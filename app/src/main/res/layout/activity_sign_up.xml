@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#AAB9FF"
+    tools:context=".SignUp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/signUpLogoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="#7878E1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/signUpLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-black"
+            android:text="Sign Up"
+            android:textColor="@color/white"
+            android:textSize="40sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <EditText
+        android:id="@+id/signUpIdEditText"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:hint="ID (4 or more)"
+        android:textSize="18sp"
+        android:textColor="#7878E1"
+        android:fontFamily="sans-serif-black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25" />
+
+    <EditText
+        android:id="@+id/signUpPwEditText"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:hint="PW (just number 4)"
+        android:textSize="18sp"
+        android:textColor="#7878E1"
+        android:fontFamily="sans-serif-black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpIdEditText"
+        app:layout_constraintVertical_bias="0.100000024" />
+
+    <EditText
+        android:id="@+id/signUpPwCheckEditText"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:hint="PW Check"
+        android:textSize="18sp"
+        android:textColor="#7878E1"
+        android:fontFamily="sans-serif-black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpPwEditText"
+        app:layout_constraintVertical_bias="0.100000024" />
+
+    <EditText
+        android:id="@+id/signUpNickNameEditText"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:hint="NickName (2 or more)"
+        android:textSize="18sp"
+        android:textColor="#7878E1"
+        android:fontFamily="sans-serif-black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpPwCheckEditText"
+        app:layout_constraintVertical_bias="0.110000014" />
+
+    <Button
+        android:id="@+id/signUpSubmitButton"
+        android:layout_width="130dp"
+        android:layout_height="60dp"
+        android:background="#7878E1"
+        android:fontFamily="sans-serif-black"
+        android:text="submit"
+        android:textColor="#AAB9FF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpNickNameEditText" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
