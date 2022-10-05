@@ -1,9 +1,12 @@
 package com.example.playlist;
 
 import androidx.appcompat.app.AppCompatActivity;
+import android.content.DialogInterface;
+import androidx.appcompat.app.AlertDialog;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +20,10 @@ public class MainActivity extends AppCompatActivity {
     Button play;
 
     String fromSignUpNickName;
+    String fromSharedNickName;
+
+    SharedPreferences shared;
+    SharedPreferences.Editor editor;
 
     public static Context mainCtx;
 
@@ -26,6 +33,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Intent intent = getIntent();
+
+        shared = getSharedPreferences("signUp", MODE_PRIVATE);
+        editor = shared.edit();
+
+        fromSharedNickName = shared.getString("nickName","LOG IN");
 
         mainCtx = this;
 
@@ -53,20 +65,53 @@ public class MainActivity extends AppCompatActivity {
         fromSignUpNickName = intent.getStringExtra("nickname");
 
         logIn = findViewById(R.id.logInButton);
-        logIn.setText(intent.getStringExtra("nickname") + "'S");
+
+        if (fromSharedNickName.equals("LOG IN")) {
+            logIn.setText(intent.getStringExtra("nickname") + "'S");
+            Log.i("[MainActivity]","fromSharedNickName String 값이 default값일 때");
+        } else {
+            logIn.setText(fromSharedNickName + "'S");
+            Log.i("[MainActivity]","fromSharedNickName String 값을 쉐어드에서 가져왔을 때 : " + fromSharedNickName);
+        }
+
         logIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (logIn.getText().toString() != fromSignUpNickName) {
+
+                if (logIn.getText().toString().equals("LOG IN")) {
 
                     Intent intent = new Intent(MainActivity.this, LogIn.class);
 
                     startActivity(intent);
 
                 } else {
-                    Log.i("로그인 버튼의 문장이 회원가입으로부터 받은 문장과 같다.","");
-                    // 로그아웃 하시겠습니까?
+                    // Dialog "로그아웃 하시겠습니까?"
+                    AlertDialog.Builder builder
+                            = new AlertDialog.Builder(mainCtx);
+
+                    builder.setTitle("로그아웃 하시겠습니까?");
+
+                    builder.setPositiveButton("아니오",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Log.i("[MainActivity]","LogOut Dialog No");
+
+                                }
+                            });
+
+                    builder.setNegativeButton("네",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Log.i("[MainActivity]","LogOut Dialog Yes");
+                                    logIn.setText("LOG IN");
+                                    editor.clear();
+                                    editor.commit();
+                                }
+                            });
+                    builder.show();
                 }
             }
         });
