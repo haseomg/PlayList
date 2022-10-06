@@ -18,6 +18,8 @@ public class SignUp extends AppCompatActivity {
     Button submit;
     String nickNameToMain;
 
+    String fromEditId, fromEditPw, fromEditPwCheck, fromEditNickName;
+
     String idShared, pwShared, pwCheckShared, nickNameShared;
 
     SharedPreferences shared;
@@ -39,33 +41,56 @@ public class SignUp extends AppCompatActivity {
         nickName = findViewById(R.id.signUpNickNameEditText);
         submit = findViewById(R.id.signUpSubmitButton);
 
+        fromEditId = id.getText().toString();
+        fromEditPw = pw.getText().toString();
+        fromEditPwCheck = pwCheck.getText().toString();
+        fromEditNickName = nickName.getText().toString();
+
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SignUp.this, MainActivity.class);
+
+                if (id.length() < 1) {
+                    Log.i("[SignUp]", "fromEditID String 길이가 1보다 작을 떄 : " + fromEditId);
+                    Toast.makeText(SignUp.this, "Enter your ID", Toast.LENGTH_LONG).show();
+                } else if (pw.length() < 1) {
+                    Log.i("[SignUp]", "fromEditPw String 길이가 1보다 작을 떄 : " + fromEditPw);
+                    Toast.makeText(SignUp.this, "Enter your Password", Toast.LENGTH_LONG).show();
+                } else if (pwCheck.length() < 1) {
+                    Log.i("[SignUp]", "fromEditPwCheck String 길이가 1보다 작을 떄 : " + fromEditPwCheck);
+                    Toast.makeText(SignUp.this, "Enter your Password Check", Toast.LENGTH_LONG).show();
+                } else if (nickName.length() < 1) {
+                    Log.i("[SignUp]", "fromEditNickName String 길이가 1보다 작을 떄 : " + fromEditNickName);
+                    Toast.makeText(SignUp.this, "Enter your NickName", Toast.LENGTH_LONG).show();
+                } else if (!pw.getText().toString().equals(pwCheck.getText().toString())) {
+                    Log.i("[SignUp]", "Pw != PwCheck : " + pw + ", " + pwCheck);
+                    Toast.makeText(SignUp.this, "Password is different", Toast.LENGTH_LONG).show();
+                } else {
+                    Intent intent = new Intent(SignUp.this, MainActivity.class);
 
 
-                nickNameToMain = nickName.getText().toString();
+                    nickNameToMain = nickName.getText().toString();
 
-                intent.putExtra("nickname", nickNameToMain);
+                    intent.putExtra("nickname", nickNameToMain);
 
-                if (id.getText().toString().equals("")) {
-                    // 다이얼로그 띄워줄 예정
-                    Log.i("회원가입 - 아이디 입력값이 비어있다.","");
+                    if (id.getText().toString().equals("")) {
+                        // 다이얼로그 띄워줄 예정
+                        Log.i("회원가입 - 아이디 입력값이 비어있다.", "");
+                    }
+
+                    idShared = id.getText().toString();
+                    pwShared = pw.getText().toString();
+                    pwCheckShared = pwCheck.getText().toString();
+                    nickNameShared = nickName.getText().toString();
+
+                    editor.putString("id", idShared);
+                    editor.putString("pw", pwShared);
+                    editor.putString("pwCheck", pwCheckShared);
+                    editor.putString("nickName", nickNameShared);
+                    editor.commit();
+
+                    startActivity(intent);
                 }
-
-                idShared = id.getText().toString();
-                pwShared = pw.getText().toString();
-                pwCheckShared = pwCheck.getText().toString();
-                nickNameShared = nickName.getText().toString();
-
-                editor.putString("id", idShared);
-                editor.putString("pw", pwShared);
-                editor.putString("pwCheck", pwCheckShared);
-                editor.putString("nickName", nickNameShared);
-                editor.commit();
-
-                startActivity(intent);
             }
         });
     }

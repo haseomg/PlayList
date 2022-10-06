@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Log.i("[MainActivity]","LogOut Dialog No");
+                                    Log.i("[MainActivity]","로그아웃 취소");
 
                                 }
                             });
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Log.i("[MainActivity]","LogOut Dialog Yes");
+                                    Log.i("[MainActivity]","로그아웃 완료");
                                     logIn.setText("LOG IN");
                                     editor.clear();
                                     editor.commit();
@@ -135,10 +135,10 @@ public class MainActivity extends AppCompatActivity {
 
                     Log.i("메인 플레이 버튼 클릭", "재생이 아닐 때");
                 }
-
-
             }
         });
+
+
 
     }
 }
