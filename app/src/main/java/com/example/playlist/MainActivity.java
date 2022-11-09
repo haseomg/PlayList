@@ -65,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
         fromSignUpNickName = intent.getStringExtra("nickname");
 
         logIn = findViewById(R.id.logInButton);
+        if (!fromSharedNickName.equals("LOG IN")) {
+            logIn.setText(fromSharedNickName);
+        }
 
         if (fromSharedNickName.equals("LOG IN")) {
             logIn.setText(intent.getStringExtra("nickname") + "'S");
@@ -72,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
         } else {
             logIn.setText(fromSharedNickName + "'S");
             Log.i("[MainActivity]","fromSharedNickName String 값을 쉐어드에서 가져왔을 때 : " + fromSharedNickName);
+        }
+        Log.i("[Main]","login.getText.toString() : " + logIn.getText().toString());
+        if (logIn.getText().toString().equals("null'S")) {
+            logIn.setText("LOG IN");
         }
 
         logIn.setOnClickListener(new View.OnClickListener() {
@@ -82,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
                 if (logIn.getText().toString().equals("LOG IN")) {
 
                     Intent intent = new Intent(MainActivity.this, LogIn.class);
+
+                    editor.remove("nickName");
+                    editor.commit();
 
                     startActivity(intent);
 

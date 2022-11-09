@@ -29,6 +29,10 @@ android {
 
 dependencies {
 
+    // Okhttp
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
+
     //로그를 남기기 위한 라이브러리
     implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
     //retrofit 통신을 위한 라이브러리

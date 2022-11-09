@@ -1,5 +1,6 @@
 package com.example.playlist;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -12,10 +13,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class SignUp extends AppCompatActivity {
 
     EditText id, pw, pwCheck, nickName;
-    Button submit;
+    Button submit, goHome;
     String nickNameToMain;
 
     String fromEditId, fromEditPw, fromEditPwCheck, fromEditNickName;
@@ -39,60 +51,228 @@ public class SignUp extends AppCompatActivity {
         pw = findViewById(R.id.signUpPwEditText);
         pwCheck = findViewById(R.id.signUpPwCheckEditText);
         nickName = findViewById(R.id.signUpNickNameEditText);
+
         submit = findViewById(R.id.signUpSubmitButton);
+        goHome = findViewById(R.id.goHomeButton);
 
         fromEditId = id.getText().toString();
         fromEditPw = pw.getText().toString();
         fromEditPwCheck = pwCheck.getText().toString();
         fromEditNickName = nickName.getText().toString();
 
+        goHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignUp.this, MainActivity.class);
+
+                startActivity(intent);
+            }
+        });
+
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (id.length() < 1) {
-                    Log.i("[SignUp]", "fromEditID String 길이가 1보다 작을 떄 : " + fromEditId);
-                    Toast.makeText(SignUp.this, "Enter your ID", Toast.LENGTH_LONG).show();
-                } else if (pw.length() < 1) {
-                    Log.i("[SignUp]", "fromEditPw String 길이가 1보다 작을 떄 : " + fromEditPw);
-                    Toast.makeText(SignUp.this, "Enter your Password", Toast.LENGTH_LONG).show();
-                } else if (pwCheck.length() < 1) {
-                    Log.i("[SignUp]", "fromEditPwCheck String 길이가 1보다 작을 떄 : " + fromEditPwCheck);
-                    Toast.makeText(SignUp.this, "Enter your Password Check", Toast.LENGTH_LONG).show();
-                } else if (nickName.length() < 1) {
-                    Log.i("[SignUp]", "fromEditNickName String 길이가 1보다 작을 떄 : " + fromEditNickName);
-                    Toast.makeText(SignUp.this, "Enter your NickName", Toast.LENGTH_LONG).show();
-                } else if (!pw.getText().toString().equals(pwCheck.getText().toString())) {
-                    Log.i("[SignUp]", "Pw != PwCheck : " + pw + ", " + pwCheck);
-                    Toast.makeText(SignUp.this, "Password is different", Toast.LENGTH_LONG).show();
-                } else {
-                    Intent intent = new Intent(SignUp.this, MainActivity.class);
+
+                int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
+                if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
+
+                    // EditText값 예외처리
+                    if (id.getText().toString().trim().length() > 0 ||
+                            pw.getText().toString().trim().length() > 0 ||
+                            pwCheck.getText().toString().trim().length() > 0 ||
+                            nickName.getText().toString().trim().length() > 0) {
+
+                        // get 방식 파라미터 추가
+                        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://43.201.105.106/signUp.php").newBuilder();
+                        urlBuilder.addQueryParameter("ver", "1.0"); // 예시
+                        String url = urlBuilder.build().toString();
+                        Log.i("[SignUp Activity]", "String url 확인 : " + url);
+
+                        // POST 파라미터 추가
+                        RequestBody formBody = new FormBody.Builder()
+                                .add("id", id.getText().toString().trim())
+                                .add("pw", pw.getText().toString().trim())
+                                .add("pwCheck", pwCheck.getText().toString().trim())
+                                .add("nickname", nickName.getText().toString().trim())
+                                .build();
+
+                        // 요청 만들기
+                        OkHttpClient client = new OkHttpClient();
+                        Request request = new Request.Builder()
+                                .url(url)
+                                .post(formBody)
+                                .build();
+
+                        // 응답 콜백
+                        client.newCall(request).enqueue(new Callback() {
+
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                e.printStackTrace();
+                                Log.i("[SignUp Activity]", "" + e);
+                            }
+
+                            @Override
+                            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
 
 
-                    nickNameToMain = nickName.getText().toString();
+                                Log.i("[SignUp Activity]", "onResponse 메서드 작동");
 
-                    intent.putExtra("nickname", nickNameToMain);
+                                // 서브 스레드 Ui 변경 할 경우 에러
+                                // 메인스레드 Ui 설정
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            // 프로그래스바 안보이게 처리
+//                                            findViewById(R.id.cpb).setVisibility(View.GONE);
 
-                    if (id.getText().toString().equals("")) {
-                        // 다이얼로그 띄워줄 예정
-                        Log.i("회원가입 - 아이디 입력값이 비어있다.", "");
+                                            if (!response.isSuccessful()) {
+                                                // 응답 실패
+                                                Log.i("[SignUp Activity]", "응답 실패 : " + response);
+                                                Toast.makeText(getApplicationContext(), "네트워크 문제 발생", Toast.LENGTH_SHORT).show();
+
+                                            } else {
+
+                                                // 응답 성공
+                                                Log.i("[SignUp Activity]", "응답 성공 : " + response);
+                                                final String responseData = response.body().string();
+                                                Log.i("[SignUp Activity]", "응답 성공 responseData : " + responseData);
+
+                                                if (id.getText().toString().length() >= 4 &&
+                                                        pw.getText().toString().length() == 4 &&
+                                                        pwCheck.getText().toString().length() == 4 &&
+                                                        nickName.getText().toString().length() >= 2) {
+
+                                                    if (pw.getText().toString().equals(pwCheck.getText().toString())) {
+
+
+                                                        if (responseData.equals("1")) {
+
+                                                            idShared = id.getText().toString();
+                                                            pwShared = pw.getText().toString();
+                                                            pwCheckShared = pwCheck.getText().toString();
+                                                            nickNameShared = nickName.getText().toString();
+
+                                                            editor.putString("id", idShared);
+                                                            editor.putString("pw", pwShared);
+                                                            editor.putString("pwCheck", pwCheckShared);
+                                                            editor.putString("nickName", nickNameShared);
+                                                            editor.commit();
+
+
+                                                            Toast.makeText(getApplicationContext(), "회원가입에 성공했습니다.", Toast.LENGTH_SHORT).show();
+                                                            startActivityflag(MainActivity.class);
+
+                                                        } else {
+
+                                                            Log.i("[SignUp Activity]", "responseData.equals(\"0\") else : " + responseData);
+
+                                                            Toast.makeText(getApplicationContext(), "회원가입에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                                                        }
+//                                                    if (id.getText().toString().length() >= 4 &&
+//                                                            pw.getText().toString().length() == 4 &&
+//                                                            pwCheck.getText().toString().length() == 4 &&
+//                                                            nickName.getText().toString().length() >= 2) {
+
+                                                    } else {
+                                                        Toast.makeText(SignUp.this, "Password is different", Toast.LENGTH_LONG).show();
+                                                    }
+
+                                                } else {
+                                                    Toast.makeText(SignUp.this, "Check your information", Toast.LENGTH_LONG).show();
+
+                                                }
+                                            }
+
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+
+
+                            }
+                        });
                     }
 
-                    idShared = id.getText().toString();
-                    pwShared = pw.getText().toString();
-                    pwCheckShared = pwCheck.getText().toString();
-                    nickNameShared = nickName.getText().toString();
+//                    if (id.length() < 1) {
+//                        Log.i("[SignUp]", "fromEditID String 길이가 1보다 작을 떄 : " + fromEditId);
+//                        Toast.makeText(SignUp.this, "Enter your ID", Toast.LENGTH_LONG).show();
+//                    } else if (pw.length() < 1) {
+//                        Log.i("[SignUp]", "fromEditPw String 길이가 1보다 작을 떄 : " + fromEditPw);
+//                        Toast.makeText(SignUp.this, "Enter your Password", Toast.LENGTH_LONG).show();
+//                    } else if (pwCheck.length() < 1) {
+//                        Log.i("[SignUp]", "fromEditPwCheck String 길이가 1보다 작을 떄 : " + fromEditPwCheck);
+//                        Toast.makeText(SignUp.this, "Enter your Password Check", Toast.LENGTH_LONG).show();
+//                    } else if (nickName.length() < 1) {
+//                        Log.i("[SignUp]", "fromEditNickName String 길이가 1보다 작을 떄 : " + fromEditNickName);
+//                        Toast.makeText(SignUp.this, "Enter your NickName", Toast.LENGTH_LONG).show();
+//                    } else if (!pw.getText().toString().equals(pwCheck.getText().toString())) {
+//                        Log.i("[SignUp]", "Pw != PwCheck : " + pw + ", " + pwCheck);
+//                        Toast.makeText(SignUp.this, "Password is different", Toast.LENGTH_LONG).show();
+//                    } else {
+//                        Intent intent = new Intent(SignUp.this, MainActivity.class);
+//
+//                        nickNameToMain = nickName.getText().toString();
+//
+//                        intent.putExtra("nickname", nickNameToMain);
+//
+//                        if (id.getText().toString().equals("")) {
+//                            // 다이얼로그 띄워줄 예정
+//                            Log.i("회원가입 - 아이디 입력값이 비어있다.", "");
+//                        }
+//
+//                        idShared = id.getText().toString();
+//                        pwShared = pw.getText().toString();
+//                        pwCheckShared = pwCheck.getText().toString();
+//                        nickNameShared = nickName.getText().toString();
+//
+//                        editor.putString("id", idShared);
+//                        editor.putString("pw", pwShared);
+//                        editor.putString("pwCheck", pwCheckShared);
+//                        editor.putString("nickName", nickNameShared);
+//                        editor.commit();
+//
+//                        if (id.getText().toString().length() >= 4 &&
+//                                pw.getText().toString().length() == 4 &&
+//                                pwCheck.getText().toString().length() == 4 &&
+//                                nickName.getText().toString().length() >= 2) {
+//                            if (pw.getText().toString().equals(pwCheck.getText().toString())) {
+////                                startActivity(intent);
+//                            } else {
+//                                Toast.makeText(SignUp.this, "Password is different", Toast.LENGTH_LONG).show();
+//                            }
+//                        } else {
+//                            Toast.makeText(SignUp.this, "Check your information", Toast.LENGTH_LONG).show();
+//                        }
 
-                    editor.putString("id", idShared);
-                    editor.putString("pw", pwShared);
-                    editor.putString("pwCheck", pwCheckShared);
-                    editor.putString("nickName", nickNameShared);
-                    editor.commit();
+//                    }
 
-                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    // 인텐트 액티비티 전환함수
+    public void startActivityC(Class c) {
+        Intent intent = new Intent(getApplicationContext(), c);
+        startActivity(intent);
+        // 화면전환 애니메이션 없애기
+        overridePendingTransition(0, 0);
+    }
+
+    // 인텐트 화면전환 하는 함수
+    // FLAG_ACTIVITY_CLEAR_TOP = 불러올 액티비티 위에 쌓인 액티비티 지운다.
+    public void startActivityflag(Class c) {
+        Intent intent = new Intent(getApplicationContext(), c);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        // 화면전환 애니메이션 없애기
+        overridePendingTransition(0, 0);
     }
 
     protected void onStart() {

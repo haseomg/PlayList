@@ -26,27 +26,27 @@ public class Intro extends AppCompatActivity {
         shared = getSharedPreferences("signUp", MODE_PRIVATE);
         editor = shared.edit();
 
-        nickNameFromShared = shared.getString("nickName","LOG IN");
+        nickNameFromShared = shared.getString("nickName", "LOG IN");
 
         start = findViewById(R.id.introStartButton);
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Log.i("[Intro]","nickNamFromShared String 값 확인 : " + nickNameFromShared);
+                Log.i("[Intro]", "nickNamFromShared String 값 확인 : " + nickNameFromShared);
 
-//                if (nickNameFromShared.equals("LOG IN")) {
-//                    Log.i("[Intro]","nickNameFromShared가 default값일 때");
-//                    Intent intent = new Intent(Intro.this, SignUp.class);
-//
-//                    startActivity(intent);
-//                } else {
-//                    Log.i("[Intro]","nickNameFromShared가 default값이 아닐 때");
+                if (nickNameFromShared.equals("LOG IN")) {
+                    Log.i("[Intro]", "nickNameFromShared가 default값일 때");
+                    Intent intent = new Intent(Intro.this, SignUp.class);
+
+                    startActivity(intent);
+                } else {
+                    Log.i("[Intro]", "nickNameFromShared가 default값이 아닐 때");
 
                     Intent intent = new Intent(Intro.this, MainActivity.class);
 
                     startActivity(intent);
-//                }
+                }
             }
         });
 
