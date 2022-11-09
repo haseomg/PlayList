@@ -91,19 +91,36 @@
         app:layout_constraintTop_toBottomOf="@+id/signUpPwCheckEditText"
         app:layout_constraintVertical_bias="0.110000014" />
 
+
+    <ImageView
+        android:id="@+id/googleBtn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="20dp"
+        android:src="@drawable/googlelogo"
+        app:flow_horizontalBias="5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.247"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpNickNameEditText"
+        app:layout_constraintVertical_bias="0.509" />
+
     <Button
         android:id="@+id/signUpSubmitButton"
         android:layout_width="130dp"
         android:layout_height="60dp"
-        android:background="#7878E1"
+        android:background="#00ff0000"
         android:fontFamily="sans-serif-black"
         android:text="submit"
-        android:textColor="#AAB9FF"
+        android:textColor="#7878E1"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.661"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signUpNickNameEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/signUpNickNameEditText"
+        app:layout_constraintVertical_bias="0.504" />
 
     <Button
         android:id="@+id/goHomeButton"
@@ -113,12 +130,12 @@
         android:fontFamily="sans-serif-black"
         android:text="i have an id"
         android:textSize="16sp"
-        android:textColor="#7878E1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.939"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signUpSubmitButton"
-        app:layout_constraintVertical_bias="0.060000002" />
+        app:layout_constraintVertical_bias="0.686" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

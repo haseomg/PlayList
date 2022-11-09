@@ -1,6 +1,7 @@
 package com.example.playlist;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -11,7 +12,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
 
@@ -30,6 +39,12 @@ public class SignUp extends AppCompatActivity {
     Button submit, goHome;
     String nickNameToMain;
 
+
+    GoogleSignInOptions gso;
+    GoogleSignInClient gsc;
+    ImageView googleBtn;
+
+
     String fromEditId, fromEditPw, fromEditPwCheck, fromEditNickName;
 
     String idShared, pwShared, pwCheckShared, nickNameShared;
@@ -43,6 +58,19 @@ public class SignUp extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
         Log.e("회원가입 [Sign Up]", "onCreate");
 
+
+        googleBtn = findViewById(R.id.googleBtn);
+        gso = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail().build();
+        gsc = GoogleSignIn.getClient(this, gso);
+
+        googleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signIn();
+            }
+        });
 
         shared = getSharedPreferences("signUp", Activity.MODE_PRIVATE);
         editor = shared.edit();
@@ -255,7 +283,35 @@ public class SignUp extends AppCompatActivity {
                 }
             }
         });
+
+
     }
+
+    void signIn() {
+        Intent signInIntent = gsc.getSignInIntent();
+        startActivityForResult(signInIntent, 1000);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1000) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            navigateToSecondActivity();
+            try {
+                task.getResult(ApiException.class);
+            } catch (ApiException e) {
+                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    void navigateToSecondActivity() {
+        finish();
+        Intent intent = new Intent(SignUp.this, MainActivity.class);
+        startActivity(intent);
+    }
+
 
     // 인텐트 액티비티 전환함수
     public void startActivityC(Class c) {

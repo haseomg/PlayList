@@ -5,6 +5,7 @@ package com.example.playlist;
 import android.app.AlertDialog;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -20,8 +21,15 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -41,6 +49,10 @@ import retrofit2.Retrofit;
 public class LogIn extends Activity {
 
     static Context ctx;
+
+    GoogleSignInOptions gso;
+    GoogleSignInClient gsc;
+    ImageView google_Btn;
 
     Button back;
     Button submit;
@@ -62,6 +74,22 @@ public class LogIn extends Activity {
         setContentView(R.layout.activity_log_in);
 
         ctx = this;
+
+
+//        google_Btn = findViewById(R.id.google_Btn);
+//        gso = new GoogleSignInOptions
+//                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestEmail().build();
+//        gsc = GoogleSignIn.getClient(this, gso);
+//
+//        google_Btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                signIn();
+//            }
+//        });
+
+
 
         shared = getSharedPreferences("signUp", MODE_PRIVATE);
         editor = shared.edit();
@@ -239,6 +267,33 @@ public class LogIn extends Activity {
         }
         return super.dispatchTouchEvent(ev);
     }
+
+
+    void signIn() {
+        Intent signInIntent = gsc.getSignInIntent();
+        startActivityForResult(signInIntent, 1000);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1000) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            navigateToSecondActivity();
+            try {
+                task.getResult(ApiException.class);
+            } catch (ApiException e) {
+                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    void navigateToSecondActivity() {
+        finish();
+        Intent intent = new Intent(LogIn.this, MainActivity.class);
+        startActivity(intent);
+    }
+
 
 //    // 자동 로그인 유저
 //    public void checkAutoLogin(String id) {

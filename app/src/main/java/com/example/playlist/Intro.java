@@ -9,11 +9,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+
 public class Intro extends AppCompatActivity {
 
     Button start;
 
     String nickNameFromShared;
+
+    GoogleSignInOptions gso;
+    GoogleSignInClient gsc;
 
     SharedPreferences shared;
     SharedPreferences.Editor editor;
@@ -22,6 +30,18 @@ public class Intro extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
+
+
+        gso = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail().build();
+        gsc = GoogleSignIn.getClient(this, gso);
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+        Log.i("[MainActivity]", "acct : " + acct);
+        if (acct != null) {
+            String personName = acct.getDisplayName();
+            String personEmail = acct.getEmail();
+        }
 
         shared = getSharedPreferences("signUp", MODE_PRIVATE);
         editor = shared.edit();
@@ -35,15 +55,15 @@ public class Intro extends AppCompatActivity {
 
                 Log.i("[Intro]", "nickNamFromShared String 값 확인 : " + nickNameFromShared);
 
-                if (nickNameFromShared.equals("LOG IN")) {
-                    Log.i("[Intro]", "nickNameFromShared가 default값일 때");
-                    Intent intent = new Intent(Intro.this, SignUp.class);
 
-                    startActivity(intent);
-                } else {
+                if (acct != null) {
                     Log.i("[Intro]", "nickNameFromShared가 default값이 아닐 때");
 
                     Intent intent = new Intent(Intro.this, MainActivity.class);
+                    startActivity(intent);
+                } else if (nickNameFromShared.equals("LOG IN")) {
+                    Log.i("[Intro]", "nickNameFromShared가 default값일 때");
+                    Intent intent = new Intent(Intro.this, SignUp.class);
 
                     startActivity(intent);
                 }
