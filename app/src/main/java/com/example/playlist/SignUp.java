@@ -43,6 +43,7 @@ public class SignUp extends AppCompatActivity {
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
     ImageView googleBtn;
+    Button googleBtnMent;
 
 
     String fromEditId, fromEditPw, fromEditPwCheck, fromEditNickName;
@@ -66,6 +67,14 @@ public class SignUp extends AppCompatActivity {
         gsc = GoogleSignIn.getClient(this, gso);
 
         googleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signIn();
+            }
+        });
+
+        googleBtnMent = findViewById(R.id.googleBtnMent);
+        googleBtnMent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signIn();

@@ -94,30 +94,46 @@
 
     <ImageView
         android:id="@+id/googleBtn"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="43dp"
+        android:layout_height="43dp"
         android:layout_margin="20dp"
         android:src="@drawable/googlelogo"
         app:flow_horizontalBias="5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.247"
+        app:layout_constraintHorizontal_bias="0.265"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signUpNickNameEditText"
-        app:layout_constraintVertical_bias="0.509" />
+        app:layout_constraintVertical_bias="0.41999" />
+
+    <Button
+        android:id="@+id/googleBtnMent"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:background="#00ff0000"
+        android:fontFamily="sans-serif-black"
+        android:text="GOOGLE LOGIN"
+        android:textColor="#7878E1"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/signUpSubmitButton"
+        app:layout_constraintHorizontal_bias="0.817"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpNickNameEditText"
+        app:layout_constraintVertical_bias="0.6" />
 
     <Button
         android:id="@+id/signUpSubmitButton"
         android:layout_width="130dp"
-        android:layout_height="60dp"
+        android:layout_height="100dp"
         android:background="#00ff0000"
         android:fontFamily="sans-serif-black"
-        android:text="submit"
+        android:text="now page submit"
         android:textColor="#7878E1"
-        android:textSize="18sp"
+        android:textSize="19sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.661"
+        app:layout_constraintHorizontal_bias="0.7"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signUpNickNameEditText"
         app:layout_constraintVertical_bias="0.504" />
