@@ -56,6 +56,7 @@ public class LogIn extends Activity {
 
     Button back;
     Button submit;
+    Button signUp;
 
     EditText idEdit, pwEdit;
 
@@ -96,6 +97,16 @@ public class LogIn extends Activity {
 
         idEdit = findViewById(R.id.idEditText);
         pwEdit = findViewById(R.id.passwordEditText);
+
+        signUp = findViewById(R.id.signUpButton);
+        signUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LogIn.this, SignUp.class);
+
+                startActivity(intent);
+            }
+        });
 
         back = findViewById(R.id.logInBackButton);
         back.setOnClickListener(new View.OnClickListener() {

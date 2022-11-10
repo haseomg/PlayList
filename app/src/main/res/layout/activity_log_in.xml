@@ -93,19 +93,36 @@
 <!--        app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />-->
 
     <Button
+        android:id="@+id/signUpButton"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:background="#7878E1"
+        android:fontFamily="sans-serif-black"
+        android:text="sign up"
+        android:textColor="#AAB9FF"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/logInSubmitButton"
+        app:layout_constraintHorizontal_bias="0.607"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
+        app:layout_constraintVertical_bias="0.51" />
+
+    <Button
         android:id="@+id/logInSubmitButton"
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:background="#7878E1"
         android:fontFamily="sans-serif-black"
         android:text="submit"
-        android:textSize="15sp"
         android:textColor="#AAB9FF"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.63"
+        app:layout_constraintHorizontal_bias="0.736"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
+        app:layout_constraintVertical_bias="0.51" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

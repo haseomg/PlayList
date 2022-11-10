@@ -56,7 +56,7 @@ public class Intro extends AppCompatActivity {
                 Log.i("[Intro]", "nickNamFromShared String 값 확인 : " + nickNameFromShared);
 
 
-                if (acct != null) {
+                if (acct != null || !nickNameFromShared.equals("LOG IN")) {
                     Log.i("[Intro]", "nickNameFromShared가 default값이 아닐 때");
 
                     Intent intent = new Intent(Intro.this, MainActivity.class);
