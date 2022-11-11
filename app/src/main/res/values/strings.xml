@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">PlayList</string>
+    <string name="kakao_app_key">aaa</string>
+    <string name="kakao_native_key">e7657431c08b5889a35e98139daef99a</string>
 </resources>

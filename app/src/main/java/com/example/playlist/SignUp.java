@@ -21,6 +21,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.kakao.sdk.user.UserApiClient;
 
 import java.io.IOException;
 
@@ -45,6 +46,8 @@ public class SignUp extends AppCompatActivity {
     ImageView googleBtn;
     Button googleBtnMent;
 
+    ImageView kakaoBtn;
+    Button kakaoBtnMent;
 
     String fromEditId, fromEditPw, fromEditPwCheck, fromEditNickName;
 
@@ -58,6 +61,24 @@ public class SignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         Log.e("회원가입 [Sign Up]", "onCreate");
+
+        kakaoBtn = findViewById(R.id.kakaoBtn);
+        kakaoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                kakaoLogin();
+                kakaoGet();
+            }
+        });
+
+        kakaoBtnMent = findViewById(R.id.kakaoBtnMent);
+        kakaoBtnMent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                kakaoLogin();
+                kakaoGet();
+            }
+        });
 
 
         googleBtn = findViewById(R.id.googleBtn);
@@ -363,6 +384,35 @@ public class SignUp extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.e("회원가입 [Sign Up]", "onDestroy");
+    }
+
+    // 카카오 로그인 공통 callback 구성
+    void kakaoLogin() {
+        Log.i("[SignUp]","kakao login");
+        UserApiClient.getInstance().loginWithKakaoTalk(SignUp.this, (oAuthToken, error) -> {
+            if (error != null) {
+                Log.e("[SignUp KAKAO LOG IN]", "로그인 실패", error);
+            } else if (oAuthToken != null) {
+                Log.i("[SignUp KAKAO LOG IN]", "로그인 성공(토큰) : " + oAuthToken.getAccessToken());
+            }
+            return null;
+        });
+    }
+
+    void kakaoGet() {
+        Log.i("[SignUp]","kakao get");
+        UserApiClient.getInstance().me((user, meError) -> {
+            if (meError != null) {
+                Log.e("[MAIN KAKAO GET]", "사용자 정보 요청 실패", meError);
+            } else {
+                Log.i("[MAIN KAKAO GET]", "사용자 정보 요청 성공" +
+                        "\n회원번호: "+user.getId() +
+                        "\n이메일: "+user.getKakaoAccount().getEmail());
+
+                ((MainActivity) MainActivity.mainCtx).logIn.setText(user.getKakaoAccount().getEmail());
+            }
+            return null;
+        });
     }
 
 }

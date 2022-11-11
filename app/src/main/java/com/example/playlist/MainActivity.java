@@ -1,5 +1,7 @@
 package com.example.playlist;
 
+import static com.google.android.gms.common.util.ClientLibraryUtils.getPackageInfo;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,7 +12,11 @@ import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +27,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.kakao.sdk.common.util.Utility;
+import com.kakao.sdk.user.UserApiClient;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.e("메인 [MainActivity]","onCreate");
+        Log.e("메인 [MainActivity]", "onCreate");
 
 
         logIn = findViewById(R.id.logInButton);
@@ -56,12 +67,12 @@ public class MainActivity extends AppCompatActivity {
                 .requestEmail().build();
         gsc = GoogleSignIn.getClient(this, gso);
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
-        Log.i("[MainActivity]","acct : " + acct);
+        Log.i("[MainActivity]", "acct : " + acct);
         if (acct != null) {
             personName = acct.getDisplayName();
             personEmail = acct.getEmail();
-            Log.i("[MainActivity]","personName : " + personName);
-            Log.i("[MainActivity]","personEmail : " + personEmail);
+            Log.i("[MainActivity]", "personName : " + personName);
+            Log.i("[MainActivity]", "personEmail : " + personEmail);
             logIn.setText(personName + "'S");
 
             // personEmail.setText
@@ -154,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
                                     Log.i("[MainActivity]", "로그아웃 완료");
 
                                     signOut();
+                                    kakaoLogout();
 
                                     logIn.setText("LOG IN");
                                     editor.clear();
@@ -188,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
 
     void signOut() {
         gsc.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -241,6 +254,32 @@ public class MainActivity extends AppCompatActivity {
         Log.e("메인 [MainActivity]", "onDestroy");
     }
 
+    // 카카오 로그아웃
+    void kakaoLogout() {
+        UserApiClient.getInstance().logout(error -> {
+            if (error != null) {
+                Log.e("[MAIN KAKAO LOGOUT]", "로그아웃 실패, SDK에서 토큰 삭제됨", error);
+            } else {
+                Log.e("[MAIN KAKAO LOGOUT]", "로그아웃 성공, SDK에서 토큰 삭제됨");
+            }
+            return null;
+        });
+    }
+
+    void kakaoGet() {
+        UserApiClient.getInstance().me((user, meError) -> {
+            if (meError != null) {
+                Log.e("[MAIN KAKAO GET]", "사용자 정보 요청 실패", meError);
+            } else {
+                Log.i("[MAIN KAKAO GET]", "사용자 정보 요청 성공" +
+                        "\n회원번호: "+user.getId() +
+                        "\n이메일: "+user.getKakaoAccount().getEmail());
+
+                logIn.setText(user.getKakaoAccount().getEmail());
+            }
+            return null;
+        });
+    }
 
 
 }

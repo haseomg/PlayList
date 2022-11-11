@@ -91,6 +91,36 @@
         app:layout_constraintTop_toBottomOf="@+id/signUpPwCheckEditText"
         app:layout_constraintVertical_bias="0.110000014" />
 
+    <ImageView
+        android:id="@+id/kakaoBtn"
+        android:layout_width="37dp"
+        android:layout_height="37dp"
+        android:layout_margin="20dp"
+        android:src="@drawable/kakao"
+        app:flow_horizontalBias="5"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpNickNameEditText"
+        app:layout_constraintVertical_bias="0.39999998" />
+
+    <Button
+        android:id="@+id/kakaoBtnMent"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:background="#00ff0000"
+        android:fontFamily="sans-serif-black"
+        android:text="KAKAO LOGIN"
+        android:textColor="#7878E1"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/signUpSubmitButton"
+        app:layout_constraintHorizontal_bias="0.34"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpNickNameEditText"
+        app:layout_constraintVertical_bias="0.6" />
 
     <ImageView
         android:id="@+id/googleBtn"
@@ -101,10 +131,10 @@
         app:flow_horizontalBias="5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.265"
+        app:layout_constraintHorizontal_bias="0.48"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signUpNickNameEditText"
-        app:layout_constraintVertical_bias="0.41999" />
+        app:layout_constraintVertical_bias="0.39" />
 
     <Button
         android:id="@+id/googleBtnMent"
@@ -116,27 +146,27 @@
         android:textColor="#7878E1"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/signUpSubmitButton"
-        app:layout_constraintHorizontal_bias="0.817"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.48"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signUpNickNameEditText"
         app:layout_constraintVertical_bias="0.6" />
 
     <Button
         android:id="@+id/signUpSubmitButton"
-        android:layout_width="130dp"
-        android:layout_height="100dp"
-        android:background="#00ff0000"
+        android:layout_width="70dp"
+        android:layout_height="78dp"
+        android:background="#7878E1"
         android:fontFamily="sans-serif-black"
         android:text="now page submit"
-        android:textColor="#7878E1"
-        android:textSize="19sp"
+        android:textColor="#AAB9FF"
+        android:textSize="7sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.7"
+        app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signUpNickNameEditText"
-        app:layout_constraintVertical_bias="0.504" />
+        app:layout_constraintVertical_bias="0.49" />
 
     <Button
         android:id="@+id/goHomeButton"
