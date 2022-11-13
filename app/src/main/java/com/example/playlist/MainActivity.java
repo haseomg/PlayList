@@ -25,7 +25,13 @@ import com.google.android.gms.tasks.Task;
 import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.user.model.Account;
 
+import java.util.Random;
+
 public class MainActivity extends AppCompatActivity {
+
+    Random random;
+    int rPlay;
+    Button rightPlayBtn;
 
     Button select;
     Button comment;
@@ -203,14 +209,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 String playState = play.getText().toString();
+                random = new Random();
+                rPlay = random.nextInt();
+
 //                playAudio();
 
                 if (!playState.equals("❚❚")) {
                     Log.i("메인 플레이 버튼 클릭", "일시정지가 아닐 때");
                     play.setText("❚❚");
                     play.setTextSize(45);
-
-//                    resumeAudio();
 
                     if (mediaPlayer == null) {
                         mediaPlayer = MediaPlayer.create(getApplicationContext()
@@ -221,10 +228,14 @@ public class MainActivity extends AppCompatActivity {
                         mediaPlayer.start();
                     }
 
+//                    resumeAudio();
+
+
                 } else if (playState.equals("❚❚")) {
                     Log.i("메인 플레이 버튼 클릭", "재생이 아닐 때");
                     play.setText("▶");
                     play.setTextSize(60);
+
 
 //                    pauseAudio();
 
@@ -235,6 +246,80 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 }
+            }
+        });
+
+        rightPlayBtn = findViewById(R.id.rightPlayButton);
+        rightPlayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                stopAudio();
+                closePlayer();
+
+                Log.i("[MAIN]","Right Play Button onClick() *Random Play");
+
+                random = new Random();
+                rPlay = random.nextInt(4) + 1;
+                play.setText("▶");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                play.setText("❚❚");
+
+                Log.i("[MAIN]","int rPlay Check : " + rPlay);
+
+                if (rPlay == 1) {
+                    Log.i("[MAIN]","friendLikeMe 재생");
+
+                    if (mediaPlayer == null) {
+                        mediaPlayer = MediaPlayer.create(getApplicationContext()
+                                ,R.raw.friendlikeme);
+                        mediaPlayer.start();
+                    } else if (!mediaPlayer.isPlaying()) {
+                        mediaPlayer.seekTo(playPosition);
+                        mediaPlayer.start();
+                    }
+
+                } else if (rPlay == 2) {
+                    Log.i("[MAIN]","waves 재생");
+
+                    if (mediaPlayer == null) {
+                        mediaPlayer = MediaPlayer.create(getApplicationContext()
+                                ,R.raw.waves);
+                        mediaPlayer.start();
+                    } else if (!mediaPlayer.isPlaying()) {
+                        mediaPlayer.seekTo(playPosition);
+                        mediaPlayer.start();
+                    }
+
+                } else if (rPlay == 3) {
+                    Log.i("[MAIN]","bonfire 재생");
+
+                    if (mediaPlayer == null) {
+                        mediaPlayer = MediaPlayer.create(getApplicationContext()
+                                ,R.raw.bonfire);
+                        mediaPlayer.start();
+                    } else if (!mediaPlayer.isPlaying()) {
+                        mediaPlayer.seekTo(playPosition);
+                        mediaPlayer.start();
+                    }
+
+                } else if (rPlay == 4) {
+                    Log.i("[MAIN]","rain 재생");
+
+                    if (mediaPlayer == null) {
+                        mediaPlayer = MediaPlayer.create(getApplicationContext()
+                                ,R.raw.rain);
+                        mediaPlayer.start();
+                    } else if (!mediaPlayer.isPlaying()) {
+                        mediaPlayer.seekTo(playPosition);
+                        mediaPlayer.start();
+                    }
+                }
+
             }
         });
 
@@ -252,7 +337,7 @@ public class MainActivity extends AppCompatActivity {
         closePlayer();
         mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.waves);
         mediaPlayer.start();
-        Toast.makeText(this, "재생 시작.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "재생 중", Toast.LENGTH_SHORT).show();
     }
 
     private void resumeAudio() {
@@ -260,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
             mediaPlayer.seekTo(playPosition);
             mediaPlayer.start();
 
-            Toast.makeText(this, "재시작.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "재시작", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -269,7 +354,20 @@ public class MainActivity extends AppCompatActivity {
             playPosition = mediaPlayer.getCurrentPosition();
             mediaPlayer.pause();
 
-            Toast.makeText(this, "일시정지.", Toast.LENGTH_SHORT).show();
+            Log.i("[MAIN]","stopAudio");
+
+            Toast.makeText(this, "일시정지", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void stopAudio() {
+        if(mediaPlayer != null && mediaPlayer.isPlaying()){
+            mediaPlayer.stop();
+
+            Log.i("[MAIN]","stopAudio");
+
+
+//            Toast.makeText(this, "중지됨.", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -53,6 +53,22 @@
         app:layout_constraintVertical_bias="0.01" />
 
 
+    <Button
+        android:id="@+id/rightPlayButton"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:background="#00FFFFFF"
+        android:fontFamily="sans-serif-black"
+        android:gravity="center"
+        android:text="〉"
+        android:textColor="#7878E1"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/mainPlayLayout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.45999998" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mainPlayLayout"
         android:layout_width="200dp"
