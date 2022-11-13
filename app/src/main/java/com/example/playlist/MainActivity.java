@@ -9,10 +9,12 @@ import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -28,7 +30,10 @@ public class MainActivity extends AppCompatActivity {
     Button select;
     Button comment;
     Button logIn;
-    Button play;
+
+    private Button play;
+    private MediaPlayer mediaPlayer;
+    private int playPosition = 0;
 
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
@@ -158,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
                     builder.setPositiveButton("NO", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Log.i("[MainActivity]","프로필/로그아웃 선택창 취소");
+                            Log.i("[MainActivity]", "프로필/로그아웃 선택창 취소");
                         }
                     });
 
@@ -198,21 +203,74 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 String playState = play.getText().toString();
+//                playAudio();
 
                 if (!playState.equals("❚❚")) {
+                    Log.i("메인 플레이 버튼 클릭", "일시정지가 아닐 때");
                     play.setText("❚❚");
                     play.setTextSize(45);
-                    Log.i("메인 플레이 버튼 클릭", "일시정지가 아닐 때");
+
+//                    resumeAudio();
+
+                    if (mediaPlayer == null) {
+                        mediaPlayer = MediaPlayer.create(getApplicationContext()
+                                ,R.raw.friendlikeme);
+                        mediaPlayer.start();
+                    } else if (!mediaPlayer.isPlaying()) {
+                        mediaPlayer.seekTo(playPosition);
+                        mediaPlayer.start();
+                    }
+
                 } else if (playState.equals("❚❚")) {
+                    Log.i("메인 플레이 버튼 클릭", "재생이 아닐 때");
                     play.setText("▶");
                     play.setTextSize(60);
 
-                    Log.i("메인 플레이 버튼 클릭", "재생이 아닐 때");
+//                    pauseAudio();
+
+                    if (mediaPlayer != null) {
+                        mediaPlayer.pause();
+                        playPosition = mediaPlayer.getCurrentPosition();
+                        Log.d("[PAUSE CHECK]","" + playPosition);
+                    }
+
                 }
             }
         });
 
 
+    }
+
+    public void closePlayer() {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
+
+    private void playAudio() {
+        closePlayer();
+        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.waves);
+        mediaPlayer.start();
+        Toast.makeText(this, "재생 시작.", Toast.LENGTH_SHORT).show();
+    }
+
+    private void resumeAudio() {
+        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
+            mediaPlayer.seekTo(playPosition);
+            mediaPlayer.start();
+
+            Toast.makeText(this, "재시작.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void pauseAudio() {
+        if (mediaPlayer != null) {
+            playPosition = mediaPlayer.getCurrentPosition();
+            mediaPlayer.pause();
+
+            Toast.makeText(this, "일시정지.", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -299,40 +357,41 @@ public class MainActivity extends AppCompatActivity {
                 Account user1 = user.getKakaoAccount();
                 System.out.println("사용자 계정 : " + user1);
                 System.out.println("user.getName : " + user1.getEmail());
-                Log.i("[KAKAO userEmail]","" + user1.getEmail());
+                Log.i("[KAKAO userEmail]", "" + user1.getEmail());
 
                 String userID = user1.getEmail();
                 String[] userEmailCut = userID.split("@");
                 String id = userEmailCut[0];
-                Log.i("[KAKAO userID]","" + user1.getEmail());
-                Log.i("[KAKAO userID]","" + id);
+                Log.i("[KAKAO userID]", "" + user1.getEmail());
+                Log.i("[KAKAO userID]", "" + id);
 
                 if (!id.equals(fromSharedNickName) && !fromSharedNickName.equals("LOG IN")) {
                     logIn.setText(fromSharedNickName + "'S");
-                    editor.putString("nickName",fromSharedNickName);
+                    editor.putString("nickName", fromSharedNickName);
                     editor.commit();
-                    Log.i("여긴가?","");
+                    Log.i("여긴가?", "");
                 } else if (fromSharedNickName.equals(null) || fromSharedNickName.equals("LOG IN")) {
-                    editor.putString("nickName",id);
+                    editor.putString("nickName", id);
                     editor.commit();
-                    Log.i("여긴가? 22","");
+                    Log.i("여긴가? 22", "");
                 } else if (!id.equals(fromSharedNickName) && fromSharedNickName.equals("LOG IN")) {
                     logIn.setText(id + "'S");
-                    editor.putString("nickName",fromSharedNickName);
+                    editor.putString("nickName", fromSharedNickName);
                     editor.commit();
-                    Log.i("여긴가? 33","");
+                    Log.i("여긴가? 33", "");
                 }
 
 
                 if (!fromSharedNickName.equals(null) || !fromSharedNickName.equals("LOG IN")) {
-                    editor.putString("nickName",fromSharedNickName);
+                    editor.putString("nickName", fromSharedNickName);
                     editor.commit();
-                    Log.i("여긴가? 44","");
-                } if (!id.equals(fromSharedNickName) && fromSharedNickName.equals("LOG IN")) {
+                    Log.i("여긴가? 44", "");
+                }
+                if (!id.equals(fromSharedNickName) && fromSharedNickName.equals("LOG IN")) {
                     logIn.setText(id + "'S");
-                    editor.putString("nickName",id);
+                    editor.putString("nickName", id);
                     editor.commit();
-                    Log.i("여긴가? 55","");
+                    Log.i("여긴가? 55", "");
                 }
 
 
