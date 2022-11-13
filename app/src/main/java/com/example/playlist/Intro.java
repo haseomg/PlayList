@@ -20,6 +20,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.kakao.sdk.user.UserApiClient;
+import com.kakao.sdk.user.model.Account;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -40,7 +42,6 @@ public class Intro extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
-
 
         gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -80,4 +81,5 @@ public class Intro extends AppCompatActivity {
             }
         });
     }
+
 }

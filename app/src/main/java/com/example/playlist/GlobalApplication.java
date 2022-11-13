@@ -1,8 +1,8 @@
 package com.example.playlist;
 
+import com.kakao.sdk.common.KakaoSdk;
 import android.app.Application;
 
-import com.kakao.sdk.common.KakaoSdk;
 
 public class GlobalApplication extends Application {
 
