@@ -61,6 +61,13 @@ public class MainActivity extends AppCompatActivity {
         mainCtx = this;
 
         logIn = findViewById(R.id.logInButton);
+        if (fromSharedNickName.length() > 20) {
+            logIn.setTextSize(10);
+        } else if (fromSharedNickName.length() > 12) {
+            logIn.setTextSize(12);
+        } else if (fromSharedNickName.length() < 5) {
+            logIn.setTextSize(15);
+        }
 
         getKakaoUserInfo();
 
@@ -146,18 +153,26 @@ public class MainActivity extends AppCompatActivity {
                     AlertDialog.Builder builder
                             = new AlertDialog.Builder(mainCtx);
 
-                    builder.setTitle("로그아웃 하시겠습니까?");
+                    builder.setTitle("선택하시겠습니까?");
 
-                    builder.setPositiveButton("아니오",
+                    builder.setPositiveButton("NO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.i("[MainActivity]","프로필/로그아웃 선택창 취소");
+                        }
+                    });
+
+                    builder.setNeutralButton("[PROFILE]",
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     Log.i("[MainActivity]", "로그아웃 취소");
-
+                                    Intent profileIntent = new Intent(MainActivity.this, Profile.class);
+                                    startActivity(profileIntent);
                                 }
                             });
 
-                    builder.setNegativeButton("네",
+                    builder.setNegativeButton("[LOGOUT]",
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -292,11 +307,34 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("[KAKAO userID]","" + user1.getEmail());
                 Log.i("[KAKAO userID]","" + id);
 
-                editor.putString("nickName",id);
-                editor.commit();
+                if (!id.equals(fromSharedNickName) && !fromSharedNickName.equals("LOG IN")) {
+                    logIn.setText(fromSharedNickName + "'S");
+                    editor.putString("nickName",fromSharedNickName);
+                    editor.commit();
+                    Log.i("여긴가?","");
+                } else if (fromSharedNickName.equals(null) || fromSharedNickName.equals("LOG IN")) {
+                    editor.putString("nickName",id);
+                    editor.commit();
+                    Log.i("여긴가? 22","");
+                } else if (!id.equals(fromSharedNickName) && fromSharedNickName.equals("LOG IN")) {
+                    logIn.setText(id + "'S");
+                    editor.putString("nickName",fromSharedNickName);
+                    editor.commit();
+                    Log.i("여긴가? 33","");
+                }
 
 
-                logIn.setText(id + "'S");
+                if (!fromSharedNickName.equals(null) || !fromSharedNickName.equals("LOG IN")) {
+                    editor.putString("nickName",fromSharedNickName);
+                    editor.commit();
+                    Log.i("여긴가? 44","");
+                } if (!id.equals(fromSharedNickName) && fromSharedNickName.equals("LOG IN")) {
+                    logIn.setText(id + "'S");
+                    editor.putString("nickName",id);
+                    editor.commit();
+                    Log.i("여긴가? 55","");
+                }
+
 
             }
             return null;
