@@ -1,12 +1,7 @@
 package com.example.playlist;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.DialogInterface;
-
-import androidx.appcompat.app.AlertDialog;
-
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
@@ -15,6 +10,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -44,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
 
+    String streamingRecordList;
+    String[] streamingArray;
+
     String personName;
     String personEmail;
 
@@ -68,8 +69,9 @@ public class MainActivity extends AppCompatActivity {
 
         mainCtx = this;
 
+        streamingRecordList = "<list>";
 
-        mainCtx = this;
+
 
         logIn = findViewById(R.id.logInButton);
         if (fromSharedNickName.length() > 20) {
@@ -211,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
                 String playState = play.getText().toString();
                 random = new Random();
                 rPlay = random.nextInt(4) + 1;
-                // 하지만 재생 중일 때는 일시정지가 아니라 랜덤 재생으로 될 것 같은데?
+                // 하지만 재생 중일 때는 일시정지가 아니라 랜덤 재생으로 될 것 같은데? 어떻게 할까
 
 //                playAudio();
 
@@ -278,6 +280,12 @@ public class MainActivity extends AppCompatActivity {
                     if (mediaPlayer == null) {
                         mediaPlayer = MediaPlayer.create(getApplicationContext()
                                 , R.raw.friendlikeme);
+
+                        String song = "friendlikeme";
+
+
+//                        Log.i("[Streaming Record End Cut]","" + StringUtils)
+
                         mediaPlayer.start();
                     } else if (!mediaPlayer.isPlaying()) {
                         mediaPlayer.seekTo(playPosition);
@@ -291,6 +299,9 @@ public class MainActivity extends AppCompatActivity {
                     if (mediaPlayer == null) {
                         mediaPlayer = MediaPlayer.create(getApplicationContext()
                                 , R.raw.waves);
+
+                        String song = "waves";
+
                         mediaPlayer.start();
                     } else if (!mediaPlayer.isPlaying()) {
                         mediaPlayer.seekTo(playPosition);
@@ -304,6 +315,9 @@ public class MainActivity extends AppCompatActivity {
                     if (mediaPlayer == null) {
                         mediaPlayer = MediaPlayer.create(getApplicationContext()
                                 , R.raw.bonfire);
+
+                        String song = "bonfire";
+
                         mediaPlayer.start();
                     } else if (!mediaPlayer.isPlaying()) {
                         mediaPlayer.seekTo(playPosition);
@@ -317,6 +331,9 @@ public class MainActivity extends AppCompatActivity {
                     if (mediaPlayer == null) {
                         mediaPlayer = MediaPlayer.create(getApplicationContext()
                                 , R.raw.rain);
+
+                        String song = "rain";
+
                         mediaPlayer.start();
                     } else if (!mediaPlayer.isPlaying()) {
                         mediaPlayer.seekTo(playPosition);
