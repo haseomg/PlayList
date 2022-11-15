@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     Random random;
     int rPlay;
     Button rightPlayBtn;
+    Button leftPlayBtn;
 
     Button select;
     Button comment;
@@ -62,18 +63,40 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.e("메인 [MainActivity]", "onCreate");
 
+        // final static Context
+        mainCtx = this;
+
         shared = getSharedPreferences("signUp", MODE_PRIVATE);
         editor = shared.edit();
 
+        // 받는 인텐트
+        Intent intent = getIntent();
+        fromSignUpNickName = intent.getStringExtra("nickname");
+
+        // 쉐어드로부터 가져온 닉네임
         fromSharedNickName = shared.getString("nickName", "LOG IN");
 
-        mainCtx = this;
+        if (!fromSharedNickName.equals("LOG IN")) {
+            logIn.setText(fromSharedNickName);
+        }
 
-        streamingRecordList = "<list>";
-
-
-
+        // LOGIN 버튼
         logIn = findViewById(R.id.logInButton);
+
+        // 쉐어드로부터 가져온 닉네임 비교해서 logIn 버튼 이름 설정
+        if (fromSharedNickName.equals("LOG IN")) {
+            logIn.setText(intent.getStringExtra("nickname") + "'S");
+            Log.i("[MainActivity]", "fromSharedNickName String 값이 default값일 때");
+        } else {
+            logIn.setText(fromSharedNickName + "'S");
+            Log.i("[MainActivity]", "fromSharedNickName String 값을 쉐어드에서 가져왔을 때 : " + fromSharedNickName);
+        }
+        Log.i("[Main]", "login.getText.toString() : " + logIn.getText().toString());
+        if (logIn.getText().toString().equals("null'S")) {
+            logIn.setText("LOG IN");
+        }
+
+        // 쉐어드로부터 가져온 닉네임 길이에 따라서 글자 사이즈 설정
         if (fromSharedNickName.length() > 20) {
             logIn.setTextSize(10);
         } else if (fromSharedNickName.length() > 12) {
@@ -82,8 +105,12 @@ public class MainActivity extends AppCompatActivity {
             logIn.setTextSize(15);
         }
 
+
+        // 카카오 유저 정보 가져오기
         getKakaoUserInfo();
 
+
+        // 구글 로그인
         gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail().build();
@@ -105,8 +132,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        Intent intent = getIntent();
-
+        // PICK 액티비티로 가는 버튼
         select = findViewById(R.id.selectableButton);
         select.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // COMMENT 액티비티로 가는 버튼
         comment = findViewById(R.id.commentButton);
         comment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,25 +155,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        fromSignUpNickName = intent.getStringExtra("nickname");
-
-
-        if (!fromSharedNickName.equals("LOG IN")) {
-            logIn.setText(fromSharedNickName);
-        }
-
-        if (fromSharedNickName.equals("LOG IN")) {
-            logIn.setText(intent.getStringExtra("nickname") + "'S");
-            Log.i("[MainActivity]", "fromSharedNickName String 값이 default값일 때");
-        } else {
-            logIn.setText(fromSharedNickName + "'S");
-            Log.i("[MainActivity]", "fromSharedNickName String 값을 쉐어드에서 가져왔을 때 : " + fromSharedNickName);
-        }
-        Log.i("[Main]", "login.getText.toString() : " + logIn.getText().toString());
-        if (logIn.getText().toString().equals("null'S")) {
-            logIn.setText("LOG IN");
-        }
-
+        // LOG IN || User 버튼
         logIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -205,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        // 메인 재생 버튼
         play = findViewById(R.id.mainPlayButton);
         play.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -252,6 +262,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // 메인 오른쪽 화살표 버튼 (랜덤 플레이 버튼)
         rightPlayBtn = findViewById(R.id.rightPlayButton);
         rightPlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -347,62 +358,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void closePlayer() {
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
-    }
 
-    private void playAudio() {
-        closePlayer();
-        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.waves);
-        mediaPlayer.start();
-        Toast.makeText(this, "재생 중", Toast.LENGTH_SHORT).show();
-    }
-
-    private void resumeAudio() {
-        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
-            mediaPlayer.seekTo(playPosition);
-            mediaPlayer.start();
-
-            Toast.makeText(this, "재시작", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void pauseAudio() {
-        if (mediaPlayer != null) {
-            playPosition = mediaPlayer.getCurrentPosition();
-            mediaPlayer.pause();
-
-            Log.i("[MAIN]", "stopAudio");
-
-            Toast.makeText(this, "일시정지", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void stopAudio() {
-        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
-
-            Log.i("[MAIN]", "stopAudio");
-
-
-//            Toast.makeText(this, "중지됨.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-    void signOut() {
-        gsc.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(Task<Void> task) {
-                finish();
-                // 괜찮을지 모르겠네
-                startActivity(new Intent(MainActivity.this, MainActivity.class));
-            }
-        });
-    }
 
     protected void onStart() {
         super.onStart();
@@ -458,6 +414,67 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void closePlayer() {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
+
+    private void playAudio() {
+        closePlayer();
+        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.waves);
+        mediaPlayer.start();
+        Toast.makeText(this, "재생 중", Toast.LENGTH_SHORT).show();
+    }
+
+    private void resumeAudio() {
+        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
+            mediaPlayer.seekTo(playPosition);
+            mediaPlayer.start();
+
+            Toast.makeText(this, "재시작", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Media Player 관련 메서드들
+    private void pauseAudio() {
+        if (mediaPlayer != null) {
+            playPosition = mediaPlayer.getCurrentPosition();
+            mediaPlayer.pause();
+
+            Log.i("[MAIN]", "stopAudio");
+
+            Toast.makeText(this, "일시정지", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void stopAudio() {
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+
+            Log.i("[MAIN]", "stopAudio");
+
+
+//            Toast.makeText(this, "중지됨.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    // 구글 로그아웃
+    void signOut() {
+        gsc.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(Task<Void> task) {
+                finish();
+                // 괜찮을지 모르겠네
+                startActivity(new Intent(MainActivity.this, MainActivity.class));
+            }
+        });
+    }
+
+
+    // 카카오 유저 정보 가져오는 메서드
     public void getKakaoUserInfo() {
         String TAG = "getUserInfo()";
         UserApiClient.getInstance().me((user, meError) -> {
