@@ -210,7 +210,8 @@ public class MainActivity extends AppCompatActivity {
 
                 String playState = play.getText().toString();
                 random = new Random();
-                rPlay = random.nextInt();
+                rPlay = random.nextInt(4) + 1;
+                // 하지만 재생 중일 때는 일시정지가 아니라 랜덤 재생으로 될 것 같은데?
 
 //                playAudio();
 
@@ -221,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
 
                     if (mediaPlayer == null) {
                         mediaPlayer = MediaPlayer.create(getApplicationContext()
-                                ,R.raw.friendlikeme);
+                                , R.raw.friendlikeme);
                         mediaPlayer.start();
                     } else if (!mediaPlayer.isPlaying()) {
                         mediaPlayer.seekTo(playPosition);
@@ -242,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
                     if (mediaPlayer != null) {
                         mediaPlayer.pause();
                         playPosition = mediaPlayer.getCurrentPosition();
-                        Log.d("[PAUSE CHECK]","" + playPosition);
+                        Log.d("[PAUSE CHECK]", "" + playPosition);
                     }
 
                 }
@@ -257,26 +258,26 @@ public class MainActivity extends AppCompatActivity {
                 stopAudio();
                 closePlayer();
 
-                Log.i("[MAIN]","Right Play Button onClick() *Random Play");
+                Log.i("[MAIN]", "Right Play Button onClick() *Random Play");
 
                 random = new Random();
                 rPlay = random.nextInt(4) + 1;
                 play.setText("▶");
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                play.setText("❚❚");
+//                try {
+//                    Thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
 
-                Log.i("[MAIN]","int rPlay Check : " + rPlay);
+                Log.i("[MAIN]", "int rPlay Check : " + rPlay);
 
                 if (rPlay == 1) {
-                    Log.i("[MAIN]","friendLikeMe 재생");
+                    Log.i("[MAIN]", "friendLikeMe 재생");
+                    play.setText("❚❚");
 
                     if (mediaPlayer == null) {
                         mediaPlayer = MediaPlayer.create(getApplicationContext()
-                                ,R.raw.friendlikeme);
+                                , R.raw.friendlikeme);
                         mediaPlayer.start();
                     } else if (!mediaPlayer.isPlaying()) {
                         mediaPlayer.seekTo(playPosition);
@@ -284,11 +285,12 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 } else if (rPlay == 2) {
-                    Log.i("[MAIN]","waves 재생");
+                    Log.i("[MAIN]", "waves 재생");
+                    play.setText("❚❚");
 
                     if (mediaPlayer == null) {
                         mediaPlayer = MediaPlayer.create(getApplicationContext()
-                                ,R.raw.waves);
+                                , R.raw.waves);
                         mediaPlayer.start();
                     } else if (!mediaPlayer.isPlaying()) {
                         mediaPlayer.seekTo(playPosition);
@@ -296,11 +298,12 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 } else if (rPlay == 3) {
-                    Log.i("[MAIN]","bonfire 재생");
+                    Log.i("[MAIN]", "bonfire 재생");
+                    play.setText("❚❚");
 
                     if (mediaPlayer == null) {
                         mediaPlayer = MediaPlayer.create(getApplicationContext()
-                                ,R.raw.bonfire);
+                                , R.raw.bonfire);
                         mediaPlayer.start();
                     } else if (!mediaPlayer.isPlaying()) {
                         mediaPlayer.seekTo(playPosition);
@@ -308,11 +311,12 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 } else if (rPlay == 4) {
-                    Log.i("[MAIN]","rain 재생");
+                    Log.i("[MAIN]", "rain 재생");
+                    play.setText("❚❚");
 
                     if (mediaPlayer == null) {
                         mediaPlayer = MediaPlayer.create(getApplicationContext()
-                                ,R.raw.rain);
+                                , R.raw.rain);
                         mediaPlayer.start();
                     } else if (!mediaPlayer.isPlaying()) {
                         mediaPlayer.seekTo(playPosition);
@@ -354,17 +358,17 @@ public class MainActivity extends AppCompatActivity {
             playPosition = mediaPlayer.getCurrentPosition();
             mediaPlayer.pause();
 
-            Log.i("[MAIN]","stopAudio");
+            Log.i("[MAIN]", "stopAudio");
 
             Toast.makeText(this, "일시정지", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void stopAudio() {
-        if(mediaPlayer != null && mediaPlayer.isPlaying()){
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
 
-            Log.i("[MAIN]","stopAudio");
+            Log.i("[MAIN]", "stopAudio");
 
 
 //            Toast.makeText(this, "중지됨.", Toast.LENGTH_SHORT).show();
