@@ -1,9 +1,5 @@
 package com.example.playlist;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +16,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -28,7 +28,6 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.user.model.Account;
-import com.kakao.sdk.user.model.User;
 
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -58,6 +57,8 @@ public class SignUp extends AppCompatActivity {
     ImageView kakaoBtn;
     Button kakaoBtnMent;
 
+    public final String TAG = "[Sign Up Activity]";
+
     String fromEditId, fromEditPw, fromEditPwCheck, fromEditNickName;
 
     String idShared, pwShared, pwCheckShared, nickNameShared;
@@ -67,22 +68,28 @@ public class SignUp extends AppCompatActivity {
 
     static Context signCtx;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        Log.e("회원가입 [Sign Up]", "onCreate");
+        Log.i(TAG, "onCreate()");
 
+
+        // final static context
         signCtx = this;
 
-
+//        카카오 키 해시 받음 (아래에 getKeyHash() 메서드 존재)
 //        Log.d("KeyHash", getKeyHash());
 
+
+        // 카카오 로그인
         kakaoBtn = findViewById(R.id.kakaoBtn);
         kakaoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("[Sign Up]", "kakaoBtn.onClick");
+                Log.i("[Sign Up]", "카카오 로그인 이미지뷰 선택");
 
                 if (UserApiClient.getInstance().isKakaoTalkLoginAvailable(SignUp.this)) {
                     kakaoLogin();
@@ -92,11 +99,12 @@ public class SignUp extends AppCompatActivity {
             }
         });
 
+        // 카카오 로그인
         kakaoBtnMent = findViewById(R.id.kakaoBtnMent);
         kakaoBtnMent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("[Sign Up]", "kakaoBtnMent.onClick");
+                Log.i("[Sign Up]", "카카오 로그인 텍스트뷰 선택");
 
                 if (UserApiClient.getInstance().isKakaoTalkLoginAvailable(SignUp.this)) {
                     kakaoLogin();
@@ -113,21 +121,28 @@ public class SignUp extends AppCompatActivity {
                 .requestEmail().build();
         gsc = GoogleSignIn.getClient(this, gso);
 
+        // 구글 로그인
         googleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("[Sign Up]", "구글 로그인 이미지뷰 선택");
+
                 signIn();
             }
         });
 
+        // 구글 로그인
         googleBtnMent = findViewById(R.id.googleBtnMent);
         googleBtnMent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("[Sign Up]", "구글 로그인 텍스트뷰 선택");
+
                 signIn();
             }
         });
 
+        // 쉐어드
         shared = getSharedPreferences("signUp", Activity.MODE_PRIVATE);
         editor = shared.edit();
 
@@ -144,19 +159,23 @@ public class SignUp extends AppCompatActivity {
         fromEditPwCheck = pwCheck.getText().toString();
         fromEditNickName = nickName.getText().toString();
 
+        // ALREAD HAVE AN ID 버튼
         goHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("[Sign Up]", "goHome 버튼 클릭");
+
                 Intent intent = new Intent(SignUp.this, MainActivity.class);
 
                 startActivity(intent);
             }
         });
 
+        // NOW PAGE 제출 버튼
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Log.i("[Sign Up]", "현재 페이지 회원가입 내용 기입 후 제출 버튼 클릭");
 
                 int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
                 if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
@@ -166,8 +185,8 @@ public class SignUp extends AppCompatActivity {
                             pw.getText().toString().trim().length() == 4 &&
                             pwCheck.getText().toString().trim().length() == 4 &&
                             nickName.getText().toString().trim().length() >= 2) {
-                        if (pw.getText().toString().equals(pwCheck.getText().toString())) {
 
+                        if (pw.getText().toString().equals(pwCheck.getText().toString())) {
                             // get 방식 파라미터 추가
                             HttpUrl.Builder urlBuilder = HttpUrl.parse("http://43.201.105.106/signUp.php").newBuilder();
                             urlBuilder.addQueryParameter("ver", "1.0"); // 예시
@@ -191,6 +210,9 @@ public class SignUp extends AppCompatActivity {
 
                             // 응답 콜백
                             client.newCall(request).enqueue(new Callback() {
+
+
+
 
                                 @Override
                                 public void onFailure(Call call, IOException e) {
@@ -297,6 +319,7 @@ public class SignUp extends AppCompatActivity {
 
     }
 
+    // 구글 로그인
     void signIn() {
         Intent signInIntent = gsc.getSignInIntent();
         startActivityForResult(signInIntent, 1000);
@@ -343,27 +366,27 @@ public class SignUp extends AppCompatActivity {
 
     protected void onStart() {
         super.onStart();
-        Log.e("회원가입 [Sign Up]", "onStart");
+       Log.i(TAG, "onStart()");
     }
 
     protected void onResume() {
         super.onResume();
-        Log.e("회원가입 [Sign Up]", "onResume");
+        Log.i(TAG, "onResume()");
     }
 
     protected void onPause() {
         super.onPause();
-        Log.e("회원가입 [Sign Up]", "onPause");
+        Log.i(TAG, "onPause()");
     }
 
     protected void onStop() {
         super.onStop();
-        Log.e("회원가입 [Sign Up]", "onStop");
+        Log.i(TAG, "onStop()");
     }
 
     protected void onDestroy() {
         super.onDestroy();
-        Log.e("회원가입 [Sign Up]", "onDestroy");
+        Log.i(TAG, "onDestroy()");
     }
 
     // 카카오 로그인 공통 callback 구성

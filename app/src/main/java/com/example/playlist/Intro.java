@@ -1,30 +1,18 @@
 package com.example.playlist;
 
-import static com.google.android.gms.common.util.ClientLibraryUtils.getPackageInfo;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.kakao.sdk.user.UserApiClient;
-import com.kakao.sdk.user.model.Account;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 public class Intro extends AppCompatActivity {
 
@@ -38,17 +26,21 @@ public class Intro extends AppCompatActivity {
     SharedPreferences shared;
     SharedPreferences.Editor editor;
 
+    public final String TAG = "[Intro Activity]";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
+        Log.i(TAG, "onCreate()");
+
 
         gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail().build();
         gsc = GoogleSignIn.getClient(this, gso);
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
-        Log.i("[MainActivity]", "acct : " + acct);
+        Log.i("[Main Activity]", "acct : " + acct);
         if (acct != null) {
             String personName = acct.getDisplayName();
             String personEmail = acct.getEmail();
@@ -80,6 +72,31 @@ public class Intro extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart()");
+    }
+
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume()");
+    }
+
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause()");
+    }
+
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop()");
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy()");
     }
 
 }

@@ -1,10 +1,9 @@
 package com.example.playlist;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -23,12 +22,15 @@ public class Profile extends Activity {
 
     String fromSharedNickName;
 
+    public final String TAG = "[Profile Activity]";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_profile);
+        Log.i(TAG, "onCreate()");
 
         shared = getSharedPreferences("signUp", MODE_PRIVATE);
         editor = shared.edit();
@@ -120,5 +122,30 @@ public class Profile extends Activity {
             }
         });
 
+    }
+
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart()");
+    }
+
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume()");
+    }
+
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause()");
+    }
+
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop()");
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy()");
     }
 }

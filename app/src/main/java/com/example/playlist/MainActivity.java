@@ -55,13 +55,15 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences shared;
     SharedPreferences.Editor editor;
 
+    public final String TAG = "[Main Activity]";
+
     public static Context mainCtx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.e("메인 [MainActivity]", "onCreate");
+        Log.i(TAG, "onCreate()");
 
         // final static Context
         mainCtx = this;
@@ -80,16 +82,17 @@ public class MainActivity extends AppCompatActivity {
             logIn.setText(fromSharedNickName);
         }
 
+
         // LOGIN 버튼
         logIn = findViewById(R.id.logInButton);
 
         // 쉐어드로부터 가져온 닉네임 비교해서 logIn 버튼 이름 설정
         if (fromSharedNickName.equals("LOG IN")) {
             logIn.setText(intent.getStringExtra("nickname") + "'S");
-            Log.i("[MainActivity]", "fromSharedNickName String 값이 default값일 때");
+            Log.i(TAG, "fromSharedNickName String 값이 default값일 때");
         } else {
             logIn.setText(fromSharedNickName + "'S");
-            Log.i("[MainActivity]", "fromSharedNickName String 값을 쉐어드에서 가져왔을 때 : " + fromSharedNickName);
+            Log.i(TAG, "fromSharedNickName String 값을 쉐어드에서 가져왔을 때 : " + fromSharedNickName);
         }
         Log.i("[Main]", "login.getText.toString() : " + logIn.getText().toString());
         if (logIn.getText().toString().equals("null'S")) {
@@ -116,12 +119,12 @@ public class MainActivity extends AppCompatActivity {
                 .requestEmail().build();
         gsc = GoogleSignIn.getClient(this, gso);
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
-        Log.i("[MainActivity]", "acct : " + acct);
+        Log.i(TAG, "acct : " + acct);
         if (acct != null) {
             personName = acct.getDisplayName();
             personEmail = acct.getEmail();
-            Log.i("[MainActivity]", "personName : " + personName);
-            Log.i("[MainActivity]", "personEmail : " + personEmail);
+            Log.i(TAG, "personName : " + personName);
+            Log.i(TAG, "personEmail : " + personEmail);
 
             editor.putString("nickName", personName);
             editor.commit();
@@ -137,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
         select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i(TAG,"PICK 버튼 클릭");
                 Intent intent = new Intent(MainActivity.this, Selectable.class);
 
                 startActivity(intent);
@@ -148,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // comment
+                Log.i(TAG,"Comment 버튼 클릭");
                 Intent intent = new Intent(MainActivity.this, Comment.class);
 
                 startActivity(intent);
@@ -160,8 +164,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Log.i(TAG,"LOG IN || User 클릭");
 
                 if (logIn.getText().toString().equals("LOG IN")) {
+
+                    Log.i(TAG,"버튼 이름이 [LOG IN]일 때");
 
                     Intent intent = new Intent(MainActivity.this, LogIn.class);
 
@@ -171,7 +178,12 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
 
                 } else {
-                    // Dialog "로그아웃 하시겠습니까?"
+
+                    Log.i(TAG,"버튼 이름이 [LOG IN]이 아닐 때");
+
+
+
+
                     AlertDialog.Builder builder
                             = new AlertDialog.Builder(mainCtx);
 
@@ -180,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
                     builder.setPositiveButton("NO", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Log.i("[MainActivity]", "프로필/로그아웃 선택창 취소");
+                            Log.i(TAG, "프로필/로그아웃 선택창 취소");
                         }
                     });
 
@@ -188,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Log.i("[MainActivity]", "로그아웃 취소");
+                                    Log.i(TAG, "프로필 선택");
                                     Intent profileIntent = new Intent(MainActivity.this, Profile.class);
                                     startActivity(profileIntent);
                                 }
@@ -198,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Log.i("[MainActivity]", "로그아웃 완료");
+                                    Log.i(TAG, "로그아웃 선택");
 
                                     signOut();
                                     kakaoLogout();
@@ -213,6 +225,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // 메인 왼쪽 화살표 버튼 (직전 음악 재생)
+        leftPlayBtn = findViewById(R.id.leftPlayButton);
+        leftPlayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG,"leftPlay 버튼 클릭");
+
+            }
+        });
+
 
         // 메인 재생 버튼
         play = findViewById(R.id.mainPlayButton);
@@ -224,8 +246,11 @@ public class MainActivity extends AppCompatActivity {
                 random = new Random();
                 rPlay = random.nextInt(4) + 1;
                 // 하지만 재생 중일 때는 일시정지가 아니라 랜덤 재생으로 될 것 같은데? 어떻게 할까
+                // String 변수에 첫 재생 제목을 받아서 조건식을 세워줄까?
+
 
 //                playAudio();
+
 
                 if (!playState.equals("❚❚")) {
                     Log.i("메인 플레이 버튼 클릭", "일시정지가 아닐 때");
@@ -252,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
 
 //                    pauseAudio();
 
+
                     if (mediaPlayer != null) {
                         mediaPlayer.pause();
                         playPosition = mediaPlayer.getCurrentPosition();
@@ -262,25 +288,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
         // 메인 오른쪽 화살표 버튼 (랜덤 플레이 버튼)
         rightPlayBtn = findViewById(R.id.rightPlayButton);
         rightPlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                Log.i(TAG, "RightPlay 버튼 클릭");
+
                 stopAudio();
                 closePlayer();
 
-                Log.i("[MAIN]", "Right Play Button onClick() *Random Play");
 
                 random = new Random();
                 rPlay = random.nextInt(4) + 1;
                 play.setText("▶");
-//                try {
-//                    Thread.sleep(1000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
 
                 Log.i("[MAIN]", "int rPlay Check : " + rPlay);
 
@@ -362,7 +386,8 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onStart() {
         super.onStart();
-        Log.e("메인 [MainActivity]", "onStart");
+        Log.i(TAG, "onStart()");
+
 
         logIn = findViewById(R.id.logInButton);
         gso = new GoogleSignInOptions
@@ -373,32 +398,33 @@ public class MainActivity extends AppCompatActivity {
         if (acct != null) {
             personName = acct.getDisplayName();
             personEmail = acct.getEmail();
-            Log.i("[MainActivity]", "personName : " + personName);
-            Log.i("[MainActivity]", "personEmail : " + personEmail);
+            Log.i(TAG, "personName : " + personName);
+            Log.i(TAG, "personEmail : " + personEmail);
             logIn.setText(personName);
             logIn.setTextSize(13);
         }
 
     }
 
+
     protected void onResume() {
         super.onResume();
-        Log.e("메인 [MainActivity]", "onResume");
+        Log.i(TAG, "onResume()");
     }
 
     protected void onPause() {
         super.onPause();
-        Log.e("메인 [MainActivity]", "onPause");
+        Log.i(TAG, "onPause()");
     }
 
     protected void onStop() {
         super.onStop();
-        Log.e("메인 [MainActivity]", "onStop");
+        Log.i(TAG, "onStop()");
     }
 
     protected void onDestroy() {
         super.onDestroy();
-        Log.e("메인 [MainActivity]", "onDestroy");
+        Log.i(TAG, "onDestroy()");
     }
 
     // 카카오 로그아웃

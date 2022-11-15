@@ -2,12 +2,6 @@ package com.example.playlist;
 
 //import androidx.appcompat.app.AlertDialog;
 
-import android.app.AlertDialog;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -24,17 +18,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
-import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -44,7 +38,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import retrofit2.Retrofit;
 
 public class LogIn extends Activity {
 
@@ -68,11 +61,16 @@ public class LogIn extends Activity {
     SharedPreferences shared;
     SharedPreferences.Editor editor;
 
+    public final String TAG = "[LogIn Activity]";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_log_in);
+
+        Log.i(TAG, "onCreate()");
+
 
         ctx = this;
 
@@ -216,6 +214,34 @@ public class LogIn extends Activity {
             }
         });
     }
+
+
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart()");
+    }
+
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume()");
+    }
+
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause()");
+    }
+
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop()");
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy()");
+    }
+
+
 
     // 액티비티 전환 함수
     // 인텐트 액티비티 전환함수
