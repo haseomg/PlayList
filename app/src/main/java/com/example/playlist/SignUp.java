@@ -29,6 +29,10 @@ import com.google.android.gms.tasks.Task;
 import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.user.model.Account;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -41,6 +45,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class SignUp extends AppCompatActivity {
 
@@ -67,7 +73,6 @@ public class SignUp extends AppCompatActivity {
     SharedPreferences.Editor editor;
 
     static Context signCtx;
-
 
 
     @Override
@@ -210,8 +215,6 @@ public class SignUp extends AppCompatActivity {
 
                             // 응답 콜백
                             client.newCall(request).enqueue(new Callback() {
-
-
 
 
                                 @Override
@@ -366,7 +369,7 @@ public class SignUp extends AppCompatActivity {
 
     protected void onStart() {
         super.onStart();
-       Log.i(TAG, "onStart()");
+        Log.i(TAG, "onStart()");
     }
 
     protected void onResume() {
@@ -398,9 +401,14 @@ public class SignUp extends AppCompatActivity {
             } else if (oAuthToken != null) {
                 Log.i(TAG, "로그인 성공(토큰) : " + oAuthToken.getAccessToken());
                 getUserInfo();
+
+                // 성공하면 테이블에 데이터 삽입
+                registerMe();
             }
             return null;
         });
+
+
 //        Log.i("[SignUp]","kakao login");
 //        UserApiClient.getInstance().loginWithKakaoTalk(SignUp.this, (oAuthToken, error) -> {
 //            if (error != null) {
@@ -421,10 +429,75 @@ public class SignUp extends AppCompatActivity {
             } else if (oAuthToken != null) {
                 Log.i(TAG, "로그인 성공(토큰) : " + oAuthToken.getAccessToken());
                 getUserInfo();
+
+                // 성공하면 테이블에 데이터 삽입
+                registerMe();
             }
             return null;
         });
     }
+
+    public void registerMe() {
+        final String id = userEmailCut[0];
+        final String nickname = userEmailCut[0];
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(RegisterInterface.REGIST_URL)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .build();
+
+        RegisterInterface api = retrofit.create(RegisterInterface.class);
+        retrofit2.Call<String> call = api.getUserRegist(id, nickname);
+        call.enqueue(new Callback<String>() {
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.e("onSuccess", response.body());
+
+                    String jsonResponse = response.body();
+                    try {
+                        parseRegData(jsonResponse);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(@NonNull retrofit2.Call<String> call, @NonNull Throwable t) {
+                Log.e(TAG, "에러 = " + t.getMessage());
+            }
+        });
+    }
+
+    private void parseRegData(String response) throws JSONException {
+        JSONObject jsonObject = new JSONObject(response);
+        if (jsonObject.optString("status").equals("true")) {
+            saveInfo(response);
+            Toast.makeText(SignUp.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(SignUp.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void saveInfo(String response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            if (jsonObject.getString("status").equals("true")) {
+                JSONArray dataArray = jsonObject.getJSONArray("data");
+                for (int i = 0; i < dataArray.length(); i++) {
+                    JSONObject dataobj = dataArray.getJSONObject(i);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void getUserInfo() {
         String TAG = "getUserInfo()";
@@ -443,6 +516,18 @@ public class SignUp extends AppCompatActivity {
                 Account user1 = user.getKakaoAccount();
                 System.out.println("사용자 계정 : " + user1);
                 System.out.println("사용자 계정.toString : " + user1.toString());
+                Log.i("[KAKAO userEmail]", "" + user1.getEmail());
+
+                String userID = user1.getEmail();
+                String[] userEmailCut = userID.split("@");
+
+                final String id = userEmailCut[0];
+                final String nickname = userEmailCut[0];
+
+                Log.i("[KAKAO userID]", "" + user1.getEmail());
+                // id를 DB에 넘겨줄 거야
+                Log.i("[KAKAO userID]", "" + id);
+
 
                 Intent intent = new Intent(SignUp.this, MainActivity.class);
                 startActivityForResult(intent, 1000);
