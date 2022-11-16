@@ -78,13 +78,13 @@ public class MainActivity extends AppCompatActivity {
         // 쉐어드로부터 가져온 닉네임
         fromSharedNickName = shared.getString("nickName", "LOG IN");
 
+        // LOGIN 버튼
+        logIn = findViewById(R.id.logInButton);
+
         if (!fromSharedNickName.equals("LOG IN")) {
             logIn.setText(fromSharedNickName);
         }
 
-
-        // LOGIN 버튼
-        logIn = findViewById(R.id.logInButton);
 
         // 쉐어드로부터 가져온 닉네임 비교해서 logIn 버튼 이름 설정
         if (fromSharedNickName.equals("LOG IN")) {
@@ -231,6 +231,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG,"leftPlay 버튼 클릭");
+
+//                if (song)
 
             }
         });
