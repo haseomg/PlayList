@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         // LOGIN 버튼
         logIn = findViewById(R.id.logInButton);
 
+
         if (!fromSharedNickName.equals("LOG IN")) {
             logIn.setText(fromSharedNickName);
         }
