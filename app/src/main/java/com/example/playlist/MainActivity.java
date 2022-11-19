@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // 카카오 유저 정보 가져오기
-        getKakaoUserInfo();
+        getUserInfo();
 
 
         // 구글 로그인
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG,"PICK 버튼 클릭");
+                Log.i(TAG, "PICK 버튼 클릭");
                 Intent intent = new Intent(MainActivity.this, Selectable.class);
 
                 startActivity(intent);
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG,"Comment 버튼 클릭");
+                Log.i(TAG, "Comment 버튼 클릭");
                 Intent intent = new Intent(MainActivity.this, Comment.class);
 
                 startActivity(intent);
@@ -165,11 +165,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Log.i(TAG,"LOG IN || User 클릭");
+                Log.i(TAG, "LOG IN || User 클릭");
 
                 if (logIn.getText().toString().equals("LOG IN")) {
 
-                    Log.i(TAG,"버튼 이름이 [LOG IN]일 때");
+                    Log.i(TAG, "버튼 이름이 [LOG IN]일 때");
 
                     Intent intent = new Intent(MainActivity.this, LogIn.class);
 
@@ -180,9 +180,7 @@ public class MainActivity extends AppCompatActivity {
 
                 } else {
 
-                    Log.i(TAG,"버튼 이름이 [LOG IN]이 아닐 때");
-
-
+                    Log.i(TAG, "버튼 이름이 [LOG IN]이 아닐 때");
 
 
                     AlertDialog.Builder builder
@@ -231,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
         leftPlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG,"leftPlay 버튼 클릭");
+                Log.i(TAG, "leftPlay 버튼 클릭");
 
 //                if (song)
 
@@ -290,7 +288,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
 
 
         // 메인 오른쪽 화살표 버튼 (랜덤 플레이 버튼)
@@ -384,7 +381,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
 
 
     protected void onStart() {
@@ -504,7 +500,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     // 카카오 유저 정보 가져오는 메서드
-    public void getKakaoUserInfo() {
+    public void getUserInfo() {
         String TAG = "getUserInfo()";
         UserApiClient.getInstance().me((user, meError) -> {
             if (meError != null) {

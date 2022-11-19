@@ -29,10 +29,6 @@ import com.google.android.gms.tasks.Task;
 import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.user.model.Account;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -45,8 +41,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class SignUp extends AppCompatActivity {
 
@@ -57,6 +51,7 @@ public class SignUp extends AppCompatActivity {
 
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
+
     ImageView googleBtn;
     Button googleBtnMent;
 
@@ -403,7 +398,7 @@ public class SignUp extends AppCompatActivity {
                 getUserInfo();
 
                 // 성공하면 테이블에 데이터 삽입
-                registerMe();
+//                registerMe();
             }
             return null;
         });
@@ -431,72 +426,72 @@ public class SignUp extends AppCompatActivity {
                 getUserInfo();
 
                 // 성공하면 테이블에 데이터 삽입
-                registerMe();
+//                registerMe();
             }
             return null;
         });
     }
 
-    public void registerMe() {
-        final String id = userEmailCut[0];
-        final String nickname = userEmailCut[0];
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(RegisterInterface.REGIST_URL)
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .build();
-
-        RegisterInterface api = retrofit.create(RegisterInterface.class);
-        retrofit2.Call<String> call = api.getUserRegist(id, nickname);
-        call.enqueue(new Callback<String>() {
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-
-                if (response.isSuccessful() && response.body() != null) {
-                    Log.e("onSuccess", response.body());
-
-                    String jsonResponse = response.body();
-                    try {
-                        parseRegData(jsonResponse);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-            }
-
-            @Override
-            public void onFailure(@NonNull retrofit2.Call<String> call, @NonNull Throwable t) {
-                Log.e(TAG, "에러 = " + t.getMessage());
-            }
-        });
-    }
-
-    private void parseRegData(String response) throws JSONException {
-        JSONObject jsonObject = new JSONObject(response);
-        if (jsonObject.optString("status").equals("true")) {
-            saveInfo(response);
-            Toast.makeText(SignUp.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(SignUp.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void saveInfo(String response) {
-        try {
-            JSONObject jsonObject = new JSONObject(response);
-            if (jsonObject.getString("status").equals("true")) {
-                JSONArray dataArray = jsonObject.getJSONArray("data");
-                for (int i = 0; i < dataArray.length(); i++) {
-                    JSONObject dataobj = dataArray.getJSONObject(i);
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void registerMe() {
+//        final String id = userEmailCut[0];
+//        final String nickname = userEmailCut[0];
+//
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(RegisterInterface.REGIST_URL)
+//                .addConverterFactory(ScalarsConverterFactory.create())
+//                .build();
+//
+//        RegisterInterface api = retrofit.create(RegisterInterface.class);
+//        retrofit2.Call<String> call = api.getUserRegist(id, nickname);
+//        call.enqueue(new Callback<String>() {
+//
+//            @Override
+//            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+//
+//                if (response.isSuccessful() && response.body() != null) {
+//                    Log.e("onSuccess", response.body());
+//
+//                    String jsonResponse = response.body();
+//                    try {
+//                        parseRegData(jsonResponse);
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(@NonNull retrofit2.Call<String> call, @NonNull Throwable t) {
+//                Log.e(TAG, "에러 = " + t.getMessage());
+//            }
+//        });
+//    }
+//
+//    private void parseRegData(String response) throws JSONException {
+//        JSONObject jsonObject = new JSONObject(response);
+//        if (jsonObject.optString("status").equals("true")) {
+//            saveInfo(response);
+//            Toast.makeText(SignUp.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
+//        } else {
+//            Toast.makeText(SignUp.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+//        }
+//    }
+//
+//    private void saveInfo(String response) {
+//        try {
+//            JSONObject jsonObject = new JSONObject(response);
+//            if (jsonObject.getString("status").equals("true")) {
+//                JSONArray dataArray = jsonObject.getJSONArray("data");
+//                for (int i = 0; i < dataArray.length(); i++) {
+//                    JSONObject dataobj = dataArray.getJSONObject(i);
+//                }
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
     public void getUserInfo() {
@@ -521,8 +516,84 @@ public class SignUp extends AppCompatActivity {
                 String userID = user1.getEmail();
                 String[] userEmailCut = userID.split("@");
 
+
+                // kakao_api DB에 넘겨줘야 해!
                 final String id = userEmailCut[0];
                 final String nickname = userEmailCut[0];
+
+
+//                // get 방식 파라미터 추가
+//                HttpUrl.Builder urlBuilder = HttpUrl.parse("http://43.201.105.106/kakaoLogin.php").newBuilder();
+//                urlBuilder.addQueryParameter("ver", "1.0"); // 예시
+//                String url = urlBuilder.build().toString();
+//                Log.i("[SignUp Activity]", "String url 확인 : " + url);
+//
+//                // POST 파라미터 추가
+//                RequestBody formBody = new FormBody.Builder()
+//                        .add("id", id.trim())
+//                        .add("nickname", nickname.trim())
+//                        .build();
+//
+//                // 요청 만들기
+//                OkHttpClient client = new OkHttpClient();
+//                Request request = new Request.Builder()
+//                        .url(url)
+//                        .post(formBody)
+//                        .build();
+//
+//                // 응답 콜백
+//                client.newCall(request).enqueue(new Callback() {
+//                    @Override
+//                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+//                        e.printStackTrace();
+//                        Log.i("[kakao Login]", "" + e);
+//                    }
+//
+//                    @Override
+//                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+//                        Log.i("[kakao Login]", "onResponse 메서드 작동");
+//
+//                        // 서브 스레드 Ui 변경 할 경우 에러
+//                        // 메인스레드 Ui 설정
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//
+//                                try {
+//
+//
+//
+//                                    if (!response.isSuccessful()) {
+//                                        // 응답 실패
+//                                        Log.i("[kakao Login]","응답 실패 : " + response);
+//                                        Toast.makeText(getApplicationContext(),"네트워크 문제 발생"
+//                                        , Toast.LENGTH_SHORT).show();
+//                                    } else {
+//                                        // 응답 성공
+//                                        final String responseData = response.body().string();
+//                                        Log.i("[kakao Login]","응답 성공 (responseData) : " + responseData);
+//
+//                                        if (responseData.equals("1")) {
+//
+//
+//                                          }
+//
+//
+//                                    }
+//
+//
+//
+//                                } catch (Exception e) {
+//                                }
+//                            }
+//                        });
+//                    }
+//                });
+//
+
+
+
+
 
                 Log.i("[KAKAO userID]", "" + user1.getEmail());
                 // id를 DB에 넘겨줄 거야
