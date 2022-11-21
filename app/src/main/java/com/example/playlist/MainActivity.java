@@ -259,8 +259,8 @@ public class MainActivity extends AppCompatActivity {
                     play.setTextSize(45);
 
                     if (mediaPlayer == null) {
-                        mediaPlayer = MediaPlayer.create(getApplicationContext()
-                                , R.raw.friendlikeme);
+//                        mediaPlayer = MediaPlayer.create(getApplicationContext()
+//                                , R.raw.friendlikeme);
                         mediaPlayer.start();
                     } else if (!mediaPlayer.isPlaying()) {
                         mediaPlayer.seekTo(playPosition);
@@ -313,8 +313,8 @@ public class MainActivity extends AppCompatActivity {
                     play.setText("❚❚");
 
                     if (mediaPlayer == null) {
-                        mediaPlayer = MediaPlayer.create(getApplicationContext()
-                                , R.raw.friendlikeme);
+//                        mediaPlayer = MediaPlayer.create(getApplicationContext()
+//                                , R.raw.friendlikeme);
 
                         String song = "friendlikeme";
 
@@ -332,8 +332,8 @@ public class MainActivity extends AppCompatActivity {
                     play.setText("❚❚");
 
                     if (mediaPlayer == null) {
-                        mediaPlayer = MediaPlayer.create(getApplicationContext()
-                                , R.raw.waves);
+//                        mediaPlayer = MediaPlayer.create(getApplicationContext()
+//                                , R.raw.waves);
 
                         String song = "waves";
 
@@ -348,8 +348,8 @@ public class MainActivity extends AppCompatActivity {
                     play.setText("❚❚");
 
                     if (mediaPlayer == null) {
-                        mediaPlayer = MediaPlayer.create(getApplicationContext()
-                                , R.raw.bonfire);
+//                        mediaPlayer = MediaPlayer.create(getApplicationContext()
+//                                , R.raw.bonfire);
 
                         String song = "bonfire";
 
@@ -364,8 +364,8 @@ public class MainActivity extends AppCompatActivity {
                     play.setText("❚❚");
 
                     if (mediaPlayer == null) {
-                        mediaPlayer = MediaPlayer.create(getApplicationContext()
-                                , R.raw.rain);
+//                        mediaPlayer = MediaPlayer.create(getApplicationContext()
+//                                , R.raw.rain);
 
                         String song = "rain";
 
@@ -448,7 +448,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void playAudio() {
         closePlayer();
-        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.waves);
+//        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.waves);
         mediaPlayer.start();
         Toast.makeText(this, "재생 중", Toast.LENGTH_SHORT).show();
     }
