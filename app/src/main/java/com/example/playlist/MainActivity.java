@@ -244,10 +244,23 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 String playState = play.getText().toString();
+                int rPlayList[] = new int[8];
                 random = new Random();
-                rPlay = random.nextInt(4) + 1;
-                // 하지만 재생 중일 때는 일시정지가 아니라 랜덤 재생으로 될 것 같은데? 어떻게 할까
-                // String 변수에 첫 재생 제목을 받아서 조건식을 세워줄까?
+                for (int i = 0; i < 8; i++) {
+//                    rPlay = random.nextInt(8) + 1;
+//                    Log.i(TAG, "Random Number For Music Play : " + rPlay);
+
+                    rPlayList[i] = random.nextInt(8) + 1;
+                    for (int j = 0; j < i; j++) {
+                        if (rPlayList[i] == rPlayList[j]) {
+                            i--;
+                        }
+                    }
+                }
+                for (int b = 0; b < 3; b++) {
+                    Log.i(TAG, "Random Number For Music Play : " + rPlayList[b]);
+                }
+                // 첫 재생시 재생목록 3개만 생성해보자 (현재 곡 개수 8개)
 
 
 //                playAudio();
@@ -258,14 +271,14 @@ public class MainActivity extends AppCompatActivity {
                     play.setText("❚❚");
                     play.setTextSize(45);
 
-                    if (mediaPlayer == null) {
-//                        mediaPlayer = MediaPlayer.create(getApplicationContext()
-//                                , R.raw.friendlikeme);
-                        mediaPlayer.start();
-                    } else if (!mediaPlayer.isPlaying()) {
-                        mediaPlayer.seekTo(playPosition);
-                        mediaPlayer.start();
-                    }
+//                    if (mediaPlayer == null) {
+////                        mediaPlayer = MediaPlayer.create(getApplicationContext()
+////                                , R.raw.friendlikeme);
+//                        mediaPlayer.start();
+//                    } else if (!mediaPlayer.isPlaying()) {
+//                        mediaPlayer.seekTo(playPosition);
+//                        mediaPlayer.start();
+//                    }
 
 //                    resumeAudio();
 
@@ -279,11 +292,12 @@ public class MainActivity extends AppCompatActivity {
 //                    pauseAudio();
 
 
-                    if (mediaPlayer != null) {
-                        mediaPlayer.pause();
-                        playPosition = mediaPlayer.getCurrentPosition();
-                        Log.d("[PAUSE CHECK]", "" + playPosition);
-                    }
+//                    if (mediaPlayer != null) {
+//                        mediaPlayer.pause();
+//                        playPosition = mediaPlayer.getCurrentPosition();
+//                        Log.d("[PAUSE CHECK]", "" + playPosition);
+//                    }
+
 
                 }
             }
