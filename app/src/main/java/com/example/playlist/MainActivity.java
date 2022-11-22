@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     String personName;
     String personEmail;
+    String playlistNum;
 
     String fromSignUpNickName;
     String fromSharedNickName;
@@ -244,32 +245,63 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 String playState = play.getText().toString();
-                int rPlayList[] = new int[8];
-                random = new Random();
-                for (int i = 0; i < 8; i++) {
-//                    rPlay = random.nextInt(8) + 1;
-//                    Log.i(TAG, "Random Number For Music Play : " + rPlay);
-
-                    rPlayList[i] = random.nextInt(8) + 1;
-                    for (int j = 0; j < i; j++) {
-                        if (rPlayList[i] == rPlayList[j]) {
-                            i--;
-                        }
-                    }
-                }
-                for (int b = 0; b < 3; b++) {
-                    Log.i(TAG, "Random Number For Music Play : " + rPlayList[b]);
-                }
-                // 첫 재생시 재생목록 3개만 생성해보자 (현재 곡 개수 8개)
-
 
 //                playAudio();
+
+                // 첫 재생시 재생목록 3개만 생성해보자 (현재 곡 개수 8개)
+                // 재생목록 어떻게 보여줄까?
 
 
                 if (!playState.equals("❚❚")) {
                     Log.i("메인 플레이 버튼 클릭", "일시정지가 아닐 때");
                     play.setText("❚❚");
                     play.setTextSize(45);
+
+
+
+
+                    int rPlayList[] = new int[8];
+                    random = new Random();
+                    for (int i = 0; i < 8; i++) {
+//                    rPlay = random.nextInt(8) + 1;
+//                    Log.i(TAG, "Random Number For Music Play : " + rPlay);
+
+                        rPlayList[i] = random.nextInt(8) + 1;
+                        for (int j = 0; j < i; j++) {
+                            if (rPlayList[i] == rPlayList[j]) {
+                                i--;
+                            }
+                        }
+                    }
+                    playlistNum = "";
+                    // b < ? = ? 부분은 총 뽑아낼 랜덤 숫자 조건
+                    for (int b = 0; b < 1; b++) {
+                        Log.i(TAG, "Random Number For Music Play : " + rPlayList[b]);
+
+                        playlistNum = playlistNum + rPlayList[b];
+                    }
+
+
+                    if (playlistNum.equals("1")) {
+                        Log.i(TAG,"랜덤 추출 숫자가 1일 때");
+                    } else if (playlistNum.equals("2")) {
+                        Log.i(TAG,"랜덤 추출 숫자가 2일 때");
+                    } else if (playlistNum.equals("3")) {
+                        Log.i(TAG,"랜덤 추출 숫자가 3일 때");
+                    } else if (playlistNum.equals("4")) {
+                        Log.i(TAG,"랜덤 추출 숫자가 4일 때");
+                    } else if (playlistNum.equals("5")) {
+                        Log.i(TAG,"랜덤 추출 숫자가 5일 때");
+                    } else if (playlistNum.equals("6")) {
+                        Log.i(TAG,"랜덤 추출 숫자가 6일 때");
+                    } else if (playlistNum.equals("7")) {
+                        Log.i(TAG,"랜덤 추출 숫자가 7일 때");
+                    } else if (playlistNum.equals("8")) {
+                        Log.i(TAG,"랜덤 추출 숫자가 8일 때");
+                    }
+                    Log.i(TAG, "String playlistNum : " + playlistNum);
+                    playlistNum = "";
+
 
 //                    if (mediaPlayer == null) {
 ////                        mediaPlayer = MediaPlayer.create(getApplicationContext()
