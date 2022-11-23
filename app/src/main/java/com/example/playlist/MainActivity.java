@@ -1,14 +1,20 @@
 package com.example.playlist;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -47,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
     Button comment;
     Button logIn;
 
+    TextView songTime;
+    TextView mainLogo;
+
     private Button play;
     private MediaPlayer mediaPlayer;
     private int playPosition = 0;
@@ -59,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
     String personName;
     String personEmail;
+    int firstplayNum;
     int playlistNum;
 
     String fromSignUpNickName;
@@ -68,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
 
     SharedPreferences shared;
     SharedPreferences.Editor editor;
+
+    private ProgressDialog progressDialog;
+    ProgressDialog mProgressDialog;
 
     public final String TAG = "[Main Activity]";
 
@@ -296,22 +309,41 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
                             }
-                            playlistNum = 0;
+                            firstplayNum = 0;
                             // b < ? = ? 부분은 총 뽑아낼 랜덤 숫자 조건
                             for (int b = 0; b < 1; b++) {
-                                Log.i(TAG, "Random Number For Music Play : " + rPlayList[b]);
+                                Log.i(TAG, "Random Number For Music Play (1) : " + rPlayList[b]);
 
-                                playlistNum = playlistNum + rPlayList[b];
+                                firstplayNum = firstplayNum + rPlayList[b];
                             }
 
-                            Log.i(TAG, "랜덤 추출 숫자 : " + playlistNum);
-                            String castNum = Integer.toString(playlistNum);
+                            playlistNum = 0;
+                            String numAdd = "-";
+                            for (int c = 0; c < 4; c++) {
+                                Log.i(TAG, "Random Number For Playlist (2) : " + rPlayList[c]);
 
-                            // get 방식 파라미터 추가
+//                                playlistNum = playlistNum + rPlayList[c];
+                                numAdd = numAdd + rPlayList[c] + "-";
+                            }
+
+                            Log.i(TAG, "랜덤 추출 숫자 : " + firstplayNum);
+                            Log.i(TAG, "랜덤 추출 숫자들 : " + numAdd);
+
+                            String castNum = Integer.toString(firstplayNum);
+                            Log.i(TAG, "String castNum 확인 : " + castNum);
+
+//                             get 방식 파라미터 추가
                             HttpUrl.Builder urlBuilder = HttpUrl.parse("http://43.201.105.106/file_sampling.php").newBuilder();
                             urlBuilder.addQueryParameter("ver", "1.0");
                             String url = urlBuilder.build().toString();
                             Log.i(TAG, "String url 확인 : " + url);
+
+                            // 직접 통신인데..
+                            Uri.Builder builder = new Uri.Builder()
+                                    .appendQueryParameter("num", castNum);
+                            String postParams = builder.build().getEncodedQuery();
+                            new getJSONData().execute("http://43.201.105.106" + "/file_sampling.php", postParams);
+
 
                             // post 파라미터 추가
                             RequestBody formBody = new FormBody.Builder()
@@ -335,6 +367,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                                    Log.i(TAG, "play callback onResponse");
 
                                     // 서브 스레드 UI 변경할 경우 에러
                                     // 메인 스레드 UI 설정
@@ -346,8 +379,9 @@ public class MainActivity extends AppCompatActivity {
 
                                                 if (!response.isSuccessful()) {
                                                     // 응답 실패
-                                                    Log.i("tag", "응답 실패");
+                                                    Log.e("tag", "응답 실패 : " + response);
                                                     Toast.makeText(getApplicationContext(), "네트워크 문제 발생", Toast.LENGTH_SHORT).show();
+
                                                 } else {
                                                     // 응답 성공
                                                     Log.i("tag", "응답 성공");
@@ -359,10 +393,75 @@ public class MainActivity extends AppCompatActivity {
                                                     } else {
                                                         Log.i("[Main]", "responseData 가 1이 아닐 때 : " + responseData);
 //                                                        startActivityString(MainActivity.class, "nickname", responseData);
+
+                                                        String songInfo = responseData;
+                                                        Log.i(TAG, "String songInfo 확인 : " + songInfo);
+                                                        String[] songCut = songInfo.split("@@@0");
+
+                                                        String path = songCut[0];
+                                                        String time = songCut[1];
+
+                                                        String[] songName = path.split("/");
+                                                        String name = songName[4];
+
+
+                                                        Log.i(TAG, "song name 확인 : " + name);
+                                                        Log.i(TAG, "song path 확인 : " + path);
+                                                        Log.i(TAG, "song time 확인 : " + time);
+
+//                                                          경로 가져와서 음악 재생 시켜준 뒤
+//                                                          초수 세팅
+
+                                                        closePlayer();
+                                                        mediaPlayer = new MediaPlayer();
+                                                        Log.i(TAG, "MediaPlayer 생성");
+
+                                                        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                                        Log.i(TAG, "mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)");
+
+                                                        String uri = "http://43.201.105.106" + path;
+                                                        mediaPlayer.setDataSource(uri);
+                                                        Log.i(TAG, "mediaPlayer.setDataSource(path)");
+
+                                                        mediaPlayer.prepareAsync();
+                                                        Log.i(TAG, "mediaPlayer.prepareAsync()");
+
+                                                        mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+                                                        Log.i(TAG, "mediaPlayer.setWakeMode");
+
+                                                        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                                            @Override
+                                                            public void onPrepared(MediaPlayer mp) {
+                                                                Log.i(TAG, "mediaPlayer.setOnPreparedListener");
+                                                                mediaPlayer.start();
+                                                                Log.i(TAG, "mediaPlayer.start()");
+                                                            }
+                                                        });
+
+
+                                                        Log.i(TAG, "mediaPlayer.start");
+
+                                                        Toast.makeText(getApplicationContext(), "재생 중", Toast.LENGTH_SHORT).show();
+
+
+                                                        songTime = findViewById(R.id.mainToPlayTime);
+                                                        songTime.setText(time);
+
+                                                        String[] exceptMp3 = name.split(".mp3");
+                                                        String justName = exceptMp3[0];
+                                                        // _ <- 이거를 공백으로 대체할 수 있을까?
+
+                                                        Log.i(TAG, "song just name 확인 : " + justName);
+
+
+                                                        mainLogo = findViewById(R.id.mainLogo);
+                                                        mainLogo.setText(justName);
+
                                                         if (!responseData.equals(0)) {
-                                                            editor.putString("nickName", responseData);
-                                                            ((MainActivity) MainActivity.mainCtx).logIn.setText(responseData);
-                                                            editor.commit();
+//                                                            responserData " + " 기준으로 잘라줘야 해
+                                                            Log.i("[Main]", "responseData 가 0이 아닐 때 : " + responseData);
+
+
                                                         }
                                                     }
                                                 }
@@ -379,35 +478,35 @@ public class MainActivity extends AppCompatActivity {
                             });
 
 
-//                    if (playlistNum.equals("1")) {
+//                    if (firstplayNum.equals("1")) {
 //                        Log.i(TAG, "랜덤 추출 숫자가 1일 때");
 //                        // 랜덤 추출 숫자 => 서버로 보내고
 //                        // music 테이블의 랜덤 추출 숫자에 맞는 num의 path 가져오기
 
 
-//                    } else if (playlistNum.equals("2")) {
+//                    } else if (firstplayNum.equals("2")) {
 //                        Log.i(TAG, "랜덤 추출 숫자가 2일 때");
 //
-//                    } else if (playlistNum.equals("3")) {
+//                    } else if (firstplayNum.equals("3")) {
 //                        Log.i(TAG, "랜덤 추출 숫자가 3일 때");
 //
-//                    } else if (playlistNum.equals("4")) {
+//                    } else if (firstplayNum.equals("4")) {
 //                        Log.i(TAG, "랜덤 추출 숫자가 4일 때");
 //
-//                    } else if (playlistNum.equals("5")) {
+//                    } else if (firstplayNum.equals("5")) {
 //                        Log.i(TAG, "랜덤 추출 숫자가 5일 때");
 //
-//                    } else if (playlistNum.equals("6")) {
+//                    } else if (firstplayNum.equals("6")) {
 //                        Log.i(TAG, "랜덤 추출 숫자가 6일 때");
 //
-//                    } else if (playlistNum.equals("7")) {
+//                    } else if (firstplayNum.equals("7")) {
 //                        Log.i(TAG, "랜덤 추출 숫자가 7일 때");
 //
-//                    } else if (playlistNum.equals("8")) {
+//                    } else if (firstplayNum.equals("8")) {
 //                        Log.i(TAG, "랜덤 추출 숫자가 8일 때");
 //                    }
-//                    Log.i(TAG, "String playlistNum : " + playlistNum);
-//                            playlistNum = 0;
+//                    Log.i(TAG, "String firstplayNum : " + firstplayNum);
+//                            firstplayNum = 0;
 
 
 //                        첫 재생 playAudio
@@ -752,4 +851,32 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    class getJSONData extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            mProgressDialog = new ProgressDialog(MainActivity.this);
+            mProgressDialog.setTitle("Music Streaming");
+            mProgressDialog.setMessage("Loading...");
+            mProgressDialog.setIndeterminate(false);
+            mProgressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+//            return null;
+            try {
+                return PHPComm.getJson(params[0], params[1]);
+            } catch (Exception e) {
+                return new String("Exception : " + e.getMessage());
+            }
+        }
+
+        protected void onPostExecute(String result) {
+//            showList(result);
+            mProgressDialog.dismiss();
+        }
+    }
 }
