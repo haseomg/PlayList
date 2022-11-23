@@ -154,6 +154,8 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "personName : " + personName);
             Log.i(TAG, "personEmail : " + personEmail);
 
+            googleInsertTable();
+
             editor.putString("nickName", personName);
             editor.commit();
 
@@ -332,17 +334,28 @@ public class MainActivity extends AppCompatActivity {
                             String castNum = Integer.toString(firstplayNum);
                             Log.i(TAG, "String castNum 확인 : " + castNum);
 
-//                             get 방식 파라미터 추가
-                            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://43.201.105.106/file_sampling.php").newBuilder();
-                            urlBuilder.addQueryParameter("ver", "1.0");
-                            String url = urlBuilder.build().toString();
-                            Log.i(TAG, "String url 확인 : " + url);
+
+
+
 
                             // 직접 통신인데..
                             Uri.Builder builder = new Uri.Builder()
                                     .appendQueryParameter("num", castNum);
                             String postParams = builder.build().getEncodedQuery();
                             new getJSONData().execute("http://43.201.105.106" + "/file_sampling.php", postParams);
+
+
+
+
+
+
+
+//                             get 방식 파라미터 추가
+                            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://43.201.105.106/file_sampling.php").newBuilder();
+                            urlBuilder.addQueryParameter("ver", "1.0");
+                            String url = urlBuilder.build().toString();
+                            Log.i(TAG, "String url 확인 : " + url);
+
 
 
                             // post 파라미터 추가
@@ -419,9 +432,16 @@ public class MainActivity extends AppCompatActivity {
                                                         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                                                         Log.i(TAG, "mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)");
 
+
+
+
                                                         String uri = "http://43.201.105.106" + path;
                                                         mediaPlayer.setDataSource(uri);
                                                         Log.i(TAG, "mediaPlayer.setDataSource(path)");
+
+
+
+
 
                                                         mediaPlayer.prepareAsync();
                                                         Log.i(TAG, "mediaPlayer.prepareAsync()");
@@ -793,6 +813,7 @@ public class MainActivity extends AppCompatActivity {
     public void getUserInfo() {
         String TAG = "getUserInfo()";
         UserApiClient.getInstance().me((user, meError) -> {
+
             if (meError != null) {
                 Log.e(TAG, "사용자 정보 요청 실패", meError);
 //                logIn.setText("LOG IN");
@@ -851,6 +872,87 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    void googleInsertTable() {
+        int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
+        if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
+            // get 방식 파라미터 추가
+            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://43.201.105.106/googleLogin.php").newBuilder();
+            urlBuilder.addQueryParameter("ver", "1.0"); // 예시
+            String url = urlBuilder.build().toString();
+            Log.i("[Google]", "String url 확인 : " + url);
+
+            // POST 파라미터 추가
+            RequestBody formBody = new FormBody.Builder()
+                    .add("id", personName)
+                    .add("nickname", personName)
+                    .build();
+
+            // 요청 만들기
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(formBody)
+                    .build();
+
+            // 응답 콜백
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    e.printStackTrace();
+                    Log.i("[Google]", "" + e);
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    Log.i("[Google]", "onResponse 메서드 작동");
+
+                    // 서브 스레드 Ui 변경 할 경우 에러
+                    // 메인스레드 Ui 설정
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            try {
+
+
+                                if (!response.isSuccessful()) {
+                                    // 응답 실패
+                                    Log.i("[Google]", "응답 실패 : " + response);
+                                    Toast.makeText(getApplicationContext(), "네트워크 문제 발생"
+                                            , Toast.LENGTH_SHORT).show();
+                                } else {
+                                    // 응답 성공
+                                    final String responseData = response.body().string();
+                                    Log.i("[Google]", "응답 성공 (responseData) : " + responseData);
+
+                                    if (responseData.equals("1")) {
+                                        Log.i("[Google]", "responseData.equals(\"1\") else : " + responseData);
+//                                                Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
+//                                                startActivityflag(MainActivity.class);
+                                    } else {
+                                        Log.i("[Google]", "responseData.equals(\"0\") else : " + responseData);
+//                                                Toast.makeText(getApplicationContext(), "Sign Up Failed", Toast.LENGTH_SHORT).show();
+                                    }
+
+
+                                }
+
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+
+                }
+            });
+        }
+
+        Log.i(TAG,"GOOGLE INSERT INTO TABLE COMPLETE? CHECKING!");
+
+    }
+
     class getJSONData extends AsyncTask<String, Void, String> {
 
         @Override
@@ -866,8 +968,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
-//            return null;
             try {
+                Log.i(TAG, "PHPComm.getJson(params[0], params[1]) : " + PHPComm.getJson(params[0], params[1]));
                 return PHPComm.getJson(params[0], params[1]);
             } catch (Exception e) {
                 return new String("Exception : " + e.getMessage());
