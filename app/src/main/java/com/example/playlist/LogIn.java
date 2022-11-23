@@ -165,7 +165,7 @@ public class LogIn extends Activity {
                                     public void run() {
                                         try {
                                             // 프로그래스바 안보이게 처리
-//                                                                      findViewById(R.id.cpb).setVisibility(View.GONE);
+//                                             findViewById(R.id.cpb).setVisibility(View.GONE);
                                             if (!response.isSuccessful()) {
                                                 // 응답 실패
                                                 Log.i("tag", "응답 실패");

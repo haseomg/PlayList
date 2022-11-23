@@ -89,7 +89,7 @@ public class SignUp extends AppCompatActivity {
         kakaoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("[Sign Up]", "카카오 로그인 이미지뷰 선택");
+                Log.i("[TAG]", "카카오 로그인 이미지뷰 선택");
 
                 if (UserApiClient.getInstance().isKakaoTalkLoginAvailable(SignUp.this)) {
                     kakaoLogin();
@@ -104,7 +104,7 @@ public class SignUp extends AppCompatActivity {
         kakaoBtnMent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("[Sign Up]", "카카오 로그인 텍스트뷰 선택");
+                Log.i("[TAG]", "카카오 로그인 텍스트뷰 선택");
 
                 if (UserApiClient.getInstance().isKakaoTalkLoginAvailable(SignUp.this)) {
                     kakaoLogin();
@@ -125,7 +125,7 @@ public class SignUp extends AppCompatActivity {
         googleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("[Sign Up]", "구글 로그인 이미지뷰 선택");
+                Log.i("[TAG]", "구글 로그인 이미지뷰 선택");
 
                 signIn();
             }
@@ -136,7 +136,7 @@ public class SignUp extends AppCompatActivity {
         googleBtnMent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("[Sign Up]", "구글 로그인 텍스트뷰 선택");
+                Log.i("[TAG]", "구글 로그인 텍스트뷰 선택");
 
                 signIn();
             }
@@ -163,7 +163,7 @@ public class SignUp extends AppCompatActivity {
         goHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("[Sign Up]", "goHome 버튼 클릭");
+                Log.i("[TAG]", "goHome 버튼 클릭");
 
                 Intent intent = new Intent(SignUp.this, MainActivity.class);
 
@@ -175,7 +175,7 @@ public class SignUp extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("[Sign Up]", "현재 페이지 회원가입 내용 기입 후 제출 버튼 클릭");
+                Log.i("[TAG]", "현재 페이지 회원가입 내용 기입 후 제출 버튼 클릭");
 
                 int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
                 if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
