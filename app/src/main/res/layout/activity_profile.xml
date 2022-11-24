@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="350dp"
-    android:layout_height="150dp"
+    android:layout_height="300dp"
     android:background="#AAB9FF"
     android:layout_gravity="center"
     tools:context=".Profile">
@@ -50,19 +50,37 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <EditText
-        android:id="@+id/nickNameChangeEditText"
+    <TextView
+        android:id="@+id/nickNameTextView"
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:fontFamily="sans-serif-black"
+        android:gravity="center"
         android:hint="NOW NICKNAME"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.173"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileLayout"
+        app:layout_constraintVertical_bias="0.23000002" />
+
+    <EditText
+        android:id="@+id/nickNameEditText"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:background="#00FFFFFF"
+        android:fontFamily="sans-serif-black"
+        android:gravity="center"
+        android:hint="change"
         android:textColor="#7878E1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.173"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profileLayout"
-        app:layout_constraintVertical_bias="0.44" />
+        app:layout_constraintVertical_bias="0.23000002" />
 
     <Button
         android:id="@+id/nickNameChangeButton"
@@ -78,6 +96,21 @@
         app:layout_constraintHorizontal_bias="0.91"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profileLayout"
-        app:layout_constraintVertical_bias="0.45" />
+        app:layout_constraintVertical_bias="0.23000002" />
+
+    <Button
+        android:id="@+id/logOutBtn"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:background="#7878E1"
+        android:fontFamily="sans-serif-black"
+        android:text="Logout"
+        android:textColor="#AAB9FF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.85" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

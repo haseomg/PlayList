@@ -2,7 +2,6 @@ package com.example.playlist;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
@@ -18,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -209,46 +207,11 @@ public class MainActivity extends AppCompatActivity {
 
                 } else {
 
-                    Log.i(TAG, "버튼 이름이 [LOG IN]이 아닐 때");
+                    Log.i(TAG, "버튼 이름이 [LOG IN]이 아닐 때 || 사용자 이름'S일 때");
 
+                    Intent profileIntent = new Intent(MainActivity.this, Profile.class);
+                    startActivity(profileIntent);
 
-                    AlertDialog.Builder builder
-                            = new AlertDialog.Builder(mainCtx);
-
-                    builder.setTitle("선택하시겠습니까?");
-
-                    builder.setPositiveButton("NO", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Log.i(TAG, "프로필/로그아웃 선택창 취소");
-                        }
-                    });
-
-                    builder.setNeutralButton("[PROFILE]",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Log.i(TAG, "프로필 선택");
-                                    Intent profileIntent = new Intent(MainActivity.this, Profile.class);
-                                    startActivity(profileIntent);
-                                }
-                            });
-
-                    builder.setNegativeButton("[LOGOUT]",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Log.i(TAG, "로그아웃 선택");
-
-                                    signOut();
-                                    kakaoLogout();
-
-                                    logIn.setText("LOG IN");
-                                    editor.clear();
-                                    editor.commit();
-                                }
-                            });
-                    builder.show();
                 }
             }
         });
@@ -335,9 +298,6 @@ public class MainActivity extends AppCompatActivity {
                             Log.i(TAG, "String castNum 확인 : " + castNum);
 
 
-
-
-
                             // 직접 통신인데..
                             Uri.Builder builder = new Uri.Builder()
                                     .appendQueryParameter("num", castNum);
@@ -345,17 +305,11 @@ public class MainActivity extends AppCompatActivity {
                             new getJSONData().execute("http://43.201.105.106" + "/file_sampling.php", postParams);
 
 
-
-
-
-
-
 //                             get 방식 파라미터 추가
                             HttpUrl.Builder urlBuilder = HttpUrl.parse("http://43.201.105.106/file_sampling.php").newBuilder();
                             urlBuilder.addQueryParameter("ver", "1.0");
                             String url = urlBuilder.build().toString();
                             Log.i(TAG, "String url 확인 : " + url);
-
 
 
                             // post 파라미터 추가
@@ -433,14 +387,9 @@ public class MainActivity extends AppCompatActivity {
                                                         Log.i(TAG, "mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)");
 
 
-
-
                                                         String uri = "http://43.201.105.106" + path;
                                                         mediaPlayer.setDataSource(uri);
                                                         Log.i(TAG, "mediaPlayer.setDataSource(path)");
-
-
-
 
 
                                                         mediaPlayer.prepareAsync();
@@ -711,6 +660,8 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "personEmail : " + personEmail);
             logIn.setText(personName);
             logIn.setTextSize(13);
+        } else {
+            Log.i(TAG, "acct == null");
         }
 
     }
@@ -949,7 +900,7 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        Log.i(TAG,"GOOGLE INSERT INTO TABLE COMPLETE? CHECKING!");
+        Log.i(TAG, "GOOGLE INSERT INTO TABLE COMPLETE? CHECKING!");
 
     }
 
