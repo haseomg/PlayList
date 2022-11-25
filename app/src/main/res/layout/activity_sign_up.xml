@@ -25,7 +25,7 @@
             android:fontFamily="sans-serif-black"
             android:text="Sign Up"
             android:textColor="@color/white"
-            android:textSize="40sp"
+            android:textSize="35sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -62,6 +62,21 @@
         app:layout_constraintTop_toBottomOf="@+id/signUpIdEditText"
         app:layout_constraintVertical_bias="0.100000024" />
 
+
+    <TextView
+        android:id="@+id/pwInfoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:text="숫자 4자를 입력해주세요."
+        android:textColor="#191970"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.38"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpPwEditText"
+        app:layout_constraintVertical_bias="0.0" />
+
     <EditText
         android:id="@+id/signUpPwCheckEditText"
         android:layout_width="220dp"
@@ -76,6 +91,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signUpPwEditText"
         app:layout_constraintVertical_bias="0.100000024" />
+
+    <TextView
+        android:id="@+id/pwCheckInfoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:text="비밀번호가 일치하지않습니다."
+        android:textColor="#191970"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.43"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpPwCheckEditText"
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/signUpNickNameEditText"

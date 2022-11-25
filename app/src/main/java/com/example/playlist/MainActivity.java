@@ -299,6 +299,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                             // 직접 통신인데..
+                            // num 보내고
                             Uri.Builder builder = new Uri.Builder()
                                     .appendQueryParameter("num", castNum);
                             String postParams = builder.build().getEncodedQuery();

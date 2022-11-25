@@ -3,8 +3,8 @@ package com.example.playlist;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -51,27 +51,48 @@ public class Intro extends AppCompatActivity {
 
         nickNameFromShared = shared.getString("nickName", "LOG IN");
 
-        start = findViewById(R.id.introStartButton);
-        start.setOnClickListener(new View.OnClickListener() {
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void onClick(View v) {
-
-                Log.i("[Intro]", "nickNamFromShared String 값 확인 : " + nickNameFromShared);
-
-
+            public void run() {
                 if (acct != null || !nickNameFromShared.equals("LOG IN")) {
                     Log.i("[Intro]", "nickNameFromShared가 default값이 아닐 때");
 
                     Intent intent = new Intent(Intro.this, MainActivity.class);
                     startActivity(intent);
+                    finish();
+
                 } else if (nickNameFromShared.equals("LOG IN")) {
                     Log.i("[Intro]", "nickNameFromShared가 default값일 때");
-                    Intent intent = new Intent(Intro.this, SignUp.class);
 
+                    Intent intent = new Intent(Intro.this, SignUp.class);
                     startActivity(intent);
+                    finish();
                 }
             }
-        });
+        }, 2000);
+
+
+//        start = findViewById(R.id.introStartButton);
+//        start.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Log.i("[Intro]", "nickNamFromShared String 값 확인 : " + nickNameFromShared);
+//
+//
+//                if (acct != null || !nickNameFromShared.equals("LOG IN")) {
+//                    Log.i("[Intro]", "nickNameFromShared가 default값이 아닐 때");
+//
+//                    Intent intent = new Intent(Intro.this, MainActivity.class);
+//                    startActivity(intent);
+//                } else if (nickNameFromShared.equals("LOG IN")) {
+//                    Log.i("[Intro]", "nickNameFromShared가 default값일 때");
+//                    Intent intent = new Intent(Intro.this, SignUp.class);
+//
+//                    startActivity(intent);
+//                }
+//            }
+//        });
     }
 
     protected void onStart() {

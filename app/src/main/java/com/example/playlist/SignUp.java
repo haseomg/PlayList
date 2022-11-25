@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -47,6 +48,8 @@ public class SignUp extends AppCompatActivity {
     EditText id, pw, pwCheck, nickName;
     Button submit, goHome;
     String nickNameToMain;
+
+    TextView pwInfo, pwCheckInfo;
 
 
     GoogleSignInOptions gso;
@@ -150,6 +153,40 @@ public class SignUp extends AppCompatActivity {
         pw = findViewById(R.id.signUpPwEditText);
         pwCheck = findViewById(R.id.signUpPwCheckEditText);
         nickName = findViewById(R.id.signUpNickNameEditText);
+
+        pwInfo = findViewById(R.id.pwInfoTextView);
+        pwInfo.setVisibility(View.GONE);
+        pwCheckInfo = findViewById(R.id.pwCheckInfoTextView);
+        pwCheckInfo.setVisibility(View.GONE);
+
+//        pw.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.i(TAG, "pw.onClick");
+//                pwInfo.setVisibility(View.VISIBLE);
+//
+//                if (pw == null) {
+//                    Log.i(TAG, "pw == null");
+//
+//                } else {
+//                    Log.i(TAG, "pw != null");
+//
+//                    int pwNum = Integer.parseInt(pw.getText().toString());
+//                    Log.i(TAG, "pwNum Check : " + pwNum);
+//                    if (pwNum <= 9999 && pwNum >= 0000) {
+//                        Log.i(TAG, "pwNum <= 9999 일 때");
+//                        pwInfo.setText("사용가능합니다.");
+//                    }
+//                    if (pw == null) {
+//                        Log.i(TAG, "pw == null");
+//
+//                    } else {
+//                        pwInfo.setText("비밀번호를 숫자 4자로 맞춰주세요.");
+//                    }
+//                }
+//
+//            }
+//        });
 
         submit = findViewById(R.id.signUpSubmitButton);
         goHome = findViewById(R.id.goHomeButton);
@@ -605,7 +642,6 @@ public class SignUp extends AppCompatActivity {
                 Log.i("[KAKAO userID]", "" + user1.getEmail());
                 // id를 DB에 넘겨줄 거야
                 Log.i("[KAKAO userID]", "" + id);
-
 
 
 //                Intent intent = new Intent(SignUp.this, MainActivity.class);

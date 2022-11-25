@@ -204,7 +204,7 @@ public class Profile extends Activity {
 
                     builder.setTitle("Are you sure want to log out?");
 
-                    builder.setPositiveButton("[YES]",
+                    builder.setPositiveButton("YES",
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -222,7 +222,7 @@ public class Profile extends Activity {
                                 }
                             });
 
-                    builder.setNegativeButton("[NO]",
+                    builder.setNegativeButton("NO",
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {

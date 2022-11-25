@@ -89,7 +89,6 @@ public class LogIn extends Activity {
 //        });
 
 
-
         shared = getSharedPreferences("signUp", MODE_PRIVATE);
         editor = shared.edit();
 
@@ -125,10 +124,7 @@ public class LogIn extends Activity {
                     if (idEdit.getText().toString().trim().length() > 0 ||
                             pwEdit.getText().toString().trim().length() > 0) {
 
-                        // 프로그래스바 보이게 처리
-//                        findViewById(R.id.cpb).setVisibility(View.VISIBLE);
-
-                        // get방식 파라미터 추가
+                        // get 방식 파라미터 추가
                         HttpUrl.Builder urlBuilder = HttpUrl.parse("http://43.201.105.106/logIn.php").newBuilder();
                         urlBuilder.addQueryParameter("v", "1.0"); // 예시
                         String url = urlBuilder.build().toString();
@@ -139,7 +135,7 @@ public class LogIn extends Activity {
                                 .add("pw", pwEdit.getText().toString().trim())
                                 .build();
 
-                        // 요청 만들기
+                        // 요청
                         OkHttpClient client = new OkHttpClient();
                         Request request = new Request.Builder()
                                 .url(url)
@@ -210,6 +206,9 @@ public class LogIn extends Activity {
                     editor.commit();
 
                     finish();
+
+                    Toast.makeText(getApplicationContext(), idStr + "님 반갑습니다!",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -240,7 +239,6 @@ public class LogIn extends Activity {
         super.onDestroy();
         Log.i(TAG, "onDestroy()");
     }
-
 
 
     // 액티비티 전환 함수
