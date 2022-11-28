@@ -10,7 +10,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class PHPComm extends Activity {
-
     private static final String TAG = "[PHPComm]";
 
     public static String getJson(String serverUrl, String postParams) throws Exception {
