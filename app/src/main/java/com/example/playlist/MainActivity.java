@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         fromSignUpNickName = intent.getStringExtra("nickname");
 
         // 쉐어드로부터 가져온 닉네임
-        fromSharedNickName = shared.getString("nickName", "LOG IN");
+        fromSharedNickName = shared.getString("id", "LOG IN");
 
         // LOGIN 버튼
         logIn = findViewById(R.id.logInButton);
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
 
             googleInsertTable();
 
-            editor.putString("nickName", personName);
+            editor.putString("id", personName);
             editor.commit();
 
             logIn.setText(personName + "'S");
@@ -303,11 +303,11 @@ public class MainActivity extends AppCompatActivity {
                             Uri.Builder builder = new Uri.Builder()
                                     .appendQueryParameter("num", castNum);
                             String postParams = builder.build().getEncodedQuery();
-                            new getJSONData().execute("http://43.201.105.106" + "/file_sampling.php", postParams);
+                            new getJSONData().execute("http://43.201.69.32" + "/file_sampling.php", postParams);
 
 
 //                             get 방식 파라미터 추가
-                            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://43.201.105.106/file_sampling.php").newBuilder();
+                            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://43.201.69.32/file_sampling.php").newBuilder();
                             urlBuilder.addQueryParameter("ver", "1.0");
                             String url = urlBuilder.build().toString();
                             Log.i(TAG, "String url 확인 : " + url);
@@ -388,7 +388,7 @@ public class MainActivity extends AppCompatActivity {
                                                         Log.i(TAG, "mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)");
 
 
-                                                        String uri = "http://43.201.105.106" + path;
+                                                        String uri = "http://43.201.69.32" + path;
                                                         mediaPlayer.setDataSource(uri);
                                                         Log.i(TAG, "mediaPlayer.setDataSource(path)");
 
@@ -791,29 +791,29 @@ public class MainActivity extends AppCompatActivity {
 
                 if (!id.equals(fromSharedNickName) && !fromSharedNickName.equals("LOG IN")) {
                     logIn.setText(fromSharedNickName + "'S");
-                    editor.putString("nickName", fromSharedNickName);
+                    editor.putString("id", fromSharedNickName);
                     editor.commit();
                     Log.i("여긴가?", "");
                 } else if (fromSharedNickName.equals(null) || fromSharedNickName.equals("LOG IN")) {
-                    editor.putString("nickName", id);
+                    editor.putString("id", id);
                     editor.commit();
                     Log.i("여긴가? 22", "");
                 } else if (!id.equals(fromSharedNickName) && fromSharedNickName.equals("LOG IN")) {
                     logIn.setText(id + "'S");
-                    editor.putString("nickName", fromSharedNickName);
+                    editor.putString("id", fromSharedNickName);
                     editor.commit();
                     Log.i("여긴가? 33", "");
                 }
 
 
                 if (!fromSharedNickName.equals(null) || !fromSharedNickName.equals("LOG IN")) {
-                    editor.putString("nickName", fromSharedNickName);
+                    editor.putString("id", fromSharedNickName);
                     editor.commit();
                     Log.i("여긴가? 44", "");
                 }
                 if (!id.equals(fromSharedNickName) && fromSharedNickName.equals("LOG IN")) {
                     logIn.setText(id + "'S");
-                    editor.putString("nickName", id);
+                    editor.putString("id", id);
                     editor.commit();
                     Log.i("여긴가? 55", "");
                 }
@@ -821,6 +821,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
             return null;
+
         });
     }
 
@@ -828,7 +829,7 @@ public class MainActivity extends AppCompatActivity {
         int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
         if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
             // get 방식 파라미터 추가
-            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://43.201.105.106/googleLogin.php").newBuilder();
+            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://43.201.69.32/googleLogin.php").newBuilder();
             urlBuilder.addQueryParameter("ver", "1.0"); // 예시
             String url = urlBuilder.build().toString();
             Log.i("[Google]", "String url 확인 : " + url);

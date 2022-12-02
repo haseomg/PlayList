@@ -178,7 +178,7 @@ public class LogIn extends Activity {
                                                     Log.i("[Main]", "responseData 가 1이 아닐 때 : " + responseData);
                                                     startActivityString(MainActivity.class, "nickname", responseData);
                                                     if (!responseData.equals(0)) {
-                                                        editor.putString("nickName", responseData);
+                                                        editor.putString("id", responseData);
                                                         ((MainActivity) MainActivity.mainCtx).logIn.setText(responseData);
                                                         editor.commit();
                                                     }
@@ -201,14 +201,23 @@ public class LogIn extends Activity {
                     pwStr = pwEdit.getText().toString();
                     hideKeyboard();
 
-                    editor.putString("id", idStr);
-                    editor.putString("pw", pwStr);
-                    editor.commit();
+                    if (!idStr.equals("") || !pwStr.equals("")) {
 
-                    finish();
+                        editor.putString("id", idStr);
+                        editor.putString("pw", pwStr);
+                        editor.commit();
 
-                    Toast.makeText(getApplicationContext(), idStr + "님 반갑습니다!",
-                            Toast.LENGTH_SHORT).show();
+                        finish();
+
+                        ((MainActivity) MainActivity.mainCtx).logIn.setText(idStr + "'S");
+
+                        Toast.makeText(getApplicationContext(), idStr + "님 반갑습니다!",
+                                Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "아이디 및 비밀번호 입력이 필요합니다.",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });

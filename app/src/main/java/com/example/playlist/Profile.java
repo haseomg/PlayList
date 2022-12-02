@@ -65,7 +65,7 @@ public class Profile extends Activity {
         shared = getSharedPreferences("signUp", MODE_PRIVATE);
         editor = shared.edit();
 
-        fromSharedNickName = shared.getString("nickName", "LOG IN");
+        fromSharedNickName = shared.getString("id", "LOG IN");
 
         profileLogo = findViewById(R.id.profileLogo);
         nickName = findViewById(R.id.nickNameTextView);
@@ -137,7 +137,7 @@ public class Profile extends Activity {
                     } else {
                         Log.i(TAG, "닉네임 우측 버튼이 'change'가 아닐 때");
 
-                        editor.putString("nickName", nickNameChange.getText().toString());
+                        editor.putString("id", nickNameChange.getText().toString());
                         editor.commit();
                         Toast.makeText(getApplicationContext(), "닉네임이 " + nickNameChange.getText().toString() + "(으)로 변경되었습니다."
                                 , Toast.LENGTH_SHORT).show();
@@ -153,26 +153,26 @@ public class Profile extends Activity {
                         if (nickNameChange.getText().toString().length() > 12) {
                             profileLogo.setTextSize(20);
                             ((MainActivity) MainActivity.mainCtx).logIn.setTextSize(12);
-                            editor.putString("nickName", nickNameChange.getText().toString());
+                            editor.putString("id", nickNameChange.getText().toString());
                             editor.commit();
                         } else if (nickNameChange.getText().toString().length() > 5) {
                             profileLogo.setTextSize(25);
-                            editor.putString("nickName", nickNameChange.getText().toString());
+                            editor.putString("id", nickNameChange.getText().toString());
                             editor.commit();
                         } else if (nickNameChange.getText().toString().length() > 20) {
                             profileLogo.setTextSize(8);
                             ((MainActivity) MainActivity.mainCtx).logIn.setTextSize(9);
-                            editor.putString("nickName", nickNameChange.getText().toString());
+                            editor.putString("id", nickNameChange.getText().toString());
                             editor.commit();
                         } else if (nickNameChange.getText().toString().length() > 25) {
                             profileLogo.setTextSize(1);
                             ((MainActivity) MainActivity.mainCtx).logIn.setTextSize(10);
-                            editor.putString("nickName", nickNameChange.getText().toString());
+                            editor.putString("id", nickNameChange.getText().toString());
                             editor.commit();
                         } else if (fromSharedNickName.length() < 5) {
                             profileLogo.setTextSize(30);
                             ((MainActivity) MainActivity.mainCtx).logIn.setTextSize(15);
-                            editor.putString("nickName", nickNameChange.getText().toString());
+                            editor.putString("id", nickNameChange.getText().toString());
                             editor.commit();
                         }
 

@@ -49,7 +49,7 @@ public class Intro extends AppCompatActivity {
         shared = getSharedPreferences("signUp", MODE_PRIVATE);
         editor = shared.edit();
 
-        nickNameFromShared = shared.getString("nickName", "LOG IN");
+        nickNameFromShared = shared.getString("id", "LOG IN");
 
         new Handler().postDelayed(new Runnable() {
             @Override
