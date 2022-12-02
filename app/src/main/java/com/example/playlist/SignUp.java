@@ -571,11 +571,15 @@ public class SignUp extends AppCompatActivity {
                     String url = urlBuilder.build().toString();
                     Log.i("[kakao]", "String url 확인 : " + url);
 
+
+
                     // POST 파라미터 추가
                     RequestBody formBody = new FormBody.Builder()
                             .add("id", id.trim())
                             .add("nickname", nickname.trim())
                             .build();
+
+
 
                     // 요청 만들기
                     OkHttpClient client = new OkHttpClient();
@@ -583,6 +587,8 @@ public class SignUp extends AppCompatActivity {
                             .url(url)
                             .post(formBody)
                             .build();
+
+
 
                     // 응답 콜백
                     client.newCall(request).enqueue(new Callback() {
