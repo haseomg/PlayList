@@ -303,11 +303,11 @@ public class MainActivity extends AppCompatActivity {
                             Uri.Builder builder = new Uri.Builder()
                                     .appendQueryParameter("num", castNum);
                             String postParams = builder.build().getEncodedQuery();
-                            new getJSONData().execute("http://43.201.69.32" + "/file_sampling.php", postParams);
+                            new getJSONData().execute("http://54.180.123.224/" + "/file_sampling.php", postParams);
 
 
 //                             get 방식 파라미터 추가
-                            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://43.201.69.32/file_sampling.php").newBuilder();
+                            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.123.224/file_sampling.php").newBuilder();
                             urlBuilder.addQueryParameter("ver", "1.0");
                             String url = urlBuilder.build().toString();
                             Log.i(TAG, "String url 확인 : " + url);
@@ -829,7 +829,7 @@ public class MainActivity extends AppCompatActivity {
         int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
         if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
             // get 방식 파라미터 추가
-            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://43.201.69.32/googleLogin.php").newBuilder();
+            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.123.224/googleLogin.php").newBuilder();
             urlBuilder.addQueryParameter("ver", "1.0"); // 예시
             String url = urlBuilder.build().toString();
             Log.i("[Google]", "String url 확인 : " + url);
