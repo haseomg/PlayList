@@ -42,6 +42,7 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
+
     Random random;
     int rPlay;
     Button rightPlayBtn;
@@ -69,13 +70,14 @@ public class MainActivity extends AppCompatActivity {
     int firstplayNum;
     int playlistNum;
 
-    String fromSignUpNickName;
-    String fromSharedNickName;
 
     boolean playCheck = false;
 
     SharedPreferences shared;
     SharedPreferences.Editor editor;
+
+    String fromSignUpNickName;
+    String fromSharedNickName;
 
     private ProgressDialog progressDialog;
     ProgressDialog mProgressDialog;

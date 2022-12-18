@@ -29,6 +29,8 @@ android {
 
 dependencies {
 
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     // Kakao Login
     implementation "com.kakao.sdk:v2-user:2.8.3" // 카카오 로그인
     implementation "com.kakao.sdk:v2-talk:2.8.3" // 친구, 메시지(카카오톡)
