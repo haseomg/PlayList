@@ -86,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static Context mainCtx;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
