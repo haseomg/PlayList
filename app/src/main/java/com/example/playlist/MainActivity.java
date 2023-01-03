@@ -270,6 +270,7 @@ public class MainActivity extends AppCompatActivity {
 //                    rPlay = random.nextInt(8) + 1;
 //                    Log.i(TAG, "Random Number For Music Play : " + rPlay);
 
+
                                 rPlayList[i] = random.nextInt(8) + 1;
                                 for (int j = 0; j < i; j++) {
                                     if (rPlayList[i] == rPlayList[j]) {
