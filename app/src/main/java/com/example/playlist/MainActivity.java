@@ -45,12 +45,12 @@ public class MainActivity extends AppCompatActivity {
 
     Random random;
     int rPlay;
-    Button rightPlayBtn;
     Button leftPlayBtn;
+    Button rightPlayBtn;
 
+    Button logIn;
     Button select;
     Button comment;
-    Button logIn;
 
     TextView songTime;
     TextView mainLogo;
@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
     public final String TAG = "[Main Activity]";
 
     public static Context mainCtx;
-
 
 
     @Override
