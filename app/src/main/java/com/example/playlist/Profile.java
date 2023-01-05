@@ -28,7 +28,6 @@ public class Profile extends Activity {
     TextView nickName;
     EditText nickNameChange;
     Button nickNameChangeBtn;
-
     Button profileBackBtn;
     Button logOutBtn;
 
