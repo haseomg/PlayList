@@ -316,13 +316,11 @@ public class MainActivity extends AppCompatActivity {
                             String url = urlBuilder.build().toString();
                             Log.i(TAG, "String url 확인 : " + url);
 
-
                             // post 파라미터 추가
                             RequestBody formBody = new FormBody.Builder()
                                     .add("num", castNum.trim())
                                     .build();
                             // num을 보내고 -> 테이블의 num을 기준으로 path, name 가져올 거야
-
 
                             // 요청 만들기
                             OkHttpClient client = new OkHttpClient();
