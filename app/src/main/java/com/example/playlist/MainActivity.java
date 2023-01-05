@@ -323,12 +323,14 @@ public class MainActivity extends AppCompatActivity {
                                     .build();
                             // num을 보내고 -> 테이블의 num을 기준으로 path, name 가져올 거야
 
+
                             // 요청 만들기
                             OkHttpClient client = new OkHttpClient();
                             Request request = new Request.Builder()
                                     .url(url)
                                     .post(formBody)
                                     .build();
+
 
                             // 응답 콜백
                             client.newCall(request).enqueue(new Callback() {
