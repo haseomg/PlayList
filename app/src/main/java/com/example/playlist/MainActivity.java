@@ -43,8 +43,8 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
 
 
-    Random random;
     int rPlay;
+    Random random;
     Button leftPlayBtn;
     Button rightPlayBtn;
 
@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
     String personEmail;
     int firstplayNum;
     int playlistNum;
-
 
     boolean playCheck = false;
 
