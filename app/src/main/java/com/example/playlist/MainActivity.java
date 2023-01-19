@@ -42,7 +42,6 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-
     int rPlay;
     Random random;
     Button leftPlayBtn;
