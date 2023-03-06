@@ -13,6 +13,7 @@ import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
     ProgressDialog mProgressDialog;
+    SeekBar playTimeCheckBar;
 
     public final String TAG = "[Main Activity]";
 
@@ -99,31 +101,37 @@ public class MainActivity extends AppCompatActivity {
 
         // 받는 인텐트
         Intent intent = getIntent();
-        fromSignUpNickName = intent.getStringExtra("nickname");
+        fromSignUpNickName = intent.getStringExtra("nickName");
 
         // 쉐어드로부터 가져온 닉네임
         fromSharedNickName = shared.getString("id", "LOG IN");
+
 
         // LOGIN 버튼
         logIn = findViewById(R.id.logInButton);
 
 
         if (!fromSharedNickName.equals("LOG IN")) {
-            logIn.setText(fromSharedNickName);
+            logIn.setText(fromSharedNickName + "'S");
+            Log.i("logIn.setText Check1 : ",fromSharedNickName);
         }
 
 
         // 쉐어드로부터 가져온 닉네임 비교해서 logIn 버튼 이름 설정
         if (fromSharedNickName.equals("LOG IN")) {
             logIn.setText(intent.getStringExtra("nickname") + "'S");
+            Log.i("logIn.setText Check2 : ",intent.getStringExtra("nickname") + "'S");
             Log.i(TAG, "fromSharedNickName String 값이 default값일 때");
         } else {
             logIn.setText(fromSharedNickName + "'S");
+            Log.i("logIn.setText Check3 : ",fromSharedNickName);
             Log.i(TAG, "fromSharedNickName String 값을 쉐어드에서 가져왔을 때 : " + fromSharedNickName);
         }
         Log.i("[Main]", "login.getText.toString() : " + logIn.getText().toString());
         if (logIn.getText().toString().equals("null'S")) {
             logIn.setText("LOG IN");
+            Log.i("logIn.setText Check4 : ", logIn.getText().toString());
+
         }
 
         // 쉐어드로부터 가져온 닉네임 길이에 따라서 글자 사이즈 설정
@@ -155,10 +163,17 @@ public class MainActivity extends AppCompatActivity {
 
             googleInsertTable();
 
-            editor.putString("id", personName);
+
+            if (fromSharedNickName.equals("LOG IN")) {
+                editor.putString("id", personName);
+                logIn.setText(personName);
+                Log.i("logIn.setText Check5 : ",personName);
+            } else {
+                logIn.setText(fromSharedNickName + "'S");
+                Log.i("logIn.setText Check6 : ",fromSharedNickName);
+            }
             editor.commit();
 
-            logIn.setText(personName + "'S");
 
             // personEmail.setText
         }
@@ -305,11 +320,11 @@ public class MainActivity extends AppCompatActivity {
                             Uri.Builder builder = new Uri.Builder()
                                     .appendQueryParameter("num", castNum);
                             String postParams = builder.build().getEncodedQuery();
-                            new getJSONData().execute("http://54.180.123.224/" + "/file_sampling.php", postParams);
+                            new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
 
 
 //                             get 방식 파라미터 추가
-                            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.123.224/file_sampling.php").newBuilder();
+                            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/file_sampling.php").newBuilder();
                             urlBuilder.addQueryParameter("ver", "1.0");
                             String url = urlBuilder.build().toString();
                             Log.i(TAG, "String url 확인 : " + url);
@@ -661,7 +676,8 @@ public class MainActivity extends AppCompatActivity {
             personEmail = acct.getEmail();
             Log.i(TAG, "personName : " + personName);
             Log.i(TAG, "personEmail : " + personEmail);
-            logIn.setText(personName);
+//            logIn.setText(personName);
+            Log.i("logIn.setText Check7 : ",personName);
             logIn.setTextSize(13);
         } else {
             Log.i(TAG, "acct == null");
@@ -793,31 +809,29 @@ public class MainActivity extends AppCompatActivity {
 
                 if (!id.equals(fromSharedNickName) && !fromSharedNickName.equals("LOG IN")) {
                     logIn.setText(fromSharedNickName + "'S");
+                    Log.i("logIn.setText Check8 : ",fromSharedNickName);
                     editor.putString("id", fromSharedNickName);
                     editor.commit();
-                    Log.i("여긴가?", "");
                 } else if (fromSharedNickName.equals(null) || fromSharedNickName.equals("LOG IN")) {
                     editor.putString("id", id);
                     editor.commit();
-                    Log.i("여긴가? 22", "");
                 } else if (!id.equals(fromSharedNickName) && fromSharedNickName.equals("LOG IN")) {
                     logIn.setText(id + "'S");
+                    Log.i("logIn.setText Check9 : ",id);
                     editor.putString("id", fromSharedNickName);
                     editor.commit();
-                    Log.i("여긴가? 33", "");
                 }
 
 
                 if (!fromSharedNickName.equals(null) || !fromSharedNickName.equals("LOG IN")) {
                     editor.putString("id", fromSharedNickName);
                     editor.commit();
-                    Log.i("여긴가? 44", "");
                 }
                 if (!id.equals(fromSharedNickName) && fromSharedNickName.equals("LOG IN")) {
                     logIn.setText(id + "'S");
+                    Log.i("logIn.setText Check10 : ",id);
                     editor.putString("id", id);
                     editor.commit();
-                    Log.i("여긴가? 55", "");
                 }
 
 
@@ -831,7 +845,7 @@ public class MainActivity extends AppCompatActivity {
         int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
         if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
             // get 방식 파라미터 추가
-            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.123.224/googleLogin.php").newBuilder();
+            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/googleLogin.php").newBuilder();
             urlBuilder.addQueryParameter("ver", "1.0"); // 예시
             String url = urlBuilder.build().toString();
             Log.i("[Google]", "String url 확인 : " + url);

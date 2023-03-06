@@ -180,6 +180,7 @@ public class LogIn extends Activity {
                                                     if (!responseData.equals(0)) {
                                                         editor.putString("id", responseData);
                                                         ((MainActivity) MainActivity.mainCtx).logIn.setText(responseData);
+                                                        Log.i(TAG, "LogIn.setText Check One : " + responseData);
                                                         editor.commit();
                                                     }
                                                 }
@@ -209,6 +210,7 @@ public class LogIn extends Activity {
 
                         finish();
 
+                        Log.i(TAG, "LogIn.setText Check Two : " + idStr);
                         ((MainActivity) MainActivity.mainCtx).logIn.setText(idStr + "'S");
 
                         Toast.makeText(getApplicationContext(), idStr + "님 반갑습니다!",

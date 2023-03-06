@@ -225,7 +225,7 @@ public class SignUp extends AppCompatActivity {
 
                         if (pw.getText().toString().equals(pwCheck.getText().toString())) {
                             // get 방식 파라미터 추가
-                            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.123.224/signUp.php").newBuilder();
+                            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/signUp.php").newBuilder();
                             urlBuilder.addQueryParameter("ver", "1.0"); // 예시
                             String url = urlBuilder.build().toString();
                             Log.i("[SignUp Activity]", "String url 확인 : " + url);
@@ -298,7 +298,7 @@ public class SignUp extends AppCompatActivity {
                                                                 editor.putString("id", idShared);
                                                                 editor.putString("pw", pwShared);
                                                                 editor.putString("pwCheck", pwCheckShared);
-                                                                editor.putString("id", nickNameShared);
+                                                                editor.putString("nickName", nickNameShared);
                                                                 editor.commit();
 
 
@@ -566,7 +566,7 @@ public class SignUp extends AppCompatActivity {
                 int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
                 if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
                     // get 방식 파라미터 추가
-                    HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.123.224/kakaoLogin.php").newBuilder();
+                    HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/kakaoLogin.php").newBuilder();
                     urlBuilder.addQueryParameter("ver", "1.0"); // 예시
                     String url = urlBuilder.build().toString();
                     Log.i("[kakao]", "String url 확인 : " + url);

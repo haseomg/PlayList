@@ -180,6 +180,7 @@ public class Profile extends Activity {
                         nickNameChange.setVisibility(View.GONE);
                         nickNameChangeBtn.setText("change");
 
+
                     }
                 }
 
