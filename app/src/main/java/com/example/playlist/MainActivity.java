@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
@@ -57,7 +58,11 @@ public class MainActivity extends AppCompatActivity {
 
     private Button play;
     private MediaPlayer mediaPlayer;
-    private int playPosition = 0;
+    private int playPosition = -1;
+
+    // 프로그레스바 진행률을 위해 생성해준 변수들
+    private Runnable runnable;
+    private Handler handler;
 
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
@@ -80,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
     ProgressDialog mProgressDialog;
-    SeekBar playTimeCheckBar;
+    SeekBar mainSeekBar;
 
     public final String TAG = "[Main Activity]";
 
@@ -244,6 +249,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        handler = new Handler();
+
+        mainSeekBar = findViewById(R.id.mainSeekBar);
+        mainSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                //TODO 시크바를 조작하고 있는 중
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                //TODO 시크바를 처음 터치했을 때
+                Log.i(TAG, "시크바를 터치했을 때 선택된 값 : " + seekBar.getProgress());
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                //TODO 시크바 터치가 끝났을 때
+            }
+        });
 
         // 메인 재생 버튼
         play = findViewById(R.id.mainPlayButton);
@@ -251,7 +276,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i("메인 플레이 버튼 클릭", "");
-
 
                 String playState = play.getText().toString();
 
@@ -321,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
                             // 직접 통신인데..
                             // num 보내고
                             Uri.Builder builder = new Uri.Builder()
-                                    .appendQueryParameter("num", castNum); // TODO 2. 원래 1이 아니라 castNum으로 설정해야 한다.
+                                    .appendQueryParameter("num", castNum);
                             String postParams = builder.build().getEncodedQuery();
                             new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
 
@@ -384,7 +408,6 @@ public class MainActivity extends AppCompatActivity {
 
                                                         String songInfo = responseData;
                                                         Log.i(TAG, "String songInfo 확인 : " + songInfo);
-                                                        // TODO 1. songInfo가 곡의 내용을 담고 있지 않다.
                                                         String[] songCut = songInfo.split("@@@0");
 
                                                         String path = songCut[0];
@@ -398,14 +421,13 @@ public class MainActivity extends AppCompatActivity {
                                                         Log.i(TAG, "song path 확인 : " + path);
                                                         Log.i(TAG, "song time 확인 : " + time);
 
-                                                        // TODO 3.여기 까지 주석 나옴
-
 //                                                          경로 가져와서 음악 재생 시켜준 뒤
 //                                                          초수 세팅
 
                                                         // TODO 4.close Player 조건 잘 세워야 함
 //                                                        closePlayer();
                                                         mediaPlayer = new MediaPlayer();
+                                                        mediaPlayer.setLooping(true);
                                                         Log.i(TAG, "MediaPlayer 생성");
 
                                                         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -428,17 +450,72 @@ public class MainActivity extends AppCompatActivity {
                                                         mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
                                                         Log.i(TAG, "mediaPlayer.setWakeMode");
 
+
+//                                                        // TODO ADD for SeekBar Moving
+                                                        if (mediaPlayer.isPlaying()) {
+                                                            mediaPlayer.stop();
+                                                            try {
+                                                                mediaPlayer.prepare();
+                                                            } catch (IllegalStateException e) {
+                                                                e.printStackTrace();
+                                                            } catch (IOException e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                            mediaPlayer.seekTo(0);
+
+                                                            mainSeekBar.setProgress(0);
+                                                        } else {
+                                                            mediaPlayer.start();
+
+                                                            Thread();
+                                                        }
+//                                                        if (mediaPlayer != null) {
+//                                                            if (mediaPlayer.isPlaying()) {
+//                                                                mainSeekBar.setMax(mediaPlayer.getDuration());
+//                                                                mainSeekBar.setProgress(mediaPlayer.getCurrentPosition());
+//                                                                play.setText("❚❚");
+//                                                            }
+//                                                        } else if (!mediaPlayer.isPlaying()) {
+//                                                            mainSeekBar.setMax(mediaPlayer.getDuration());
+//                                                            mainSeekBar.setProgress(mediaPlayer.getCurrentPosition());
+//                                                            play.setText("▶");
+//                                                        }
+////
+
                                                         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                                                             @Override
                                                             public void onPrepared(MediaPlayer mp) {
                                                                 Log.i(TAG, "mediaPlayer.setOnPreparedListener");
+//                                                                mainSeekBar.setMax(mediaPlayer.getDuration());
                                                                 mediaPlayer.start();
+//                                                                changeSeekbar();
                                                                 Log.i(TAG, "mediaPlayer.start()");
                                                             }
                                                         });
 
+                                                        // TODO When SeekBar click, move to time from mp3 file
+                                                        mainSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                                                            @Override
+                                                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                                                Log.i(TAG, "SeekBar onProgressChanged");
+                                                                if (fromUser) {
+                                                                    mediaPlayer.seekTo(progress);
+                                                                }
+                                                            }
 
-                                                        Log.i(TAG, "mediaPlayer.start");
+                                                            @Override
+                                                            public void onStartTrackingTouch(SeekBar seekBar) {
+                                                                Log.i(TAG, "SeekBar onStartTrackingTouch");
+                                                            }
+
+                                                            @Override
+                                                            public void onStopTrackingTouch(SeekBar seekBar) {
+                                                                Log.i(TAG, "SeekBar onStopTrackingTouch");
+                                                            }
+                                                        });
+
+                                                        // TODO. END for SeekBar
+
 
                                                         Toast.makeText(getApplicationContext(), "재생 중", Toast.LENGTH_SHORT).show();
 
@@ -450,8 +527,6 @@ public class MainActivity extends AppCompatActivity {
                                                         String justName = exceptMp3[0];
                                                         // _ <- 이거를 공백으로 대체할 수 있을까?
 
-                                                        // TODO 5. 여기 나온 이름대로 재생 됨
-                                                        // music table에 있는 123.mp3와 waves.mp3 파일만 재생되는 상태
                                                         Log.i(TAG, "song just name 확인 : " + justName);
 
 
@@ -478,38 +553,6 @@ public class MainActivity extends AppCompatActivity {
 
                             });
 
-
-//                    if (firstplayNum.equals("1")) {
-//                        Log.i(TAG, "랜덤 추출 숫자가 1일 때");
-//                        // 랜덤 추출 숫자 => 서버로 보내고
-//                        // music 테이블의 랜덤 추출 숫자에 맞는 num의 path 가져오기
-
-
-//                    } else if (firstplayNum.equals("2")) {
-//                        Log.i(TAG, "랜덤 추출 숫자가 2일 때");
-//
-//                    } else if (firstplayNum.equals("3")) {
-//                        Log.i(TAG, "랜덤 추출 숫자가 3일 때");
-//
-//                    } else if (firstplayNum.equals("4")) {
-//                        Log.i(TAG, "랜덤 추출 숫자가 4일 때");
-//
-//                    } else if (firstplayNum.equals("5")) {
-//                        Log.i(TAG, "랜덤 추출 숫자가 5일 때");
-//
-//                    } else if (firstplayNum.equals("6")) {
-//                        Log.i(TAG, "랜덤 추출 숫자가 6일 때");
-//
-//                    } else if (firstplayNum.equals("7")) {
-//                        Log.i(TAG, "랜덤 추출 숫자가 7일 때");
-//
-//                    } else if (firstplayNum.equals("8")) {
-//                        Log.i(TAG, "랜덤 추출 숫자가 8일 때");
-//                    }
-//                    Log.i(TAG, "String firstplayNum : " + firstplayNum);
-//                            firstplayNum = 0;
-
-
 //                        첫 재생 playAudio
 //                        playAudio();
 
@@ -529,14 +572,16 @@ public class MainActivity extends AppCompatActivity {
                             play.setText("❚❚");
 
 
-//                        if (mediaPlayer == null) {
+                            if (mediaPlayer == null) {
+                                Log.i(TAG, "> btn on Click (mp == null)");
 //                    mediaPlayer = MediaPlayer.create(getApplicationContext()
 //                            , R.raw.friendlikeme);
-//                    mediaPlayer.start();
-//                } else if (!mediaPlayer.isPlaying()) {
-//                    mediaPlayer.seekTo(playPosition);
-//                    mediaPlayer.start();
-//                }
+                                mediaPlayer.start();
+                            } else if (!mediaPlayer.isPlaying()) {
+                                mediaPlayer.seekTo(playPosition);
+                                Log.i(TAG, "playPosition Check : " + playPosition);
+                                mediaPlayer.start();
+                            }
 
 //                    resumeAudio() 일단 안 씀
 //                    resumeAudio();
@@ -580,9 +625,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // 메인 오른쪽 화살표 버튼 (랜덤 플레이 버튼)
-        rightPlayBtn =
-
-                findViewById(R.id.rightPlayButton);
+        rightPlayBtn = findViewById(R.id.rightPlayButton);
         rightPlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -592,85 +635,42 @@ public class MainActivity extends AppCompatActivity {
                 stopAudio();
                 closePlayer();
 
+                // 새로운 음악 파일 실행해야 함
 
-                random = new Random();
-                rPlay = random.nextInt(4) + 1;
-                play.setText("▶");
 
-                Log.i("[MAIN]", "int rPlay Check : " + rPlay);
-
-//                if (rPlay == 1) {
-//                    Log.i("[MAIN]", "friendLikeMe 재생");
-//                    play.setText("❚❚");
-//
-//                    if (mediaPlayer == null) {
-////                        mediaPlayer = MediaPlayer.create(getApplicationContext()
-////                                , R.raw.friendlikeme);
-//
-//                        String song = "friendlikeme";
-//
-//
-////                        Log.i("[Streaming Record End Cut]","" + StringUtils)
-//
-//                        mediaPlayer.start();
-//                    } else if (!mediaPlayer.isPlaying()) {
-//                        mediaPlayer.seekTo(playPosition);
-//                        mediaPlayer.start();
-//                    }
-//
-//                } else if (rPlay == 2) {
-//                    Log.i("[MAIN]", "waves 재생");
-//                    play.setText("❚❚");
-//
-//                    if (mediaPlayer == null) {
-////                        mediaPlayer = MediaPlayer.create(getApplicationContext()
-////                                , R.raw.waves);
-//
-//                        String song = "waves";
-//
-//                        mediaPlayer.start();
-//                    } else if (!mediaPlayer.isPlaying()) {
-//                        mediaPlayer.seekTo(playPosition);
-//                        mediaPlayer.start();
-//                    }
-//
-//                } else if (rPlay == 3) {
-//                    Log.i("[MAIN]", "bonfire 재생");
-//                    play.setText("❚❚");
-//
-//                    if (mediaPlayer == null) {
-////                        mediaPlayer = MediaPlayer.create(getApplicationContext()
-////                                , R.raw.bonfire);
-//
-//                        String song = "bonfire";
-//
-//                        mediaPlayer.start();
-//                    } else if (!mediaPlayer.isPlaying()) {
-//                        mediaPlayer.seekTo(playPosition);
-//                        mediaPlayer.start();
-//                    }
-//
-//                } else if (rPlay == 4) {
-//                    Log.i("[MAIN]", "rain 재생");
-//                    play.setText("❚❚");
-//
-//                    if (mediaPlayer == null) {
-////                        mediaPlayer = MediaPlayer.create(getApplicationContext()
-////                                , R.raw.rain);
-//
-//                        String song = "rain";
-//
-//                        mediaPlayer.start();
-//                    } else if (!mediaPlayer.isPlaying()) {
-//                        mediaPlayer.seekTo(playPosition);
-//                        mediaPlayer.start();
-//                    }
-//                }
-//
             }
         });
+    }
 
+//    private void changeSeekbar() {
+//        //TODO 현재 mp3 재생 시간을 seekBar에 넣는다.
+//        mainSeekBar.setProgress(mediaPlayer.getCurrentPosition());
+//        if (mediaPlayer.isPlaying()) {
+//            AudioManager audioManager =
+//                    (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+//            AudioDeviceInfo[] audioDevices =
+//                    audioManager.getDevices(AudioManager.GET_DEVICES_ALL);
+//
+//        }
+//    }
 
+    public void Thread() {
+        Log.i(TAG, "Thread Method Start");
+        Runnable task = new Runnable() {
+            @Override
+            public void run() {
+                while (mediaPlayer.isPlaying()) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    mainSeekBar.setProgress(mediaPlayer.getCurrentPosition());
+                }
+            }
+        };
+        Thread thread = new Thread(task);
+        thread.start();
     }
 
 
