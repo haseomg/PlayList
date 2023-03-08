@@ -55,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
 
     TextView songTime;
     TextView mainLogo;
+    TextView playingTime;
+    TextView toPlayTime;
+
 
     private Button play;
     private MediaPlayer mediaPlayer;
@@ -62,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
     // 프로그레스바 진행률을 위해 생성해준 변수들
     private Runnable runnable;
-    private Handler handler;
+    private Handler handler = new Handler();
 
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
@@ -111,6 +114,9 @@ public class MainActivity extends AppCompatActivity {
         // 쉐어드로부터 가져온 닉네임
         fromSharedNickName = shared.getString("id", "LOG IN");
 
+        // TODO 예제 참고
+        mediaPlayer = new MediaPlayer();
+        //
 
         // LOGIN 버튼
         logIn = findViewById(R.id.logInButton);
@@ -207,7 +213,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        if (mediaPlayer.isPlaying()) {
+            mainSeekBar.setVisibility(View.VISIBLE);
+            playingTime.setVisibility(View.VISIBLE);
+            toPlayTime.setVisibility(View.VISIBLE);
+            comment.setVisibility(View.VISIBLE);
+        }
         // LOG IN || User 버튼
         logIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -249,26 +260,40 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        handler = new Handler();
+//        handler = new Handler();
 
         mainSeekBar = findViewById(R.id.mainSeekBar);
-        mainSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                //TODO 시크바를 조작하고 있는 중
-            }
+        playingTime = findViewById(R.id.mainPlayingTime);
+        toPlayTime = findViewById(R.id.mainToPlayTime);
+        if (!mediaPlayer.isPlaying()) {
+            Log.i(TAG,"mainSeekBar.getVisibility() : " + mainSeekBar.getVisibility());
+            Log.i(TAG,"playingTime.getVisibility() : " + playingTime.getVisibility());
+            Log.i(TAG,"toPlayTime.getVisibility() : " + toPlayTime.getVisibility());
+            Log.i(TAG,"comment.getVisibility() : " + comment.getVisibility());
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                //TODO 시크바를 처음 터치했을 때
-                Log.i(TAG, "시크바를 터치했을 때 선택된 값 : " + seekBar.getProgress());
-            }
+//            mainSeekBar.setVisibility(View.INVISIBLE);
+//            playingTime.setVisibility(View.INVISIBLE);
+//            toPlayTime.setVisibility(View.INVISIBLE);
+//            comment.setVisibility(View.INVISIBLE);
+        }
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                //TODO 시크바 터치가 끝났을 때
-            }
-        });
+//        mainSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                //TODO 시크바를 조작하고 있는 중
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//                //TODO 시크바를 처음 터치했을 때
+//                Log.i(TAG, "시크바를 터치했을 때 선택된 값 : " + seekBar.getProgress());
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+//                //TODO 시크바 터치가 끝났을 때
+//            }
+//        });
 
         // 메인 재생 버튼
         play = findViewById(R.id.mainPlayButton);
@@ -276,6 +301,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i("메인 플레이 버튼 클릭", "");
+
+//                if (mediaPlayer.isPlaying()) {
+                    mainSeekBar.setVisibility(View.VISIBLE);
+                    playingTime.setVisibility(View.VISIBLE);
+                    toPlayTime.setVisibility(View.VISIBLE);
+                    comment.setVisibility(View.VISIBLE);
+                    Log.i(TAG,"mainSeekBar.getVisibility() 2 : " + mainSeekBar.getVisibility());
+                    Log.i(TAG,"playingTime.getVisibility() 2 : " + playingTime.getVisibility());
+                    Log.i(TAG,"toPlayTime.getVisibility() 2 : " + toPlayTime.getVisibility());
+                    Log.i(TAG,"comment.getVisibility() 2 : " + comment.getVisibility());
+//                }
 
                 String playState = play.getText().toString();
 
@@ -408,7 +444,7 @@ public class MainActivity extends AppCompatActivity {
 
                                                         String songInfo = responseData;
                                                         Log.i(TAG, "String songInfo 확인 : " + songInfo);
-                                                        String[] songCut = songInfo.split("@@@0");
+                                                        String[] songCut = songInfo.split("@@@");
 
                                                         String path = songCut[0];
                                                         String time = songCut[1];
@@ -426,7 +462,7 @@ public class MainActivity extends AppCompatActivity {
 
                                                         // TODO 4.close Player 조건 잘 세워야 함
 //                                                        closePlayer();
-                                                        mediaPlayer = new MediaPlayer();
+//                                                        mediaPlayer = new MediaPlayer();
                                                         mediaPlayer.setLooping(true);
                                                         Log.i(TAG, "MediaPlayer 생성");
 
@@ -446,6 +482,10 @@ public class MainActivity extends AppCompatActivity {
 
                                                         mediaPlayer.prepareAsync();
                                                         Log.i(TAG, "mediaPlayer.prepareAsync()");
+
+                                                        // TODO
+                                                        mainSeekBar.setMax(mediaPlayer.getDuration());
+                                                        //
 
                                                         mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
                                                         Log.i(TAG, "mediaPlayer.setWakeMode");
@@ -486,14 +526,15 @@ public class MainActivity extends AppCompatActivity {
                                                             @Override
                                                             public void onPrepared(MediaPlayer mp) {
                                                                 Log.i(TAG, "mediaPlayer.setOnPreparedListener");
-//                                                                mainSeekBar.setMax(mediaPlayer.getDuration());
+                                                                mainSeekBar.setMax(mediaPlayer.getDuration());
                                                                 mediaPlayer.start();
+                                                                updateSeekBar();
 //                                                                changeSeekbar();
                                                                 Log.i(TAG, "mediaPlayer.start()");
                                                             }
                                                         });
 
-                                                        // TODO When SeekBar click, move to time from mp3 file
+//                                                        // TODO When SeekBar click, move to time from mp3 file
                                                         mainSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                                                             @Override
                                                             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -502,7 +543,7 @@ public class MainActivity extends AppCompatActivity {
                                                                     mediaPlayer.seekTo(progress);
                                                                 }
                                                             }
-
+//
                                                             @Override
                                                             public void onStartTrackingTouch(SeekBar seekBar) {
                                                                 Log.i(TAG, "SeekBar onStartTrackingTouch");
@@ -513,12 +554,13 @@ public class MainActivity extends AppCompatActivity {
                                                                 Log.i(TAG, "SeekBar onStopTrackingTouch");
                                                             }
                                                         });
-
-                                                        // TODO. END for SeekBar
+//
+//                                                        // TODO. END for SeekBar
 
 
                                                         Toast.makeText(getApplicationContext(), "재생 중", Toast.LENGTH_SHORT).show();
 
+                                                        updateSeekBar();
 
                                                         songTime = findViewById(R.id.mainToPlayTime);
                                                         songTime.setText(time);
@@ -576,6 +618,8 @@ public class MainActivity extends AppCompatActivity {
                                 Log.i(TAG, "> btn on Click (mp == null)");
 //                    mediaPlayer = MediaPlayer.create(getApplicationContext()
 //                            , R.raw.friendlikeme);
+                                // TODO 원래 new 연산자 안 썼는데 null 떠서 우선 생성해줌
+//                                mediaPlayer = new MediaPlayer();
                                 mediaPlayer.start();
                             } else if (!mediaPlayer.isPlaying()) {
                                 mediaPlayer.seekTo(playPosition);
@@ -632,8 +676,8 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.i(TAG, "RightPlay 버튼 클릭");
 
-                stopAudio();
-                closePlayer();
+//                stopAudio();
+//                closePlayer();
 
                 // 새로운 음악 파일 실행해야 함
 
@@ -641,7 +685,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 //    private void changeSeekbar() {
 //        //TODO 현재 mp3 재생 시간을 seekBar에 넣는다.
 //        mainSeekBar.setProgress(mediaPlayer.getCurrentPosition());
@@ -703,11 +746,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume()");
+        updateSeekBar();
     }
 
     protected void onPause() {
         super.onPause();
         Log.i(TAG, "onPause()");
+        handler.removeCallbacksAndMessages(null);
     }
 
     protected void onStop() {
@@ -717,7 +762,10 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onDestroy() {
         super.onDestroy();
+//        stopMediaPlayer();
         Log.i(TAG, "onDestroy()");
+        mediaPlayer.release();
+        handler.removeCallbacksAndMessages(null);
     }
 
     // 카카오 로그아웃
@@ -964,4 +1012,35 @@ public class MainActivity extends AppCompatActivity {
             mProgressDialog.dismiss();
         }
     }
+
+//    private Runnable updateSeekBarRunnable = new Runnable() {
+//        @Override
+//        public void run() {
+//            updateSeekBar();
+//        }
+//    };
+
+    private void updateSeekBar() {
+//        mainSeekBar.setProgress(mediaPlayer.getCurrentPosition());
+//        if (mediaPlayer.isPlaying()) {
+//            handler.postDelayed(updateSeekBarRunnable, 1000);
+//        }
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int currentPosition = mediaPlayer.getCurrentPosition();
+                mainSeekBar.setProgress(mediaPlayer.getCurrentPosition());
+                String progressText = String.format("%02d:%02d", currentPosition / 1000 / 60, currentPosition / 1000 % 60);
+                playingTime.setText(progressText);
+                updateSeekBar();
+            }
+        }, 1000);
+    }
+
+//    private void stopMediaPlayer() {
+//        mediaPlayer.stop();
+//        mediaPlayer.release();
+//        handler.removeCallbacks(updateSeekBarRunnable);
+//    }
+
 }
