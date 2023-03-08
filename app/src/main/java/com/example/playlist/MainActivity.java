@@ -113,18 +113,18 @@ public class MainActivity extends AppCompatActivity {
 
         if (!fromSharedNickName.equals("LOG IN")) {
             logIn.setText(fromSharedNickName + "'S");
-            Log.i("logIn.setText Check1 : ",fromSharedNickName);
+            Log.i("logIn.setText Check1 : ", fromSharedNickName);
         }
 
 
         // 쉐어드로부터 가져온 닉네임 비교해서 logIn 버튼 이름 설정
         if (fromSharedNickName.equals("LOG IN")) {
             logIn.setText(intent.getStringExtra("nickname") + "'S");
-            Log.i("logIn.setText Check2 : ",intent.getStringExtra("nickname") + "'S");
+            Log.i("logIn.setText Check2 : ", intent.getStringExtra("nickname") + "'S");
             Log.i(TAG, "fromSharedNickName String 값이 default값일 때");
         } else {
             logIn.setText(fromSharedNickName + "'S");
-            Log.i("logIn.setText Check3 : ",fromSharedNickName);
+            Log.i("logIn.setText Check3 : ", fromSharedNickName);
             Log.i(TAG, "fromSharedNickName String 값을 쉐어드에서 가져왔을 때 : " + fromSharedNickName);
         }
         Log.i("[Main]", "login.getText.toString() : " + logIn.getText().toString());
@@ -167,10 +167,10 @@ public class MainActivity extends AppCompatActivity {
             if (fromSharedNickName.equals("LOG IN")) {
                 editor.putString("id", personName);
                 logIn.setText(personName);
-                Log.i("logIn.setText Check5 : ",personName);
+                Log.i("logIn.setText Check5 : ", personName);
             } else {
                 logIn.setText(fromSharedNickName + "'S");
-                Log.i("logIn.setText Check6 : ",fromSharedNickName);
+                Log.i("logIn.setText Check6 : ", fromSharedNickName);
             }
             editor.commit();
 
@@ -308,17 +308,20 @@ public class MainActivity extends AppCompatActivity {
                                 numAdd = numAdd + rPlayList[c] + "-";
                             }
 
+                            // 랜덤 숫자 1개 생성
                             Log.i(TAG, "랜덤 추출 숫자 : " + firstplayNum);
+                            // 랜덤 숫자 4개 생성
                             Log.i(TAG, "랜덤 추출 숫자들 : " + numAdd);
 
                             String castNum = Integer.toString(firstplayNum);
+                            // 랜덤 숫자 1개
                             Log.i(TAG, "String castNum 확인 : " + castNum);
 
 
                             // 직접 통신인데..
                             // num 보내고
                             Uri.Builder builder = new Uri.Builder()
-                                    .appendQueryParameter("num", castNum);
+                                    .appendQueryParameter("num", castNum); // TODO 2. 원래 1이 아니라 castNum으로 설정해야 한다.
                             String postParams = builder.build().getEncodedQuery();
                             new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
 
@@ -381,6 +384,7 @@ public class MainActivity extends AppCompatActivity {
 
                                                         String songInfo = responseData;
                                                         Log.i(TAG, "String songInfo 확인 : " + songInfo);
+                                                        // TODO 1. songInfo가 곡의 내용을 담고 있지 않다.
                                                         String[] songCut = songInfo.split("@@@0");
 
                                                         String path = songCut[0];
@@ -394,10 +398,13 @@ public class MainActivity extends AppCompatActivity {
                                                         Log.i(TAG, "song path 확인 : " + path);
                                                         Log.i(TAG, "song time 확인 : " + time);
 
+                                                        // TODO 3.여기 까지 주석 나옴
+
 //                                                          경로 가져와서 음악 재생 시켜준 뒤
 //                                                          초수 세팅
 
-                                                        closePlayer();
+                                                        // TODO 4.close Player 조건 잘 세워야 함
+//                                                        closePlayer();
                                                         mediaPlayer = new MediaPlayer();
                                                         Log.i(TAG, "MediaPlayer 생성");
 
@@ -405,7 +412,12 @@ public class MainActivity extends AppCompatActivity {
                                                         Log.i(TAG, "mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)");
 
 
-                                                        String uri = "http://43.201.69.32" + path;
+                                                        // 수정한 부분
+                                                        String uri = "http://54.180.155.66/" + name;
+                                                        Log.i(TAG, "file name from music table : " + uri);
+                                                        //
+
+
                                                         mediaPlayer.setDataSource(uri);
                                                         Log.i(TAG, "mediaPlayer.setDataSource(path)");
 
@@ -438,6 +450,8 @@ public class MainActivity extends AppCompatActivity {
                                                         String justName = exceptMp3[0];
                                                         // _ <- 이거를 공백으로 대체할 수 있을까?
 
+                                                        // TODO 5. 여기 나온 이름대로 재생 됨
+                                                        // music table에 있는 123.mp3와 waves.mp3 파일만 재생되는 상태
                                                         Log.i(TAG, "song just name 확인 : " + justName);
 
 
@@ -677,7 +691,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "personName : " + personName);
             Log.i(TAG, "personEmail : " + personEmail);
 //            logIn.setText(personName);
-            Log.i("logIn.setText Check7 : ",personName);
+            Log.i("logIn.setText Check7 : ", personName);
             logIn.setTextSize(13);
         } else {
             Log.i(TAG, "acct == null");
@@ -809,7 +823,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (!id.equals(fromSharedNickName) && !fromSharedNickName.equals("LOG IN")) {
                     logIn.setText(fromSharedNickName + "'S");
-                    Log.i("logIn.setText Check8 : ",fromSharedNickName);
+                    Log.i("logIn.setText Check8 : ", fromSharedNickName);
                     editor.putString("id", fromSharedNickName);
                     editor.commit();
                 } else if (fromSharedNickName.equals(null) || fromSharedNickName.equals("LOG IN")) {
@@ -817,7 +831,7 @@ public class MainActivity extends AppCompatActivity {
                     editor.commit();
                 } else if (!id.equals(fromSharedNickName) && fromSharedNickName.equals("LOG IN")) {
                     logIn.setText(id + "'S");
-                    Log.i("logIn.setText Check9 : ",id);
+                    Log.i("logIn.setText Check9 : ", id);
                     editor.putString("id", fromSharedNickName);
                     editor.commit();
                 }
@@ -829,7 +843,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (!id.equals(fromSharedNickName) && fromSharedNickName.equals("LOG IN")) {
                     logIn.setText(id + "'S");
-                    Log.i("logIn.setText Check10 : ",id);
+                    Log.i("logIn.setText Check10 : ", id);
                     editor.putString("id", id);
                     editor.commit();
                 }
