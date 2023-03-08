@@ -1021,10 +1021,7 @@ public class MainActivity extends AppCompatActivity {
 //    };
 
     private void updateSeekBar() {
-//        mainSeekBar.setProgress(mediaPlayer.getCurrentPosition());
-//        if (mediaPlayer.isPlaying()) {
-//            handler.postDelayed(updateSeekBarRunnable, 1000);
-//        }
+
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
