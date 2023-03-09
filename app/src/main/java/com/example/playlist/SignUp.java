@@ -348,6 +348,8 @@ public class SignUp extends AppCompatActivity {
                 } else {
                     Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
                 }
+
+
             }
         });
 
@@ -572,13 +574,11 @@ public class SignUp extends AppCompatActivity {
                     Log.i("[kakao]", "String url 확인 : " + url);
 
 
-
                     // POST 파라미터 추가
                     RequestBody formBody = new FormBody.Builder()
                             .add("id", id.trim())
                             .add("nickname", nickname.trim())
                             .build();
-
 
 
                     // 요청 만들기
@@ -587,7 +587,6 @@ public class SignUp extends AppCompatActivity {
                             .url(url)
                             .post(formBody)
                             .build();
-
 
 
                     // 응답 콜백

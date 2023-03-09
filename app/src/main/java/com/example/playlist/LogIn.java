@@ -125,7 +125,7 @@ public class LogIn extends Activity {
                             pwEdit.getText().toString().trim().length() > 0) {
 
                         // get 방식 파라미터 추가
-                        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://43.201.105.106/logIn.php").newBuilder();
+                        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/logIn.php").newBuilder();
                         urlBuilder.addQueryParameter("v", "1.0"); // 예시
                         String url = urlBuilder.build().toString();
 
