@@ -677,6 +677,8 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.i(TAG, "RightPlay 버튼 클릭");
 
+                // 여기 구현해가야 해
+
 //                stopAudio();
 //                closePlayer();
 
