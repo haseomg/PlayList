@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private Button play;
     private MediaPlayer mediaPlayer;
     private int playPosition = -1;
+    String castNum;
 
     // 프로그레스바 진행률을 위해 생성해준 변수들
     private Runnable runnable;
@@ -83,10 +84,12 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences shared;
     SharedPreferences.Editor editor;
 
+    SharedPreferences randomShared;
+    SharedPreferences.Editor randomEditor;
+
     String fromSignUpNickName;
     String fromSharedNickName;
 
-    private ProgressDialog progressDialog;
     ProgressDialog mProgressDialog;
     SeekBar mainSeekBar;
 
@@ -260,8 +263,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        handler = new Handler();
-
         mainSeekBar = findViewById(R.id.mainSeekBar);
         playingTime = findViewById(R.id.mainPlayingTime);
         toPlayTime = findViewById(R.id.mainToPlayTime);
@@ -295,12 +296,22 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
+        // TODO 랜덤 넘버 추출
+        randomNumber();
+
         // 메인 재생 버튼
         play = findViewById(R.id.mainPlayButton);
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i("메인 플레이 버튼 클릭", "");
+
+                if (v == play) {
+                    Log.i(TAG, "[play check] play button onClick");
+                }
+                if (v == rightPlayBtn) {
+                    Log.i(TAG, "[play check] rightplay button onClick");
+                }
 
 //                if (mediaPlayer.isPlaying()) {
                 mainSeekBar.setVisibility(View.VISIBLE);
@@ -333,49 +344,6 @@ public class MainActivity extends AppCompatActivity {
                             Log.i("메인 플레이 버튼 클릭", "일시정지가 아닐 때");
                             play.setText("❚❚");
                             play.setTextSize(45);
-
-
-                            int rPlayList[] = new int[8];
-                            random = new Random();
-
-
-                            for (int i = 0; i < 8; i++) {
-//                    rPlay = random.nextInt(8) + 1;
-//                    Log.i(TAG, "Random Number For Music Play : " + rPlay);
-
-
-                                rPlayList[i] = random.nextInt(8) + 1;
-                                for (int j = 0; j < i; j++) {
-                                    if (rPlayList[i] == rPlayList[j]) {
-                                        i--;
-                                    }
-                                }
-                            }
-                            firstplayNum = 0;
-                            // b < ? = ? 부분은 총 뽑아낼 랜덤 숫자 조건
-                            for (int b = 0; b < 1; b++) {
-                                Log.i(TAG, "Random Number For Music Play (1) : " + rPlayList[b]);
-
-                                firstplayNum = firstplayNum + rPlayList[b];
-                            }
-
-                            playlistNum = 0;
-                            String numAdd = "-";
-                            for (int c = 0; c < 4; c++) {
-                                Log.i(TAG, "Random Number For Playlist (2) : " + rPlayList[c]);
-
-//                                playlistNum = playlistNum + rPlayList[c];
-                                numAdd = numAdd + rPlayList[c] + "-";
-                            }
-
-                            // 랜덤 숫자 1개 생성
-                            Log.i(TAG, "랜덤 추출 숫자 : " + firstplayNum);
-                            // 랜덤 숫자 4개 생성
-                            Log.i(TAG, "랜덤 추출 숫자들 : " + numAdd);
-
-                            String castNum = Integer.toString(firstplayNum);
-                            // 랜덤 숫자 1개
-                            Log.i(TAG, "String castNum 확인 : " + castNum);
 
 
                             // 직접 통신인데..
@@ -474,7 +442,7 @@ public class MainActivity extends AppCompatActivity {
                                                         String uri = "http://54.180.155.66/" + name;
                                                         Log.i(TAG, "file name from music table : " + uri);
                                                         //
-
+                                                        play.setText("❚❚");
 
                                                         mediaPlayer.setDataSource(uri);
                                                         Log.i(TAG, "mediaPlayer.setDataSource(path)");
@@ -631,7 +599,7 @@ public class MainActivity extends AppCompatActivity {
 //                    resumeAudio() 일단 안 씀
 //                    resumeAudio();
 
-                        } else if (playState.equals("❚❚")) {
+                        } if (playState.equals("❚❚")) {
                             Log.i("메인 플레이 버튼 클릭", "일시정지 상태일 때");
                             Log.i(TAG, "playCheck : " + playCheck);
 
@@ -661,10 +629,12 @@ public class MainActivity extends AppCompatActivity {
 
 
                 } else {
+                    Log.i(TAG, "playCheck : " + playCheck);
                     Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
 
                 }
 
+                Log.i(TAG, "playCheck : " + playCheck);
             } // OnClick 메서드 닫아주는 중괄호
         });
 
@@ -675,14 +645,42 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        play.setText("▶");
+//                        play.setText("❚❚");
+                        playCheck = false;
+                    }
+                });
+
                 Log.i(TAG, "RightPlay 버튼 클릭");
+                Log.i(TAG, "RightPlay-------------------------------------------");
+
+
+                onStopButtonClick();
 
                 // 여기 구현해가야 해
 
 //                stopAudio();
 //                closePlayer();
 
-                // 새로운 음악 파일 실행해야 함
+
+//                mediaPlayer = new MediaPlayer();
+//                Log.i(TAG, "[RightPlay] new MediaPlayer");
+//                Log.i(TAG, "RightPlay-------------------------------------------");
+//
+//                if (mediaPlayer != null) {
+//                    try {
+//                        int currentPosition = mediaPlayer.getCurrentPosition();
+//                        Log.i(TAG, "[RightPlay] currentPosition Check : " + currentPosition);
+//                        Log.i(TAG, "RightPlay-------------------------------------------");
+//                    } catch (NullPointerException e) {
+//                        e.printStackTrace();
+//                    }
+//                } else {
+//
+//                }
 
 
             }
@@ -923,7 +921,7 @@ public class MainActivity extends AppCompatActivity {
                                         } else {
                                             Log.i(TAG, "응답 성공 : " + response);
                                             final String responseData = response.body().string();
-                                            Log.i(TAG,"응답 성공 responseData Check : " + responseData);
+                                            Log.i(TAG, "응답 성공 responseData Check : " + responseData);
 
                                             if (responseData.equals("1")) {
                                                 Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
@@ -1103,6 +1101,413 @@ public class MainActivity extends AppCompatActivity {
                 updateSeekBar();
             }
         }, 1000);
+    }
+
+    public void onStopButtonClick() {
+        Log.i(TAG, "[RightPlay] onStopButtonClick 메서드 작동");
+        if (mediaPlayer.isPlaying() || playCheck == true) {
+            Log.i(TAG, "[RightPlay] mediaPlayer.isPlaying");
+            mediaPlayer.stop();
+            play.setText("❚❚");
+            playCheck = false;
+            changeStreaming();
+        } else {
+            mediaPlayer.start();
+            play.setText("▶");
+            playCheck = true;
+            Log.i(TAG, "[RightPlay] !mediaPlayer.isPlaying");
+        }
+    }
+
+
+    public void changeStreaming() {
+
+
+        Log.i(TAG, "[RightPlay] playcheck Check : " + playCheck);
+        randomNumber();
+        Log.i(TAG, "[RightPlay] -----------------------------------------------");
+
+
+        Log.i(TAG, "[RightPlay] changeStreaming Method");
+        Log.i(TAG, "[RightPlay] -----------------------------------------------");
+
+        String playState = play.getText().toString();
+
+        int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
+        if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
+
+
+            if (playCheck == false) {
+
+
+                Log.i("[RightPlay] 버튼 클릭", "재생");
+                Log.i(TAG, "[RightPlay] playCheck : " + playCheck);
+                Log.i(TAG, "[RightPlay] -----------------------------------------------");
+
+
+                if (!playState.equals("❚❚")) {
+                    Log.i("[RightPlay] 버튼 클릭", "일시정지가 아닐 때");
+                    Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                    play.setText("❚❚");
+                    play.setTextSize(45);
+
+
+                    Uri.Builder builder = new Uri.Builder()
+                            .appendQueryParameter("num", castNum);
+                    String postParams = builder.build().getEncodedQuery();
+                    new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
+
+
+//                             get 방식 파라미터 추가
+                    HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/file_sampling.php").newBuilder();
+                    urlBuilder.addQueryParameter("ver", "1.0");
+                    String url = urlBuilder.build().toString();
+                    Log.i(TAG, "[RightPlay] String url 확인 : " + url);
+                    Log.i(TAG, "[RightPlay] -----------------------------------------------");
+
+                    // post 파라미터 추가
+                    RequestBody formBody = new FormBody.Builder()
+                            .add("num", castNum.trim())
+                            .build();
+                    // num을 보내고 -> 테이블의 num을 기준으로 path, name 가져올 거야
+
+                    // 요청 만들기
+                    OkHttpClient client = new OkHttpClient();
+                    Request request = new Request.Builder()
+                            .url(url)
+                            .post(formBody)
+                            .build();
+
+
+                    // 응답 콜백
+                    client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                            Log.e(TAG, "[RightPlay] play callback onFailure : " + e);
+                            Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                        }
+
+                        @Override
+                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                            Log.i(TAG, "[RightPlay] play callback onResponse");
+                            Log.i(TAG, "[RightPlay] -----------------------------------------------");
+
+                            // 서브 스레드 UI 변경할 경우 에러
+                            // 메인 스레드 UI 설정
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    try {
+
+                                        if (!response.isSuccessful()) {
+                                            // 응답 실패
+                                            Log.e("tag", "[RightPlay] 응답 실패 : " + response);
+                                            Toast.makeText(getApplicationContext(), "네트워크 문제 발생", Toast.LENGTH_SHORT).show();
+                                            Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                                        } else {
+                                            // 응답 성공
+                                            Log.i("tag", "[RightPlay] 응답 성공");
+                                            final String responseData = response.body().string().trim();
+                                            Log.i("tag", "[RightPlay] responseData Check : " + responseData);
+                                            Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                                            if (responseData.equals("1")) {
+                                                Log.i("[Main]", "[RightPlay] responseData 가 1일 때 : " + responseData);
+                                                Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                                                Toast.makeText(getApplicationContext(), "아이디 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Log.i("[Main]", "[RightPlay] responseData 가 1이 아닐 때 : " + responseData);
+                                                Log.i(TAG, "[RightPlay] -----------------------------------------------");
+//                                                        startActivityString(MainActivity.class, "nickname", responseData);
+
+                                                String songInfo = responseData;
+                                                Log.i(TAG, "[RightPlay] String songInfo 확인 : " + songInfo);
+                                                Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                                                String[] songCut = songInfo.split("@@@");
+
+                                                String path = songCut[0];
+                                                String time = songCut[1];
+
+                                                String[] songName = path.split("/");
+                                                String name = songName[4];
+
+
+                                                Log.i(TAG, "[RightPlay] song name 확인 : " + name);
+                                                Log.i(TAG, "[RightPlay] song path 확인 : " + path);
+                                                Log.i(TAG, "[RightPlay] song time 확인 : " + time);
+                                                Log.i(TAG, "[RightPlay] -----------------------------------------------");
+
+//                                                          경로 가져와서 음악 재생 시켜준 뒤
+//                                                          초수 세팅
+
+                                                // TODO 4.close Player 조건 잘 세워야 함
+//                                                        closePlayer();
+//                                                        mediaPlayer = new MediaPlayer();
+                                                mediaPlayer.setLooping(true);
+                                                Log.i(TAG, "[RightPlay] MediaPlayer 생성");
+
+                                                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                                Log.i(TAG, "[RightPlay] mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)");
+
+
+                                                // 수정한 부분
+                                                String uri = "http://54.180.155.66/" + name;
+                                                Log.i(TAG, "[RightPlay] file name from music table : " + uri);
+                                                //
+
+
+                                                mediaPlayer.setDataSource(uri);
+//                                                play.setText("❚❚");
+                                                Log.i(TAG, "[fv RightPlay] mediaPlayer.setDataSource(path)");
+
+
+                                                mediaPlayer.prepareAsync();
+                                                Log.i(TAG, "[RightPlay] mediaPlayer.prepareAsync()");
+
+                                                // TODO
+                                                mainSeekBar.setMax(mediaPlayer.getDuration());
+                                                //
+
+                                                mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+                                                Log.i(TAG, "[RightPlay] mediaPlayer.setWakeMode");
+                                                Log.i(TAG, "[RightPlay] -----------------------------------------------");
+
+
+//                                                        // TODO ADD for SeekBar Moving
+                                                if (mediaPlayer.isPlaying()) {
+                                                    mediaPlayer.stop();
+                                                    try {
+                                                        mediaPlayer.prepare();
+                                                    } catch (IllegalStateException e) {
+                                                        e.printStackTrace();
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    mediaPlayer.seekTo(0);
+
+                                                    mainSeekBar.setProgress(0);
+                                                } else {
+                                                    mediaPlayer.start();
+
+                                                    Thread();
+                                                }
+
+                                                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                                    @Override
+                                                    public void onPrepared(MediaPlayer mp) {
+                                                        Log.i(TAG, "[RightPlay] mediaPlayer.setOnPreparedListener");
+                                                        mainSeekBar.setMax(mediaPlayer.getDuration());
+                                                        mediaPlayer.start();
+                                                        updateSeekBar();
+//                                                                changeSeekbar();
+                                                        Log.i(TAG, "[RightPlay] mediaPlayer.start()");
+                                                        Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                                                    }
+                                                });
+
+//                                                        // TODO When SeekBar click, move to time from mp3 file
+                                                mainSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                                                    @Override
+                                                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                                        Log.i(TAG, "[RightPlay] SeekBar onProgressChanged");
+                                                        Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                                                        if (fromUser) {
+                                                            mediaPlayer.seekTo(progress);
+                                                        }
+                                                    }
+
+                                                    //
+                                                    @Override
+                                                    public void onStartTrackingTouch(SeekBar seekBar) {
+                                                        Log.i(TAG, "[RightPlay] SeekBar onStartTrackingTouch");
+                                                        Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                                                    }
+
+                                                    @Override
+                                                    public void onStopTrackingTouch(SeekBar seekBar) {
+                                                        Log.i(TAG, "[RightPlay] SeekBar onStopTrackingTouch");
+                                                        Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                                                    }
+                                                });
+//
+//                                                        // TODO. END for SeekBar
+
+
+                                                Toast.makeText(getApplicationContext(), "재생 중", Toast.LENGTH_SHORT).show();
+
+                                                updateSeekBar();
+
+                                                songTime = findViewById(R.id.mainToPlayTime);
+                                                songTime.setText(time);
+
+                                                String[] exceptMp3 = name.split(".mp3");
+                                                String justName = exceptMp3[0];
+                                                // _ <- 이거를 공백으로 대체할 수 있을까?
+
+                                                Log.i(TAG, "[RightPlay] song just name 확인 : " + justName);
+                                                Log.i(TAG, "[RightPlay] -----------------------------------------------");
+
+
+                                                mainLogo = findViewById(R.id.mainLogo);
+                                                mainLogo.setText(justName);
+
+                                                if (!responseData.equals(0)) {
+//                                                            responserData " + " 기준으로 잘라줘야 해
+                                                    Log.i("[Main]", "responseData 가 0이 아닐 때 : " + responseData);
+                                                    Log.i(TAG, "[RightPlay] -----------------------------------------------");
+
+
+                                                }
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
+                                }
+
+                            });
+
+                        }
+
+                    });
+
+//                        첫 재생 playAudio
+//                        playAudio();
+
+
+                    // 재생 됐는지 체크
+//                    playCheck = true;
+
+
+                }
+
+
+                // 아래 if (playCHeck == false 닫아주는 중괄호
+            } else { // <-> if (playCheck == true
+
+                if (!playState.equals("❚❚")) {
+                    Log.i("[RightPlay] 메인 플레이 버튼 클릭", "재시작");
+                    Log.i(TAG, "[RightPlay] playCheck : " + playCheck);
+                    play.setText("❚❚");
+
+
+                    if (mediaPlayer == null) {
+                        Log.i(TAG, "> btn on Click (mp == null)");
+//                    mediaPlayer = MediaPlayer.create(getApplicationContext()
+//                            , R.raw.friendlikeme);
+                        // TODO 원래 new 연산자 안 썼는데 null 떠서 우선 생성해줌
+//                                mediaPlayer = new MediaPlayer();
+                        mediaPlayer.start();
+                    } else if (!mediaPlayer.isPlaying()) {
+                        mediaPlayer.seekTo(playPosition);
+                        Log.i(TAG, "playPosition Check : " + playPosition);
+                        mediaPlayer.start();
+                    }
+
+//                    resumeAudio() 일단 안 씀
+//                    resumeAudio();
+
+                } else if (playState.equals("❚❚")) {
+                    Log.i("메인 플레이 버튼 클릭", "일시정지 상태일 때");
+                    Log.i(TAG, "playCheck : " + playCheck);
+
+                    play.setText("▶");
+                    play.setTextSize(60);
+
+
+//                    pauseAudio() 일단 안 씀
+//                    pauseAudio();
+
+
+                    if (mediaPlayer != null) {
+                        mediaPlayer.pause();
+                        playPosition = mediaPlayer.getCurrentPosition();
+                        Log.d("[PAUSE CHECK]", "" + playPosition);
+                        Log.i(TAG, "playCheck : " + playCheck);
+
+                    }
+
+                } // 재생 버튼이 일시정지 모양일 때
+                // + 예외 처리
+                else {
+                    Log.i(TAG, "재생 버튼 모양이 재생도 일시정지도 아님");
+                }
+
+            } // if (playCheck == true 닫아주는 중괄호
+
+
+        } else {
+            Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
+
+        }
+
+    }
+
+    public void randomNumber() {
+
+        Log.i(TAG, "randomNumber 메서드 실행");
+
+        random = new Random();
+        int rPlayList[] = new int[8];
+
+        for (int i = 0; i < 8; i++) {
+//                    rPlay = random.nextInt(8) + 1;
+//                    Log.i(TAG, "Random Number For Music Play : " + rPlay);
+
+
+            rPlayList[i] = random.nextInt(8) + 1;
+            for (int j = 0; j < i; j++) {
+                if (rPlayList[i] == rPlayList[j]) {
+                    i--;
+                }
+            }
+        }
+        firstplayNum = 0;
+        // b < ? = ? 부분은 총 뽑아낼 랜덤 숫자 조건
+        for (int b = 0; b < 1; b++) {
+            Log.i(TAG, "Random Number For Music Play (1) : " + rPlayList[b]);
+
+            firstplayNum = firstplayNum + rPlayList[b];
+        }
+
+        playlistNum = 0;
+        String numAdd = "-";
+        for (int c = 0; c < 8; c++) {
+            Log.i(TAG, "Random Number For Playlist (2) : " + rPlayList[c]);
+
+//                                playlistNum = playlistNum + rPlayList[c];
+            numAdd = numAdd + rPlayList[c] + "-";
+        }
+
+
+        // TODO Shared에 넣어보자
+//        if (bringInNumbers.equals("") || bringInNumbers == null) {
+        randomShared = getSharedPreferences("randomNumber", MODE_PRIVATE);
+        randomEditor = randomShared.edit();
+        randomEditor.putString("randomNumbers", numAdd);
+        Log.i(TAG, "numAdd Check : " + numAdd);
+        randomEditor.apply();
+        randomEditor.commit();
+
+        String bringInNumbers = randomShared.getString("randomNumbers", "");
+        Log.i(TAG, "randomNumbers bring in shared : " + bringInNumbers);
+//        } else {
+//            Log.i(TAG, "randomNumber -- after shared : " + bringInNumbers);
+//        }
+        // TODO 여기까지
+
+        Log.i(TAG, "[Random] numAdd check : " + numAdd);
+        Log.i(TAG, "[Random] -------------------------------");
+
+        // 랜덤 숫자 1개 생성
+        Log.i(TAG, "랜덤 추출 숫자 : " + firstplayNum);
+        // 랜덤 숫자 4개 생성
+        Log.i(TAG, "랜덤 추출 숫자들 : " + numAdd);
+
+        castNum = Integer.toString(firstplayNum);
+        // 랜덤 숫자 1개
+        Log.i(TAG, "String castNum 확인 : " + castNum);
     }
 
 //    private void stopMediaPlayer() {
