@@ -306,12 +306,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i("메인 플레이 버튼 클릭", "");
 
-                if (v == play) {
-                    Log.i(TAG, "[play check] play button onClick");
-                }
-                if (v == rightPlayBtn) {
-                    Log.i(TAG, "[play check] rightplay button onClick");
-                }
 
 //                if (mediaPlayer.isPlaying()) {
                 mainSeekBar.setVisibility(View.VISIBLE);
@@ -343,7 +337,7 @@ public class MainActivity extends AppCompatActivity {
                         if (!playState.equals("❚❚")) {
                             Log.i("메인 플레이 버튼 클릭", "일시정지가 아닐 때");
                             play.setText("❚❚");
-                            play.setTextSize(45);
+                            play.setTextSize(53);
 
 
                             // 직접 통신인데..
@@ -599,12 +593,13 @@ public class MainActivity extends AppCompatActivity {
 //                    resumeAudio() 일단 안 씀
 //                    resumeAudio();
 
-                        } if (playState.equals("❚❚")) {
+                        }
+                        if (playState.equals("❚❚")) {
                             Log.i("메인 플레이 버튼 클릭", "일시정지 상태일 때");
                             Log.i(TAG, "playCheck : " + playCheck);
 
                             play.setText("▶");
-                            play.setTextSize(60);
+                            play.setTextSize(53);
 
 
 //                    pauseAudio() 일단 안 씀
@@ -645,12 +640,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                play.setText("▶");
+
                 mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mp) {
-                        play.setText("▶");
-//                        play.setText("❚❚");
-                        playCheck = false;
+                        play.setText("❚❚");
+                        playCheck = true;
                     }
                 });
 
@@ -658,34 +654,24 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "RightPlay-------------------------------------------");
 
 
-                onStopButtonClick();
+                if (mediaPlayer.isPlaying() || !playCheck) {
+                    Log.i(TAG, "mediaPlayer.isPlaying() || playCheck == false");
+                    play.setText("▶"); //TODO GOOD!
+                    if (play.getText().toString().equals("▶")) {
+                        Log.i(TAG, "[RightPlay] 플레이 모양이 재생일 때");
 
-                // 여기 구현해가야 해
-
-//                stopAudio();
-//                closePlayer();
-
-
-//                mediaPlayer = new MediaPlayer();
-//                Log.i(TAG, "[RightPlay] new MediaPlayer");
-//                Log.i(TAG, "RightPlay-------------------------------------------");
-//
-//                if (mediaPlayer != null) {
-//                    try {
-//                        int currentPosition = mediaPlayer.getCurrentPosition();
-//                        Log.i(TAG, "[RightPlay] currentPosition Check : " + currentPosition);
-//                        Log.i(TAG, "RightPlay-------------------------------------------");
-//                    } catch (NullPointerException e) {
-//                        e.printStackTrace();
-//                    }
-//                } else {
-//
-//                }
-
-
+                        onStopButtonClick();
+                    }
+                } else {
+                    Log.i(TAG, "!mediaPlayer.isPlaying() || playCheck == true");
+                }
             }
         });
+        Log.i("[Random] mediaPlayer Check : ", String.valueOf(mediaPlayer));
+        Log.i("[Random] playCheck : ", String.valueOf(playCheck));
     }
+
+
 //    private void changeSeekbar() {
 //        //TODO 현재 mp3 재생 시간을 seekBar에 넣는다.
 //        mainSeekBar.setProgress(mediaPlayer.getCurrentPosition());
@@ -1108,9 +1094,19 @@ public class MainActivity extends AppCompatActivity {
         if (mediaPlayer.isPlaying() || playCheck == true) {
             Log.i(TAG, "[RightPlay] mediaPlayer.isPlaying");
             mediaPlayer.stop();
-            play.setText("❚❚");
+//            mediaPlayer.start();
+//            play.setText("❚❚");
             playCheck = false;
+//            playCheck = true;
+            // changeStreaming이 있어야지만 노래를 바꿀 수 있어
+            // 그런데 지금 과정이 뭔가 엉켜있어
             changeStreaming();
+
+            mediaPlayer.start();
+            play.setText("❚❚");
+            playCheck = true;
+            Log.i(TAG, "mediaPlayer.start() &&  playCheck : " + playCheck);
+
         } else {
             mediaPlayer.start();
             play.setText("▶");
@@ -1149,7 +1145,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("[RightPlay] 버튼 클릭", "일시정지가 아닐 때");
                     Log.i(TAG, "[RightPlay] -----------------------------------------------");
                     play.setText("❚❚");
-                    play.setTextSize(45);
+                    play.setTextSize(53);
 
 
                     Uri.Builder builder = new Uri.Builder()
@@ -1258,7 +1254,7 @@ public class MainActivity extends AppCompatActivity {
 
                                                 mediaPlayer.setDataSource(uri);
 //                                                play.setText("❚❚");
-                                                Log.i(TAG, "[fv RightPlay] mediaPlayer.setDataSource(path)");
+                                                Log.i(TAG, "[RightPlay] mediaPlayer.setDataSource(path)");
 
 
                                                 mediaPlayer.prepareAsync();
@@ -1353,11 +1349,12 @@ public class MainActivity extends AppCompatActivity {
 
                                                 if (!responseData.equals(0)) {
 //                                                            responserData " + " 기준으로 잘라줘야 해
-                                                    Log.i("[Main]", "responseData 가 0이 아닐 때 : " + responseData);
+                                                    Log.i("[RightPlay]", "responseData 가 0이 아닐 때 : " + responseData);
                                                     Log.i(TAG, "[RightPlay] -----------------------------------------------");
 
 
                                                 }
+
                                             }
                                         }
                                     } catch (Exception e) {
@@ -1387,22 +1384,22 @@ public class MainActivity extends AppCompatActivity {
             } else { // <-> if (playCheck == true
 
                 if (!playState.equals("❚❚")) {
-                    Log.i("[RightPlay] 메인 플레이 버튼 클릭", "재시작");
-                    Log.i(TAG, "[RightPlay] playCheck : " + playCheck);
-                    play.setText("❚❚");
+//                    Log.i("[RightPlay] 메인 플레이 버튼 클릭", "재시작");
+//                    Log.i(TAG, "[RightPlay] playCheck : " + playCheck);
+//                    play.setText("❚❚");
 
 
                     if (mediaPlayer == null) {
-                        Log.i(TAG, "> btn on Click (mp == null)");
-//                    mediaPlayer = MediaPlayer.create(getApplicationContext()
-//                            , R.raw.friendlikeme);
-                        // TODO 원래 new 연산자 안 썼는데 null 떠서 우선 생성해줌
-//                                mediaPlayer = new MediaPlayer();
-                        mediaPlayer.start();
+//                        Log.i(TAG, "> btn on Click (mp == null)");
+////                    mediaPlayer = MediaPlayer.create(getApplicationContext()
+////                            , R.raw.friendlikeme);
+//                        // TODO 원래 new 연산자 안 썼는데 null 떠서 우선 생성해줌
+////                                mediaPlayer = new MediaPlayer();
+//                        mediaPlayer.start();
                     } else if (!mediaPlayer.isPlaying()) {
-                        mediaPlayer.seekTo(playPosition);
-                        Log.i(TAG, "playPosition Check : " + playPosition);
-                        mediaPlayer.start();
+//                        mediaPlayer.seekTo(playPosition);
+//                        Log.i(TAG, "playPosition Check : " + playPosition);
+//                        mediaPlayer.start();
                     }
 
 //                    resumeAudio() 일단 안 씀
@@ -1410,28 +1407,28 @@ public class MainActivity extends AppCompatActivity {
 
                 } else if (playState.equals("❚❚")) {
                     Log.i("메인 플레이 버튼 클릭", "일시정지 상태일 때");
-                    Log.i(TAG, "playCheck : " + playCheck);
-
-                    play.setText("▶");
-                    play.setTextSize(60);
-
-
-//                    pauseAudio() 일단 안 씀
-//                    pauseAudio();
-
-
-                    if (mediaPlayer != null) {
-                        mediaPlayer.pause();
-                        playPosition = mediaPlayer.getCurrentPosition();
-                        Log.d("[PAUSE CHECK]", "" + playPosition);
-                        Log.i(TAG, "playCheck : " + playCheck);
-
-                    }
-
-                } // 재생 버튼이 일시정지 모양일 때
-                // + 예외 처리
-                else {
-                    Log.i(TAG, "재생 버튼 모양이 재생도 일시정지도 아님");
+//                    Log.i(TAG, "playCheck : " + playCheck);
+//
+//                    play.setText("▶");
+//                    play.setTextSize(60);
+//
+//
+////                    pauseAudio() 일단 안 씀
+////                    pauseAudio();
+//
+//
+//                    if (mediaPlayer != null) {
+//                        mediaPlayer.pause();
+//                        playPosition = mediaPlayer.getCurrentPosition();
+//                        Log.d("[PAUSE CHECK]", "" + playPosition);
+//                        Log.i(TAG, "playCheck : " + playCheck);
+//
+//                    }
+//
+//                } // 재생 버튼이 일시정지 모양일 때
+//                // + 예외 처리
+//                else {
+//                    Log.i(TAG, "재생 버튼 모양이 재생도 일시정지도 아님");
                 }
 
             } // if (playCheck == true 닫아주는 중괄호
