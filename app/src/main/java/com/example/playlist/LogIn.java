@@ -27,6 +27,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.kakao.sdk.user.UserApiClient;
+import com.kakao.sdk.user.model.Account;
 
 import java.io.IOException;
 
@@ -46,10 +48,13 @@ public class LogIn extends Activity {
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
     ImageView google_Btn;
+    ImageView kakao_Btn;
 
     Button back;
     Button submit;
     Button signUp;
+    Button google;
+    Button kakao;
 
     EditText idEdit, pwEdit;
 
@@ -74,19 +79,43 @@ public class LogIn extends Activity {
 
         ctx = this;
 
+        kakao_Btn = findViewById(R.id.kakaoBtn);
+        kakao_Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               goKakao();
+            }
+        });
 
-//        google_Btn = findViewById(R.id.google_Btn);
-//        gso = new GoogleSignInOptions
-//                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                .requestEmail().build();
-//        gsc = GoogleSignIn.getClient(this, gso);
-//
-//        google_Btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                signIn();
-//            }
-//        });
+
+        kakao = findViewById(R.id.kakaoBtnMent);
+        kakao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goKakao();
+            }
+        });
+
+        google_Btn = findViewById(R.id.googleBtn);
+        gso = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail().build();
+        gsc = GoogleSignIn.getClient(this, gso);
+
+        google_Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signIn();
+            }
+        });
+
+        google = findViewById(R.id.googleBtnMent);
+        google.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signIn();
+            }
+        });
 
 
         shared = getSharedPreferences("signUp", MODE_PRIVATE);
@@ -341,15 +370,206 @@ public class LogIn extends Activity {
     }
 
 
-//    // 자동 로그인 유저
-//    public void checkAutoLogin(String id) {
-//
-//        //Toast.makeText(this, id + "님 환영합니다.", Toast.LENGTH_LONG).show();
-//        Intent intent = new Intent(this, MainActivity.class);
-//        startActivity(intent);
-//        finish();
-//
-//    }
+    // 자동 로그인 유저
+    public void checkAutoLogin(String id) {
+
+        //Toast.makeText(this, id + "님 환영합니다.", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+
+    }
+
+    // 카카오 로그인 공통 callback 구성
+    void kakaoLogin() {
+        String TAG = "kakaoLogin()";
+        UserApiClient.getInstance().loginWithKakaoAccount(LogIn.this, (oAuthToken, error) -> {
+            if (error != null) {
+                Log.e(TAG, "로그인 실패", error);
+            } else if (oAuthToken != null) {
+                Log.i(TAG, "로그인 성공(토큰) : " + oAuthToken.getAccessToken());
+                getUserInfo();
+
+                // 성공하면 테이블에 데이터 삽입
+//                registerMe();
+            }
+            return null;
+        });
+
+
+//        Log.i("[SignUp]","kakao login");
+//        UserApiClient.getInstance().loginWithKakaoTalk(SignUp.this, (oAuthToken, error) -> {
+//            if (error != null) {
+//                Log.e("[SignUp KAKAO LOG IN]", "로그인 실패", error);
+//            } else if (oAuthToken != null) {
+//                Log.i("[SignUp KAKAO LOG IN]", "로그인 성공(토큰) : " + oAuthToken.getAccessToken());
+//            }
+//            return null;
+//        });
+
+    }
+
+    public void getUserInfo() {
+        String TAG = "getUserInfo()";
+        UserApiClient.getInstance().me((user, meError) -> {
+
+
+            if (meError != null) {
+                Log.e(TAG, "사용자 정보 요청 실패", meError);
+            } else {
+                System.out.println("로그인 완료");
+                Log.i(TAG, user.toString());
+                {
+                    Log.i(TAG, "사용자 정보 요청 성공" +
+                            "\n회원번호: " + user.getId() +
+                            "\n이메일: " + user.getKakaoAccount().getEmail());
+
+                }
+                Account user1 = user.getKakaoAccount();
+                System.out.println("사용자 계정 : " + user1);
+                System.out.println("사용자 계정.toString : " + user1.toString());
+                Log.i("[KAKAO userEmail]", "" + user1.getEmail());
+
+                String userID = user1.getEmail();
+                String[] userEmailCut = userID.split("@");
+
+
+                // kakao_api DB에 넘겨줘야 해!
+                final String id = userEmailCut[0];
+                final String nickname = userEmailCut[0];
+                Log.i(TAG, "String id : " + id);
+                Log.i(TAG, "String nickname : " + nickname);
+
+
+                int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
+                if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
+                    // get 방식 파라미터 추가
+                    HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/kakaoLogin.php").newBuilder();
+                    urlBuilder.addQueryParameter("ver", "1.0"); // 예시
+                    String url = urlBuilder.build().toString();
+                    Log.i("[kakao]", "String url 확인 : " + url);
+
+
+                    // POST 파라미터 추가
+                    RequestBody formBody = new FormBody.Builder()
+                            .add("id", id.trim())
+                            .add("nickname", nickname.trim())
+                            .build();
+
+
+                    // 요청 만들기
+                    OkHttpClient client = new OkHttpClient();
+                    Request request = new Request.Builder()
+                            .url(url)
+                            .post(formBody)
+                            .build();
+
+
+                    // 응답 콜백
+                    client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                            e.printStackTrace();
+                            Log.i("[kakao]", "" + e);
+                        }
+
+                        @Override
+                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                            Log.i("[kakao]", "onResponse 메서드 작동");
+
+                            // 서브 스레드 Ui 변경 할 경우 에러
+                            // 메인스레드 Ui 설정
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    try {
+
+
+                                        if (!response.isSuccessful()) {
+                                            // 응답 실패
+                                            Log.i("[kakao]", "응답 실패 : " + response);
+                                            Toast.makeText(getApplicationContext(), "네트워크 문제 발생"
+                                                    , Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            // 응답 성공
+                                            final String responseData = response.body().string();
+                                            Log.i("[kakao]", "응답 성공 (responseData) : " + responseData);
+
+                                            if (responseData.equals("1")) {
+                                                Log.i("[SignUp Activity]", "responseData.equals(\"1\") else : " + responseData);
+//                                                Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
+//                                                startActivityflag(MainActivity.class);
+                                            } else {
+                                                Log.i("[SignUp Activity]", "responseData.equals(\"0\") else : " + responseData);
+//                                                Toast.makeText(getApplicationContext(), "Sign Up Failed", Toast.LENGTH_SHORT).show();
+                                            }
+
+
+                                        }
+
+
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+
+
+                        }
+                    });
+                }
+
+                Log.i("[KAKAO userID]", "" + user1.getEmail());
+                // id를 DB에 넘겨줄 거야
+                Log.i("[KAKAO userID]", "" + id);
+
+
+//                Intent intent = new Intent(SignUp.this, MainActivity.class);
+//                startActivityForResult(intent, 1000);
+                Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
+                startActivityflag(MainActivity.class);
+
+            }
+
+
+            return null;
+        });
+    }
+
+    // 인텐트 화면전환 하는 함수
+    // FLAG_ACTIVITY_CLEAR_TOP = 불러올 액티비티 위에 쌓인 액티비티 지운다.
+    public void startActivityflag(Class c) {
+        Intent intent = new Intent(getApplicationContext(), c);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        // 화면전환 애니메이션 없애기
+        overridePendingTransition(0, 0);
+    }
+
+    public void kakaoAccountLogin() {
+        String TAG = "kakaoAccountLogin()";
+        UserApiClient.getInstance().loginWithKakaoAccount(LogIn.this, (oAuthToken, error) -> {
+            if (error != null) {
+                Log.e(TAG, "로그인 실패", error);
+            } else if (oAuthToken != null) {
+                Log.i(TAG, "로그인 성공(토큰) : " + oAuthToken.getAccessToken());
+                getUserInfo();
+
+                // 성공하면 테이블에 데이터 삽입
+//                registerMe();
+            }
+            return null;
+        });
+    }
+
+    void goKakao() {
+        if (UserApiClient.getInstance().isKakaoTalkLoginAvailable(LogIn.this)) {
+            kakaoLogin();
+        } else {
+            kakaoAccountLogin();
+        }
+    }
 
     // 뒤로 가기 버튼 2번 클릭시 종료
 //    @Override
@@ -357,5 +577,6 @@ public class LogIn extends Activity {
 //        //super.onBackPressed();
 //        backPressCloseHandler.onBackPressed();
 //    }
+
 }
 

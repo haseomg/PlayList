@@ -126,23 +126,22 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (!fromSharedNickName.equals("LOG IN")) {
-            logIn.setText(fromSharedNickName + "'S");
+            logIn.setText(fromSharedNickName);
             Log.i("logIn.setText Check1 : ", fromSharedNickName);
         }
 
 
         // 쉐어드로부터 가져온 닉네임 비교해서 logIn 버튼 이름 설정
         if (fromSharedNickName.equals("LOG IN")) {
-            logIn.setText(intent.getStringExtra("nickname") + "'S");
-            Log.i("logIn.setText Check2 : ", intent.getStringExtra("nickname") + "'S");
+            logIn.setText(intent.getStringExtra("nickname"));
             Log.i(TAG, "fromSharedNickName String 값이 default값일 때");
         } else {
-            logIn.setText(fromSharedNickName + "'S");
+            logIn.setText(fromSharedNickName);
             Log.i("logIn.setText Check3 : ", fromSharedNickName);
             Log.i(TAG, "fromSharedNickName String 값을 쉐어드에서 가져왔을 때 : " + fromSharedNickName);
         }
         Log.i("[Main]", "login.getText.toString() : " + logIn.getText().toString());
-        if (logIn.getText().toString().equals("null'S")) {
+        if (logIn.getText().toString().equals("null") || logIn.getText().toString().equals("")) {
             logIn.setText("LOG IN");
             Log.i("logIn.setText Check4 : ", logIn.getText().toString());
 
@@ -183,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
                 logIn.setText(personName);
                 Log.i("logIn.setText Check5 : ", personName);
             } else {
-                logIn.setText(fromSharedNickName + "'S");
+                logIn.setText(fromSharedNickName);
                 Log.i("logIn.setText Check6 : ", fromSharedNickName);
             }
             editor.commit();
@@ -242,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
 
                 } else {
 
-                    Log.i(TAG, "버튼 이름이 [LOG IN]이 아닐 때 || 사용자 이름'S일 때");
+                    Log.i(TAG, "버튼 이름이 [LOG IN]이 아닐 때 || 사용자 이름일 때");
 
                     Intent profileIntent = new Intent(MainActivity.this, Profile.class);
                     startActivity(profileIntent);
@@ -925,7 +924,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 if (!id.equals(fromSharedNickName) && !fromSharedNickName.equals("LOG IN")) {
-                    logIn.setText(fromSharedNickName + "'S");
+                    logIn.setText(fromSharedNickName);
                     Log.i("logIn.setText Check8 : ", fromSharedNickName);
                     editor.putString("id", fromSharedNickName);
                     editor.commit();
@@ -933,7 +932,7 @@ public class MainActivity extends AppCompatActivity {
                     editor.putString("id", id);
                     editor.commit();
                 } else if (!id.equals(fromSharedNickName) && fromSharedNickName.equals("LOG IN")) {
-                    logIn.setText(id + "'S");
+                    logIn.setText(id);
                     Log.i("logIn.setText Check9 : ", id);
                     editor.putString("id", fromSharedNickName);
                     editor.commit();
@@ -945,7 +944,7 @@ public class MainActivity extends AppCompatActivity {
                     editor.commit();
                 }
                 if (!id.equals(fromSharedNickName) && fromSharedNickName.equals("LOG IN")) {
-                    logIn.setText(id + "'S");
+                    logIn.setText(id);
                     Log.i("logIn.setText Check10 : ", id);
                     editor.putString("id", id);
                     editor.commit();

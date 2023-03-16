@@ -299,6 +299,7 @@ public class SignUp extends AppCompatActivity {
                                                                 editor.putString("pw", pwShared);
                                                                 editor.putString("pwCheck", pwCheckShared);
                                                                 editor.putString("nickName", nickNameShared);
+                                                                editor.apply();
                                                                 editor.commit();
 
 
@@ -315,6 +316,8 @@ public class SignUp extends AppCompatActivity {
                                                     } else {
 
                                                         Log.i("[SignUp Activity]", "responseData.equals(\"0\") else : " + responseData);
+
+
 
                                                         Toast.makeText(getApplicationContext(), "Sign Up Failed", Toast.LENGTH_SHORT).show();
                                                     }

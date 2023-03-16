@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="350dp"
-    android:layout_height="300dp"
+    android:layout_height="350dp"
     android:background="#AAB9FF"
     android:layout_gravity="center"
     tools:context=".LogIn">
@@ -65,7 +65,7 @@
         app:layout_constraintHorizontal_bias="0.45"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/logInFrame"
-        app:layout_constraintVertical_bias="0.37" />
+        app:layout_constraintVertical_bias="0.26" />
 
     <EditText
         android:id="@+id/passwordEditText"
@@ -82,7 +82,7 @@
         app:layout_constraintHorizontal_bias="0.45"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.58000004" />
+        app:layout_constraintVertical_bias="0.44" />
 
 <!--    <ImageView-->
 <!--        android:id="@+id/google_Btn"-->
@@ -109,7 +109,8 @@
         app:layout_constraintEnd_toStartOf="@+id/logInSubmitButton"
         app:layout_constraintHorizontal_bias="0.607"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
+        app:layout_constraintVertical_bias="0.18" />
 
     <Button
         android:id="@+id/logInSubmitButton"
@@ -124,67 +125,68 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.724"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
+        app:layout_constraintVertical_bias="0.18" />
 
-<!--    <ImageView-->
-<!--        android:id="@+id/kakaoBtn"-->
-<!--        android:layout_width="37dp"-->
-<!--        android:layout_height="37dp"-->
-<!--        android:layout_margin="20dp"-->
-<!--        android:src="@drawable/kakao"-->
-<!--        app:flow_horizontalBias="5"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.22"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/passwordEditText"-->
-<!--        app:layout_constraintVertical_bias="0.96" />-->
+    <ImageView
+        android:id="@+id/kakaoBtn"
+        android:layout_width="37.5dp"
+        android:layout_height="37.5dp"
+        android:layout_margin="20dp"
+        android:src="@drawable/kakao"
+        app:flow_horizontalBias="5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.22"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
+        app:layout_constraintVertical_bias="0.97" />
 
-<!--    <Button-->
-<!--        android:id="@+id/kakaoBtnMent"-->
-<!--        android:layout_width="90dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginBottom="68dp"-->
-<!--        android:background="#00ff0000"-->
-<!--        android:fontFamily="sans-serif-black"-->
-<!--        android:text="KAKAO LOGIN"-->
-<!--        android:textColor="#7878E1"-->
-<!--        android:textSize="11sp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.21"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/passwordEditText"-->
-<!--        app:layout_constraintVertical_bias="0.96" />-->
+    <Button
+        android:id="@+id/kakaoBtnMent"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="68dp"
+        android:background="#00ff0000"
+        android:fontFamily="sans-serif-black"
+        android:text="KAKAO LOGIN"
+        android:textColor="#7878E1"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.21"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
+        app:layout_constraintVertical_bias="0.96" />
 
-<!--    <ImageView-->
-<!--        android:id="@+id/googleBtn"-->
-<!--        android:layout_width="43dp"-->
-<!--        android:layout_height="43dp"-->
-<!--        android:layout_margin="20dp"-->
-<!--        android:src="@drawable/googlelogo"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.73"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/passwordEditText"-->
-<!--        app:layout_constraintVertical_bias="0.97" />-->
+    <ImageView
+        android:id="@+id/googleBtn"
+        android:layout_width="43dp"
+        android:layout_height="43dp"
+        android:layout_margin="20dp"
+        android:src="@drawable/googlelogo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.7"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
+        app:layout_constraintVertical_bias="1.0" />
 
-<!--    <Button-->
-<!--        android:id="@+id/googleBtnMent"-->
-<!--        android:layout_width="90dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:background="#00ff0000"-->
-<!--        android:fontFamily="sans-serif-black"-->
-<!--        android:text="GOOGLE LOGIN"-->
-<!--        android:textColor="#7878E1"-->
-<!--        android:textSize="11sp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.73"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/passwordEditText"-->
-<!--        app:layout_constraintVertical_bias="0.55" />-->
+    <Button
+        android:id="@+id/googleBtnMent"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:background="#00ff0000"
+        android:fontFamily="sans-serif-black"
+        android:text="GOOGLE LOGIN"
+        android:textColor="#7878E1"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.71"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
+        app:layout_constraintVertical_bias="0.56" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
