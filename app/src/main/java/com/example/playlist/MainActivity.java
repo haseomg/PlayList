@@ -1044,11 +1044,11 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            mProgressDialog = new ProgressDialog(MainActivity.this);
-            mProgressDialog.setTitle("Music Streaming");
-            mProgressDialog.setMessage("Loading...");
-            mProgressDialog.setIndeterminate(false);
-            mProgressDialog.show();
+//            mProgressDialog = new ProgressDialog(MainActivity.this);
+//            mProgressDialog.setTitle("Music Streaming");
+//            mProgressDialog.setMessage("Loading...");
+//            mProgressDialog.setIndeterminate(false);
+//            mProgressDialog.show();
         }
 
         @Override
@@ -1063,7 +1063,7 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(String result) {
 //            showList(result);
-            mProgressDialog.dismiss();
+//            mProgressDialog.dismiss();
         }
     }
 
