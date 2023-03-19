@@ -130,8 +130,8 @@
 
     <ImageView
         android:id="@+id/kakaoBtn"
-        android:layout_width="37.5dp"
-        android:layout_height="37.5dp"
+        android:layout_width="37.1dp"
+        android:layout_height="37.1dp"
         android:layout_margin="20dp"
         android:src="@drawable/kakao"
         app:flow_horizontalBias="5"
@@ -157,7 +157,7 @@
         app:layout_constraintHorizontal_bias="0.21"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
-        app:layout_constraintVertical_bias="0.96" />
+        app:layout_constraintVertical_bias="0.99" />
 
     <ImageView
         android:id="@+id/googleBtn"
@@ -186,7 +186,7 @@
         app:layout_constraintHorizontal_bias="0.71"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
-        app:layout_constraintVertical_bias="0.56" />
+        app:layout_constraintVertical_bias="0.55" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

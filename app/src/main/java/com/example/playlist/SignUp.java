@@ -2,6 +2,7 @@ package com.example.playlist;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -55,6 +57,8 @@ public class SignUp extends AppCompatActivity {
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
 
+    AlertDialog.Builder builder;
+
     ImageView googleBtn;
     Button googleBtnMent;
 
@@ -72,6 +76,8 @@ public class SignUp extends AppCompatActivity {
 
     static Context signCtx;
 
+    EditText idEdit, pwEdit, pwCheckEdit, nicknameEdit;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,9 +89,11 @@ public class SignUp extends AppCompatActivity {
         // final static context
         signCtx = this;
 
+        builder = new AlertDialog.Builder(this);
+
+
 //        카카오 키 해시 받음 (아래에 getKeyHash() 메서드 존재)
 //        Log.d("KeyHash", getKeyHash());
-
 
         // 카카오 로그인
         kakaoBtn = findViewById(R.id.kakaoBtn);
@@ -273,7 +281,18 @@ public class SignUp extends AppCompatActivity {
                                                 if (!response.isSuccessful()) {
                                                     // 응답 실패
                                                     Log.i("[SignUp Activity]", "응답 실패 : " + response);
-                                                    Toast.makeText(getApplicationContext(), "네트워크 문제 발생", Toast.LENGTH_SHORT).show();
+//                                                    Toast.makeText(getApplicationContext(), "네트워크 문제 발생", Toast.LENGTH_SHORT).show();
+//                                                    builder.setTitle("⚠️ NETWORK ERROR ⚠️");
+//                                                    builder.setMessage("데이터 활성화와 와이파이를 확인해 주세요. ");
+//                                                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+//                                                        @Override
+//                                                        public void onClick(DialogInterface dialog, int which) {
+//
+//                                                        }
+//                                                    });
+//                                                    AlertDialog dialog = builder.create();
+//                                                    dialog.show();
+
 
                                                 } else {
 
@@ -310,7 +329,17 @@ public class SignUp extends AppCompatActivity {
                                                         } else {
                                                             Log.i("[SignUp Activity]", "responseData.equals(\"0\") else : " + responseData);
 
-                                                            Toast.makeText(getApplicationContext(), "Password is difference", Toast.LENGTH_SHORT).show();
+//                                                            Toast.makeText(getApplicationContext(), "Password is difference", Toast.LENGTH_SHORT).show();
+                                                            builder.setTitle("PASSWORD CHECK✔️");
+                                                            builder.setMessage("패스워드가 다릅니다. ");
+                                                            builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                                }
+                                                            });
+                                                            AlertDialog dialog = builder.create();
+                                                            dialog.show();
                                                         }
 
                                                     } else {
@@ -318,8 +347,17 @@ public class SignUp extends AppCompatActivity {
                                                         Log.i("[SignUp Activity]", "responseData.equals(\"0\") else : " + responseData);
 
 
+//                                                        Toast.makeText(getApplicationContext(), "Sign Up Failed", Toast.LENGTH_SHORT).show();
+                                                        builder.setTitle("SIGN UP FAILED❕");
+                                                        builder.setMessage("회원가입에 실패하였습니다.");
+                                                        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
 
-                                                        Toast.makeText(getApplicationContext(), "Sign Up Failed", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        });
+                                                        AlertDialog dialog = builder.create();
+                                                        dialog.show();
                                                     }
 
 //                                                    if (id.getText().toString().length() >= 4 &&
@@ -344,12 +382,32 @@ public class SignUp extends AppCompatActivity {
                             });
 
                         } else {
-                            Toast.makeText(getApplicationContext(), "Check your information", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getApplicationContext(), "Check your information", Toast.LENGTH_SHORT).show();
+                            builder.setTitle("CHECK YOUR INFO ✔️");
+                            builder.setMessage("플레이어의 정보를 다시 확인해 주세요.");
+                            builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            });
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
                         }
 
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
+                    builder.setTitle("CHECK THE INTERNET ✔️");
+                    builder.setMessage("인터넷 연결을 확인해 주세요.");
+                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
                 }
 
 
@@ -374,7 +432,8 @@ public class SignUp extends AppCompatActivity {
             try {
                 task.getResult(ApiException.class);
             } catch (ApiException e) {
-                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Something went wrong ⚠️", Toast.LENGTH_SHORT).show();
+
             }
         }
     }
@@ -618,6 +677,17 @@ public class SignUp extends AppCompatActivity {
                                             Log.i("[kakao]", "응답 실패 : " + response);
                                             Toast.makeText(getApplicationContext(), "네트워크 문제 발생"
                                                     , Toast.LENGTH_SHORT).show();
+                                            builder.setTitle("NETWORK ERROR ⚠️");
+                                            builder.setMessage("네트워크 문제가 발생하였습니다. ");
+                                            builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                }
+                                            });
+                                            AlertDialog dialog = builder.create();
+                                            dialog.show();
+
                                         } else {
                                             // 응답 성공
                                             final String responseData = response.body().string();

@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -58,10 +60,13 @@ public class MainActivity extends AppCompatActivity {
     TextView playingTime;
     TextView toPlayTime;
 
+    Toast toast;
+    View toastView;
 
     private Button play;
     private MediaPlayer mediaPlayer;
     private int playPosition = -1;
+    private boolean isDragging = false;
     String castNum;
 
     // 프로그레스바 진행률을 위해 생성해준 변수들
@@ -73,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
 
     String streamingRecordList;
     String[] streamingArray;
+    String name;
+    static final String mediaPlayerKey = "media_player";
 
     String personName;
     String personEmail;
@@ -80,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
     int playlistNum;
 
     boolean playCheck = false;
+    boolean nowPlaying = false;
 
     SharedPreferences shared;
     SharedPreferences.Editor editor;
@@ -102,10 +110,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.i(TAG, "onCreate()");
+        Log.i(TAG, "LifeCycle onCreate()");
 
         // final static Context
         mainCtx = this;
+
+        toast = Toast.makeText(this, "\uD835\uDC29\uD835\uDC25\uD835\uDC1A\uD835\uDC32\uD835\uDC22\uD835\uDC27\uD835\uDC20 ♪", Toast.LENGTH_SHORT);
+        toastView = toast.getView();
+        toastView.getBackground().setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
+        TextView toastMessage = toastView.findViewById(android.R.id.message);
+        toastMessage.setTextColor(Color.WHITE);
+        toastMessage.setTextSize(16);
 
         shared = getSharedPreferences("signUp", MODE_PRIVATE);
         editor = shared.edit();
@@ -326,7 +341,7 @@ public class MainActivity extends AppCompatActivity {
                     // 첫 재생시 재생목록 3개만 생성해보자 (현재 곡 개수 8개)
                     // 재생목록 어떻게 보여줄까?
 
-                    if (playCheck == false) {
+                    if (!playCheck) {
 
 
                         Log.i("메인 플레이 버튼 클릭", "첫 재생");
@@ -408,15 +423,18 @@ public class MainActivity extends AppCompatActivity {
                                                         String[] songCut = songInfo.split("@@@");
 
                                                         String path = songCut[0];
+                                                        Log.i(TAG, "String songInfo path 확인 : " + path);
+
                                                         String time = songCut[1];
+                                                        Log.i(TAG, "String songInfo 확인 : " + time);
 
                                                         String[] songName = path.split("/");
-                                                        String name = songName[4];
+                                                        name = songName[4];
 
 
-                                                        Log.i(TAG, "song name 확인 : " + name);
-                                                        Log.i(TAG, "song path 확인 : " + path);
-                                                        Log.i(TAG, "song time 확인 : " + time);
+                                                        Log.i(TAG, "songInfo name 확인 : " + name);
+                                                        Log.i(TAG, "songInfo path 확인 : " + path);
+                                                        Log.i(TAG, "songInfo time 확인 : " + time);
 
 //                                                          경로 가져와서 음악 재생 시켜준 뒤
 //                                                          초수 세팅
@@ -509,18 +527,21 @@ public class MainActivity extends AppCompatActivity {
                                                             @Override
                                                             public void onStartTrackingTouch(SeekBar seekBar) {
                                                                 Log.i(TAG, "SeekBar onStartTrackingTouch");
+                                                                isDragging = true;
                                                             }
 
                                                             @Override
                                                             public void onStopTrackingTouch(SeekBar seekBar) {
                                                                 Log.i(TAG, "SeekBar onStopTrackingTouch");
+                                                                isDragging = false;
                                                             }
                                                         });
 //
 //                                                        // TODO. END for SeekBar
 
-
-                                                        Toast.makeText(getApplicationContext(), "재생 중", Toast.LENGTH_SHORT).show();
+                                                        // TODO TOAST
+//                                                        Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
+                                                        toast.show();
 
                                                         updateSeekBar();
 
@@ -566,7 +587,6 @@ public class MainActivity extends AppCompatActivity {
 
                         }
 
-
                         // 아래 if (playCHeck == false 닫아주는 중괄호
                     } else { // <-> if (playCheck == true
 
@@ -600,6 +620,10 @@ public class MainActivity extends AppCompatActivity {
                             play.setText("▶");
                             play.setTextSize(53);
 
+                            nowPlaying = false;
+
+//                            seekBarMoving();
+//                            updateSeekBar();
 
 //                    pauseAudio() 일단 안 씀
 //                    pauseAudio();
@@ -670,19 +694,6 @@ public class MainActivity extends AppCompatActivity {
         Log.i("[Random] playCheck : ", String.valueOf(playCheck));
     }
 
-
-//    private void changeSeekbar() {
-//        //TODO 현재 mp3 재생 시간을 seekBar에 넣는다.
-//        mainSeekBar.setProgress(mediaPlayer.getCurrentPosition());
-//        if (mediaPlayer.isPlaying()) {
-//            AudioManager audioManager =
-//                    (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-//            AudioDeviceInfo[] audioDevices =
-//                    audioManager.getDevices(AudioManager.GET_DEVICES_ALL);
-//
-//        }
-//    }
-
     public void Thread() {
         Log.i(TAG, "Thread Method Start");
         Runnable task = new Runnable() {
@@ -705,7 +716,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onStart() {
         super.onStart();
-        Log.i(TAG, "onStart()");
+        Log.i(TAG, "LifeCycle onStart()");
 
 
         logIn = findViewById(R.id.logInButton);
@@ -731,27 +742,41 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onResume() {
         super.onResume();
-        Log.i(TAG, "onResume()");
+        Log.i(TAG, "LifeCycle onResume()");
         updateSeekBar();
     }
 
     protected void onPause() {
         super.onPause();
-        Log.i(TAG, "onPause()");
+        Log.i(TAG, "LifeCycle onPause()");
         handler.removeCallbacksAndMessages(null);
     }
 
     protected void onStop() {
         super.onStop();
-        Log.i(TAG, "onStop()");
+        Log.i(TAG, "LifeCycle onStop()");
+        Log.i(TAG, "LifeCycle onStop() 로그인 액티비티에서 로그아웃 하고 돌아왔을 때");
+
+//        if (savedInstanveStae != null) {
+//
+//        }
     }
 
     protected void onDestroy() {
         super.onDestroy();
 //        stopMediaPlayer();
-        Log.i(TAG, "onDestroy()");
+//        Log.i(TAG, "LifeCycle onDestroy()");
+//        if (mediaPlayer != null) {
+//            mediaPlayer.release();
+//            handler.removeCallbacksAndMessages(null);
+//            mediaPlayer = null;
+//        } else {
+        // TODO Original
         mediaPlayer.release();
+        mediaPlayer = null;
         handler.removeCallbacksAndMessages(null);
+        //
+//        }
     }
 
     // 카카오 로그아웃
@@ -778,7 +803,9 @@ public class MainActivity extends AppCompatActivity {
         closePlayer();
 //        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.waves);
         mediaPlayer.start();
-        Toast.makeText(this, "재생 중", Toast.LENGTH_SHORT).show();
+        // TODO TOAST
+//        Toast.makeText(this, "♫", Toast.LENGTH_SHORT).show();
+        toast.show();
     }
 
     private void resumeAudio() {
@@ -1250,7 +1277,6 @@ public class MainActivity extends AppCompatActivity {
                                                 Log.i(TAG, "[RightPlay] file name from music table : " + uri);
                                                 //
 
-
                                                 mediaPlayer.setDataSource(uri);
 //                                                play.setText("❚❚");
                                                 Log.i(TAG, "[RightPlay] mediaPlayer.setDataSource(path)");
@@ -1287,6 +1313,13 @@ public class MainActivity extends AppCompatActivity {
                                                     Thread();
                                                 }
 
+                                                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                                    @Override
+                                                    public void onCompletion(MediaPlayer mp) {
+                                                        mainSeekBar.setProgress(0);
+                                                    }
+                                                });
+
                                                 mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                                                     @Override
                                                     public void onPrepared(MediaPlayer mp) {
@@ -1316,19 +1349,23 @@ public class MainActivity extends AppCompatActivity {
                                                     public void onStartTrackingTouch(SeekBar seekBar) {
                                                         Log.i(TAG, "[RightPlay] SeekBar onStartTrackingTouch");
                                                         Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                                                        isDragging = true;
                                                     }
 
                                                     @Override
                                                     public void onStopTrackingTouch(SeekBar seekBar) {
                                                         Log.i(TAG, "[RightPlay] SeekBar onStopTrackingTouch");
                                                         Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                                                        isDragging = false;
                                                     }
                                                 });
 //
 //                                                        // TODO. END for SeekBar
 
 
-                                                Toast.makeText(getApplicationContext(), "재생 중", Toast.LENGTH_SHORT).show();
+                                                // TODO TOAST
+//                                                Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
+                                                toast.show();
 
                                                 updateSeekBar();
 
@@ -1511,5 +1548,76 @@ public class MainActivity extends AppCompatActivity {
 //        mediaPlayer.release();
 //        handler.removeCallbacks(updateSeekBarRunnable);
 //    }
+
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        if (mediaPlayer != null) {
+//            outState.putParcelable(mediaPlayerKey, (Parcelable) mediaPlayer);
+//            outState.putString("media_title", name);
+//            outState.putInt("media_progress", mediaPlayer.getCurrentPosition());
+//        }
+//    }
+
+//    @Override
+//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//        if (mediaPlayer != null) {
+//            setTitle(name);
+//            mediaPlayer.seekTo(savedInstanceState.getInt("media_progress"));
+//            mediaPlayer.start();
+//        }
+//    }
+
+
+    void seekBarMoving() {
+        // TODO When SeekBar click, move to time from mp3 file
+        if (!nowPlaying) {
+
+//            mainSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//                @Override
+//                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                    Log.i(TAG, "[RightPlay] SeekBar onProgressChanged");
+//                    Log.i(TAG, "[RightPlay] -----------------------------------------------");
+//                    if (fromUser) {
+//                        mediaPlayer.seekTo(progress);
+//                    }
+//                }
+//
+//                //
+//                @Override
+//                public void onStartTrackingTouch(SeekBar seekBar) {
+//                    Log.i(TAG, "[RightPlay] SeekBar onStartTrackingTouch");
+//                    Log.i(TAG, "[RightPlay] -----------------------------------------------");
+//                    isDragging = true;
+//                }
+//
+//                @Override
+//                public void onStopTrackingTouch(SeekBar seekBar) {
+//                    Log.i(TAG, "[RightPlay] SeekBar onStopTrackingTouch");
+//                    Log.i(TAG, "[RightPlay] -----------------------------------------------");
+//                    isDragging = false;
+//                }
+//            });
+////
+////                                                        // TODO. END for SeekBar
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (mediaPlayer != null) {
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        if (!isDragging) {
+                            mainSeekBar.setProgress(mediaPlayer.getCurrentPosition());
+                        }
+                    }
+                }
+            }).start();
+        }
+    }
 
 }
