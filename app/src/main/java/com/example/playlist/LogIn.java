@@ -254,6 +254,13 @@ public class LogIn extends Activity {
         });
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+            return false;
+        }
+        return true;
+    }
 
     protected void onStart() {
         super.onStart();

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -204,6 +205,7 @@ public class Profile extends Activity {
 
                     builder.setTitle("Are you sure want to log out?");
 
+                    // app.dialog 여서 버튼이 앞에부터 순서대로 쌓이는데, 아무래도 커스텀 해야 할 것 같다.
                     builder.setPositiveButton("YES",
                             new DialogInterface.OnClickListener() {
                                 @Override
@@ -294,4 +296,13 @@ public class Profile extends Activity {
         super.onDestroy();
         Log.i(TAG, "onDestroy()");
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+            return false;
+        }
+        return true;
+    }
+
 }
