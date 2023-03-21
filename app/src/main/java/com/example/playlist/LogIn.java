@@ -242,7 +242,7 @@ public class LogIn extends Activity {
                         Log.i(TAG, "LogIn.setText Check Two : " + idStr);
                         ((MainActivity) MainActivity.mainCtx).logIn.setText(idStr + "'S");
 
-                        Toast.makeText(getApplicationContext(), idStr + "님 반갑습니다!",
+                        Toast.makeText(getApplicationContext(), idStr + " 님 반갑습니다 !",
                                 Toast.LENGTH_SHORT).show();
 
                     } else {
