@@ -83,7 +83,7 @@ public class SignUp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        Log.i(TAG, "onCreate()");
+        Log.i(TAG, "signUp onCreate()");
 
 
         // final static context
@@ -163,9 +163,9 @@ public class SignUp extends AppCompatActivity {
         nickName = findViewById(R.id.signUpNickNameEditText);
 
         pwInfo = findViewById(R.id.pwInfoTextView);
-        pwInfo.setVisibility(View.GONE);
+        pwInfo.setVisibility(View.INVISIBLE);
         pwCheckInfo = findViewById(R.id.pwCheckInfoTextView);
-        pwCheckInfo.setVisibility(View.GONE);
+        pwCheckInfo.setVisibility(View.INVISIBLE);
 
 //        pw.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -324,22 +324,33 @@ public class SignUp extends AppCompatActivity {
 
                                                                 Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
                                                                 startActivityflag(MainActivity.class);
+                                                            } else { //
+                                                                builder.setTitle("CHECK YOUR INFO✔️");
+                                                                builder.setMessage("정보를 형식에 맞춰 입력해 주세요.");
+                                                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                                    }
+                                                                });
+                                                                AlertDialog dialog = builder.create();
+                                                                dialog.show();
                                                             }
 
                                                         } else {
                                                             Log.i("[SignUp Activity]", "responseData.equals(\"0\") else : " + responseData);
 
-//                                                            Toast.makeText(getApplicationContext(), "Password is difference", Toast.LENGTH_SHORT).show();
-                                                            builder.setTitle("PASSWORD CHECK✔️");
-                                                            builder.setMessage("패스워드가 다릅니다. ");
-                                                            builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                                                @Override
-                                                                public void onClick(DialogInterface dialog, int which) {
 
-                                                                }
-                                                            });
-                                                            AlertDialog dialog = builder.create();
-                                                            dialog.show();
+//                                                            builder.setTitle("PASSWORD CHECK✔️");
+//                                                            builder.setMessage("패스워드가 다릅니다. ");
+//                                                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                                                                @Override
+//                                                                public void onClick(DialogInterface dialog, int which) {
+//
+//                                                                }
+//                                                            });
+//                                                            AlertDialog dialog = builder.create();
+//                                                            dialog.show();
                                                         }
 
                                                     } else {
@@ -348,9 +359,9 @@ public class SignUp extends AppCompatActivity {
 
 
 //                                                        Toast.makeText(getApplicationContext(), "Sign Up Failed", Toast.LENGTH_SHORT).show();
-                                                        builder.setTitle("SIGN UP FAILED❕");
-                                                        builder.setMessage("회원가입에 실패하였습니다.");
-                                                        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                                        builder.setTitle("PLEASE CHECK THE ID❕");
+                                                        builder.setMessage("아이디가 중복되었습니다.");
+                                                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                             @Override
                                                             public void onClick(DialogInterface dialog, int which) {
 
@@ -359,15 +370,6 @@ public class SignUp extends AppCompatActivity {
                                                         AlertDialog dialog = builder.create();
                                                         dialog.show();
                                                     }
-
-//                                                    if (id.getText().toString().length() >= 4 &&
-//                                                            pw.getText().toString().length() == 4 &&
-//                                                            pwCheck.getText().toString().length() == 4 &&
-//                                                            nickName.getText().toString().length() >= 2) {
-
-//                                                    else {
-//                                                        Toast.makeText(SignUp.this, "Password is different", Toast.LENGTH_LONG).show();
-//                                                    }
 
                                                 }
 
@@ -383,9 +385,13 @@ public class SignUp extends AppCompatActivity {
 
                         } else {
 //                            Toast.makeText(getApplicationContext(), "Check your information", Toast.LENGTH_SHORT).show();
-                            builder.setTitle("CHECK YOUR INFO ✔️");
-                            builder.setMessage("플레이어의 정보를 다시 확인해 주세요.");
-                            builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+
+//                            // 비밀번호가 다릅니디.
+//                            pwCheckInfo.setVisibility(View.VISIBLE);
+
+                            builder.setTitle("CHECK THE PASSWORD ✔️");
+                            builder.setMessage("비밀번호가 다릅니다.");
+                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
 
@@ -395,12 +401,24 @@ public class SignUp extends AppCompatActivity {
                             dialog.show();
                         }
 
+                    } //if 문 종료 (회원가입 전에 글자 개수 체크)
+                    else {
+                        builder.setTitle("CHECK YOUR INFO ✔️");
+                        builder.setMessage("입력하신 정보를 확인해 주세요.");
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
                     }
                 } else {
 //                    Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
                     builder.setTitle("CHECK THE INTERNET ✔️");
                     builder.setMessage("인터넷 연결을 확인해 주세요.");
-                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
@@ -408,7 +426,7 @@ public class SignUp extends AppCompatActivity {
                     });
                     AlertDialog dialog = builder.create();
                     dialog.show();
-                }
+                } //else END
 
 
             }
@@ -459,33 +477,47 @@ public class SignUp extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), c);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+
         // 화면전환 애니메이션 없애기
         overridePendingTransition(0, 0);
     }
 
     protected void onStart() {
         super.onStart();
-        Log.i(TAG, "onStart()");
+        Log.i(TAG, "signUp onStart()");
     }
 
     protected void onResume() {
         super.onResume();
-        Log.i(TAG, "onResume()");
+        Log.i(TAG, "signUp onResume()");
+
+        // 만약 pwCheckEdit에서 손을 뗐는데 pw랑 정보가 다르면
+//
+//        String pwString = pw.getText().toString();
+//        String pwCheckString = pwCheck.getText().toString();
+//        int pwLength = pwString.length();
+//        int pwCheckLength = pwCheckString.length();
+//
+//        if (pwLength != 0 || pwCheckLength != 0) {
+//            if (pwString.equals(pwCheckString)) {
+//                pwCheckInfo.setVisibility(View.VISIBLE);
+//            }
+//        }
     }
 
     protected void onPause() {
         super.onPause();
-        Log.i(TAG, "onPause()");
+        Log.i(TAG, "signUp onPause()");
     }
 
     protected void onStop() {
         super.onStop();
-        Log.i(TAG, "onStop()");
+        Log.i(TAG, "signUp onStop()");
     }
 
     protected void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "onDestroy()");
+        Log.i(TAG, "signUp onDestroy()");
     }
 
     // 카카오 로그인 공통 callback 구성
