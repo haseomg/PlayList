@@ -811,6 +811,10 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "LifeCycle onStop()");
         Log.i(TAG, "LifeCycle onStop() 로그인 액티비티에서 로그아웃 하고 돌아왔을 때");
 
+        if (logIn.getText().toString().equals("LOG IN")) {
+            stopAudio();
+        }
+
 //        if (savedInstanveStae != null) {
 //
 //        }
