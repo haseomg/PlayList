@@ -51,7 +51,7 @@ public class SignUp extends AppCompatActivity {
     Button submit, goHome;
     String nickNameToMain;
 
-    TextView pwInfo, pwCheckInfo;
+    TextView pwSame, pwDiff;
 
 
     GoogleSignInOptions gso;
@@ -162,39 +162,44 @@ public class SignUp extends AppCompatActivity {
         pwCheck = findViewById(R.id.signUpPwCheckEditText);
         nickName = findViewById(R.id.signUpNickNameEditText);
 
-        pwInfo = findViewById(R.id.pwInfoTextView);
-        pwInfo.setVisibility(View.INVISIBLE);
-        pwCheckInfo = findViewById(R.id.pwCheckInfoTextView);
-        pwCheckInfo.setVisibility(View.INVISIBLE);
+        pwSame = findViewById(R.id.pwSameTextView);
+        pwSame.setVisibility(View.INVISIBLE);
+        pwDiff = findViewById(R.id.pwDiffTextView);
+        pwDiff.setVisibility(View.INVISIBLE);
 
-//        pw.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.i(TAG, "pw.onClick");
-//                pwInfo.setVisibility(View.VISIBLE);
-//
-//                if (pw == null) {
-//                    Log.i(TAG, "pw == null");
-//
-//                } else {
-//                    Log.i(TAG, "pw != null");
-//
-//                    int pwNum = Integer.parseInt(pw.getText().toString());
-//                    Log.i(TAG, "pwNum Check : " + pwNum);
-//                    if (pwNum <= 9999 && pwNum >= 0000) {
-//                        Log.i(TAG, "pwNum <= 9999 일 때");
-//                        pwInfo.setText("사용가능합니다.");
-//                    }
-//                    if (pw == null) {
-//                        Log.i(TAG, "pw == null");
-//
-//                    } else {
-//                        pwInfo.setText("비밀번호를 숫자 4자로 맞춰주세요.");
-//                    }
-//                }
-//
-//            }
-//        });
+        pwCheck.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+                if (hasFocus) {
+                    // 포커스 상태일 때
+                    Log.i(TAG, "pwCheck hasFocus");
+//                    Toast.makeText(signCtx, "hasFocus", Toast.LENGTH_SHORT).show();
+                    if (pwCheck.getText().toString().length() >= 4) {
+                        Log.i(TAG, "has focus check (if)");
+                        pwFocusCheck();
+                    } else {
+                        Log.i(TAG, "has focus check (else)");
+                        pwDiff.setVisibility(View.INVISIBLE);
+                        pwSame.setVisibility(View.INVISIBLE);
+                    }
+
+                } else {
+                    // 포커스 상태가 아닐 때
+                    Log.i(TAG, "pwCheck not hasFocus");
+//                    Toast.makeText(signCtx, "has not Focus", Toast.LENGTH_SHORT).show();
+                    if (pwCheck.getText().toString().length() >= 4) {
+                        Log.i(TAG, "has not focus check (if)");
+                        pwFocusCheck();
+                    } else {
+                        Log.i(TAG, "has not focus check (else)");
+                        pwDiff.setVisibility(View.INVISIBLE);
+                        pwSame.setVisibility(View.INVISIBLE);
+                    }
+
+                }
+            }
+        });
 
         submit = findViewById(R.id.signUpSubmitButton);
         goHome = findViewById(R.id.goHomeButton);
@@ -387,7 +392,7 @@ public class SignUp extends AppCompatActivity {
 //                            Toast.makeText(getApplicationContext(), "Check your information", Toast.LENGTH_SHORT).show();
 
 //                            // 비밀번호가 다릅니디.
-//                            pwCheckInfo.setVisibility(View.VISIBLE);
+//                            pwDiff.setVisibility(View.VISIBLE);
 
                             builder.setTitle("CHECK THE PASSWORD ✔️");
                             builder.setMessage("비밀번호가 다릅니다.");
@@ -491,6 +496,7 @@ public class SignUp extends AppCompatActivity {
         super.onResume();
         Log.i(TAG, "signUp onResume()");
 
+
         // 만약 pwCheckEdit에서 손을 뗐는데 pw랑 정보가 다르면
 //
 //        String pwString = pw.getText().toString();
@@ -500,10 +506,47 @@ public class SignUp extends AppCompatActivity {
 //
 //        if (pwLength != 0 || pwCheckLength != 0) {
 //            if (pwString.equals(pwCheckString)) {
-//                pwCheckInfo.setVisibility(View.VISIBLE);
+//                pwDiff.setVisibility(View.VISIBLE);
 //            }
 //        }
     }
+
+    public void pwFocusCheck() {
+        // 만약 pwCheckEdit에서 손을 뗐는데 pw랑 정보가 다르면
+
+        String pwString = pw.getText().toString();
+        String pwCheckString = pwCheck.getText().toString();
+        int pwLength = pwString.length();
+        int pwCheckLength = pwCheckString.length();
+
+        if (pwLength != 0 || pwCheckLength != 0) {
+            if (pwLength == 4) {
+
+                Log.i(TAG, "visible check if 1");
+                if (pwString.equals(pwCheckString)) {
+                    Log.i(TAG, "visible check if 2");
+                    pwDiff.setVisibility(View.INVISIBLE);
+                    pwSame.setVisibility(View.VISIBLE);
+                } else {
+                    Log.i(TAG, "visible check else 2");
+                    pwDiff.setVisibility(View.VISIBLE);
+                    pwSame.setVisibility(View.INVISIBLE);
+                }
+            }
+        } else {
+            Log.i(TAG, "visible check else 11");
+//            if (pwString.equals(pwCheckString)) {
+//                Log.i(TAG, "visible check if 22");
+//                pwDiff.setVisibility(View.INVISIBLE);
+//                pwSame.setVisibility(View.VISIBLE);
+//            } else {
+//                Log.i(TAG, "visible check else 33");
+//                pwDiff.setVisibility(View.VISIBLE);
+//                pwSame.setVisibility(View.INVISIBLE);
+//            }
+        }
+    }
+
 
     protected void onPause() {
         super.onPause();
