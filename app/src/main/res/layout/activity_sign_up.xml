@@ -64,18 +64,18 @@
 
 
     <TextView
-        android:id="@+id/pwInfoTextView"
+        android:id="@+id/pwSameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
-        android:text="숫자 4자를 입력해주세요."
+        android:text="비밀번호가 일치합니다."
         android:textColor="#191970"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.38"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signUpPwEditText"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/signUpLogoLayout"
+        app:layout_constraintVertical_bias="0.51" />
 
     <EditText
         android:id="@+id/signUpPwCheckEditText"
@@ -93,15 +93,15 @@
         app:layout_constraintVertical_bias="0.100000024" />
 
     <TextView
-        android:id="@+id/pwCheckInfoTextView"
+        android:id="@+id/pwDiffTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
-        android:text="비밀번호가 일치하지않습니다."
-        android:textColor="#191970"
+        android:text="비밀번호가 일치하지 않습니다."
+        android:textColor="#C01515"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.43"
+        app:layout_constraintHorizontal_bias="0.45"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signUpPwCheckEditText"
         app:layout_constraintVertical_bias="0.0" />
