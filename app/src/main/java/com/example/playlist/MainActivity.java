@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     // 프로그레스바 진행률을 위해 생성해준 변수들
     private Runnable runnable;
     private Handler handler = new Handler();
+    int currentPosition;
 
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
@@ -815,9 +816,6 @@ public class MainActivity extends AppCompatActivity {
             stopAudio();
         }
 
-//        if (savedInstanveStae != null) {
-//
-//        }
     }
 
     protected void onDestroy() {
@@ -1164,7 +1162,7 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                int currentPosition = mediaPlayer.getCurrentPosition();
+               currentPosition = mediaPlayer.getCurrentPosition();
                 mainSeekBar.setProgress(mediaPlayer.getCurrentPosition());
                 String progressText = String.format("%02d:%02d", currentPosition / 1000 / 60, currentPosition / 1000 % 60);
                 playingTime.setText(progressText);
@@ -1390,6 +1388,7 @@ public class MainActivity extends AppCompatActivity {
                                                         Log.i(TAG, "[RightPlay] -----------------------------------------------");
                                                     }
                                                 });
+
 
 //                                                        // TODO When SeekBar click, move to time from mp3 file
                                                 mainSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
