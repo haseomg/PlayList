@@ -467,6 +467,7 @@ public class MainActivity extends AppCompatActivity {
                                                             Log.i(TAG, "songInfo name Check : " + name);
 
                                                             insertIntoPastMusicTable();
+                                                            deleteFromMusicTable();
 
                                                             // TODO 4.close Player 조건 잘 세워야 함
 //                                                        closePlayer();
@@ -1691,6 +1692,76 @@ public class MainActivity extends AppCompatActivity {
             });
         }
     }
+
+    private void deleteFromMusicTable() {
+        // 내가 들은 음악 뮤직 테이블에서 삭제되게 하기
+        // name을 php로 보내
+        String deleteName = name;
+        int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
+        if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
+
+            HttpUrl.Builder builder = HttpUrl.parse("http://54.180.155.66/delete_Music.php").newBuilder();
+            builder.addQueryParameter("ver","1.0");
+            String url = builder.build().toString();
+            Log.i(TAG, "delete_Music  String url Check : " + url);
+
+            // POST Parameter Add
+            RequestBody body = new FormBody.Builder()
+                    .add("name", name)
+                    .build();
+
+            // Request Add
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(body)
+                    .build();
+
+            // CallBack
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    Log.i("d", "" + e);
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    Log.i("delete_Music", "onResponse Method");
+
+                    // 서브 스레드 - UI 변경할 경우 에러
+                    // 메인 스레드 - UI 설정
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                if (!response.isSuccessful()) {
+                                    Log.i(TAG, "delete_Music 응답 실패 시 response Check : " + response);
+
+                                } else {
+                                    Log.i(TAG, "delete_Music 응답 성공 시 response Check : " + response);
+                                    final String responseData = response.body().string();
+                                    Log.i(TAG, "delete_Music 응답 성공 시 responseData : " + responseData);
+
+                                    if (responseData.equals("1")) {
+                                        Log.i(TAG, "delete_Music responseData가 1일 때");
+                                    } else {
+                                        Log.i(TAG, "delete_Music responseData가 1이 아닐 때");
+                                    }
+
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+                }
+            });
+        }
+
+
+    }
+
 //    private void stopMediaPlayer() {
 //        mediaPlayer.stop();
 //        mediaPlayer.release();
