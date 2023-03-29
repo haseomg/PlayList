@@ -209,7 +209,7 @@ public class SignUp extends AppCompatActivity {
         fromEditPwCheck = pwCheck.getText().toString();
         fromEditNickName = nickName.getText().toString();
 
-        // ALREAD HAVE AN ID 버튼
+        // ALREADY HAVE AN ID 버튼
         goHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
