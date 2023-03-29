@@ -70,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
     private int playPosition = -1;
     private boolean isDragging = false;
     String castNum;
+    String artist;
+    String name;
+    String time;
 
     // 프로그레스바 진행률을 위해 생성해준 변수들
     private Runnable runnable;
@@ -81,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
 
     String streamingRecordList;
     String[] streamingArray;
-    String name;
     static final String mediaPlayerKey = "media_player";
 
     String personName;
@@ -118,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         // final static Context
         mainCtx = this;
 
-        toast = Toast.makeText(this, "\uD835\uDC29\uD835\uDC25\uD835\uDC1A\uD835\uDC32\uD835\uDC22\uD835\uDC27\uD835\uDC20 ♪", Toast.LENGTH_SHORT);
+        toast = Toast.makeText(this, "\uD835\uDC29\uD835\uDC25\uD835\uDC1A\uD835\uDC32\uD835\uDC22\uD835\uDC27\uD835\uDC20 ♪", Toast.LENGTH_LONG);
         toastView = toast.getView();
         toastView.getBackground().setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
         TextView toastMessage = toastView.findViewById(android.R.id.message);
@@ -436,26 +438,35 @@ public class MainActivity extends AppCompatActivity {
                                                             Log.i("[Main]", "responseData 가 1이 아닐 때 : " + responseData);
 //                                                        startActivityString(MainActivity.class, "nickname", responseData);
 
+
+                                                            // responseData를 받아서 num이랑 artist 잘라내고 songInfo 값 안에 넣어주자
+
+
                                                             String songInfo = responseData;
-                                                            Log.i(TAG, "String songInfo 확인 : " + songInfo);
-                                                            String[] songCut = songInfo.split("@@@");
+                                                            Log.i(TAG, "songInfo Check : " + songInfo);
 
-                                                            String path = songCut[0];
-                                                            Log.i(TAG, "String songInfo path 확인 : " + path);
+                                                            String[] numCut = songInfo.split("___");
+                                                            String num = numCut[0];
+                                                            Log.i(TAG, "songInfo num Check : " + num);
 
-                                                            String time = songCut[1];
-                                                            Log.i(TAG, "String songInfo 확인 : " + time);
+                                                            String deleteNum = numCut[1];
+                                                            String [] artistCut = deleteNum.split("###");
+                                                           artist = artistCut[0];
+                                                            Log.i(TAG, "songInfo artist Check : " + artist);
 
-                                                            String[] songName = path.split("/");
-                                                            name = songName[4];
+                                                            String deleteArtist = artistCut[1];
+                                                            String [] pathCut = deleteArtist.split("@@@");
+                                                            String path = pathCut[0];
+                                                            Log.i(TAG, "songInfo path Check : " + path);
 
+                                                            time = pathCut[1];
+                                                            Log.i(TAG, "songInfo time Check : " + time);
 
-                                                            Log.i(TAG, "songInfo name 확인 : " + name);
-                                                            Log.i(TAG, "songInfo path 확인 : " + path);
-                                                            Log.i(TAG, "songInfo time 확인 : " + time);
+                                                            String[] nameCut = path.split("/");
+                                                            name = nameCut[4];
+                                                            Log.i(TAG, "songInfo name Check : " + name);
 
-//                                                          경로 가져와서 음악 재생 시켜준 뒤
-//                                                          초수 세팅
+                                                            insertIntoPastMusicTable();
 
                                                             // TODO 4.close Player 조건 잘 세워야 함
 //                                                        closePlayer();
@@ -564,6 +575,8 @@ public class MainActivity extends AppCompatActivity {
                                                             updateSeekBar();
 
                                                             songTime = findViewById(R.id.mainToPlayTime);
+
+                                                            // TODO 다시 활성화
                                                             songTime.setText(time);
 
                                                             String[] exceptMp3 = name.split(".mp3");
@@ -655,9 +668,9 @@ public class MainActivity extends AppCompatActivity {
 
                                 }
 
-                            } // 재생 버튼이 일시정지 모양일 때
-                            // + 예외 처리
-                            else {
+                            } else {
+                                // 재생 버튼이 일시정지 모양일 때
+                                // + 예외 처리
                                 Log.i(TAG, "재생 버튼 모양이 재생도 일시정지도 아님");
                             }
 
@@ -669,7 +682,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
 
                     }
-                }
+                } // First biggest else end
 
 
                 Log.i(TAG, "playCheck : " + playCheck);
@@ -1162,7 +1175,7 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-               currentPosition = mediaPlayer.getCurrentPosition();
+                currentPosition = mediaPlayer.getCurrentPosition();
                 mainSeekBar.setProgress(mediaPlayer.getCurrentPosition());
                 String progressText = String.format("%02d:%02d", currentPosition / 1000 / 60, currentPosition / 1000 % 60);
                 playingTime.setText(progressText);
@@ -1299,20 +1312,29 @@ public class MainActivity extends AppCompatActivity {
 //                                                        startActivityString(MainActivity.class, "nickname", responseData);
 
                                                 String songInfo = responseData;
-                                                Log.i(TAG, "[RightPlay] String songInfo 확인 : " + songInfo);
-                                                Log.i(TAG, "[RightPlay] -----------------------------------------------");
-                                                String[] songCut = songInfo.split("@@@");
+                                                Log.i(TAG, "[RightPlay] songInfo Check : " + songInfo);
 
-                                                String path = songCut[0];
-                                                String time = songCut[1];
+                                                String[] numCut = songInfo.split("___");
+                                                String num = numCut[0];
+                                                Log.i(TAG, "[RightPlay]songInfo num Check : " + num);
 
-                                                String[] songName = path.split("/");
-                                                String name = songName[4];
+                                                String deleteNum = numCut[1];
+                                                String [] artistCut = deleteNum.split("###");
+                                                artist = artistCut[0];
+                                                Log.i(TAG, "[RightPlay]songInfo artist Check : " + artist);
 
+                                                String deleteArtist = artistCut[1];
+                                                String [] pathCut = deleteArtist.split("@@@");
+                                                String path = pathCut[0];
+                                                Log.i(TAG, "[RightPlay]songInfo path Check : " + path);
 
-                                                Log.i(TAG, "[RightPlay] song name 확인 : " + name);
-                                                Log.i(TAG, "[RightPlay] song path 확인 : " + path);
-                                                Log.i(TAG, "[RightPlay] song time 확인 : " + time);
+                                                time = pathCut[1];
+                                                Log.i(TAG, "[RightPlay]songInfo time Check : " + time);
+
+                                                String[] nameCut = path.split("/");
+                                                name = nameCut[4];
+                                                Log.i(TAG, "[RightPlay]songInfo name Check : " + name);
+
                                                 Log.i(TAG, "[RightPlay] -----------------------------------------------");
 
 //                                                          경로 가져와서 음악 재생 시켜준 뒤
@@ -1423,6 +1445,7 @@ public class MainActivity extends AppCompatActivity {
                                                 // TODO TOAST
 //                                                Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
                                                 toast.show();
+
 
                                                 updateSeekBar();
 
@@ -1600,6 +1623,74 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "String castNum 확인 : " + castNum);
     }
 
+
+    private void insertIntoPastMusicTable() {
+        // num은 nono
+        // name, artist, time만 pastMusicTable에 넣어줄 것이다.
+        int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
+        if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
+
+            HttpUrl.Builder builder = HttpUrl.parse("http://54.180.155.66/insert_pastMusic.php").newBuilder();
+            builder.addQueryParameter("ver","1.0");
+            String url = builder.build().toString();
+            Log.i(TAG, "insertPastMusicTable String url Check : " + url);
+
+            // POST Parameter Add
+            RequestBody body = new FormBody.Builder()
+                    .add("name", name)
+                    .add("artist", artist)
+                    .add("time", time)
+                    .build();
+
+            // Request Add
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(body)
+                    .build();
+
+            // CallBack
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    Log.i("insertIntoMusicTable", "" + e);
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    Log.i("insertIntoMusicTable", "onResponse Method");
+
+                    // 서브 스레드 - UI 변경할 경우 에러
+                    // 메인 스레드 - UI 설정
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                if (!response.isSuccessful()) {
+                                    Log.i(TAG, "insertIntoMusicTB 응답 실패 시 response Check : " + response);
+
+                                } else {
+                                    Log.i(TAG, "insertIntoMusicTB 응답 성공 시 response Check : " + response);
+                                    final String responseData = response.body().string();
+                                    Log.i(TAG, "insertIntoMusicTB 응답 성공 시 responseData : " + responseData);
+
+                                    if (responseData.equals("1")) {
+                                        Log.i(TAG, "insertIntoMusicTB responseData가 1일 때");
+                                    } else {
+                                        Log.i(TAG, "insertIntoMusicTB responseData가 1이 아닐 때");
+                                    }
+
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+                }
+            });
+        }
+    }
 //    private void stopMediaPlayer() {
 //        mediaPlayer.stop();
 //        mediaPlayer.release();
