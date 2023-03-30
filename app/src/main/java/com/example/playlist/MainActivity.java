@@ -1745,6 +1745,7 @@ public class MainActivity extends AppCompatActivity {
                                     if (responseData.equals("1")) {
                                         Log.i(TAG, "delete_Music responseData가 1일 때");
                                     } else {
+                                        // 계속 responseData == 0
                                         Log.i(TAG, "delete_Music responseData가 1이 아닐 때");
                                     }
 
