@@ -62,10 +62,10 @@ public class Profile extends Activity {
         }
 
 
-        shared = getSharedPreferences("signUp", MODE_PRIVATE);
+        shared = getSharedPreferences("nickname", MODE_PRIVATE);
         editor = shared.edit();
 
-        fromSharedNickName = shared.getString("id", "LOG IN");
+        fromSharedNickName = shared.getString("nickname", "LOG IN");
 
         profileLogo = findViewById(R.id.profileLogo);
         nickName = findViewById(R.id.nickNameTextView);
@@ -148,7 +148,7 @@ public class Profile extends Activity {
                         // DB에서도 닉네임 변경해줘야 해
                         nickNameChange.setHint(nickName.getText().toString());
 
-                        ((MainActivity) MainActivity.mainCtx).logIn.setText(nickNameChange.getText().toString() + "'S");
+                        ((MainActivity) MainActivity.mainCtx).logIn.setText(nickNameChange.getText().toString());
 
                         if (nickNameChange.getText().toString().length() > 12) {
                             profileLogo.setTextSize(20);

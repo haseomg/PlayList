@@ -154,7 +154,7 @@ public class SignUp extends AppCompatActivity {
         });
 
         // 쉐어드
-        shared = getSharedPreferences("signUp", Activity.MODE_PRIVATE);
+        shared = getSharedPreferences("nickname", Activity.MODE_PRIVATE);
         editor = shared.edit();
 
         id = findViewById(R.id.signUpIdEditText);
@@ -318,11 +318,15 @@ public class SignUp extends AppCompatActivity {
                                                                 pwShared = pw.getText().toString();
                                                                 pwCheckShared = pwCheck.getText().toString();
                                                                 nickNameShared = nickName.getText().toString();
+                                                                Log.i("Insert Shared ID Check : ", idShared);
+                                                                Log.i("Insert Shared PW Check : ", pwShared);
+                                                                Log.i("Insert Shared PWCHECK Check : ", pwCheckShared);
+                                                                Log.i("Insert Shared NICKNAME Check : ", nickNameShared);
 
-                                                                editor.putString("id", idShared);
-                                                                editor.putString("pw", pwShared);
-                                                                editor.putString("pwCheck", pwCheckShared);
-                                                                editor.putString("nickName", nickNameShared);
+//                                                                editor.putString("id", idShared);
+//                                                                editor.putString("pw", pwShared);
+//                                                                editor.putString("pwCheck", pwCheckShared);
+                                                                editor.putString("nickname", nickNameShared);
                                                                 editor.apply();
                                                                 editor.commit();
 

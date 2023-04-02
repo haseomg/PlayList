@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         toastMessage.setTextColor(Color.WHITE);
         toastMessage.setTextSize(16);
 
-        shared = getSharedPreferences("signUp", MODE_PRIVATE);
+        shared = getSharedPreferences("nickname", MODE_PRIVATE);
         editor = shared.edit();
 
         // 받는 인텐트
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         fromSignUpNickName = intent.getStringExtra("nickName");
 
         // 쉐어드로부터 가져온 닉네임
-        fromSharedNickName = shared.getString("id", "LOG IN");
+        fromSharedNickName = shared.getString("nickname", "LOG IN");
 
         // TODO 예제 참고
         mediaPlayer = new MediaPlayer();
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             if (fromSharedNickName.equals("LOG IN")) {
-                editor.putString("id", personName);
+                editor.putString("nickname", personName);
                 logIn.setText(personName);
                 Log.i("logIn.setText Check5 : ", personName);
             } else {
@@ -467,7 +467,7 @@ public class MainActivity extends AppCompatActivity {
                                                             Log.i(TAG, "songInfo name Check : " + name);
 
                                                             insertIntoPastMusicTable();
-                                                            deleteFromMusicTable();
+//                                                            deleteFromMusicTable();
 
                                                             // TODO 4.close Player 조건 잘 세워야 함
 //                                                        closePlayer();
@@ -1023,27 +1023,27 @@ public class MainActivity extends AppCompatActivity {
                 if (!id.equals(fromSharedNickName) && !fromSharedNickName.equals("LOG IN")) {
                     logIn.setText(fromSharedNickName);
                     Log.i("logIn.setText Check8 : ", fromSharedNickName);
-                    editor.putString("id", fromSharedNickName);
+                    editor.putString("nickname", fromSharedNickName);
                     editor.commit();
                 } else if (fromSharedNickName.equals(null) || fromSharedNickName.equals("LOG IN")) {
-                    editor.putString("id", id);
+                    editor.putString("nickname", id);
                     editor.commit();
                 } else if (!id.equals(fromSharedNickName) && fromSharedNickName.equals("LOG IN")) {
                     logIn.setText(id);
                     Log.i("logIn.setText Check9 : ", id);
-                    editor.putString("id", fromSharedNickName);
+                    editor.putString("nickname", fromSharedNickName);
                     editor.commit();
                 }
 
 
                 if (!fromSharedNickName.equals(null) || !fromSharedNickName.equals("LOG IN")) {
-                    editor.putString("id", fromSharedNickName);
+                    editor.putString("nickname", fromSharedNickName);
                     editor.commit();
                 }
                 if (!id.equals(fromSharedNickName) && fromSharedNickName.equals("LOG IN")) {
                     logIn.setText(id);
                     Log.i("logIn.setText Check10 : ", id);
-                    editor.putString("id", id);
+                    editor.putString("nickname", id);
                     editor.commit();
                 }
 
@@ -1595,7 +1595,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        // TODO Shared에 넣어보자
+        // TODO Random Numbers Shared에 넣어보자
 //        if (bringInNumbers.equals("") || bringInNumbers == null) {
         randomShared = getSharedPreferences("randomNumber", MODE_PRIVATE);
         randomEditor = randomShared.edit();

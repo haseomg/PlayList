@@ -118,7 +118,7 @@ public class LogIn extends Activity {
         });
 
 
-        shared = getSharedPreferences("signUp", MODE_PRIVATE);
+        shared = getSharedPreferences("nickname", MODE_PRIVATE);
         editor = shared.edit();
 
         idEdit = findViewById(R.id.idEditText);
@@ -207,7 +207,7 @@ public class LogIn extends Activity {
                                                     Log.i("[Main]", "responseData 가 1이 아닐 때 : " + responseData);
                                                     startActivityString(MainActivity.class, "nickname", responseData);
                                                     if (!responseData.equals(0)) {
-                                                        editor.putString("id", responseData);
+                                                        editor.putString("nickname", responseData);
                                                         ((MainActivity) MainActivity.mainCtx).logIn.setText(responseData);
                                                         Log.i(TAG, "LogIn.setText Check One : " + responseData);
                                                         editor.commit();
@@ -240,7 +240,7 @@ public class LogIn extends Activity {
                         finish();
 
                         Log.i(TAG, "LogIn.setText Check Two : " + idStr);
-                        ((MainActivity) MainActivity.mainCtx).logIn.setText(idStr + "'S");
+                        ((MainActivity) MainActivity.mainCtx).logIn.setText(idStr);
 
                         Toast.makeText(getApplicationContext(), idStr + " 님 반갑습니다 !",
                                 Toast.LENGTH_SHORT).show();
