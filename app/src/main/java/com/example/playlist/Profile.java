@@ -23,6 +23,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.kakao.sdk.user.UserApiClient;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class Profile extends Activity {
 
     TextView profileLogo;
@@ -146,6 +152,37 @@ public class Profile extends Activity {
 
 
                         // DB에서도 닉네임 변경해줘야 해
+                        // TODO 클릭 시 유저 테이블 닉네임 컬럼 업데이트하고
+                        // TODO 프로필에 닉네임 표시할 때 유저테이블으로 부터 갖고와야 해
+
+                        Retrofit retrofit = new Retrofit.Builder()
+                                .baseUrl("http://54.180.155.66/updateNicknameUserTB.php")
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .build();
+
+                        RetrofitService retrofitService = retrofit.create(RetrofitService.class);
+
+                        Call<PostResult> call = retrofitService.getPosts("1");
+
+                        call.enqueue(new Callback<PostResult>() {
+                            @Override
+                            public void onResponse(Call<PostResult> call, Response<PostResult> response) {
+                                if (response.isSuccessful()) {
+                                    PostResult result = response.body();
+                                    Log.i(TAG, "onResponse 성공! 결과 : " + response.toString());
+                                } else {
+                                    Log.i(TAG, "onResponse 실패");
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<PostResult> call, Throwable t) {
+                                Log.i(TAG, "onFailure : " + t.getMessage());
+                            }
+                        });
+
+
+
                         nickNameChange.setHint(nickName.getText().toString());
 
                         ((MainActivity) MainActivity.mainCtx).logIn.setText(nickNameChange.getText().toString());
@@ -220,7 +257,7 @@ public class Profile extends Activity {
                                     editor.clear();
                                     editor.commit();
 
-                                    Toast.makeText(getApplicationContext(),"로그아웃 되었습니다.",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
                                 }
                             });
 
