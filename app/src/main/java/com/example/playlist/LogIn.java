@@ -220,6 +220,7 @@ public class LogIn extends Activity {
                                                             editor.putString("nickname", responseData);
                                                             editor.commit();
 
+
                                                         }
                                                     }
                                                 }

@@ -18,4 +18,5 @@ public interface UserApi {
     Call<String> updateUserNickname(@Query("num")int num,
     @Query("nickname")String nickname);
 
+
 }
