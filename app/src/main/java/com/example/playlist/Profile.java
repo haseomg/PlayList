@@ -2,6 +2,7 @@ package com.example.playlist;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -31,6 +32,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Profile extends Activity {
 
+    private UserApi userApi;
+
     TextView profileLogo;
     TextView nickName;
     EditText nickNameChange;
@@ -48,6 +51,8 @@ public class Profile extends Activity {
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
 
+    static Context ctx;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,8 @@ public class Profile extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_profile);
         Log.i(TAG, "onCreate()");
+
+        ctx = this;
 
         gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -114,6 +121,10 @@ public class Profile extends Activity {
             ((MainActivity) MainActivity.mainCtx).logIn.setTextSize(15);
         }
 
+        // TODO - FOR Retrofit USE
+        retrofitApi();
+        getUser();
+        ;
 
         nickNameChangeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,45 +154,14 @@ public class Profile extends Activity {
                     } else {
                         Log.i(TAG, "닉네임 우측 버튼이 'change'가 아닐 때");
 
-                        editor.putString("id", nickNameChange.getText().toString());
+                        editor.putString("nickname", nickNameChange.getText().toString());
                         editor.commit();
                         Toast.makeText(getApplicationContext(), "닉네임이 " + nickNameChange.getText().toString() + "(으)로 변경되었습니다."
                                 , Toast.LENGTH_SHORT).show();
 
                         profileLogo.setText(nickNameChange.getText().toString() + "'s profile");
 
-
-                        // DB에서도 닉네임 변경해줘야 해
-                        // TODO 클릭 시 유저 테이블 닉네임 컬럼 업데이트하고
-                        // TODO 프로필에 닉네임 표시할 때 유저테이블으로 부터 갖고와야 해
-
-                        Retrofit retrofit = new Retrofit.Builder()
-                                .baseUrl("http://54.180.155.66/updateNicknameUserTB.php")
-                                .addConverterFactory(GsonConverterFactory.create())
-                                .build();
-
-                        RetrofitService retrofitService = retrofit.create(RetrofitService.class);
-
-                        Call<PostResult> call = retrofitService.getPosts("1");
-
-                        call.enqueue(new Callback<PostResult>() {
-                            @Override
-                            public void onResponse(Call<PostResult> call, Response<PostResult> response) {
-                                if (response.isSuccessful()) {
-                                    PostResult result = response.body();
-                                    Log.i(TAG, "onResponse 성공! 결과 : " + response.toString());
-                                } else {
-                                    Log.i(TAG, "onResponse 실패");
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<PostResult> call, Throwable t) {
-                                Log.i(TAG, "onFailure : " + t.getMessage());
-                            }
-                        });
-
-
+                        // TODO update nickname to user table
 
                         nickNameChange.setHint(nickName.getText().toString());
 
@@ -224,7 +204,6 @@ public class Profile extends Activity {
 
             }
         });
-
 
         logOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -340,6 +319,35 @@ public class Profile extends Activity {
             return false;
         }
         return true;
+    }
+
+    public void retrofitApi() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://54.180.155.66/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        userApi = retrofit.create(UserApi.class);
+    }
+
+    public void getUser() {
+        Call<User> call = userApi.getUserByNickname("닉네임");
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (!response.isSuccessful()) {
+                    Log.i(TAG, "onResponse API 호출 실패");
+                    return;
+                }
+                User user = response.body();
+                Log.i(TAG, "num : " + user.getNum() + ", nickname : " + nickName);
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.i(TAG, "onFailureAPI 호출 실패");
+            }
+        });
     }
 
 }

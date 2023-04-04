@@ -83,7 +83,7 @@ public class LogIn extends Activity {
         kakao_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               goKakao();
+                goKakao();
             }
         });
 
@@ -167,6 +167,7 @@ public class LogIn extends Activity {
                         // 요청
                         OkHttpClient client = new OkHttpClient();
                         Request request = new Request.Builder()
+                                .addHeader("content-type", "charset=utf-8")
                                 .url(url)
                                 .post(formBody)
                                 .build();
@@ -203,14 +204,23 @@ public class LogIn extends Activity {
                                                 if (responseData.equals("1")) {
                                                     Log.i("[Main]", "responseData 가 1일 때 : " + responseData);
                                                     Toast.makeText(getApplicationContext(), "아이디 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show();
+                                                    ((MainActivity) MainActivity.mainCtx).logIn.setText(idStr);
                                                 } else {
                                                     Log.i("[Main]", "responseData 가 1이 아닐 때 : " + responseData);
                                                     startActivityString(MainActivity.class, "nickname", responseData);
                                                     if (!responseData.equals(0)) {
-                                                        editor.putString("nickname", responseData);
-                                                        ((MainActivity) MainActivity.mainCtx).logIn.setText(responseData);
-                                                        Log.i(TAG, "LogIn.setText Check One : " + responseData);
-                                                        editor.commit();
+                                                        if (responseData.equals("??")) {
+                                                            Log.i(TAG, "LogIn.setText Check Three : " + responseData + ", id : " + idStr);
+                                                            ((MainActivity) MainActivity.mainCtx).logIn.setText(idStr);
+                                                            editor.putString("nickname", idStr);
+                                                            editor.commit();
+                                                        } else {
+                                                            Log.i(TAG, "LogIn.setText Check One : " + responseData);
+                                                            ((MainActivity) MainActivity.mainCtx).logIn.setText(responseData);
+                                                            editor.putString("nickname", responseData);
+                                                            editor.commit();
+
+                                                        }
                                                     }
                                                 }
                                             }
@@ -233,14 +243,14 @@ public class LogIn extends Activity {
 
                     if (!idStr.equals("") || !pwStr.equals("")) {
 
-                        editor.putString("id", idStr);
-                        editor.putString("pw", pwStr);
-                        editor.commit();
+//                        editor.putString("id", idStr);
+//                        editor.putString("pw", pwStr);
+//                        editor.commit();
 
-                        finish();
+//                        finish();
 
-                        Log.i(TAG, "LogIn.setText Check Two : " + idStr);
-                        ((MainActivity) MainActivity.mainCtx).logIn.setText(idStr);
+//                        Log.i(TAG, "LogIn.setText Check Two : " + idStr);
+//                        ((MainActivity) MainActivity.mainCtx).logIn.setText(idStr);
 
                         Toast.makeText(getApplicationContext(), idStr + " 님 반갑습니다 !",
                                 Toast.LENGTH_SHORT).show();
