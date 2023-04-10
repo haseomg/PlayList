@@ -9,6 +9,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +37,7 @@ import com.kakao.sdk.user.model.Account;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.regex.Pattern;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -158,6 +161,8 @@ public class SignUp extends AppCompatActivity {
         editor = shared.edit();
 
         id = findViewById(R.id.signUpIdEditText);
+        id.setFilters(new InputFilter[] {filter});
+        
         pw = findViewById(R.id.signUpPwEditText);
         pwCheck = findViewById(R.id.signUpPwCheckEditText);
         nickName = findViewById(R.id.signUpNickNameEditText);
@@ -813,6 +818,16 @@ public class SignUp extends AppCompatActivity {
         });
     }
 
+    protected InputFilter filter = new InputFilter() {
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            Pattern ps = Pattern.compile("^[a-zA-Z0-9]+$");
+            if (!ps.matcher(source).matches()) {
+                return "";
+            }
+            return null;
+        }
+    };
 
     public String getKeyHash() {
         try {

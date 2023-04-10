@@ -37,7 +37,7 @@
         android:id="@+id/signUpIdEditText"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:hint="ID (4 or more)"
+        android:hint="ID (no kr 4 or more)"
         android:textSize="18sp"
         android:textColor="#7878E1"
         android:fontFamily="sans-serif-black"
