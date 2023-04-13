@@ -1,20 +1,24 @@
 package com.example.playlist;
 
 public class User {
-    private int num;
-    private  String nickname;
+    private String  id;
+    private String nickname;
 
-    public User(int num, String nickname) {
-        this.num = num;
+    public User() {
+
+    }
+
+    public User(String id, String nickname) {
+        this.id = id;
         this.nickname = nickname;
     }
 
-    public int getNum() {
-        return num;
+    public String getId() {
+        return id;
     }
 
     public String getNickname() {
-        return  nickname;
+        return nickname;
     }
 
 }
