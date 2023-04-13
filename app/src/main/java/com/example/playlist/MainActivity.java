@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     Button logIn;
     Button select;
     Button comment;
+    Button upload;
+    Button songList;
 
     TextView songTime;
     TextView mainLogo;
@@ -211,6 +213,25 @@ public class MainActivity extends AppCompatActivity {
             // personEmail.setText
         }
 
+        // 클릭 이벤트 시 재생목록 생성
+        songList = findViewById(R.id.menuButton);
+        songList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "재생목록 버튼 클릭");
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("SongList See U Soon !");
+                builder.setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                builder.show();
+            }
+        });
+
 
         // PICK 액티비티로 가는 버튼
         select = findViewById(R.id.selectableButton);
@@ -314,6 +335,16 @@ public class MainActivity extends AppCompatActivity {
 //                //TODO 시크바 터치가 끝났을 때
 //            }
 //        });
+
+        upload = findViewById(R.id.uploadButton);
+        upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "uploadButton onCLick()");
+                Intent intent = new Intent(mainCtx, Upload.class);
+                startActivity(intent);
+            }
+        });
 
         // TODO 랜덤 넘버 추출
         randomNumber();
@@ -450,12 +481,12 @@ public class MainActivity extends AppCompatActivity {
                                                             Log.i(TAG, "songInfo num Check : " + num);
 
                                                             String deleteNum = numCut[1];
-                                                            String [] artistCut = deleteNum.split("###");
-                                                           artist = artistCut[0];
+                                                            String[] artistCut = deleteNum.split("###");
+                                                            artist = artistCut[0];
                                                             Log.i(TAG, "songInfo artist Check : " + artist);
 
                                                             String deleteArtist = artistCut[1];
-                                                            String [] pathCut = deleteArtist.split("@@@");
+                                                            String[] pathCut = deleteArtist.split("@@@");
                                                             String path = pathCut[0];
                                                             Log.i(TAG, "songInfo path Check : " + path);
 
@@ -472,7 +503,8 @@ public class MainActivity extends AppCompatActivity {
                                                             // TODO 4.close Player 조건 잘 세워야 함
 //                                                        closePlayer();
 //                                                        mediaPlayer = new MediaPlayer();
-                                                            mediaPlayer.setLooping(true);
+                                                            // TODO 연속 재생 시켜야 해서 한 곡 반복 해제
+                                                            mediaPlayer.setLooping(false);
                                                             Log.i(TAG, "MediaPlayer 생성");
 
                                                             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -1183,6 +1215,10 @@ public class MainActivity extends AppCompatActivity {
                 updateSeekBar();
             }
         }, 1000);
+        if (mainSeekBar.getProgress() == 0) {
+            // 다음 음악 재생
+            Log.i(TAG, "mainSeekBar.getProgress Check : " + mainSeekBar.getProgress());
+        }
     }
 
     public void onStopButtonClick() {
@@ -1320,12 +1356,12 @@ public class MainActivity extends AppCompatActivity {
                                                 Log.i(TAG, "[RightPlay]songInfo num Check : " + num);
 
                                                 String deleteNum = numCut[1];
-                                                String [] artistCut = deleteNum.split("###");
+                                                String[] artistCut = deleteNum.split("###");
                                                 artist = artistCut[0];
                                                 Log.i(TAG, "[RightPlay]songInfo artist Check : " + artist);
 
                                                 String deleteArtist = artistCut[1];
-                                                String [] pathCut = deleteArtist.split("@@@");
+                                                String[] pathCut = deleteArtist.split("@@@");
                                                 String path = pathCut[0];
                                                 Log.i(TAG, "[RightPlay]songInfo path Check : " + path);
 
@@ -1344,7 +1380,7 @@ public class MainActivity extends AppCompatActivity {
                                                 // TODO 4.close Player 조건 잘 세워야 함
 //                                                        closePlayer();
 //                                                        mediaPlayer = new MediaPlayer();
-                                                mediaPlayer.setLooping(true);
+                                                mediaPlayer.setLooping(false);
                                                 Log.i(TAG, "[RightPlay] MediaPlayer 생성");
 
                                                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -1395,7 +1431,9 @@ public class MainActivity extends AppCompatActivity {
                                                 mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                                                     @Override
                                                     public void onCompletion(MediaPlayer mp) {
+                                                        // 다음곡을 재생하는 코드를 여기에 적어
                                                         mainSeekBar.setProgress(0);
+//                                                        rightPlayBtn.performClick();
                                                     }
                                                 });
 
@@ -1560,68 +1598,69 @@ public class MainActivity extends AppCompatActivity {
 
     public void randomNumber() {
 
-        Log.i(TAG, "randomNumber 메서드 실행");
+        randomShared = getSharedPreferences("randomNumber", MODE_PRIVATE);
+        randomEditor = randomShared.edit();
 
-        random = new Random();
-        int rPlayList[] = new int[8];
+        String bringInNumbers = randomShared.getString("randomNumbers", "");
+        Log.i(TAG, "randomNumbers bring in shared : " + bringInNumbers);
 
-        for (int i = 0; i < 8; i++) {
+        if (bringInNumbers == "" || bringInNumbers == null) {
+
+        } else {
+            Log.i(TAG, "randomNumber 메서드 실행");
+
+            random = new Random();
+            int rPlayList[] = new int[8];
+
+            for (int i = 0; i < 8; i++) {
 //                    rPlay = random.nextInt(8) + 1;
 //                    Log.i(TAG, "Random Number For Music Play : " + rPlay);
 
 
-            rPlayList[i] = random.nextInt(8) + 1;
-            for (int j = 0; j < i; j++) {
-                if (rPlayList[i] == rPlayList[j]) {
-                    i--;
+                rPlayList[i] = random.nextInt(8) + 1;
+                for (int j = 0; j < i; j++) {
+                    if (rPlayList[i] == rPlayList[j]) {
+                        i--;
+                    }
                 }
             }
-        }
-        firstplayNum = 0;
-        // b < ? = ? 부분은 총 뽑아낼 랜덤 숫자 조건
-        for (int b = 0; b < 1; b++) {
-            Log.i(TAG, "Random Number For Music Play (1) : " + rPlayList[b]);
+            firstplayNum = 0;
+            // b < ? = ? 부분은 총 뽑아낼 랜덤 숫자 조건
+            for (int b = 0; b < 1; b++) {
+                Log.i(TAG, "Random Number For Music Play (1) : " + rPlayList[b]);
 
-            firstplayNum = firstplayNum + rPlayList[b];
-        }
+                firstplayNum = firstplayNum + rPlayList[b];
+            }
 
-        playlistNum = 0;
-        String numAdd = "-";
-        for (int c = 0; c < 8; c++) {
-            Log.i(TAG, "Random Number For Playlist (2) : " + rPlayList[c]);
+            playlistNum = 0;
+            String numAdd = "-";
+            for (int c = 0; c < 8; c++) {
+                Log.i(TAG, "Random Number For Playlist (2) : " + rPlayList[c]);
 
 //                                playlistNum = playlistNum + rPlayList[c];
-            numAdd = numAdd + rPlayList[c] + "-";
+                numAdd = numAdd + rPlayList[c] + "-";
+            }
+
+
+            // TODO Random Numbers Shared에 넣어보자
+
+            randomEditor.putString("randomNumbers", numAdd);
+            Log.i(TAG, "numAdd Check : " + numAdd);
+            randomEditor.apply();
+            randomEditor.commit();
+
+            Log.i(TAG, "[Random] numAdd check : " + numAdd);
+            Log.i(TAG, "[Random] -------------------------------");
+
+            // 랜덤 숫자 1개 생성
+            Log.i(TAG, "랜덤 추출 숫자 : " + firstplayNum);
+            // 랜덤 숫자 4개 생성
+            Log.i(TAG, "랜덤 추출 숫자들 : " + numAdd);
+
+            castNum = Integer.toString(firstplayNum);
+            // 랜덤 숫자 1개
+            Log.i(TAG, "String castNum 확인 : " + castNum);
         }
-
-
-        // TODO Random Numbers Shared에 넣어보자
-//        if (bringInNumbers.equals("") || bringInNumbers == null) {
-        randomShared = getSharedPreferences("randomNumber", MODE_PRIVATE);
-        randomEditor = randomShared.edit();
-        randomEditor.putString("randomNumbers", numAdd);
-        Log.i(TAG, "numAdd Check : " + numAdd);
-        randomEditor.apply();
-        randomEditor.commit();
-
-        String bringInNumbers = randomShared.getString("randomNumbers", "");
-        Log.i(TAG, "randomNumbers bring in shared : " + bringInNumbers);
-//        } else {
-//            Log.i(TAG, "randomNumber -- after shared : " + bringInNumbers);
-//        }
-        // TODO 여기까지
-
-        Log.i(TAG, "[Random] numAdd check : " + numAdd);
-        Log.i(TAG, "[Random] -------------------------------");
-
-        // 랜덤 숫자 1개 생성
-        Log.i(TAG, "랜덤 추출 숫자 : " + firstplayNum);
-        // 랜덤 숫자 4개 생성
-        Log.i(TAG, "랜덤 추출 숫자들 : " + numAdd);
-
-        castNum = Integer.toString(firstplayNum);
-        // 랜덤 숫자 1개
-        Log.i(TAG, "String castNum 확인 : " + castNum);
     }
 
 
@@ -1632,7 +1671,7 @@ public class MainActivity extends AppCompatActivity {
         if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
 
             HttpUrl.Builder builder = HttpUrl.parse("http://54.180.155.66/insert_pastMusic.php").newBuilder();
-            builder.addQueryParameter("ver","1.0");
+            builder.addQueryParameter("ver", "1.0");
             String url = builder.build().toString();
             Log.i(TAG, "insertPastMusicTable String url Check : " + url);
 
@@ -1701,7 +1740,7 @@ public class MainActivity extends AppCompatActivity {
         if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
 
             HttpUrl.Builder builder = HttpUrl.parse("http://54.180.155.66/delete_Music.php").newBuilder();
-            builder.addQueryParameter("ver","1.0");
+            builder.addQueryParameter("ver", "1.0");
             String url = builder.build().toString();
             Log.i(TAG, "delete_Music  String url Check : " + url);
 
