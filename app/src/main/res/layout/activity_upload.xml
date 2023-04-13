@@ -52,11 +52,13 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <EditText
+    <TextView
+        android:id="@+id/selectedAudioTextView"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
-        android:hint="Find my music"
+        android:hint="Find my music not yet"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.22"
@@ -115,10 +117,10 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/previewButton"
-        app:layout_constraintHorizontal_bias="0.84"
+        app:layout_constraintHorizontal_bias="0.86"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.6" />
+        app:layout_constraintVertical_bias="0.62" />
 
     <Button
         android:id="@+id/uploadButton"
