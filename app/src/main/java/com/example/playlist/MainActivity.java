@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
+                                Log.i(TAG, "songList Button onClick()");
                             }
                         });
                 builder.show();
@@ -657,6 +657,8 @@ public class MainActivity extends AppCompatActivity {
                             if (!playState.equals("❚❚")) {
                                 Log.i("메인 플레이 버튼 클릭", "재시작");
                                 Log.i(TAG, "playCheck : " + playCheck);
+                                mediaPlayer.start();
+                                updateSeekBar();
                                 play.setText("❚❚");
 
 
