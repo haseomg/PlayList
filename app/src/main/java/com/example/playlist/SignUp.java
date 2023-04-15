@@ -9,8 +9,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -51,7 +53,7 @@ import okhttp3.Response;
 public class SignUp extends AppCompatActivity {
 
     EditText id, pw, pwCheck, nickName;
-    Button submit, goHome;
+    Button submit, goHome, idDuCheck;
     String nickNameToMain;
 
     TextView pwSame, pwDiff;
@@ -161,12 +163,96 @@ public class SignUp extends AppCompatActivity {
         editor = shared.edit();
 
         id = findViewById(R.id.signUpIdEditText);
-        id.setFilters(new InputFilter[] {filter});
-        
+        id.setFilters(new InputFilter[]{filter});
+
+        idDuCheck = findViewById(R.id.idDuCheckButton);
+        idDuCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "idDuCheckButton OnClick()");
+                String url = "http://54.180.155.66/check_id.php";
+                String myId = id.getText().toString();
+                new CheckIdTask() {
+                    @Override
+                    protected void onPostExecute(String status) {
+                        Log.i("SignUp", "status Check : " + status);
+                        if (id.getText().toString().length() > 0) {
+                            if (status.equals("ok")) {
+                                idDuCheck.setText("✔️");
+                            } else if (status.equals("duplicated")) {
+                                // 다이얼로그 아이디가 중복되었습니다
+                                AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
+                                builder.setTitle("아이디가 즁복되었습니다,");
+                                builder.setPositiveButton("YES",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Log.i(TAG, "아이디가 중복되었습니다. - YES Click");
+                                            }
+                                        });
+                                builder.show();
+                            } else {
+                                Log.i(TAG, "idDuCheck onClick() - status가 ok도 duplicated도 아닐 때 status Check : " + status);
+                            }
+                        } else if (id.getText().toString().length() == 0 || id.getText().toString().equals("")) {
+                            // 다이얼로그 값을 입력해주세요
+                            AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
+                            builder.setTitle("아이디의 값을 입력해 주세요.");
+                            builder.setPositiveButton("YES",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Log.i(TAG, "아이디가 중복되었습니다. - YES Click");
+                                        }
+                                    });
+                            builder.show();
+                        }
+                    }
+                }.execute(url, myId);
+            }
+        });
+        id.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                Log.i(TAG, "id - beforeTextChanged Method");
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.i(TAG, "id - onTextChanged Method");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.i(TAG, "id - afterTextChanged Method");
+                String url = "http://54.180.155.66/check_id.php";
+                String myId = id.getText().toString();
+                new CheckIdTask() {
+                    @Override
+                    protected void onPostExecute(String status) {
+                        Log.i("SignUp", "status Check : " + status);
+                        if (id.getText().toString().length() > 0) {
+                            Log.i(TAG, "id 입력받은 값의 길이가 0 이상일 때");
+                            if (status.equals("ok")) {
+
+                            } else if (status.equals("duplicated")) {
+
+                            } else {
+
+                            }
+                        } else {
+                            idDuCheck.setText("중복✔️");
+                        }
+                    }
+                }.execute(url, myId);
+            }
+        });
+
         pw = findViewById(R.id.signUpPwEditText);
         pwCheck = findViewById(R.id.signUpPwCheckEditText);
         nickName = findViewById(R.id.signUpNickNameEditText);
 
+        // TODO ID DUPLICATION CHECK
         pwSame = findViewById(R.id.pwSameTextView);
         pwSame.setVisibility(View.INVISIBLE);
         pwDiff = findViewById(R.id.pwDiffTextView);
@@ -486,7 +572,7 @@ public class SignUp extends AppCompatActivity {
     }
 
     // 인텐트 화면전환 하는 함수
-    // FLAG_ACTIVITY_CLEAR_TOP = 불러올 액티비티 위에 쌓인 액티비티 지운다.
+// FLAG_ACTIVITY_CLEAR_TOP = 불러올 액티비티 위에 쌓인 액티비티 지운다.
     public void startActivityflag(Class c) {
         Intent intent = new Intent(getApplicationContext(), c);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -704,7 +790,7 @@ public class SignUp extends AppCompatActivity {
                 String[] userEmailCut = userID.split("@");
 
 
-                // kakao_api DB에 넘겨줘야 해!
+// kakao_api DB에 넘겨줘야 해!
                 final String id = userEmailCut[0];
                 final String nickname = userEmailCut[0];
                 Log.i(TAG, "String id : " + id);
@@ -773,7 +859,7 @@ public class SignUp extends AppCompatActivity {
                                             dialog.show();
 
                                         } else {
-                                            // 응답 성공
+// 응답 성공
                                             final String responseData = response.body().string();
                                             Log.i("[kakao]", "응답 성공 (responseData) : " + responseData);
 

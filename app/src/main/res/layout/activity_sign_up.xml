@@ -14,6 +14,7 @@
         android:background="#7878E1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
@@ -35,49 +36,38 @@
 
     <EditText
         android:id="@+id/signUpIdEditText"
-        android:layout_width="220dp"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:hint="ID (no kr 4 or more)"
-        android:textSize="18sp"
-        android:textColor="#7878E1"
         android:fontFamily="sans-serif-black"
+        android:hint="ID (no kr 4 or more)"
+        android:textColor="#7878E1"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.38"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.25" />
 
-    <TextView
-        android:id="@+id/idDuNoTextView"
+    <Button
+        android:id="@+id/idDuCheckButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="#00ff0000"
         android:fontFamily="sans-serif-black"
-        android:text="아이디가 중복되었습니다."
-        android:textColor="#C01515"
+        android:text="중복✔️"
+        android:textColor="@color/white"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.39"
+        app:layout_constraintHorizontal_bias="0.78"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
-
-    <TextView
-        android:id="@+id/idDuOkTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-black"
-        android:text="사용 가능한 아이디입니다."
-        android:textColor="#191970"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.395"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/signUpLogoLayout"
-        app:layout_constraintVertical_bias="0.31" />
+        app:layout_constraintVertical_bias="0.25" />
 
     <EditText
         android:id="@+id/signUpPwEditText"
-        android:layout_width="220dp"
+        android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:hint="PW (just number 4)"
         android:inputType="textPassword"
@@ -100,14 +90,14 @@
         android:textColor="#191970"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.38"
+        app:layout_constraintHorizontal_bias="0.32"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signUpLogoLayout"
         app:layout_constraintVertical_bias="0.51" />
 
     <EditText
         android:id="@+id/signUpPwCheckEditText"
-        android:layout_width="220dp"
+        android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:hint="PW Check"
         android:inputType="textPassword"
@@ -129,14 +119,14 @@
         android:textColor="#C01515"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.448"
+        app:layout_constraintHorizontal_bias="0.38"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signUpPwCheckEditText"
         app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/signUpNickNameEditText"
-        android:layout_width="220dp"
+        android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:hint="NickName (2 or more)"
         android:textSize="18sp"
