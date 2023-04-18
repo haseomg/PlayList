@@ -12,10 +12,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,25 +44,86 @@ public class Upload extends Activity {
     private boolean isPlaying = false;
     private Handler handler = new Handler(Looper.getMainLooper());
 
+    Spinner vibe, season;
+    TextView vibeTextView, seasonTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_upload);
 
+        String[] vibeItems = {"love (사랑)", "sad (슬픔)", "mysterious (신비로움)", "youth (청춘)", "happy (행복)", "thril (짜릿)",
+                "passion (열정)", "refresh (시원)", "stable (차분)", "modern (모던)", "cheerful (열정)", "eccentric (괴짜)", "etc (기타 *직접 입력)"};
+        vibe = findViewById(R.id.vibeSpinner);
+        vibeTextView = findViewById(R.id.vibeTextView);
+
+        ArrayAdapter<String> vibeAdapter = new ArrayAdapter<String>(
+                Upload.this, android.R.layout.simple_spinner_item, vibeItems
+        );
+        vibeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        vibe.setAdapter(vibeAdapter);
+        vibe.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                vibeTextView.setText(vibeItems[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                vibeTextView.setText("VIBE : ");
+            }
+        });
+
+        String vibePick = vibeTextView.getText().toString();
+        Log.i(TAG, "String vibePick Check : " + vibePick);
+
+
+        String[] seasonItems = {"spring (봄)", "early summer (초여름)", "midsummer (한여름)", "late summer (늦여름)", "fall (가을)",
+                "winter (겨울)", "midwinter (한겨울)", "etc (기타 *직접 입력)"};
+        season = findViewById(R.id.seasonSpinner);
+        seasonTextView = findViewById(R.id.seasonTextView);
+
+        ArrayAdapter<String> seasonAdapter = new ArrayAdapter<String>(
+                Upload.this, android.R.layout.simple_spinner_item, seasonItems
+        );
+        seasonAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        season.setAdapter(seasonAdapter);
+        season.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                seasonTextView.setText(seasonItems[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                seasonTextView.setText("SEASON : ");
+            }
+        });
+
+        String seasonPick = seasonTextView.getText().toString();
+        Log.i(TAG, "String seasonPick Check : " + seasonPick);
+
+
+
+
         back = findViewById(R.id.uploadBackButton);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                stopAudio();
                 finish();
             }
         });
 
         find = findViewById(R.id.fileFindButton);
+        songTime = findViewById(R.id.uploadPreviewTime);
+        play = findViewById(R.id.previewButton);
         find.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pickAudioFile();
+                play.setText("Play");
             }
         });
 
@@ -126,7 +191,7 @@ public class Upload extends Activity {
 
     private String convertMillisToTime(int millis) {
         int seconds = (int) (millis / 1000) % 60;
-        int minutes = (int) ((millis / (1000*60)) % 60);
+        int minutes = (int) ((millis / (1000 * 60)) % 60);
         return String.format("%02d:%02d", minutes, seconds);
     }
 
@@ -245,5 +310,12 @@ public class Upload extends Activity {
         }
     } //getRealPathFromUri End
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+            return false;
+        }
+        return true;
+    }
 
 }
