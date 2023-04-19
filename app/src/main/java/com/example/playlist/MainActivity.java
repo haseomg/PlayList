@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -107,6 +108,15 @@ public class MainActivity extends AppCompatActivity {
 
     ProgressDialog mProgressDialog;
     SeekBar mainSeekBar;
+
+    LocationManager locationManager;
+    String provider;
+    static double lat, lng;
+    int myPermission = 0;
+    private static final String API_KEY = "5a620a6e8b9bbe71c32d3b1cf6f28455";
+    private static final String WEATHER_URL =
+            "https://api.openweathermap.org/data/2.5/weather?q={CITY_NAME}&appid={API_KEY}";
+
 
     public final String TAG = "[Main Activity]";
 
@@ -302,6 +312,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        mainLogo = findViewById(R.id.mainLogo);
+//        weather();
+
 
         mainSeekBar = findViewById(R.id.mainSeekBar);
         playingTime = findViewById(R.id.mainPlayingTime);
@@ -618,8 +632,6 @@ public class MainActivity extends AppCompatActivity {
 
                                                             Log.i(TAG, "song just name 확인 : " + justName);
 
-
-                                                            mainLogo = findViewById(R.id.mainLogo);
                                                             mainLogo.setText(justName);
 
                                                             if (!responseData.equals(0)) {
@@ -1598,50 +1610,51 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // TODO randomNumber Method
     public void randomNumber() {
 
-        randomShared = getSharedPreferences("randomNumber", MODE_PRIVATE);
+        randomShared = getSharedPreferences("randomNumbers", MODE_PRIVATE);
         randomEditor = randomShared.edit();
 
         String bringInNumbers = randomShared.getString("randomNumbers", "");
         Log.i(TAG, "randomNumbers bring in shared : " + bringInNumbers);
 
-        if (bringInNumbers == "" || bringInNumbers == null) {
+//        if (bringInNumbers != "" || bringInNumbers != null) {
+//
+//        } else {
+        Log.i(TAG, "randomNumber 메서드 실행");
 
-        } else {
-            Log.i(TAG, "randomNumber 메서드 실행");
+        random = new Random();
+        int rPlayList[] = new int[8];
 
-            random = new Random();
-            int rPlayList[] = new int[8];
-
-            for (int i = 0; i < 8; i++) {
-//                    rPlay = random.nextInt(8) + 1;
-//                    Log.i(TAG, "Random Number For Music Play : " + rPlay);
+        for (int i = 0; i < 8; i++) {
+            rPlay = random.nextInt(8) + 1;
+            Log.i(TAG, "Random Number For Music Play : " + rPlay);
 
 
-                rPlayList[i] = random.nextInt(8) + 1;
-                for (int j = 0; j < i; j++) {
-                    if (rPlayList[i] == rPlayList[j]) {
-                        i--;
-                    }
+            rPlayList[i] = random.nextInt(8) + 1;
+            for (int j = 0; j < i; j++) {
+                if (rPlayList[i] == rPlayList[j]) {
+                    i--;
                 }
             }
-            firstplayNum = 0;
-            // b < ? = ? 부분은 총 뽑아낼 랜덤 숫자 조건
-            for (int b = 0; b < 1; b++) {
-                Log.i(TAG, "Random Number For Music Play (1) : " + rPlayList[b]);
+        }
+        firstplayNum = 0;
+        // b < ? = ? 부분은 총 뽑아낼 랜덤 숫자 조건
+        for (int b = 0; b < 1; b++) {
+            Log.i(TAG, "Random Number For Music Play (1) : " + rPlayList[b]);
 
-                firstplayNum = firstplayNum + rPlayList[b];
-            }
+            firstplayNum = firstplayNum + rPlayList[b];
+        }
 
-            playlistNum = 0;
-            String numAdd = "-";
-            for (int c = 0; c < 8; c++) {
-                Log.i(TAG, "Random Number For Playlist (2) : " + rPlayList[c]);
+        playlistNum = 0;
+        String numAdd = "-";
+        for (int c = 0; c < 8; c++) {
+            Log.i(TAG, "Random Number For Playlist (2) : " + rPlayList[c]);
 
 //                                playlistNum = playlistNum + rPlayList[c];
-                numAdd = numAdd + rPlayList[c] + "-";
-            }
+            numAdd = numAdd + rPlayList[c] + "-";
+//            }
 
 
             // TODO Random Numbers Shared에 넣어보자
@@ -1831,6 +1844,36 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //    }
 
+    // TODO weather
+    public void weather() {
+        OkHttpClient client = new OkHttpClient();
+
+        String city = "Suwon";
+        String url = WEATHER_URL.replace("{CITY_NAME}", city).replace("{API_KEY}", API_KEY);
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    throw new IOException("response Check : " + response);
+                }
+                String responseData = response.body().string();
+                Log.i(TAG, "responseData Check : " + responseData);
+                // TODO WEATHER
+                mainLogo.setText("날씨 : " + responseData);
+            }
+        });
+    }
+
 
     void seekBarMoving() {
         // TODO When SeekBar click, move to time from mp3 file
@@ -1881,5 +1924,4 @@ public class MainActivity extends AppCompatActivity {
             }).start();
         }
     }
-
 }
