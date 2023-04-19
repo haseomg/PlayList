@@ -242,7 +242,6 @@ public class Profile extends Activity {
 //                            Log.i(TAG, "match ok 6");
                         }
 
-
                         fromSharedNickName = shared.getString("nickname","LOG IN");
                         selectAndUpdateNickname();
                         Log.i(TAG, "match ok 7");
