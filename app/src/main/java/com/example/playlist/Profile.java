@@ -16,14 +16,26 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kakao.sdk.user.UserApiClient;
 
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,6 +45,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Profile extends Activity {
 
     private UserApi userApi;
+
+    AlertDialog.Builder builder;
 
     TextView profileLogo;
     TextView nickName;
@@ -45,6 +59,13 @@ public class Profile extends Activity {
     SharedPreferences.Editor editor;
 
     String fromSharedNickName;
+
+    String id;
+    String idToPost;
+    String nickname;
+    String fromNicknameChange;
+
+    UpdateNickname updateNickname;
 
     public final String TAG = "[Profile Activity]";
 
@@ -62,6 +83,10 @@ public class Profile extends Activity {
         Log.i(TAG, "onCreate()");
 
         ctx = this;
+
+        builder = new AlertDialog.Builder(this);
+
+//        updateNickname = new UpdateNickname();
 
         gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -122,14 +147,16 @@ public class Profile extends Activity {
         }
 
         // TODO - FOR Retrofit USE
-        retrofitApi();
-        getUser();
-        ;
+//        retrofitApi();
+//        getUser();
+
 
         nickNameChangeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "nickNameChangeBtn onClick()");
+                nickname = nickNameChange.getText().toString();
+//                selectUserTB();
 
                 // TextView -> editText로 변경
                 // Button = 변경 -> 완료로 변경
@@ -161,37 +188,64 @@ public class Profile extends Activity {
 
                         profileLogo.setText(nickNameChange.getText().toString() + "'s profile");
 
+                        fromNicknameChange = nickNameChange.getText().toString();
                         // TODO update nickname to user table
+//                        updateNickname(id, nickname);
+//                        updateUserTB();
+                        //                        updateNickname.selectUserTB(nickname);
+                        //                        updateNickname.updateUserTB(id, nickname);
 
                         nickNameChange.setHint(nickName.getText().toString());
 
                         ((MainActivity) MainActivity.mainCtx).logIn.setText(nickNameChange.getText().toString());
+
+                        selectAndUpdateNickname();
+                        Log.i(TAG, "match ok 1");
 
                         if (nickNameChange.getText().toString().length() > 12) {
                             profileLogo.setTextSize(20);
                             ((MainActivity) MainActivity.mainCtx).logIn.setTextSize(12);
                             editor.putString("id", nickNameChange.getText().toString());
                             editor.commit();
+                            fromSharedNickName = shared.getString("nickname","LOG IN");
+//                            selectAndUpdateNickname();
+//                            Log.i(TAG, "match ok 2");
                         } else if (nickNameChange.getText().toString().length() > 5) {
                             profileLogo.setTextSize(25);
                             editor.putString("id", nickNameChange.getText().toString());
                             editor.commit();
+                            fromSharedNickName = shared.getString("nickname","LOG IN");
+//                            selectAndUpdateNickname();
+//                            Log.i(TAG, "match ok 3");
                         } else if (nickNameChange.getText().toString().length() > 20) {
                             profileLogo.setTextSize(8);
                             ((MainActivity) MainActivity.mainCtx).logIn.setTextSize(9);
                             editor.putString("id", nickNameChange.getText().toString());
                             editor.commit();
+                            fromSharedNickName = shared.getString("nickname","LOG IN");
+//                            selectAndUpdateNickname();
+//                            Log.i(TAG, "match ok 4");
                         } else if (nickNameChange.getText().toString().length() > 25) {
                             profileLogo.setTextSize(1);
                             ((MainActivity) MainActivity.mainCtx).logIn.setTextSize(10);
                             editor.putString("id", nickNameChange.getText().toString());
                             editor.commit();
+                            fromSharedNickName = shared.getString("nickname","LOG IN");
+//                            selectAndUpdateNickname();
+//                            Log.i(TAG, "match ok 5");
                         } else if (fromSharedNickName.length() < 5) {
                             profileLogo.setTextSize(30);
                             ((MainActivity) MainActivity.mainCtx).logIn.setTextSize(15);
                             editor.putString("id", nickNameChange.getText().toString());
                             editor.commit();
+//                            selectAndUpdateNickname();
+//                            Log.i(TAG, "match ok 6");
                         }
+
+
+                        fromSharedNickName = shared.getString("nickname","LOG IN");
+                        selectAndUpdateNickname();
+                        Log.i(TAG, "match ok 7");
 
                         nickName.setText(nickNameChange.getText().toString());
                         nickName.setVisibility(View.VISIBLE);
@@ -322,15 +376,30 @@ public class Profile extends Activity {
     }
 
     public void retrofitApi() {
+        Log.i(TAG, "retrofitApi Method Start");
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://54.180.155.66/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(60, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .build();
+
+//        retrofit = retrofit.newBuilder().client(client).build();
+
         userApi = retrofit.create(UserApi.class);
     }
 
     public void getUser() {
+
+        Log.i(TAG, "getUser Method Start");
         Call<User> call = userApi.getUserByNickname("닉네임");
         call.enqueue(new Callback<User>() {
             @Override
@@ -340,12 +409,184 @@ public class Profile extends Activity {
                     return;
                 }
                 User user = response.body();
-                Log.i(TAG, "num : " + user.getNum() + ", nickname : " + nickName);
+                Log.i(TAG, "response body Check : " + response.body().toString());
+                Log.i(TAG, "id : " + user.getId() + ", nickname : " + user.getNickname());
+                id = user.getId();
+                nickname = user.getNickname();
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Log.i(TAG, "onFailureAPI 호출 실패");
+                Log.i(TAG, "onFailureAPI 호출 실패 : " + t.getMessage());
+            }
+        });
+    }
+
+    public void updateNickname(String id, String nickname) {
+        Log.i(TAG, "updateNickname Method Start");
+        Call<String> call = userApi.updateUserNickname(id, nickname);
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.i(TAG, "updateNickname onResponse Method Start");
+
+                if (response.isSuccessful()) {
+                    Log.i(TAG, "updateNickname response.isSuccessful");
+                    String result = response.body();
+                    if (result.equals("failed")) {
+                        Log.i(TAG, "onResponse failed result Check : " + result);
+                        // SUCCESS
+                    } else {
+                        Log.i(TAG, "onResponse success result Check : " + result);
+                        // FAILED
+                    }
+                } else {
+                    Log.i(TAG, "updateNickname response failed");
+                    // RESPONSE FAILED
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+//                Toast.makeText(getApplicationContext(), "데이터 활성화와 와이파이를 확인해 주세요.", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "데이터 활성화와 와이파이를 확인해 주세요");
+            }
+        });
+    }
+
+    public void selectUserTB() {
+
+        Log.i("updateNickname Class", "selectUserTB Method");
+
+        HttpUrl.Builder builder = HttpUrl.parse("http://54.180.155.66/user_info.php").newBuilder();
+        builder.addQueryParameter("ver", "1.0");
+        String url = builder.build().toString();
+        Log.i("updateNickname", "String url check : " + url);
+
+        nickname = nickNameChange.getText().toString();
+
+        RequestBody formBody = new FormBody.Builder()
+                .add("nickname", nickname)
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    Log.i("Update", "응답 실패 : " + response);
+                } else {
+                    Log.i("Update", "응답 성공 : " + response);
+                    final String responseData = response.body().string();
+                    if (responseData.equals("1")) {
+                        Log.i("Update", "User Table match == 0");
+                    } else {
+                        Log.i("Update", "User Table match ok : " + responseData);
+                        idToPost = responseData;
+                    }
+
+                }
+            }
+        });
+
+    }
+
+    public void updateUserTB() {
+
+        Log.i("updateNickname Class", "updateUserTB Method");
+
+        HttpUrl.Builder builder = HttpUrl.parse("http://54.180.155.66/update_user.php").newBuilder();
+        builder.addQueryParameter("ver", "1.0");
+        String url = builder.build().toString();
+        Log.i("updateNickname", "String url check : " + url);
+
+        RequestBody formBody = new FormBody.Builder()
+                .add("nickname", nickname)
+                .add("id", idToPost)
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    Log.i("Update", "응답 실패 : " + response);
+                } else {
+                    Log.i("Update", "응답 성공 : " + response);
+                    final String responseData = response.body().string();
+                    if (responseData.equals("1")) {
+                        Log.i("Update", "User Table match == 0");
+                    } else {
+                        Log.i("Update", "User Table match ok : " + responseData);
+                    }
+
+                }
+            }
+        });
+    }
+
+    public void selectAndUpdateNickname() {
+
+        OkHttpClient client = new OkHttpClient();
+
+        HttpUrl.Builder builder = HttpUrl.parse("http://54.180.155.66/user_info.php").newBuilder();
+        builder.addQueryParameter("ver", "1.0");
+        String url = builder.build().toString();
+        Log.i("updateNickname", "String url check : " + url);
+
+        RequestBody requestBody = new FormBody.Builder()
+                .add("before", fromSharedNickName.trim())
+                .add("after", fromNicknameChange.trim())
+                .build();
+
+        Request request = new Request.Builder()
+                .addHeader("content-type", "charset=utf-8")
+                .url(url)
+                .post(requestBody)
+                .build();
+
+//        Call call = (Call) client.newCall(request);
+
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    Log.i("Update", "응답 실패 : " + response);
+                } else {
+                    Log.i("Update", "응답 성공 : " + response);
+                    final String responseData = response.body().string();
+                    if (responseData.equals("false")) {
+                        Log.i("Update", "User Table match == 0");
+                    } else {
+                        Log.i("Update", "User Table match ok : " + responseData);
+                    }
+                }
             }
         });
     }
