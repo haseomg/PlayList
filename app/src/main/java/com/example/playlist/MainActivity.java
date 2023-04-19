@@ -35,7 +35,13 @@ import com.google.android.gms.tasks.Task;
 import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.user.model.Account;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Random;
 
 import okhttp3.Call;
@@ -93,6 +99,13 @@ public class MainActivity extends AppCompatActivity {
     String personEmail;
     int firstplayNum;
     int playlistNum;
+    int num;
+    int forRandomNumberCount = 0;
+    String randomNumCheck;
+    String firstRanNum = "";
+    int firstRanNumToInt;
+    int ranRanToInt;
+    String nextRanNum;
 
     boolean playCheck = false;
     boolean nowPlaying = false;
@@ -105,6 +118,8 @@ public class MainActivity extends AppCompatActivity {
 
     String fromSignUpNickName;
     String fromSharedNickName;
+    String pastNumBox = "";
+    String ranRan;
 
     ProgressDialog mProgressDialog;
     SeekBar mainSeekBar;
@@ -141,6 +156,21 @@ public class MainActivity extends AppCompatActivity {
 
         shared = getSharedPreferences("nickname", MODE_PRIVATE);
         editor = shared.edit();
+
+        randomShared = getSharedPreferences("randomNumbers", MODE_PRIVATE);
+        randomEditor = randomShared.edit();
+        randomNumCheck = randomShared.getString("randomNumbers", "");
+
+        // TODO 랜덤 넘버 서버로부터 받아온당
+        responseRandomNumbers();
+        if (forRandomNumberCount == 0) {
+            firstRanNum = randomNumCheck;
+            Log.i(TAG, "forRandomNumberCount check : " + forRandomNumberCount);
+            forRandomNumberCount++;
+        }
+        if (randomNumCheck.equals("") || randomNumCheck.length() == 0) {
+            responseRandomNumbers();
+        }
 
         // 받는 인텐트
         Intent intent = getIntent();
@@ -308,8 +338,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "leftPlay 버튼 클릭");
 
-//                if (song)
-
+                // pastNumBox의 앞숫자부터 가져와서 틀어줄 건데
+                // 틀때마다 앞숫자 잘라줘야함
             }
         });
 
@@ -360,8 +390,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        if (randomNumCheck.equals("") || randomNumCheck.length() == 0) {
+            responseRandomNumbers();
+        }
+
         // TODO 랜덤 넘버 추출
-        randomNumber();
+        Log.i(TAG, "ran shared check : " + randomNumCheck);
+        if (randomNumCheck.length() > 0) {
+            char first = randomNumCheck.charAt(0);
+            firstRanNum = String.valueOf(first);
+        }
+//        firstRanNumToInt = Integer.parseInt(firstRanNum);
+        Log.i(TAG, "ran first check : " + firstRanNum);
+        ranRan = randomNumCheck;
+        if (ranRan.length() > 0) {
+            ranRan = ranRan.substring(1);
+            Log.i(TAG, "ran substring check : " + ranRan);
+//            ranRanToInt = Integer.parseInt(ranRan);
+            randomShared = getSharedPreferences("randomNumbers", MODE_PRIVATE);
+            randomEditor = randomShared.edit();
+            randomEditor.putString("randomNumbers", ranRan);
+            randomEditor.apply();
+            randomEditor.commit();
+            pastNumBox =  pastNumBox + firstRanNum;
+            Log.i(TAG, "Number : " + pastNumBox);
+        }
+
 
         // 메인 재생 버튼
         play = findViewById(R.id.mainPlayButton);
@@ -418,11 +472,35 @@ public class MainActivity extends AppCompatActivity {
                                 play.setText("❚❚");
                                 play.setTextSize(53);
 
+                                // TODO 랜덤 넘버 추출
+                                Log.i(TAG, "ran shared check : " + randomNumCheck);
+                                if (randomNumCheck.length() > 0) {
+                                    char first = randomNumCheck.charAt(0);
+                                    firstRanNum = String.valueOf(first);
+                                }
+//        firstRanNumToInt = Integer.parseInt(firstRanNum);
+                                Log.i(TAG, "ran first check : " + firstRanNum);
+                                ranRan = randomNumCheck;
+                                if (ranRan.length() > 0) {
+                                    ranRan = ranRan.substring(1);
+                                    Log.i(TAG, "ran substring check : " + ranRan);
+//            ranRanToInt = Integer.parseInt(ranRan);
+                                    randomShared = getSharedPreferences("randomNumbers", MODE_PRIVATE);
+                                    randomEditor = randomShared.edit();
+                                    randomEditor.putString("randomNumbers", ranRan);
+                                    randomEditor.apply();
+                                    randomEditor.commit();
+                                    pastNumBox = pastNumBox +firstRanNum;
+                                    Log.i(TAG, "Number : " + pastNumBox);
+                                }
+
+
 
                                 // 직접 통신인데..
                                 // num 보내고
+                                // TODO 랜덤
                                 Uri.Builder builder = new Uri.Builder()
-                                        .appendQueryParameter("num", castNum);
+                                        .appendQueryParameter("num", firstRanNum);
                                 String postParams = builder.build().getEncodedQuery();
                                 new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
 
@@ -434,8 +512,9 @@ public class MainActivity extends AppCompatActivity {
                                 Log.i(TAG, "String url 확인 : " + url);
 
                                 // post 파라미터 추가
+                                // TODO 랜덤
                                 RequestBody formBody = new FormBody.Builder()
-                                        .add("num", castNum.trim())
+                                        .add("num", firstRanNum.trim())
                                         .build();
                                 // num을 보내고 -> 테이블의 num을 기준으로 path, name 가져올 거야
 
@@ -662,6 +741,8 @@ public class MainActivity extends AppCompatActivity {
                                 playCheck = true;
 
                             }
+                            responseRandomNumbers();
+
 
                             // 아래 if (playCHeck == false 닫아주는 중괄호
                         } else { // <-> if (playCheck == true
@@ -1266,7 +1347,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         Log.i(TAG, "[RightPlay] playcheck Check : " + playCheck);
-        randomNumber();
+//TODO randomNumber
+        //        randomNumber();
         Log.i(TAG, "[RightPlay] -----------------------------------------------");
 
 
@@ -1293,9 +1375,39 @@ public class MainActivity extends AppCompatActivity {
                     play.setText("❚❚");
                     play.setTextSize(53);
 
+                    if (randomNumCheck.equals("") || randomNumCheck.length() == 0) {
+                        responseRandomNumbers();
+                    }
 
+
+                    String ranRanRan = randomShared.getString("randomNumbers", "");
+                    if (ranRanRan.length() != 0) {
+                        if (randomNumCheck.length() > 0) {
+                            char next = ranRanRan.charAt(0);
+                            nextRanNum = String.valueOf(next);
+                        }
+//                    firstRanNumToInt = Integer.parseInt(firstRanNum);
+                        Log.i(TAG, "ran first check : " + nextRanNum);
+//                    ranRanRan = randomNumCheck;
+                        if (ranRanRan.length() > 0) {
+                            ranRanRan = ranRanRan.substring(1);
+                            Log.i(TAG, "ran substring check : " + ranRanRan);
+//                        ranRanToInt = Integer.parseInt(ranRan);
+                            randomShared = getSharedPreferences("randomNumbers", MODE_PRIVATE);
+                            randomEditor = randomShared.edit();
+                            randomEditor.putString("randomNumbers", ranRanRan);
+                            randomEditor.apply();
+                            randomEditor.commit();
+                            pastNumBox = pastNumBox + nextRanNum ;
+                            Log.i(TAG, "Number : " + pastNumBox);
+                        }
+                    }
+
+                    if (ranRanRan.length() == 0 || ranRanRan.equals("")) {
+                        nextRanNum = "1";
+                    }
                     Uri.Builder builder = new Uri.Builder()
-                            .appendQueryParameter("num", castNum);
+                            .appendQueryParameter("num", nextRanNum);
                     String postParams = builder.build().getEncodedQuery();
                     new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
 
@@ -1309,7 +1421,7 @@ public class MainActivity extends AppCompatActivity {
 
                     // post 파라미터 추가
                     RequestBody formBody = new FormBody.Builder()
-                            .add("num", castNum.trim())
+                            .add("num", nextRanNum.trim())
                             .build();
                     // num을 보내고 -> 테이블의 num을 기준으로 path, name 가져올 거야
 
@@ -1922,6 +2034,88 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }).start();
+        }
+    }
+
+    public void responseRandomNumbers() {
+        Log.i(TAG, "bringGetSongInfo Method");
+
+        OkHttpClient client = new OkHttpClient();
+
+        HttpUrl.Builder builder = HttpUrl.parse("http://54.180.155.66/create_random_numbers.php").newBuilder();
+        builder.addQueryParameter("ver", "1.0");
+        String url = builder.build().toString();
+        Log.i(TAG, "bringGet String url check : " + url);
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    final String result = response.body().string();
+                    Log.i("bringGet", "response check : " + result);
+                    num = Integer.parseInt(result);
+                    randomShared = getSharedPreferences("randomNumbers", MODE_PRIVATE);
+                    randomEditor = randomShared.edit();
+                    String bringRanNum = randomShared.getString("randomNumbers", "");
+                    Log.i(TAG, "ran bring check : " + bringRanNum);
+                    if (bringRanNum.equals("") || bringRanNum.equals(null)) {
+                        randomEditor.putString("randomNumbers", result);
+                        Log.i(TAG, "numAdd Check : " + result);
+                        randomEditor.apply();
+                        randomEditor.commit();
+                        randomNumCheck = bringRanNum;
+                        Log.i("bringGet", "num check : " + num);
+                    } else {
+                        Log.i(TAG, "[else] bringGetShared RanNum Check : " + bringRanNum);
+                    }
+                    randomNumCheck = bringRanNum;
+                    Log.i(TAG, "ran bring check : " + randomNumCheck);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // nothing
+                        }
+                    });
+                }
+            }
+        });
+
+        class GetNumber extends AsyncTask<String, Void, Integer> {
+
+            @Override
+            protected Integer doInBackground(String... urls) {
+                Integer number = null;
+                try {
+                    URL url = new URL(urls[0]);
+                    HttpURLConnection urlConnection
+                            = (HttpURLConnection) url.openConnection();
+                    try {
+                        InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                        number = Integer.parseInt(reader.readLine());
+                    } finally {
+                        urlConnection.disconnect();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return number;
+            }
+
+            protected void onPostExecute(Integer result) {
+                int number = result;
+                Log.i(TAG, "bringGet number check : " + number);
+            }
         }
     }
 }
