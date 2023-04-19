@@ -16,7 +16,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -28,6 +27,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Upload extends Activity {
 
@@ -53,59 +53,8 @@ public class Upload extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_upload);
 
-        String[] vibeItems = {"love (사랑)", "sad (슬픔)", "mysterious (신비로움)", "youth (청춘)", "happy (행복)", "thril (짜릿)",
-                "passion (열정)", "refresh (시원)", "stable (차분)", "modern (모던)", "cheerful (열정)", "eccentric (괴짜)", "etc (기타 *직접 입력)"};
-        vibe = findViewById(R.id.vibeSpinner);
-        vibeTextView = findViewById(R.id.vibeTextView);
 
-        ArrayAdapter<String> vibeAdapter = new ArrayAdapter<String>(
-                Upload.this, android.R.layout.simple_spinner_item, vibeItems
-        );
-        vibeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        vibe.setAdapter(vibeAdapter);
-        vibe.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                vibeTextView.setText(vibeItems[position]);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                vibeTextView.setText("VIBE : ");
-            }
-        });
-
-        String vibePick = vibeTextView.getText().toString();
-        Log.i(TAG, "String vibePick Check : " + vibePick);
-
-
-        String[] seasonItems = {"spring (봄)", "early summer (초여름)", "midsummer (한여름)", "late summer (늦여름)", "fall (가을)",
-                "winter (겨울)", "midwinter (한겨울)", "etc (기타 *직접 입력)"};
-        season = findViewById(R.id.seasonSpinner);
-        seasonTextView = findViewById(R.id.seasonTextView);
-
-        ArrayAdapter<String> seasonAdapter = new ArrayAdapter<String>(
-                Upload.this, android.R.layout.simple_spinner_item, seasonItems
-        );
-        seasonAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        season.setAdapter(seasonAdapter);
-        season.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                seasonTextView.setText(seasonItems[position]);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                seasonTextView.setText("SEASON : ");
-            }
-        });
-
-        String seasonPick = seasonTextView.getText().toString();
-        Log.i(TAG, "String seasonPick Check : " + seasonPick);
-
-
-
+        spinners();
 
         back = findViewById(R.id.uploadBackButton);
         back.setOnClickListener(new View.OnClickListener() {
@@ -316,6 +265,75 @@ public class Upload extends Activity {
             return false;
         }
         return true;
+    }
+
+    public void spinners() {
+
+        ArrayList<String> vibeItems = new ArrayList<String>();
+        vibeItems.add("love (사랑)");
+        vibeItems.add("sad (슬픔)");
+        vibeItems.add("youth (청춘)");
+        vibeItems.add("happy (행복)");
+        vibeItems.add("passion (열정)");
+        vibeItems.add("refresh (시원)");
+        vibeItems.add("thril (짜릿)");
+        vibeItems.add("stable (차분)");
+        vibeItems.add("modern (모던)");
+        vibeItems.add("eccentric (괴짜)");
+        vibeItems.add("mysterious (신비로움)");
+        vibeItems.add("etc (기타 *직접 입력)");
+        vibeItems.add("VIBE");
+
+        vibe = findViewById(R.id.vibeSpinner);
+        SpinnerAdapter vibeAdapter = new SpinnerAdapter
+                (this, android.R.layout.simple_spinner_item, vibeItems);
+
+        vibeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        vibe.setAdapter(vibeAdapter);
+        vibe.setSelection(vibeAdapter.getCount());
+        vibe.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.i(TAG, "spinner vibe pick check : " + vibe.getSelectedItem().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+        ArrayList<String> seasonItems = new ArrayList<String>();
+        seasonItems.add("spring (봄)");
+        seasonItems.add("early summer (초여름)");
+        seasonItems.add("midsummer (한여름)");
+        seasonItems.add("late summer (늦여름)");
+        seasonItems.add("fall (가을)");
+        seasonItems.add("winter (겨울)");
+        seasonItems.add("midwinter (한겨울)");
+        seasonItems.add("etc (기타 *직접 입력)");
+        seasonItems.add("SEASON");
+
+        season = findViewById(R.id.seasonSpinner);
+        SpinnerAdapter seasonAdapter = new SpinnerAdapter
+                (this, android.R.layout.simple_spinner_item, seasonItems);
+
+        seasonAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        season.setAdapter(seasonAdapter);
+        season.setSelection(seasonAdapter.getCount());
+        season.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.i(TAG, "spinner season pick check : " + season.getSelectedItem().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
     }
 
 }
