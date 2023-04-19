@@ -165,88 +165,16 @@ public class SignUp extends AppCompatActivity {
         id = findViewById(R.id.signUpIdEditText);
         id.setFilters(new InputFilter[]{filter});
 
+        checkIdChange();
+
         idDuCheck = findViewById(R.id.idDuCheckButton);
         idDuCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "idDuCheckButton OnClick()");
-                String url = "http://54.180.155.66/check_id.php";
-                String myId = id.getText().toString();
-                new CheckIdTask() {
-                    @Override
-                    protected void onPostExecute(String status) {
-                        Log.i("SignUp", "status Check : " + status);
-                        if (id.getText().toString().length() > 0) {
-                            if (status.equals("ok")) {
-                                idDuCheck.setText("✔️");
-                            } else if (status.equals("duplicated")) {
-                                // 다이얼로그 아이디가 중복되었습니다
-                                AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
-                                builder.setTitle("아이디가 즁복되었습니다,");
-                                builder.setPositiveButton("YES",
-                                        new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                Log.i(TAG, "아이디가 중복되었습니다. - YES Click");
-                                            }
-                                        });
-                                builder.show();
-                            } else {
-                                Log.i(TAG, "idDuCheck onClick() - status가 ok도 duplicated도 아닐 때 status Check : " + status);
-                            }
-                        } else if (id.getText().toString().length() == 0 || id.getText().toString().equals("")) {
-                            // 다이얼로그 값을 입력해주세요
-                            AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
-                            builder.setTitle("아이디의 값을 입력해 주세요.");
-                            builder.setPositiveButton("YES",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            Log.i(TAG, "아이디가 중복되었습니다. - YES Click");
-                                        }
-                                    });
-                            builder.show();
-                        }
-                    }
-                }.execute(url, myId);
+                idDuplicateCheck();
             }
         });
-        id.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                Log.i(TAG, "id - beforeTextChanged Method");
-            }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Log.i(TAG, "id - onTextChanged Method");
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                Log.i(TAG, "id - afterTextChanged Method");
-                String url = "http://54.180.155.66/check_id.php";
-                String myId = id.getText().toString();
-                new CheckIdTask() {
-                    @Override
-                    protected void onPostExecute(String status) {
-                        Log.i("SignUp", "status Check : " + status);
-                        if (id.getText().toString().length() > 0) {
-                            Log.i(TAG, "id 입력받은 값의 길이가 0 이상일 때");
-                            if (status.equals("ok")) {
-
-                            } else if (status.equals("duplicated")) {
-
-                            } else {
-
-                            }
-                        } else {
-                            idDuCheck.setText("중복✔️");
-                        }
-                    }
-                }.execute(url, myId);
-            }
-        });
 
         pw = findViewById(R.id.signUpPwEditText);
         pwCheck = findViewById(R.id.signUpPwCheckEditText);
@@ -292,6 +220,43 @@ public class SignUp extends AppCompatActivity {
             }
         });
 
+        pwCheck.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (pwCheck.getText().toString().length() > 0) {
+                    Log.i(TAG, "has focus check (if)");
+                    pwFocusCheck();
+                } else if (pwCheck.getText().toString().length() == 0){
+                    Log.i(TAG, "has focus check (else)");
+                    pwDiff.setVisibility(View.INVISIBLE);
+                    pwSame.setVisibility(View.INVISIBLE);
+                }
+
+//            } else {
+//                // 포커스 상태가 아닐 때
+//                Log.i(TAG, "pwCheck not hasFocus");
+////                    Toast.makeText(signCtx, "has not Focus", Toast.LENGTH_SHORT).show();
+//                if (pwCheck.getText().toString().length() >= 4) {
+//                    Log.i(TAG, "has not focus check (if)");
+//                    pwFocusCheck();
+//                } else {
+//                    Log.i(TAG, "has not focus check (else)");
+//                    pwDiff.setVisibility(View.INVISIBLE);
+//                    pwSame.setVisibility(View.INVISIBLE);
+//                }
+            }
+        });
+
         submit = findViewById(R.id.signUpSubmitButton);
         goHome = findViewById(R.id.goHomeButton);
 
@@ -329,6 +294,7 @@ public class SignUp extends AppCompatActivity {
 
                         if (pw.getText().toString().equals(pwCheck.getText().toString())) {
                             // get 방식 파라미터 추가
+
                             HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/signUp.php").newBuilder();
                             urlBuilder.addQueryParameter("ver", "1.0"); // 예시
                             String url = urlBuilder.build().toString();
@@ -362,7 +328,7 @@ public class SignUp extends AppCompatActivity {
                                 @Override
                                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
 
-
+                                    // TODO copy
                                     Log.i("[SignUp Activity]", "onResponse 메서드 작동");
 
                                     // 서브 스레드 Ui 변경 할 경우 에러
@@ -934,5 +900,173 @@ public class SignUp extends AppCompatActivity {
         return null;
     }
 
+    public void checkId() {
+        Log.i(TAG, "idDuCheckButton OnClick()");
+        String url = "http://54.180.155.66/check_id.php";
+        String myId = id.getText().toString();
+        new CheckIdTask() {
+            @Override
+            protected void onPostExecute(String status) {
+                Log.i("SignUp", "idDuCheck onClick status Check : " + status);
+                if (id.getText().toString().length() > 0) {
+                    if (status.equals("ok")) {
+                        Log.i(TAG, "idDuCheck onClick 아이디가 중복되지 않았을 때 statis check : " + status);
+                        idDuCheck.setText("✔️");
+                    } else if (status.equals("duplicated")) {
+                        // 다이얼로그 아이디가 중복되었습니다
+                        Log.i(TAG, "idDuCheck onClick 아이디가 중복됐을 때");
+                        AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
+                        builder.setTitle("아이디가 즁복되었습니다,");
+                        builder.setPositiveButton("YES",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Log.i(TAG, "아이디가 중복되었습니다. - YES Click");
+                                    }
+                                });
+                        builder.show();
+                    } else {
+                        Log.i(TAG, "idDuCheck onClick() - status가 ok도 duplicated도 아닐 때 status Check : " + status);
+                    }
+                } else if (id.getText().toString().length() == 0 || id.getText().toString().equals("")) {
+                    // 다이얼로그 값을 입력해주세요
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
+                    builder.setTitle("아이디의 값을 입력해 주세요.");
+                    builder.setPositiveButton("YES",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Log.i(TAG, "아이디가 중복되었습니다. - YES Click");
+                                }
+                            });
+                    builder.show();
+                }
+            }
+        }.execute(url, myId);
+    }
 
+    public void checkIdChange() {
+        id.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                Log.i(TAG, "id - beforeTextChanged Method");
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.i(TAG, "id - onTextChanged Method");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.i(TAG, "id - afterTextChanged Method");
+                String url = "http://54.180.155.66/check_id.php";
+                String myId = id.getText().toString();
+                new CheckIdTask() {
+                    @Override
+                    protected void onPostExecute(String status) {
+                        Log.i("SignUp", "id afterTextChanged status Check : " + status);
+                        if (id.getText().toString().length() > 4) {
+                            if (status.equals("ok")) {
+                                Log.i(TAG, "id onTextChanged 아이디가 중복되지 않았을 때  statis check : " + status);
+//                                idDuCheck.setText("✔️");
+
+                            } else if (status.equals("duplicated")) {
+                                // 다이얼로그 아이디가 중복되었습니다
+                                Log.i(TAG, "id onTextChanged 아이디가 중복 됐을 때");
+                            } else {
+                                Log.i(TAG, "idDuCheck onClick() - status가 ok도 duplicated도 아닐 때 status Check : " + status);
+                            }
+                        } else if (id.getText().toString().length() < 4 || id.getText().toString().equals("")) {
+                            // 다이얼로그 값을 입력해주세요
+                            idDuCheck.setText("중복✔️");
+                        }
+                    }
+                }.execute(url, myId);
+            }
+        });
+    }
+
+    public void idDuplicateCheck() {
+        Log.i(TAG, "idDuplicate Check Method()");
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/check_id.php").newBuilder();
+        urlBuilder.addQueryParameter("ver", "1.0"); // 예시
+        String url = urlBuilder.build().toString();
+        Log.i("[SignUp Activity]", "String url 확인 : " + url);
+
+        String idStr = id.getText().toString();
+
+        RequestBody formBody = new FormBody.Builder()
+                .add("id", id.getText().toString().trim())
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.i(TAG, "onFailure");
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                //TODO copy
+                Log.i(TAG, "onResponse");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            if (!response.isSuccessful()) {
+                                Log.i(TAG, "!response.isSuccessful : " + response);
+                            } else {
+                                Log.i(TAG, "response.isSuccessful");
+                                final String responseBodyStr = response.body().string().trim();
+                                if (idStr.length() > 4) {
+                                    if (responseBodyStr.equals("duplicate")) {
+                                        Log.i(TAG, "idDuCheck onClick 아이디가 중복됐을 때");
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
+                                        builder.setTitle("아이디가 중복되었습니다.");
+                                        builder.setPositiveButton("YES",
+                                                new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        Log.i(TAG, "아이디가 중복되었습니다. - YES Click");
+                                                    }
+                                                });
+                                        builder.show();
+                                    } else if (responseBodyStr.equals("ok")) {
+                                        Log.i(TAG, "id idDuCheck 아이디가 중복되지 않았을 때  statis check : " + responseBodyStr);
+                                        idDuCheck.setText("✔️");
+                                    } else {
+                                        Log.i(TAG, "status가 ok도 duplicated도 아닐 때 status Check : " + responseBodyStr);
+                                    }
+                                } else if (id.getText().toString().length() == 0 || id.getText().toString().equals("")) {
+                                    // 다이얼로그 값을 입력해주세요
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
+                                    builder.setTitle("아이디의 값을 입력해 주세요.");
+                                    builder.setPositiveButton("YES",
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    Log.i(TAG, "아이디가 비어있습니다. - YES Click");
+                                                }
+                                            });
+                                    builder.show();
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+
+    }
 }
