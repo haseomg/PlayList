@@ -5,7 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#AAB9FF"
+    android:id="@+id/mainLayout"
     tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/mainFull_ImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 
     <Button

@@ -18,14 +18,22 @@ import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -76,8 +84,10 @@ public class MainActivity extends AppCompatActivity {
 
     private Button play;
     private MediaPlayer mediaPlayer;
+    private MediaPlayer reMediaPlayer;
     private int playPosition = -1;
     private boolean isDragging = false;
+    private boolean isPlaying = false;
     String castNum;
     String artist;
     String name;
@@ -106,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
     int firstRanNumToInt;
     int ranRanToInt;
     String nextRanNum;
+    String leftPlay;
+
+    Gif_Play gif;
 
     boolean playCheck = false;
     boolean nowPlaying = false;
@@ -115,6 +128,9 @@ public class MainActivity extends AppCompatActivity {
 
     SharedPreferences randomShared;
     SharedPreferences.Editor randomEditor;
+
+    SharedPreferences pastShared;
+    SharedPreferences.Editor pastEditor;
 
     String fromSignUpNickName;
     String fromSharedNickName;
@@ -136,6 +152,9 @@ public class MainActivity extends AppCompatActivity {
     public final String TAG = "[Main Activity]";
 
     public static Context mainCtx;
+    androidx.constraintlayout.widget.ConstraintLayout mainLayout;
+    androidx.constraintlayout.widget.ConstraintLayout mainPlayLayout;
+    ImageView mainFull;
 
 
     @Override
@@ -146,6 +165,10 @@ public class MainActivity extends AppCompatActivity {
 
         // final static Context
         mainCtx = this;
+        mainLayout = findViewById(R.id.mainLayout);
+        mainPlayLayout = findViewById(R.id.mainPlayLayout);
+        mainFull = findViewById(R.id.mainFull_ImageView);
+        gif = new Gif_Play();
 
         toast = Toast.makeText(this, "\uD835\uDC29\uD835\uDC25\uD835\uDC1A\uD835\uDC32\uD835\uDC22\uD835\uDC27\uD835\uDC20 ♪", Toast.LENGTH_LONG);
         toastView = toast.getView();
@@ -331,18 +354,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // 메인 왼쪽 화살표 버튼 (직전 음악 재생)
-        leftPlayBtn = findViewById(R.id.leftPlayButton);
-        leftPlayBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "leftPlay 버튼 클릭");
-
-                // pastNumBox의 앞숫자부터 가져와서 틀어줄 건데
-                // 틀때마다 앞숫자 잘라줘야함
-            }
-        });
-
         mainLogo = findViewById(R.id.mainLogo);
 //        weather();
 
@@ -412,7 +423,7 @@ public class MainActivity extends AppCompatActivity {
             randomEditor.putString("randomNumbers", ranRan);
             randomEditor.apply();
             randomEditor.commit();
-            pastNumBox =  pastNumBox + firstRanNum;
+            pastNumBox = pastNumBox + firstRanNum;
             Log.i(TAG, "Number : " + pastNumBox);
         }
 
@@ -490,17 +501,16 @@ public class MainActivity extends AppCompatActivity {
                                     randomEditor.putString("randomNumbers", ranRan);
                                     randomEditor.apply();
                                     randomEditor.commit();
-                                    pastNumBox = pastNumBox +firstRanNum;
+                                    pastNumBox = pastNumBox + firstRanNum;
                                     Log.i(TAG, "Number : " + pastNumBox);
                                 }
-
 
 
                                 // 직접 통신인데..
                                 // num 보내고
                                 // TODO 랜덤
                                 Uri.Builder builder = new Uri.Builder()
-                                        .appendQueryParameter("num", firstRanNum);
+                                        .appendQueryParameter("num", "1" + firstRanNum);
                                 String postParams = builder.build().getEncodedQuery();
                                 new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
 
@@ -514,7 +524,7 @@ public class MainActivity extends AppCompatActivity {
                                 // post 파라미터 추가
                                 // TODO 랜덤
                                 RequestBody formBody = new FormBody.Builder()
-                                        .add("num", firstRanNum.trim())
+                                        .add("num", "1" + firstRanNum.trim())
                                         .build();
                                 // num을 보내고 -> 테이블의 num을 기준으로 path, name 가져올 거야
 
@@ -612,6 +622,7 @@ public class MainActivity extends AppCompatActivity {
 
                                                             mediaPlayer.setDataSource(uri);
                                                             Log.i(TAG, "mediaPlayer.setDataSource(path)");
+                                                            isPlaying = true;
 
 
                                                             mediaPlayer.prepareAsync();
@@ -623,6 +634,38 @@ public class MainActivity extends AppCompatActivity {
 
                                                             mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
                                                             Log.i(TAG, "mediaPlayer.setWakeMode");
+
+
+//                                                            gif.playing();
+                                                            Glide.with(mainCtx)
+                                                                    .asGif()
+                                                                    .load(R.drawable.sea_gif)
+                                                                    .centerCrop()
+                                                                    .listener(new RequestListener<GifDrawable>() {
+                                                                        @Override
+                                                                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<GifDrawable> target, boolean isFirstResource) {
+                                                                            // GIF 파일 로드에 실패한 경우의 처리
+                                                                            return false;
+                                                                        }
+
+                                                                        @Override
+                                                                        public boolean onResourceReady(GifDrawable resource, Object model, Target<GifDrawable> target, DataSource dataSource, boolean isFirstResource) {
+                                                                            // GIF 파일 로드에 성공한 경우의 처리
+                                                                            resource.setLoopCount(GifDrawable.LOOP_FOREVER); // 반복 재생 설정
+                                                                            resource.start(); // GIF 파일 재생 시작
+                                                                            return false;
+                                                                        }
+                                                                    }).into(mainFull);
+                                                            playingTime.setTextColor(Color.WHITE);
+                                                            toPlayTime.setTextColor(Color.WHITE);
+                                                            // TODO background
+                                                            mainPlayLayout.setBackgroundColor(Color.parseColor("#00ff0000"));
+                                                            play.setTextColor(Color.WHITE);
+                                                            play.setAlpha(0.7f);
+                                                            leftPlayBtn.setAlpha(0.7f);
+                                                            rightPlayBtn.setAlpha(0.7f);
+                                                            playingTime.setAlpha(0.7f);
+                                                            toPlayTime.setAlpha(0.7f);
 
 
 //                                                        // TODO ADD for SeekBar Moving
@@ -707,11 +750,12 @@ public class MainActivity extends AppCompatActivity {
 
                                                             String[] exceptMp3 = name.split(".mp3");
                                                             String justName = exceptMp3[0];
+                                                            String reReName = justName.replace("_", " ");
                                                             // _ <- 이거를 공백으로 대체할 수 있을까?
 
-                                                            Log.i(TAG, "song just name 확인 : " + justName);
+                                                            Log.i(TAG, "song just name 확인 : " + reReName);
 
-                                                            mainLogo.setText(justName);
+                                                            mainLogo.setText(reReName);
 
                                                             if (!responseData.equals(0)) {
 //                                                            responserData " + " 기준으로 잘라줘야 해
@@ -825,17 +869,17 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (logIn.getText().toString().equals("LOG IN")) {
-//                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
-//                    builder.setTitle("〈 Please Check the Log In 〉");
-//
-//                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//
-//                        }
-//                    });
-//                    builder.show();
+                    builder.setTitle("〈 Please Check the Log In 〉");
+
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    builder.show();
                 } else {
 
                     if (play.getText().toString().equals("")) {
@@ -851,6 +895,7 @@ public class MainActivity extends AppCompatActivity {
                         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                             @Override
                             public void onCompletion(MediaPlayer mp) {
+                                isPlaying = false;
                                 play.setText("❚❚");
                                 playCheck = true;
                             }
@@ -933,12 +978,42 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "acct == null");
         }
 
+        // 메인 왼쪽 화살표 버튼 (직전 음악 재생)
+        leftPlayBtn = findViewById(R.id.leftPlayButton);
+        leftPlayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "leftPlay 버튼 클릭");
+
+//                pastStreaming();
+
+            }
+        });
+
     }
 
 
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "LifeCycle onResume()");
+//        if (!isPlaying) {
+//            Log.i(TAG, "change song check : " + mainSeekBar.getProgress());
+//            reMediaPlayer = new MediaPlayer();
+//            reMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                @Override
+//                public void onCompletion(MediaPlayer mp) {
+//                    Log.i(TAG, "change song onCompletion() ");
+//                    // 다음곡을 재생하는 코드를 여기에 적어
+//                    reMediaPlayer.reset();
+//                    changeStreaming();
+//                    reMediaPlayer.start();
+//                    mainSeekBar.setProgress(0);
+//                    updateSeekBar();
+//
+//                }
+//            });
+
+//        }
         updateSeekBar();
     }
 
@@ -1387,27 +1462,61 @@ public class MainActivity extends AppCompatActivity {
                             nextRanNum = String.valueOf(next);
                         }
 //                    firstRanNumToInt = Integer.parseInt(firstRanNum);
-                        Log.i(TAG, "ran first check : " + nextRanNum);
+                        Log.i(TAG, "ran now check : " + nextRanNum);
 //                    ranRanRan = randomNumCheck;
                         if (ranRanRan.length() > 0) {
                             ranRanRan = ranRanRan.substring(1);
-                            Log.i(TAG, "ran substring check : " + ranRanRan);
+                            Log.i(TAG, "ran nums substring(1) check : " + ranRanRan);
 //                        ranRanToInt = Integer.parseInt(ranRan);
                             randomShared = getSharedPreferences("randomNumbers", MODE_PRIVATE);
                             randomEditor = randomShared.edit();
                             randomEditor.putString("randomNumbers", ranRanRan);
                             randomEditor.apply();
                             randomEditor.commit();
-                            pastNumBox = pastNumBox + nextRanNum ;
-                            Log.i(TAG, "Number : " + pastNumBox);
+                            pastNumBox = nextRanNum + pastNumBox;
+                            Log.i(TAG, "ran past nums : " + pastNumBox);
                         }
                     }
 
                     if (ranRanRan.length() == 0 || ranRanRan.equals("")) {
-                        nextRanNum = "1";
+                        responseRandomNumbers();
+//                        nextRanNum = "1";
+//                        String reRan = randomShared.getString("randomNumbers", "");
+                        String reRan = randomNumCheck;
+                        Log.i(TAG, "ran reRan check : " + reRan);
+                        char reNext = reRan.charAt(0);
+                        nextRanNum = String.valueOf(reNext);
+                        Log.i(TAG, "ran now check : " + nextRanNum);
+                        reRan = reRan.substring(1);
+                        Log.i(TAG, "ran nums substring(1) check : " + reRan);
+//                        ranRanToInt = Integer.parseInt(ranRan);
+                        randomShared = getSharedPreferences("randomNumbers", MODE_PRIVATE);
+                        randomEditor = randomShared.edit();
+                        randomEditor.putString("randomNumbers", reRan);
+                        randomEditor.apply();
+                        randomEditor.commit();
+                        pastNumBox = reNext + pastNumBox;
+                        Log.i(TAG, "ran past  nums : " + pastNumBox);
+                        if (reRan.length() > 0) {
+                            String reRanRan = randomShared.getString("randomNumbers", "");
+                            Log.i(TAG, "ran reRanRan check : " + reRanRan);
+                            char next = reRanRan.charAt(0);
+                            nextRanNum = String.valueOf(next);
+                            Log.i(TAG, "ran now check : " + nextRanNum);
+                            reRanRan = reRanRan.substring(1);
+                            Log.i(TAG, "ran nums substring(1) check : " + reRanRan);
+//                        ranRanToInt = Integer.parseInt(ranRan);
+                            randomShared = getSharedPreferences("randomNumbers", MODE_PRIVATE);
+                            randomEditor = randomShared.edit();
+                            randomEditor.putString("randomNumbers", reRanRan);
+                            randomEditor.apply();
+                            randomEditor.commit();
+                            pastNumBox = next + pastNumBox;
+                            Log.i(TAG, "ran past  nums : " + pastNumBox);
+                        }
                     }
                     Uri.Builder builder = new Uri.Builder()
-                            .appendQueryParameter("num", nextRanNum);
+                            .appendQueryParameter("num", "1" + nextRanNum);
                     String postParams = builder.build().getEncodedQuery();
                     new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
 
@@ -1421,7 +1530,7 @@ public class MainActivity extends AppCompatActivity {
 
                     // post 파라미터 추가
                     RequestBody formBody = new FormBody.Builder()
-                            .add("num", nextRanNum.trim())
+                            .add("num", "1" + nextRanNum.trim())
                             .build();
                     // num을 보내고 -> 테이블의 num을 기준으로 path, name 가져올 거야
 
@@ -1496,6 +1605,7 @@ public class MainActivity extends AppCompatActivity {
 
                                                 String[] nameCut = path.split("/");
                                                 name = nameCut[4];
+                                                String reName = name.replace("_", " ");
                                                 Log.i(TAG, "[RightPlay]songInfo name Check : " + name);
 
                                                 Log.i(TAG, "[RightPlay] -----------------------------------------------");
@@ -1519,6 +1629,8 @@ public class MainActivity extends AppCompatActivity {
                                                 //
 
                                                 mediaPlayer.setDataSource(uri);
+
+                                                isPlaying = true;
 //                                                play.setText("❚❚");
                                                 Log.i(TAG, "[RightPlay] mediaPlayer.setDataSource(path)");
 
@@ -1534,6 +1646,36 @@ public class MainActivity extends AppCompatActivity {
                                                 Log.i(TAG, "[RightPlay] mediaPlayer.setWakeMode");
                                                 Log.i(TAG, "[RightPlay] -----------------------------------------------");
 
+//                                                gif.playing();
+                                                Glide.with(mainCtx)
+                                                        .asGif()
+                                                        .load(R.drawable.sea_gif)
+                                                        .centerCrop()
+                                                        .listener(new RequestListener<GifDrawable>() {
+                                                            @Override
+                                                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<GifDrawable> target, boolean isFirstResource) {
+                                                                // GIF 파일 로드에 실패한 경우의 처리
+                                                                return false;
+                                                            }
+
+                                                            @Override
+                                                            public boolean onResourceReady(GifDrawable resource, Object model, Target<GifDrawable> target, DataSource dataSource, boolean isFirstResource) {
+                                                                // GIF 파일 로드에 성공한 경우의 처리
+                                                                resource.setLoopCount(GifDrawable.LOOP_FOREVER); // 반복 재생 설정
+                                                                resource.start(); // GIF 파일 재생 시작
+                                                                return false;
+                                                            }
+                                                        }).into(mainFull);
+                                                playingTime.setTextColor(Color.WHITE);
+                                                toPlayTime.setTextColor(Color.WHITE);
+                                                // TODO background
+                                                mainPlayLayout.setBackgroundColor(Color.parseColor("#00ff0000"));
+                                                play.setTextColor(Color.WHITE);
+                                                play.setAlpha(0.7f);
+                                                leftPlayBtn.setAlpha(0.7f);
+                                                rightPlayBtn.setAlpha(0.7f);
+                                                playingTime.setAlpha(0.7f);
+                                                toPlayTime.setAlpha(0.7f);
 
 //                                                        // TODO ADD for SeekBar Moving
                                                 if (mediaPlayer.isPlaying()) {
@@ -1558,8 +1700,14 @@ public class MainActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onCompletion(MediaPlayer mp) {
                                                         // 다음곡을 재생하는 코드를 여기에 적어
-                                                        mainSeekBar.setProgress(0);
+                                                        isPlaying = false;
 //                                                        rightPlayBtn.performClick();
+//                                                        mediaPlayer.reset();
+//                                                        changeStreaming();
+//                                                        mediaPlayer.start();
+//                                                        mainSeekBar.setProgress(0);
+//                                                        updateSeekBar();
+
                                                     }
                                                 });
 
@@ -1619,14 +1767,15 @@ public class MainActivity extends AppCompatActivity {
 
                                                 String[] exceptMp3 = name.split(".mp3");
                                                 String justName = exceptMp3[0];
+                                                String reReName = justName.replace("_", " ");
                                                 // _ <- 이거를 공백으로 대체할 수 있을까?
 
-                                                Log.i(TAG, "[RightPlay] song just name 확인 : " + justName);
+                                                Log.i(TAG, "[RightPlay] song just name 확인 : " + reReName);
                                                 Log.i(TAG, "[RightPlay] -----------------------------------------------");
 
 
                                                 mainLogo = findViewById(R.id.mainLogo);
-                                                mainLogo.setText(justName);
+                                                mainLogo.setText(reReName);
 
                                                 if (!responseData.equals(0)) {
 //                                                            responserData " + " 기준으로 잘라줘야 해
@@ -2062,7 +2211,7 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     final String result = response.body().string();
                     Log.i("bringGet", "response check : " + result);
-                    num = Integer.parseInt(result);
+//                    num = Integer.parseInt(result);
                     randomShared = getSharedPreferences("randomNumbers", MODE_PRIVATE);
                     randomEditor = randomShared.edit();
                     String bringRanNum = randomShared.getString("randomNumbers", "");
@@ -2116,6 +2265,330 @@ public class MainActivity extends AppCompatActivity {
                 int number = result;
                 Log.i(TAG, "bringGet number check : " + number);
             }
+
+
         }
     }
+
+    public void pastStreaming() {
+
+        String playState = play.getText().toString();
+
+        int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
+        if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
+
+
+            if (!playCheck) {
+
+
+                Log.i("[LeftPlay] 버튼 클릭", "재생");
+                Log.i(TAG, "[LeftPlay] playCheck : " + playCheck);
+                Log.i(TAG, "[LeftPlay] -----------------------------------------------");
+
+
+                Log.i("[LeftPlay] 버튼 클릭", "일시정지가 아닐 때");
+                Log.i(TAG, "[LeftPlay] -----------------------------------------------");
+                play.setText("❚❚");
+                play.setTextSize(53);
+
+                // pastNumBox의 앞숫자부터 가져와서 틀어줄 건데
+                // 틀때마다 앞숫자 잘라줘야함
+                if (pastNumBox.length() != 0) {
+                    char cutFirst = pastNumBox.charAt(0);
+                    // pastNumPlay로 재생
+                    String pastNumPlay = String.valueOf(cutFirst);
+                    // 듣고 나서 잘라 준 것
+                    leftPlay = pastNumPlay.substring(0);
+                    pastShared = getSharedPreferences("pastNumbers", MODE_PRIVATE);
+                    pastEditor = pastShared.edit();
+                    pastEditor.putString("pastNumbers", pastNumBox);
+                    pastEditor.putString("pastNumber", leftPlay);
+                    pastEditor.apply();
+                    pastEditor.commit();
+                    // left play로 재생
+                } else {
+
+                }
+                Uri.Builder builder = new Uri.Builder()
+                        .appendQueryParameter("num", leftPlay);
+                String postParams = builder.build().getEncodedQuery();
+                new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
+
+
+//                             get 방식 파라미터 추가
+                HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/file_sampling.php").newBuilder();
+                urlBuilder.addQueryParameter("ver", "1.0");
+                String url = urlBuilder.build().toString();
+                Log.i(TAG, "[RightPlay] String url 확인 : " + url);
+                Log.i(TAG, "[RightPlay] -----------------------------------------------");
+
+                // post 파라미터 추가
+                RequestBody formBody = new FormBody.Builder()
+                        .add("num", leftPlay.trim())
+                        .build();
+                // num을 보내고 -> 테이블의 num을 기준으로 path, name 가져올 거야
+
+                // 요청 만들기
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url(url)
+                        .post(formBody)
+                        .build();
+
+
+                // 응답 콜백
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        Log.e(TAG, "[LeftPlay] play callback onFailure : " + e);
+                        Log.i(TAG, "[LeftPlay] -----------------------------------------------");
+                    }
+
+                    @Override
+                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                        Log.i(TAG, "[LeftPlay] play callback onResponse");
+                        Log.i(TAG, "[LeftPlay] -----------------------------------------------");
+
+                        // 서브 스레드 UI 변경할 경우 에러
+                        // 메인 스레드 UI 설정
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                try {
+
+                                    if (!response.isSuccessful()) {
+                                        // 응답 실패
+                                        Log.e("tag", "[LeftPlay] 응답 실패 : " + response);
+                                        Toast.makeText(getApplicationContext(), "네트워크 문제 발생", Toast.LENGTH_SHORT).show();
+                                        Log.i(TAG, "[LeftPlay] -----------------------------------------------");
+                                    } else {
+                                        // 응답 성공
+                                        Log.i("tag", "[LeftPlay] 응답 성공");
+                                        final String responseData = response.body().string().trim();
+                                        Log.i("tag", "[LeftPlay] responseData Check : " + responseData);
+                                        Log.i(TAG, "[LeftPlay] -----------------------------------------------");
+                                        if (responseData.equals("1")) {
+                                            Log.i("[Main]", "[LeftPlay] responseData 가 1일 때 : " + responseData);
+                                            Log.i(TAG, "[LeftPlay] -----------------------------------------------");
+                                            Toast.makeText(getApplicationContext(), "아이디 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Log.i("[Main]", "[LeftPlay] responseData 가 1이 아닐 때 : " + responseData);
+                                            Log.i(TAG, "[LeftPlay] -----------------------------------------------");
+//                                                        startActivityString(MainActivity.class, "nickname", responseData);
+
+                                            String songInfo = responseData;
+                                            Log.i(TAG, "[LeftPlay] songInfo Check : " + songInfo);
+
+                                            String[] numCut = songInfo.split("___");
+                                            String num = numCut[0];
+                                            Log.i(TAG, "[LeftPlay]songInfo num Check : " + num);
+
+                                            String deleteNum = numCut[1];
+                                            String[] artistCut = deleteNum.split("###");
+                                            artist = artistCut[0];
+                                            Log.i(TAG, "[LeftPlay]songInfo artist Check : " + artist);
+
+                                            String deleteArtist = artistCut[1];
+                                            String[] pathCut = deleteArtist.split("@@@");
+                                            String path = pathCut[0];
+                                            Log.i(TAG, "[LeftPlay]songInfo path Check : " + path);
+
+                                            time = pathCut[1];
+                                            Log.i(TAG, "[LeftPlay]songInfo time Check : " + time);
+
+                                            String[] nameCut = path.split("/");
+                                            name = nameCut[4];
+                                            Log.i(TAG, "[LeftPlay]songInfo name Check : " + name);
+
+                                            Log.i(TAG, "[LeftPlay] -----------------------------------------------");
+
+                                            mediaPlayer.setLooping(false);
+                                            Log.i(TAG, "[LeftPlay] MediaPlayer 생성");
+
+                                            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                            Log.i(TAG, "[LeftPlay] mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)");
+
+
+                                            // 수정한 부분
+                                            String uri = "http://54.180.155.66/" + name;
+                                            Log.i(TAG, "[LeftPlay] file name from music table : " + uri);
+
+                                            mediaPlayer.setDataSource(uri);
+                                            isPlaying = true;
+                                            Log.i(TAG, "[LeftPlay] mediaPlayer.setDataSource(path)");
+
+
+                                            mediaPlayer.prepareAsync();
+                                            Log.i(TAG, "[LeftPlay] mediaPlayer.prepareAsync()");
+
+                                            // TODO
+                                            mainSeekBar.setMax(mediaPlayer.getDuration());
+                                            //
+
+                                            mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+                                            Log.i(TAG, "[LeftPlay] mediaPlayer.setWakeMode");
+                                            Log.i(TAG, "[LeftPlay] -----------------------------------------------");
+
+//                                            gif.playing();
+                                            Glide.with(mainCtx)
+                                                    .asGif()
+                                                    .load(R.drawable.sea_gif)
+                                                    .centerCrop()
+                                                    .listener(new RequestListener<GifDrawable>() {
+                                                        @Override
+                                                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<GifDrawable> target, boolean isFirstResource) {
+                                                            // GIF 파일 로드에 실패한 경우의 처리
+                                                            return false;
+                                                        }
+
+                                                        @Override
+                                                        public boolean onResourceReady(GifDrawable resource, Object model, Target<GifDrawable> target, DataSource dataSource, boolean isFirstResource) {
+                                                            // GIF 파일 로드에 성공한 경우의 처리
+                                                            resource.setLoopCount(GifDrawable.LOOP_FOREVER); // 반복 재생 설정
+                                                            resource.start(); // GIF 파일 재생 시작
+                                                            return false;
+                                                        }
+                                                    }).into(mainFull);
+                                            playingTime.setTextColor(Color.WHITE);
+                                            toPlayTime.setTextColor(Color.WHITE);
+                                            // TODO background
+                                            mainPlayLayout.setBackgroundColor(Color.parseColor("#00ff0000"));
+                                            play.setTextColor(Color.WHITE);
+                                            play.setAlpha(0.7f);
+                                            leftPlayBtn.setAlpha(0.7f);
+                                            rightPlayBtn.setAlpha(0.7f);
+                                            playingTime.setAlpha(0.7f);
+                                            toPlayTime.setAlpha(0.7f);
+
+//                                                        // TODO ADD for SeekBar Moving
+                                            if (mediaPlayer.isPlaying()) {
+                                                mediaPlayer.stop();
+                                                try {
+                                                    mediaPlayer.prepare();
+                                                } catch (IllegalStateException e) {
+                                                    e.printStackTrace();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                mediaPlayer.seekTo(0);
+
+                                                mainSeekBar.setProgress(0);
+                                            } else {
+                                                mediaPlayer.start();
+
+                                                Thread();
+                                            }
+
+                                            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                                @Override
+                                                public void onCompletion(MediaPlayer mp) {
+                                                    // 다음곡을 재생하는 코드를 여기에 적어
+                                                    isPlaying = false;
+                                                    mainSeekBar.setProgress(0);
+//                                                        rightPlayBtn.performClick();
+                                                }
+                                            });
+
+                                            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                                @Override
+                                                public void onPrepared(MediaPlayer mp) {
+                                                    Log.i(TAG, "[LeftPlay] mediaPlayer.setOnPreparedListener");
+                                                    mainSeekBar.setMax(mediaPlayer.getDuration());
+                                                    mediaPlayer.start();
+                                                    updateSeekBar();
+//                                                                changeSeekbar();
+                                                    Log.i(TAG, "[LeftPlay] mediaPlayer.start()");
+                                                    Log.i(TAG, "[LeftPlay] -----------------------------------------------");
+                                                }
+                                            });
+
+
+//                                                        // TODO When SeekBar click, move to time from mp3 file
+                                            mainSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                                                @Override
+                                                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                                    Log.i(TAG, "[LeftPlay] SeekBar onProgressChanged");
+                                                    Log.i(TAG, "[LeftPlay] -----------------------------------------------");
+                                                    if (fromUser) {
+                                                        mediaPlayer.seekTo(progress);
+                                                    }
+                                                }
+
+                                                //
+                                                @Override
+                                                public void onStartTrackingTouch(SeekBar seekBar) {
+                                                    Log.i(TAG, "[LeftPlay] SeekBar onStartTrackingTouch");
+                                                    Log.i(TAG, "[LeftPlay] -----------------------------------------------");
+                                                    isDragging = true;
+                                                }
+
+                                                @Override
+                                                public void onStopTrackingTouch(SeekBar seekBar) {
+                                                    Log.i(TAG, "[LeftPlay] SeekBar onStopTrackingTouch");
+                                                    Log.i(TAG, "[LeftPlay] -----------------------------------------------");
+                                                    isDragging = false;
+                                                }
+                                            });
+                                            toast.show();
+
+
+                                            updateSeekBar();
+
+                                            songTime = findViewById(R.id.mainToPlayTime);
+                                            songTime.setText(time);
+
+                                            String[] exceptMp3 = name.split(".mp3");
+                                            String justName = exceptMp3[0];
+                                            String reReName = justName.replace("_", " ");
+                                            // _ <- 이거를 공백으로 대체할 수 있을까?
+
+                                            Log.i(TAG, "[LeftPlay] song just name 확인 : " + reReName);
+                                            Log.i(TAG, "[LeftPlay] -----------------------------------------------");
+
+
+                                            mainLogo = findViewById(R.id.mainLogo);
+                                            mainLogo.setText(reReName);
+
+                                            if (!responseData.equals(0)) {
+//                                                            responserData " + " 기준으로 잘라줘야 해
+                                                Log.i("[LeftPlay]", "responseData 가 0이 아닐 때 : " + responseData);
+                                                Log.i(TAG, "[LeftPlay] -----------------------------------------------");
+
+
+                                            }
+
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+
+                        });
+
+                    }
+
+                });
+
+
+                // 아래 if (playCHeck == false 닫아주는 중괄호
+            } else { // <-> if (playCheck == true
+
+//                if (!playState.equals("❚❚")) {튼
+//
+//                } else if (playState.equals("❚❚")) {
+//                    Log.i("LeftPlay 버튼 클릭", "일시정지 상태일 때");
+//                }
+
+            } // if (playCheck == true 닫아주는 중괄호
+
+
+        } else {
+            Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
 }
