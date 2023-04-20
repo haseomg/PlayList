@@ -667,6 +667,9 @@ public class MainActivity extends AppCompatActivity {
                                                             playingTime.setAlpha(0.7f);
                                                             toPlayTime.setAlpha(0.7f);
 
+                                                            mainLogo.setAlpha(0.8f);
+                                                            upload.setAlpha(0.8f);
+
 
 //                                                        // TODO ADD for SeekBar Moving
                                                             if (mediaPlayer.isPlaying()) {
@@ -1677,6 +1680,9 @@ public class MainActivity extends AppCompatActivity {
                                                 playingTime.setAlpha(0.7f);
                                                 toPlayTime.setAlpha(0.7f);
 
+                                                mainLogo.setAlpha(0.8f);
+                                                upload.setAlpha(0.8f);
+
 //                                                        // TODO ADD for SeekBar Moving
                                                 if (mediaPlayer.isPlaying()) {
                                                     mediaPlayer.stop();
@@ -2460,6 +2466,9 @@ public class MainActivity extends AppCompatActivity {
                                             rightPlayBtn.setAlpha(0.7f);
                                             playingTime.setAlpha(0.7f);
                                             toPlayTime.setAlpha(0.7f);
+
+                                            mainLogo.setAlpha(0.8f);
+                                            upload.setAlpha(0.8f);
 
 //                                                        // TODO ADD for SeekBar Moving
                                             if (mediaPlayer.isPlaying()) {
