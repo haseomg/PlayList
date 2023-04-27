@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:background="#00ff0000"
         android:fontFamily="sans-serif-black"
-        android:text="중복✔️"
+        android:text="중복체크️"
         android:textColor="@color/white"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"

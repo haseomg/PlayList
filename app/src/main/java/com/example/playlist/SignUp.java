@@ -979,7 +979,7 @@ public class SignUp extends AppCompatActivity {
                             }
                         } else if (id.getText().toString().length() < 4 || id.getText().toString().equals("")) {
                             // 다이얼로그 값을 입력해주세요
-                            idDuCheck.setText("중복✔️");
+                            idDuCheck.setText("중복체크️");
                         }
                     }
                 }.execute(url, myId);
