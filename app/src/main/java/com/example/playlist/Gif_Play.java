@@ -1,10 +1,13 @@
 package com.example.playlist;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,18 +18,31 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
+
 public class Gif_Play {
 
+    public Gif_Play() {
+
+    }
+
+    public Gif_Play(ByteArrayOutputStream bos) {
+        this.bos = bos;
+    }
+
+    AnimatedGifEncoder gifEncoder = new AnimatedGifEncoder();
     static final String API_KEY = "vcXNF0Hr1MLK42lMUrDBiMgSJolmnvEO";
-    static final String SEARCH_URL = "https://api.giphy.com/v1/gifs/search?q=sea&api_key=" + API_KEY;
+    static final String SEARCH_URL = "https://api.giphy.com/v1/gifs/search?q=happy&api_key=" + API_KEY;
     String TAG = "[Gif Class]";
     androidx.constraintlayout.widget.ConstraintLayout mainLayout;
     ImageView mainFull;
+    Context ctx;
+    ByteArrayOutputStream bos;
 
 
     public void playing() {
         mainLayout = ((MainActivity) MainActivity.mainCtx).mainLayout;
         mainFull = ((MainActivity) MainActivity.mainCtx).mainFull;
+        ctx = MainActivity.mainCtx;
 
         new SearchGIF().execute(SEARCH_URL);
     }
@@ -88,6 +104,7 @@ public class Gif_Play {
 
 
     private class DownloadGIF extends AsyncTask<String, Void, byte[]> {
+        AnimatedGifEncoder gifEncoder;
         @Override
         protected byte[] doInBackground(String... urls) {
             try {
@@ -124,6 +141,14 @@ public class Gif_Play {
             }
 
             Bitmap gifBitmap = BitmapFactory.decodeByteArray(gifData, 0, gifData.length);
+            bos = new ByteArrayOutputStream();
+
+            AnimatedGifEncoder gifEncoder = new AnimatedGifEncoder();
+            gifEncoder.start(bos);
+            gifEncoder.setRepeat(0);
+            gifEncoder.setDelay(100);
+            gifEncoder.addFrame(gifBitmap);
+            gifEncoder.finish();
 
             if (gifBitmap == null) {
                 return;
@@ -136,13 +161,15 @@ public class Gif_Play {
             mainFull.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mainFull.setImageBitmap(gifBitmap);
+//                    mainFull.setImageBitmap(gifBitmap);
+                    Glide.with(ctx)
+                            .asGif()
+                            .load(bos)
+                            .into(mainFull);
 
 //                    mainLayout.addView(mainFull);
                 }
             }, 100);
-
-
         }
     }
 }
