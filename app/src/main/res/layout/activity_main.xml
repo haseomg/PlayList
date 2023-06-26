@@ -45,6 +45,22 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.29000002" />
 
+    <ImageView
+        android:id="@+id/chatListButton"
+        android:layout_width="30dp"
+        android:layout_height="20dp"
+        android:background="#00FFFFFF"
+        android:fontFamily="sans-serif-black"
+        android:src="@drawable/img"
+        android:text="✉"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/logInButton"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/selectableButton"
+        app:layout_constraintTop_toTopOf="@+id/mainFull_ImageView"
+        app:layout_constraintVertical_bias="0.03" />
+
     <Button
         android:id="@+id/logInButton"
         android:layout_width="wrap_content"
@@ -58,7 +74,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.01" />
+        app:layout_constraintVertical_bias="0.00999999" />
 
 
     <Button

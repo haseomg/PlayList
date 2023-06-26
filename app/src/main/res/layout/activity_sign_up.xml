@@ -174,7 +174,7 @@
         android:layout_width="43dp"
         android:layout_height="43dp"
         android:layout_margin="20dp"
-        android:src="@drawable/googlelogo"
+        android:src="@drawable/google_logo"
         app:flow_horizontalBias="5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
