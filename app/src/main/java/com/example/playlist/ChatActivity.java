@@ -16,8 +16,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,6 +49,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChatActivity extends AppCompatActivity {
 
+    private MyLifecycleObserver lifecycleObserver;
+    private MutableLiveData<String> nameLiveData;
 
     private SharedPreferences shared;
     private SharedPreferences.Editor editor;
@@ -62,7 +68,7 @@ public class ChatActivity extends AppCompatActivity {
     private Adapter chatAdapter;
     private RecyclerView chat_recyclerView;
 
-    private String TAG = "MainActivity";
+    private String TAG = "[Chat Activity]";
 
     private OkHttpClient client;
     private WebSocket webSocket;
@@ -94,19 +100,15 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
         initial();
         setSend();
-
+        loadChatMessages(getSharedUUID);
     } // onCreate END
-
-
-
-
-
-
-
 
 
     void initial() {
         chatCtx = ChatActivity.this;
+
+        lifecycleObserver = new MyLifecycleObserver();
+        getLifecycle().addObserver(lifecycleObserver);
 
         shared = getSharedPreferences("USER", MODE_PRIVATE);
         editor = shared.edit();
@@ -131,19 +133,6 @@ public class ChatActivity extends AppCompatActivity {
         Log.i(TAG, "getSharedUUID check : " + getSharedUUID);
         Log.i(TAG, "getSharedYou check : " + getSharedYou);
 
-        loadChatMessages(getSharedUUID);
-
-//        if (!getSharedUUID.contains(getUsername) && !getSharedUUID.contains(getYourname)) {
-//            getRoomName = getSharedUUID;
-//            Log.i(TAG, "[Shared]getSharedUUID check 1 : " + getSharedUUID);
-//        } else if (uuidForChat != null){
-//            // 받아와야 되는데... DB uuid... db에서 받아온 게 없을 때 uuid 생성
-//            extractingUUID(getUsername, getYourname);
-//            getRoomName = uuid;
-//            Log.i(TAG, "[Shared]getSharedUUID check 2 : " + uuid);
-//        }
-//        editor.commit();
-
         options = new IO.Options();
         Log.i(TAG, "options check : " + options);
         options.transports = new String[]{"websocket"};
@@ -160,89 +149,16 @@ public class ChatActivity extends AppCompatActivity {
 
         chat_recyclerView = findViewById(R.id.recyclerView);
         chat_recyclerView.setAdapter(chatAdapter);
-//        chatAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-//            @Override
-//            public void onItemRangeInserted(int positionStart, int itemCount) {
-//                super.onItemRangeInserted(positionStart, itemCount);
-//
-//                int lastVisiblePosition = ((LinearLayoutManager) chat_recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-//
-//                if (lastVisiblePosition == -1 || ((positionStart) >= (chatAdapter.getItemCount() -1 ) &&
-//                        lastVisiblePosition == (positionStart -1))) {
-//                    chat_recyclerView.scrollToPosition(positionStart);
-//                } // if END
-//            } // onItemRangeInserted END
-//        }); // Observer END
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
-        // TODO. KEYBOARD NO TOUCH RECYCLERVIEW
-//        isKeyboardOpen = false;
-//        keyboardHeight = 0;
-//        onWindowFocusChanged(isKeyboardOpen);
-//        // 키보드 상태에 따른 화면 조정
-//            if (isKeyboardOpen) {
-//                chat_recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-//                    @Override
-//                    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-//                        layoutManager.setStackFromEnd(true);
-//                    } // onLayoutChange END
-//                }); // if END
-//            } else {
-//                chat_recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-//                    @Override
-//                    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-//                        layoutManager.setStackFromEnd(false);
-//                    } // Listener END
-//                }); // onLayoutChange END
-//            } // else END
         layoutManager.setStackFromEnd(true);
         chat_recyclerView.setLayoutManager(layoutManager);
         chat_recyclerView.setHasFixedSize(true);
-//        chat_recyclerView.setLayoutParams(new LinearLayout.LayoutParams
-//                (ViewGroup.LayoutParams.MATCH_PARENT, getWindow().getDecorView().getRootView()
-//                        .getHeight() - getWindow().getDecorView().getRootView().getRootView()
-//                        .getSystemUiVisibility()));
-
-//        final View activityRootView = findViewById(R.id.root_layout);
-////        // activityRootView의 레이아웃 변화를 감지하는 리스너
-//        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                Rect r = new Rect();
-//                // 화면에서 보이는 영역의 정보를 Rect 객체인 r에 저장
-//                activityRootView.getWindowVisibleDisplayFrame(r);
-//                // 화면 전체 높이를 가져와 screenHeight에 저장
-//                int screenHeight = activityRootView.getRootView().getHeight();
-//                Log.i(TAG, "screenHeight check : " + screenHeight);
-//
-//                // 키보드가 올라온 경우 마지막 메시지로 이동
-//
-//                // 화면 전체 높이에서 보이는 영역의 높이를 뺀 것으로, 키보드 높이를 구한다.
-//                int heightDifference = screenHeight - (r.bottom - r.top);
-//                // 키보드 높이를 화면체 높이로 나누어 스케일 값을 구한다.
-//                float keyboardHeight = (float) heightDifference / screenHeight;
-//                Log.i(TAG, "keyboardHeight check : " + keyboardHeight);
-//                if (keyboardHeight > 0.15) {
-//                    int lastIndex = chatAdapter.getItemCount() - 1;
-//                    Log.i(TAG, "item lastIndex check : " + lastIndex);
-//                    if (lastIndex >= 0) {
-//                        chat_recyclerView.smoothScrollToPosition(chatAdapter.getItemCount() - 1);
-//                    } // if END
-//                } // if END
-//            } // onGlobalLayout END
-//        }); // Listener END
 
         chatMsg = findViewById(R.id.chatMsg);
         chatMsg.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         send = findViewById(R.id.sendBtn);
         send.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
-//        chatBack = findViewById(R.id.chatBackBtn);
-//        chatBack.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                finish();
-//            }
-//        });
 
         options = new IO.Options();
         Log.i(TAG, "options check : " + options);
@@ -283,7 +199,11 @@ public class ChatActivity extends AppCompatActivity {
 //                    }
                     chatList.addAll(response.body());
 
-                    chatAdapter.notifyDataSetChanged();
+                    try {
+                        chatAdapter.notifyDataSetChanged();
+                    } catch (NullPointerException e) {
+                        Log.i(TAG, "chatAdapter.notifyDataSetChanged(); null error check : " + e);
+                    } // Null catch END
                 } // else END
             } // onResponse END
 
@@ -556,6 +476,7 @@ public class ChatActivity extends AppCompatActivity {
         } // catch END
     }); // onNewUser END
 
+    // TODO. 채팅 데이터 insert 할 때, SQLlite 테이블에도 넣어줘야 한다. SQLlite 입력할 때 중복 제거
     private void insertData(String uuid, String me, String you, String from_idx, String msg, int msg_idx, String date_time, int is_read, String image_idx) {
         Log.i(TAG, "InsertData Method");
         Call<Void> call = serverApi.insertData(uuid, me, you, from_idx, msg, msg_idx, date_time, is_read, image_idx);
@@ -791,6 +712,52 @@ public class ChatActivity extends AppCompatActivity {
             Log.i(TAG, "insert getTimeToTable check : " + getTimeToTable);
         } // else END
     } // getTime Method END
+
+
+    static class MyLifecycleObserver implements DefaultLifecycleObserver {
+        String TAG = "[Lifecycle]";
+        String bringGetSharedUUID;
+        ChatActivity chatActivity;
+
+        @Override
+        public void onCreate(@NonNull LifecycleOwner owner) {
+            Log.d(TAG, "ChatActivity Lifecycle onCreate");
+
+            initial();
+//            chatActivity.loadChatMessages(bringGetSharedUUID);
+//            Log.i(TAG, "uuid check (lifecycle) : " + bringGetSharedUUID);
+        } // onCreate END
+
+        @Override
+        public void onStart(@NonNull LifecycleOwner owner) {
+            Log.d(TAG, "ChatActivity Lifecycle onStart");
+        } // onStart END
+
+        @Override
+        public void onResume(@NonNull LifecycleOwner owner) {
+            Log.d(TAG, "ChatActivity Lifecycle onResume");
+        } // onResume END
+
+        @Override
+        public void onPause(@NonNull LifecycleOwner owner) {
+            Log.d(TAG, "ChatActivity Lifecycle onPause");
+        } // onPause END
+
+        @Override
+        public void onStop(@NonNull LifecycleOwner owner) {
+            Log.d(TAG, "ChatActivity Lifecycle onStop");
+        } // onStop END
+
+        @Override
+        public void onDestroy(@NonNull LifecycleOwner owner) {
+            Log.d(TAG, "ChatActivity Lifecycle onDestroy");
+        } // onDestroy END
+
+        void initial() {
+            chatActivity = new ChatActivity();
+            bringGetSharedUUID = ((ChatActivity)ChatActivity.chatCtx).getSharedUUID;
+        } // initial void END
+    } // Lifecycle CLASS END
 
 
 } // Main CLASS END

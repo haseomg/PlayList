@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
     Button comment;
     Button upload;
     Button songList;
+    ImageView chatList;
 
     TextView songTime;
     TextView mainLogo;
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
     private int playPosition = -1;
     private boolean isDragging = false;
     private boolean isPlaying = false;
+
     String castNum;
     String artist;
     String name;
@@ -148,14 +150,12 @@ public class MainActivity extends AppCompatActivity {
     private static final String WEATHER_URL =
             "https://api.openweathermap.org/data/2.5/weather?q={CITY_NAME}&appid={API_KEY}";
 
-
-    public final String TAG = "[Main Activity]";
-
     public static Context mainCtx;
     androidx.constraintlayout.widget.ConstraintLayout mainLayout;
     androidx.constraintlayout.widget.ConstraintLayout mainPlayLayout;
     ImageView mainFull;
 
+    public final String TAG = "[Main Activity]";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -274,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             // personEmail.setText
-        }
+        } // if END
 
         // 클릭 이벤트 시 재생목록 생성
         songList = findViewById(R.id.menuButton);
@@ -637,6 +637,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 //                                                            gif.playing();
+                                                            // TODO gif 직접 추가
                                                             Glide.with(mainCtx)
                                                                     .asGif()
                                                                     .load(R.drawable.sea_gif)
@@ -938,6 +939,37 @@ public class MainActivity extends AppCompatActivity {
         Log.i("[Random] playCheck : ", String.valueOf(playCheck));
     }
 
+    void setChatListButton() {
+        chatList = findViewById(R.id.chatListButton);
+        Log.i(TAG, "logIn Text check : " + logIn.getText().toString());
+        shared = getSharedPreferences("nickname", MODE_PRIVATE);
+        editor = shared.edit();
+
+        SharedPreferences chat_shared = getSharedPreferences("USER", MODE_PRIVATE);
+        SharedPreferences.Editor chat_editor = chat_shared.edit();
+
+        if (logIn.getText().toString().equals("LOG IN")) {
+            chatList.setVisibility(View.GONE);
+        } else {
+            chatList.setVisibility(View.VISIBLE);
+            chatList.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i(TAG, "ChatList Button onClick()");
+                    Intent intent = new Intent(getApplicationContext(), ChatSelect.class);
+                    String me = shared.getString("nickname", "");
+                    String name = logIn.getText().toString();
+                    intent.putExtra("username", name);
+                    chat_editor.putString("name", name);
+                    chat_editor.commit();
+                    // User로
+                    Log.i(TAG, "-> ChatSelect Class / Shared nickname check : " + me);
+                    startActivity(intent);
+                } // onClick END
+            }); // setOnClickListener END
+        } // else END
+    } // method END
+
     public void Thread() {
         Log.i(TAG, "Thread Method Start");
         Runnable task = new Runnable() {
@@ -1018,6 +1050,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        }
         updateSeekBar();
+        setChatListButton();
     }
 
     protected void onPause() {
@@ -1650,6 +1683,8 @@ public class MainActivity extends AppCompatActivity {
                                                 Log.i(TAG, "[RightPlay] -----------------------------------------------");
 
 //                                                gif.playing();
+
+                                                // TODO gif 직접추가
                                                 Glide.with(mainCtx)
                                                         .asGif()
                                                         .load(R.drawable.sea_gif)
@@ -2437,6 +2472,8 @@ public class MainActivity extends AppCompatActivity {
                                             Log.i(TAG, "[LeftPlay] -----------------------------------------------");
 
 //                                            gif.playing();
+
+                                            // TODO gif 직접추가
                                             Glide.with(mainCtx)
                                                     .asGif()
                                                     .load(R.drawable.sea_gif)
@@ -2565,8 +2602,7 @@ public class MainActivity extends AppCompatActivity {
                                                 Log.i(TAG, "[LeftPlay] -----------------------------------------------");
 
 
-                                            }
-
+                                            } // if END
                                         }
                                     }
                                 } catch (Exception e) {
@@ -2600,4 +2636,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-}
+} // MainActivity CLASS END

@@ -11,8 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,9 +35,11 @@ public class ChatSelect extends AppCompatActivity {
     private SharedPreferences shared;
     private SharedPreferences.Editor editor;
 
+    private UUIDDatabase uuidDatabase;
+
     String TAG = "[Chat Select CLASS]";
     Intent intent;
-    String getUsername, getRoomName, myName, yourName, uuidForChat, uuid, you;
+    String getUsername, getRoomName, myName, yourName, uuidForChat, uuid, you, uuidResponse;
     Button enterButton;
     TextView name, list_name, list_msg, list_time;
     EditText write_chat_person;
@@ -54,6 +58,8 @@ public class ChatSelect extends AppCompatActivity {
         Log.i(TAG, "onCreate()");
 
         initial();
+//        setUuidDatabase();
+//        setSelectUUIDDatabase();
     } // onCreate END
 
     // chat_messages 테이블 me, you 컬럼에 내 이름이 들어가있다면
@@ -111,6 +117,13 @@ public class ChatSelect extends AppCompatActivity {
 
 
     void initial() {
+        // 데이터베이스 인스턴스 생성
+        uuidDatabase = Room.databaseBuilder(getApplicationContext(), UUIDDatabase.class, "uuid_db")
+                .allowMainThreadQueries()
+                .build();
+
+
+
         Log.i(TAG, "initial()");
         intent = getIntent();
         getUsername = intent.getStringExtra("username");
@@ -145,6 +158,7 @@ public class ChatSelect extends AppCompatActivity {
             @Override
             public void onItemClick(int position) {
 
+                Log.i(TAG, "Recyclerview itemclick position check : " + position);
                 // 클릭한 아이템의 데이터 가져온다.
                 ChatListModel clickedItem = chatListAdapter.getChatModel(position);
                 you = chatRoomList.get(position).getThe_other();
@@ -177,8 +191,6 @@ public class ChatSelect extends AppCompatActivity {
                 editor.putString("the_other", you);
                 editor.commit();
 
-//                Toast.makeText(getApplicationContext(), "Enjoy !", Toast.LENGTH_SHORT).show();
-
                 startActivity(intent);
             } // onItemClick END
         }); // setOnItemClickListener END
@@ -186,41 +198,7 @@ public class ChatSelect extends AppCompatActivity {
 //        setEnterButton();
     } // initial method END
 
-    // setRecyclerView END ---------- 리사이클러뷰 세팅 (from DB)
-    // image = default / user_name =  you / last_msg = 가장 마지막 메시지 (길면 ...)
-    // Time 가장 마지막 시간 (오늘이 지나가면 오늘 날짜랑 비교해서 날짜 바꿔주기)
-    // RED Circle = from_idx가 상대인 로우의 is_read 컬럼이 1이라도 있을 때
-
-//    void setEnterButton() {
-//        enterButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.i(TAG, "ENTER button onClick()");
-//
-//                yourName = write_chat_person.getText().toString();
-//                setToChat();
-//            } // onClick END
-//        }); // setOnClickListener END
-//    } // setEnterButton Method END
-
-//    void setToChat() {
-//        getUUIDFromTable(getUsername, yourName);
-//
-//        Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-//
-//        Log.i(TAG, "yourname Check : " + yourName);
-//        Log.i(TAG, "username Check : " + getUsername);
-//
-//        intent.putExtra("yourname", you);
-//        intent.putExtra("username", getUsername);
-//
-//        editor.putString("room", getRoomName);
-//        editor.putString("name", getUsername);
-//        editor.commit();
-//
-//        startActivity(intent);
-//    }
-
+    // TODO. UUID 가져오는 방식 변경 (레트로핏으로 서버에서 가져오다가, SQlite에서 가져오는 것으로)
     private void getUUIDFromTable(String me, String you) {
         Log.i(TAG, "getUUIDFRomToTable Method");
         Retrofit retrofit = new Retrofit.Builder()
@@ -239,18 +217,26 @@ public class ChatSelect extends AppCompatActivity {
                     // 성공적인 응답 처리
 //                    Toast.makeText(ChatSelect.this, "Data selected successfully", Toast.LENGTH_SHORT).show();
                     ResponseModel responseModel = response.body();
+                    // uuidFromResponse 전역 변수로 생성해서 값 넣어주면
+                    // 변수의 값이 너무 늦게 들어가거나 안 들어가 = 통신해서 response 값 받아오는 게
+                    // 원하는 생명주기 시점이 아니여서 != 채팅 목록 클릭 시
+                    String uuiidFromResponse = responseModel.getUUID();
+                    ;
                     if (responseModel != null) {
-                        String uuid = responseModel.getUUID();
 
-                        Log.d(TAG, "uuid 1 : " + uuid);
-                        uuidForChat = uuid;
+                        Log.d(TAG, "uuid 1 : " + uuiidFromResponse);
+                        editor.putString("UUID", uuiidFromResponse);
+                        editor.commit();
+                        uuidForChat = uuiidFromResponse;
                         Log.d(TAG, "uuid 2 : " + uuidForChat);
                         // 생성한 uuid
                         if (uuid == null) {
+                            Log.d(TAG, "uuid 3 : " + uuidForChat);
                             editor.putString("UUID", uuidForChat);
                             editor.commit();
                         } else {
                             extractingUUID(getUsername, you);
+                            Log.d(TAG, "uuid 4 : " + uuid);
                             Log.i(TAG, "uuid check : " + uuid);
                             editor.putString("UUID", uuid);
                             editor.commit();
@@ -297,6 +283,7 @@ public class ChatSelect extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         Log.i(TAG, "onStop");
+
     } // onStop END
 
     @Override
@@ -304,6 +291,31 @@ public class ChatSelect extends AppCompatActivity {
         super.onDestroy();
         Log.i(TAG, "onDestroy");
     } // onDestroy END
+
+    void setUuidDatabase() {
+        // TODO getUUID - chat_messages 테이블에서 채팅방 이름으로 필요한 uuid 값을 가져와서 각 디바이스 기기의 데이터베이스에 저장해서 채팅방 들어갈 때 사용해주려고 했음.
+
+    } // setUuidDatabase END
+
+    void setSelectUUIDDatabase() {
+        uuidDatabase.uuidDao().getAll().observe(ChatSelect.this, new Observer<List<Uuid>>() {
+            @Override
+            public void onChanged(List<Uuid> uuids) {
+                // DB가 비어있는 경우
+                if (uuids.isEmpty()) {
+                    Log.i("[UUID DATABASE]", "데이터베이스가 비어있습니다.");
+                } else {
+                    StringBuilder sb = new StringBuilder();
+                    for (Uuid uuid : uuids) {
+//                        sb.append("").append(uuid.id).append("_");
+                        sb.append("").append(uuid.uuid).append("_");
+//                        Log.i()
+                    } // for END
+//                    Log.d("[UUID DATABASE]",  )
+                } // else END
+            } // onChanged END
+        }); // observe END
+    } // setSelectUUIDDatabase Method END
 
     private void extractingUUID(String user1, String user2) {
         // 생성할 고유 값의 개수
