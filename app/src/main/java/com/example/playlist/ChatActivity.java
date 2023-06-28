@@ -289,7 +289,14 @@ public class ChatActivity extends AppCompatActivity {
 
         hasConn = true;
 
-        send.setOnClickListener(v -> sendMessage());
+        if (!chatMsg.getText().toString().isEmpty()) {
+            Log.i(TAG, "if) chatMsg EditText check : " + chatMsg.getText().toString());
+            send.setOnClickListener(v -> sendMessage());
+
+        } else {
+            Log.i(TAG, "else) chatMsg EditText check : " + chatMsg.getText().toString());
+
+        }
 //        send.setOnClickListener(v -> insertToTable());
     } // setChatSocket Method END
 
@@ -755,7 +762,7 @@ public class ChatActivity extends AppCompatActivity {
 
         void initial() {
             chatActivity = new ChatActivity();
-            bringGetSharedUUID = ((ChatActivity)ChatActivity.chatCtx).getSharedUUID;
+            bringGetSharedUUID = ((ChatActivity) ChatActivity.chatCtx).getSharedUUID;
         } // initial void END
     } // Lifecycle CLASS END
 

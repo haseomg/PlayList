@@ -36,6 +36,13 @@ public interface ServerApi {
     );
 
     @FormUrlEncoded
+    @POST("chatting_data_delete.php")
+    Call<ResponseModel> deleteData(
+            @Field("me") String me,
+            @Field("you") String you
+    );
+
+    @FormUrlEncoded
     @POST("chat_data.php")
     Call<Void> insertData(
             @Field("uuid") String uuid,

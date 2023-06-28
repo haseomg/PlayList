@@ -2,19 +2,29 @@ package com.example.playlist;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,11 +34,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
 
 public class ChatSelect extends AppCompatActivity {
 
@@ -42,6 +54,7 @@ public class ChatSelect extends AppCompatActivity {
     String getUsername, getRoomName, myName, yourName, uuidForChat, uuid, you, uuidResponse;
     Button enterButton;
     TextView name, list_name, list_msg, list_time;
+    LinearLayoutManager layoutManager;
     EditText write_chat_person;
     ImageView profile_image, red_circle;
 
@@ -123,7 +136,6 @@ public class ChatSelect extends AppCompatActivity {
                 .build();
 
 
-
         Log.i(TAG, "initial()");
         intent = getIntent();
         getUsername = intent.getStringExtra("username");
@@ -148,7 +160,9 @@ public class ChatSelect extends AppCompatActivity {
 //        write_chat_person = findViewById(R.id.writeChatPersonEditText); // 채팅 목록에 없는 상대와 대화하고 싶을 때
 
         chat_list_recyclerView = findViewById(R.id.chatListRecyclerView);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+
+
+        layoutManager = new LinearLayoutManager(this);
         chat_list_recyclerView.setLayoutManager(layoutManager);
         chat_list_recyclerView.setHasFixedSize(true);
         chatListAdapter = new ChatListAdapter(this, chatRoomList);
@@ -163,6 +177,8 @@ public class ChatSelect extends AppCompatActivity {
                 ChatListModel clickedItem = chatListAdapter.getChatModel(position);
                 you = chatRoomList.get(position).getThe_other();
                 Log.i(TAG, "you check : " + you);
+
+                // TODO 서버로부터 uuid 키 값을 가져온다.
                 getUUIDFromTable(getUsername, you);
 
                 Log.i(TAG, "uuid ForChat ; " + uuidForChat);
@@ -196,6 +212,7 @@ public class ChatSelect extends AppCompatActivity {
         }); // setOnItemClickListener END
 
 //        setEnterButton();
+        setDeleteChatRoom();
     } // initial method END
 
     // TODO. UUID 가져오는 방식 변경 (레트로핏으로 서버에서 가져오다가, SQlite에서 가져오는 것으로)
@@ -293,7 +310,25 @@ public class ChatSelect extends AppCompatActivity {
     } // onDestroy END
 
     void setUuidDatabase() {
-        // TODO getUUID - chat_messages 테이블에서 채팅방 이름으로 필요한 uuid 값을 가져와서 각 디바이스 기기의 데이터베이스에 저장해서 채팅방 들어갈 때 사용해주려고 했음.
+        String uuids1 = "745620230622NakiOscar";
+        String uuids2 = "086420230622NakiHuman";
+        String uuids3 = "E5F620230622NakiJayden";
+        String uuids4 = "38C520230622NakiPinni";
+        String uuids5 = "67420230622JaydenNooty";
+
+
+        // DB에 입력할 UUid 값들 추가
+        Uuid newUuid1 = new Uuid(uuids1);
+        Uuid newUuid2 = new Uuid(uuids2);
+        Uuid newUuid3 = new Uuid(uuids3);
+        Uuid newUuid4 = new Uuid(uuids4);
+        Uuid newUuid5 = new Uuid(uuids5);
+
+        uuidDatabase.uuidDao().insert(newUuid1);
+        uuidDatabase.uuidDao().insert(newUuid2);
+        uuidDatabase.uuidDao().insert(newUuid3);
+        uuidDatabase.uuidDao().insert(newUuid4);
+        uuidDatabase.uuidDao().insert(newUuid5);
 
     } // setUuidDatabase END
 
@@ -360,5 +395,108 @@ public class ChatSelect extends AppCompatActivity {
 //        System.out.println(one);
     }
 
+    void setDeleteChatRoom() {
+        chat_list_recyclerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            } // onClick END
+        }); // setOnClickListener END
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            } // onMove END
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+                int position = viewHolder.getAdapterPosition();
+                Log.i(TAG, "position check : " + position);
+
+                switch (direction) {
+                    case ItemTouchHelper.LEFT:
+                        if (!chatRoomList.isEmpty()) {
+                            String getYourname = chatRoomList.get(position).getThe_other(); // 사실 이 부분임...
+                            Log.i(TAG, "Delete - me, you check : " + getUsername + ", " + getYourname);
+
+                            chatRoomList.remove(position);
+                            chatListAdapter.notifyItemRemoved(position);
+
+                            deleteData(getUsername, you);
+
+                        } else {
+
+                        }
+                } // switch END
+            } // onSwiped END
+
+            @Override
+            public void onChildDraw(@NonNull Canvas canvas, @NonNull RecyclerView recyclerView
+                    , @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState,
+                                    boolean isCurrentlyActive) {
+
+                Typeface font = Typeface.DEFAULT_BOLD;
+                new RecyclerViewSwipeDecorator.Builder(canvas, recyclerView, viewHolder,
+                        dX, dY, actionState, isCurrentlyActive)
+                        .addSwipeLeftBackgroundColor(Color.parseColor("#7878E1"))
+                        .addSwipeLeftLabel("delete")
+                        .setSwipeLeftLabelColor(Color.parseColor("#CDD5FB"))
+                        .setSwipeLeftLabelTypeface(font)
+                        .create()
+                        .decorate();
+
+                super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+        }).attachToRecyclerView(chat_list_recyclerView);;
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration
+                (chat_list_recyclerView.getContext(), layoutManager.getOrientation());
+        chat_list_recyclerView.addItemDecoration(dividerItemDecoration);
+
+    } // setDeleteChatRoom Method END
+
+    private void deleteData(String me, String you) {
+        Log.i(TAG, "Delete method");
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://54.180.155.66/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        ServerApi api = retrofit.create(ServerApi.class);
+        Call<ResponseModel> call = api.deleteData(me, you);
+
+        call.enqueue(new Callback<ResponseModel>() {
+            @Override
+            public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                ResponseModel responseModel = response.body();
+                String response_check = String.valueOf(response.body());
+
+                if (response.isSuccessful()) {
+                    // 성공적인 응답 처리
+                    Toast.makeText(ChatSelect.this, "Data deleted successfully", Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "Delete (response success)  and response.body check 1 : " + responseModel);
+                    Log.i(TAG, "Delete (response success)  and response.body check 2 : " + response_check);
+                } else {
+                    // 실패한 응답 처리
+                    Toast.makeText(ChatSelect.this, "Failed to delete data", Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "Delete (response failed)  and response.body check 1 : " + responseModel);
+                    Log.i(TAG, "Delete (response failed)  and response.body check 2 : " + response_check);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseModel> call, Throwable t) {
+                // 에러 처리
+                Toast.makeText(ChatSelect.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 } // Select CLASS END
