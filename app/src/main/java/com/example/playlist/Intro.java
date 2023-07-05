@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -26,6 +27,9 @@ public class Intro extends AppCompatActivity {
     SharedPreferences shared;
     SharedPreferences.Editor editor;
 
+    private ServerApi serverApi;
+    private UUIDDatabase uuidDatabase;
+
     int num;
 
     public final String TAG = "[Intro Activity]";
@@ -36,6 +40,8 @@ public class Intro extends AppCompatActivity {
         setContentView(R.layout.activity_intro);
         Log.i(TAG, "onCreate()");
 
+        // TODO. intro에서 uuid 키 값 서버로부터 가져와서 쉐어드에 저장해서 뽑아쓰자!
+        initial();
 
         gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -76,6 +82,13 @@ public class Intro extends AppCompatActivity {
         }, 2000);
     }
 
+    private void initial() {
+        serverApi = ApiClient.getApiClient().create(ServerApi.class);
+        uuidDatabase = Room.databaseBuilder(getApplicationContext(), UUIDDatabase.class, "uuid_db")
+                .allowMainThreadQueries()
+                .build();
+    }
+
     protected void onStart() {
         super.onStart();
         Log.i(TAG, "onStart()");
@@ -100,73 +113,5 @@ public class Intro extends AppCompatActivity {
         super.onDestroy();
         Log.i(TAG, "onDestroy()");
     }
-
-//    public void responseRandomNumbers() {
-//        Log.i(TAG, "bringGetSongInfo Method");
-//
-//        OkHttpClient client = new OkHttpClient();
-//
-//        HttpUrl.Builder builder = HttpUrl.parse("http://54.180.155.66/create_random_numbers.php").newBuilder();
-//        builder.addQueryParameter("ver", "1.0");
-//        String url = builder.build().toString();
-//        Log.i(TAG, "bringGet String url check : " + url);
-//
-//        Request request = new Request.Builder()
-//                .url(url)
-//                .build();
-//
-//        client.newCall(request).enqueue(new Callback() {
-//            @Override
-//            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            @Override
-//            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-//                if (response.isSuccessful()) {
-//                    final String result = response.body().string();
-//                    Log.i("bringGet", "response check : " + result);
-//                    num = Integer.parseInt(result);
-//                    Log.i("bringGet", "num check : " + num);
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            // nothing
-//                        }
-//                    });
-//                }
-//            }
-//        });
-//
-//        class GetNumber extends AsyncTask<String, Void, Integer> {
-//
-//            @Override
-//            protected Integer doInBackground(String... urls) {
-//                Integer number = null;
-//                try {
-//                    URL url = new URL(urls[0]);
-//                    HttpURLConnection urlConnection
-//                            = (HttpURLConnection) url.openConnection();
-//                    try {
-//                        InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-//                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-//                        number = Integer.parseInt(reader.readLine());
-//                    } finally {
-//                        urlConnection.disconnect();
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                return number;
-//            }
-//
-//            protected void onPostExecute(Integer result) {
-//                int number = result;
-//                Log.i(TAG, "bringGet number check : " + number);
-//            }
-//        }
-//    }
-
 
 }
