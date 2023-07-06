@@ -113,7 +113,7 @@ public class ChatActivity extends AppCompatActivity {
         shared = getSharedPreferences("USER", MODE_PRIVATE);
         editor = shared.edit();
 
-        serverApi = ApiClient.getApiClient().create(ServerApi.class);
+//        serverApi = ApiClient.getApiClient().create(ServerApi.class);
 
         Intent intent = getIntent();
         getUsername = intent.getStringExtra("username");
@@ -310,7 +310,7 @@ public class ChatActivity extends AppCompatActivity {
 
         ServerApi serverApi = retrofit.create(ServerApi.class);
 
-        Call<ResponseModel> call = serverApi.getUUID(me, you);
+        Call<ResponseModel> call = serverApi.getUUID(me);
 
         call.enqueue(new Callback<ResponseModel>() {
             @Override

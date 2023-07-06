@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +28,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -50,6 +54,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import okhttp3.Call;
@@ -60,6 +67,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -70,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button logIn;
     Button select;
-    Button comment;
+    Button heart;
     Button upload;
     Button songList;
     ImageView chatList;
@@ -141,6 +150,13 @@ public class MainActivity extends AppCompatActivity {
 
     ProgressDialog mProgressDialog;
     SeekBar mainSeekBar;
+
+    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            // 적절한 쿼리를 실행하여 데이터베이스를 버전 2로 업데이트합니다.
+        }
+    };
 
     LocationManager locationManager;
     String provider;
@@ -213,8 +229,9 @@ public class MainActivity extends AppCompatActivity {
         if (!fromSharedNickName.equals("LOG IN")) {
             logIn.setText(fromSharedNickName);
             Log.i("logIn.setText Check1 : ", fromSharedNickName);
+            getUUIDFromTable(fromSharedNickName);
+            Log.i(TAG, "UUID - getuuidTable 1 : " + fromSharedNickName);
         }
-
 
         // 쉐어드로부터 가져온 닉네임 비교해서 logIn 버튼 이름 설정
         if (fromSharedNickName.equals("LOG IN")) {
@@ -224,6 +241,8 @@ public class MainActivity extends AppCompatActivity {
             logIn.setText(fromSharedNickName);
             Log.i("logIn.setText Check3 : ", fromSharedNickName);
             Log.i(TAG, "fromSharedNickName String 값을 쉐어드에서 가져왔을 때 : " + fromSharedNickName);
+            getUUIDFromTable(fromSharedNickName);
+            Log.i(TAG, "UUID - getuuidTable 2 : " + fromSharedNickName);
         }
         Log.i("[Main]", "login.getText.toString() : " + logIn.getText().toString());
         if (logIn.getText().toString().equals("null") || logIn.getText().toString().equals("")) {
@@ -308,22 +327,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // COMMENT 액티비티로 가는 버튼
-        comment = findViewById(R.id.commentButton);
-        comment.setOnClickListener(new View.OnClickListener() {
+        // heart 액티비티로 가는 버튼
+        heart = findViewById(R.id.commentButton);
+        heart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "Comment 버튼 클릭");
-                Intent intent = new Intent(MainActivity.this, Comment.class);
+                Log.i(TAG, "heart 버튼 클릭");
+                String hearStatus = heart.getText().toString();
+                Toast.makeText(getApplicationContext(), "❤︎︎", Toast.LENGTH_SHORT);
+                if (hearStatus.equals("❤︎︎")) {
+                    heart.setText("♡");
 
-                startActivity(intent);
-            }
+                } else {
+                    heart.setText("❤︎︎");
+                } // else END
+            } // onClick END
         });
         if (mediaPlayer.isPlaying()) {
             mainSeekBar.setVisibility(View.VISIBLE);
             playingTime.setVisibility(View.VISIBLE);
             toPlayTime.setVisibility(View.VISIBLE);
-            comment.setVisibility(View.VISIBLE);
+            heart.setVisibility(View.VISIBLE);
         }
         // LOG IN || User 버튼
         logIn.setOnClickListener(new View.OnClickListener() {
@@ -365,12 +389,12 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "mainSeekBar.getVisibility() : " + mainSeekBar.getVisibility());
             Log.i(TAG, "playingTime.getVisibility() : " + playingTime.getVisibility());
             Log.i(TAG, "toPlayTime.getVisibility() : " + toPlayTime.getVisibility());
-            Log.i(TAG, "comment.getVisibility() : " + comment.getVisibility());
+            Log.i(TAG, "heart.getVisibility() : " + heart.getVisibility());
 
 //            mainSeekBar.setVisibility(View.INVISIBLE);
 //            playingTime.setVisibility(View.INVISIBLE);
 //            toPlayTime.setVisibility(View.INVISIBLE);
-//            comment.setVisibility(View.INVISIBLE);
+//            heart.setVisibility(View.INVISIBLE);
         }
 
 //        mainSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -455,11 +479,11 @@ public class MainActivity extends AppCompatActivity {
                     mainSeekBar.setVisibility(View.VISIBLE);
                     playingTime.setVisibility(View.VISIBLE);
                     toPlayTime.setVisibility(View.VISIBLE);
-                    comment.setVisibility(View.VISIBLE);
+                    heart.setVisibility(View.VISIBLE);
                     Log.i(TAG, "mainSeekBar.getVisibility() 2 : " + mainSeekBar.getVisibility());
                     Log.i(TAG, "playingTime.getVisibility() 2 : " + playingTime.getVisibility());
                     Log.i(TAG, "toPlayTime.getVisibility() 2 : " + toPlayTime.getVisibility());
-                    Log.i(TAG, "comment.getVisibility() 2 : " + comment.getVisibility());
+                    Log.i(TAG, "heart.getVisibility() 2 : " + heart.getVisibility());
 //                }
 
                     String playState = play.getText().toString();
@@ -2634,6 +2658,97 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
 
         }
+    }
+
+    // TODO. UUID 가져오는 방식 변경 (레트로핏으로 서버에서 가져오고, SQlite에 insert)
+    private void getUUIDFromTable(String me) {
+        Log.i(TAG, "getUUIDFRomToTable Method");
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://54.180.155.66/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ServerApi serverApi = retrofit.create(ServerApi.class);
+
+        retrofit2.Call<ResponseModel> call = serverApi.getUUID(me);
+
+        call.enqueue(new retrofit2.Callback<ResponseModel>() {
+            @Override
+            public void onResponse(retrofit2.Call<ResponseModel> call, retrofit2.Response<ResponseModel> response) {
+                if (response.isSuccessful()) {
+                    // 성공적인 응답 처리
+                    Toast.makeText(MainActivity.this, "Data selected successfully", Toast.LENGTH_SHORT).show();
+                    ResponseModel responseModel = response.body();
+
+                    if (responseModel != null) {
+                        List<String> uuidsFromResponse = responseModel.getUUIDs();
+                        Log.d(TAG, "UUID - Received UUIDs: " + Arrays.toString(uuidsFromResponse.toArray()));
+                        String receivedUuids = TextUtils.join(", ", uuidsFromResponse);
+                        String[] uuidArray = receivedUuids.split(", ");
+                        List<Uuid> uuidEntities = new ArrayList<>();
+
+
+                        for (String uuidStr : uuidArray) {
+                            Uuid newUuidEntity = new Uuid(uuidStr);
+                            uuidEntities.add(newUuidEntity);
+                        }
+
+                        if (uuidsFromResponse != null) {
+                            // 밑에 코드에서 uuidsFromResponse를 사용하여 처리 수행
+                            // 예 : 저장, 출력, 변수 저장 등
+                            UUIDDatabase db = Room.databaseBuilder(getApplicationContext(), UUIDDatabase.class, "uuid")
+                                    .allowMainThreadQueries()
+                                    .addMigrations(MIGRATION_1_2)
+                                    .build();
+                            UuidDao uuidDao = db.uuidDao();
+
+                            new Thread(() -> {
+                               uuidDao.deleteAll();
+                            }).start();
+
+                            new Thread(() -> {
+                                for (Uuid uuidEntity : uuidEntities) {
+                                    uuidDao.insert(uuidEntity);
+                                }
+                            }).start();
+
+
+                                // 저장이 완료된 후 데이터베이스에서 모든 UUID를 가져와 출력합니다.
+                            runOnUiThread(() -> {
+                                db.uuidDao().getAll().observe(MainActivity.this, uuids -> {
+                                    if (uuids.isEmpty()) {
+                                        Toast.makeText(MainActivity.this, "데이터베이스가 비어 있습니다.", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        StringBuilder sb = new StringBuilder();
+                                        for (Uuid uuid : uuids) {
+                                            sb.append("UUID : ").append(uuid.uuid).append("\n");
+                                        } // for END
+                                        Log.i(TAG, "UUID: " + sb.toString());
+                                    } // else END
+                                }); // observer END
+                            }); // runOnUiThread END
+
+                        } else {
+                            Log.d(TAG, "uuids : " + "응답 데이터가 null 입니다.");
+                            editor.putString("UUID", "none_uuid");
+                            editor.commit();
+                        }
+
+                    } else {
+                        Log.d(TAG, "uuid : " + "응답 데이터가 null 입니다.");
+                    }
+                } else {
+                    // 실패한 응답 처리
+                    Toast.makeText(MainActivity.this, "Failed to select data", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<ResponseModel> call, Throwable t) {
+                // 에러 처리
+                Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 } // MainActivity CLASS END
