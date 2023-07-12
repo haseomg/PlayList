@@ -100,7 +100,7 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
         initial();
         setSend();
-        loadChatMessages(getSharedUUID);
+        loadChatMessages(uuidFromSelect);
     } // onCreate END
 
 
@@ -123,14 +123,14 @@ public class ChatActivity extends AppCompatActivity {
 
         Log.i(TAG, "getUsername check : " + getUsername);
         Log.i(TAG, "getYourname check : " + getYourname);
-        Log.i(TAG, "getUuidFromSelect check : " + uuidFromSelect);
+        Log.i(TAG, "uuid - getUuidFromSelect check : " + uuidFromSelect);
 
 //        getUUIDFromTable(getUsername, getYourname);
         getSharedUserName = shared.getString("name", "");
-        getSharedUUID = shared.getString("UUID", "");
+//        getSharedUUID = shared.getString("UUID", "");
         getSharedYou = shared.getString("the_other", "");
         Log.i(TAG, "getSharedUserName check : " + getSharedUserName);
-        Log.i(TAG, "getSharedUUID check : " + getSharedUUID);
+//        Log.i(TAG, "getSharedUUID check : " + getSharedUUID);
         Log.i(TAG, "getSharedYou check : " + getSharedYou);
 
         options = new IO.Options();
@@ -180,7 +180,7 @@ public class ChatActivity extends AppCompatActivity {
 
         ServerApi serverApi = retrofit.create(ServerApi.class);
 
-        Call<List<ResponseModel>> call = serverApi.loadChat(getSharedUUID);
+        Call<List<ResponseModel>> call = serverApi.loadChat(uuidFromSelect);
 
         call.enqueue(new Callback<List<ResponseModel>>() {
             @Override
@@ -274,7 +274,7 @@ public class ChatActivity extends AppCompatActivity {
         } // catch END
         JSONObject userId = new JSONObject();
 
-        getRoomName = getSharedUUID;
+        getRoomName = uuidFromSelect;
         insertUUID = getRoomName;
 
         try {
@@ -300,50 +300,6 @@ public class ChatActivity extends AppCompatActivity {
 //        send.setOnClickListener(v -> insertToTable());
     } // setChatSocket Method END
 
-
-    private void getUUIDFromTable(String me, String you) {
-        Log.i(TAG, "getUUIDFRomToTable Method");
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://54.180.155.66/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ServerApi serverApi = retrofit.create(ServerApi.class);
-
-        Call<ResponseModel> call = serverApi.getUUID(me);
-
-        call.enqueue(new Callback<ResponseModel>() {
-            @Override
-            public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
-                if (response.isSuccessful()) {
-                    // 성공적인 응답 처리
-//                    Toast.makeText(ChatActivity.this, "Data selected successfully", Toast.LENGTH_SHORT).show();
-                    ResponseModel responseModel = response.body();
-                    if (responseModel != null) {
-                        String uuid = responseModel.getUUID();
-
-                        Log.d(TAG, "uuid : " + uuid);
-                        uuidForChat = uuid;
-                        Log.d(TAG, "uuid 2 : " + uuidForChat);
-
-                        editor.putString("UUID", uuidForChat);
-                        editor.commit();
-                    } else {
-                        Log.d(TAG, "uuid : " + "응답 데이터가 null 입니다.");
-                    }
-                } else {
-                    // 실패한 응답 처리
-//                    Toast.makeText(ChatActivity.this, "Failed to select data", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseModel> call, Throwable t) {
-                // 에러 처리
-//                Toast.makeText(ChatActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     private void joinRoom() {
         chatSocket.emit("join");
@@ -394,8 +350,8 @@ public class ChatActivity extends AppCompatActivity {
 
 //        if (getSharedUUID.contains(getSharedUserName) && getSharedUUID.contains(getSharedYou)) {
 //        if (!uuid.equals(getSharedUUID)) {
-        getRoomName = getSharedUUID;
-        Log.i(TAG, "[Shared]getSharedUUID check 1 : " + getSharedUUID);
+        getRoomName = uuidFromSelect;
+        Log.i(TAG, "[Shared]getSharedUUID check 1 : " + uuidFromSelect);
 //        }
         JSONObject jsonObject = new JSONObject();
         try {
@@ -511,42 +467,6 @@ public class ChatActivity extends AppCompatActivity {
     } // insertData method END
 
 
-    // TODO. Insert Chat_info To chat_messages table T T Why don't ......
-    private void addData(String uuid, String me, String you, String from_idx, String msg, int msg_idx, String date_time, int is_read, String image_idx) {
-        Log.i(TAG, "insert method addData");
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://54.180.155.66/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ServerApi api = retrofit.create(ServerApi.class);
-        Call<ResponseModel> call = api.addData(uuid, me, you, from_idx, msg, msg_idx, date_time, is_read, image_idx);
-
-        call.enqueue(new Callback<ResponseModel>() {
-            @Override
-            public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
-                if (response.isSuccessful()) {
-                    // 성공적인 응답 처리
-//                    Toast.makeText(ChatActivity.this, "Data insert successfully", Toast.LENGTH_SHORT).show();
-                    ResponseModel responseModel = response.body();
-                    String response_check = String.valueOf(response.body());
-                    Log.e(TAG, "response.body check : " + responseModel);
-                    Log.d(TAG, "response.body check : " + response_check);
-
-                } else {
-                    // 실패한 응답 처리
-//                    Toast.makeText(ChatActivity.this, "Failed insert data", Toast.LENGTH_SHORT).show();
-                } // else END
-            } // onResponse END
-
-            @Override
-            public void onFailure(Call<ResponseModel> call, Throwable t) {
-                // 에러 처리
-//                Toast.makeText(ChatActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            } // onFailure END
-        }); // call.enqueque END
-    } // addData END
-
     void noti() {
         // 알림 관리자 객체를 가져옵니다.
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -656,13 +576,8 @@ public class ChatActivity extends AppCompatActivity {
     void insertToTable() {
         Log.i(TAG, "insert to chat_messages table");
         //TODO Insert Chat_Info To chat_messages
-        if (uuidForChat != null) {
-            uuidKey = uuidForChat;
-            Log.i(TAG, "insert uuid : " + uuidKey);
-        } else {
-            uuidKey = insertUUID;
-            Log.i(TAG, "insert uuid : " + insertUUID);
-        }
+        uuidKey = uuidFromSelect;
+        Log.i(TAG, "insert uuid : " + uuidFromSelect);
         me = getUsername;
         Log.i(TAG, "insert me : " + getUsername);
         you = getYourname;
@@ -729,10 +644,6 @@ public class ChatActivity extends AppCompatActivity {
         @Override
         public void onCreate(@NonNull LifecycleOwner owner) {
             Log.d(TAG, "ChatActivity Lifecycle onCreate");
-
-            initial();
-//            chatActivity.loadChatMessages(bringGetSharedUUID);
-//            Log.i(TAG, "uuid check (lifecycle) : " + bringGetSharedUUID);
         } // onCreate END
 
         @Override
@@ -761,8 +672,8 @@ public class ChatActivity extends AppCompatActivity {
         } // onDestroy END
 
         void initial() {
-            chatActivity = new ChatActivity();
-            bringGetSharedUUID = ((ChatActivity) ChatActivity.chatCtx).getSharedUUID;
+//            chatActivity = new ChatActivity();
+//            bringGetSharedUUID = ((ChatActivity) ChatActivity.chatCtx).getSharedUUID;
         } // initial void END
     } // Lifecycle CLASS END
 

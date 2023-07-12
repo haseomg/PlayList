@@ -52,7 +52,8 @@ public class ChatSelect extends AppCompatActivity {
 
     String TAG = "[Chat Select CLASS]";
     Intent intent;
-    String getUsername, getRoomName, myName, yourName, uuidForChat, uuid, you, uuidResponse;
+    String uuidFromDB, getUsername, getRoomName, myName, yourName, uuidForChat, uuid, you, uuidResponse;
+    private ArrayList<String> uuidValues;
     Button enterButton;
     TextView name, list_name, list_msg, list_time;
     LinearLayoutManager layoutManager;
@@ -75,7 +76,8 @@ public class ChatSelect extends AppCompatActivity {
         initial();
 //        setUuidDatabase();
 //        setSelectUUIDDatabase();
-        getUUIDFromTable(getUsername);
+//        getUUIDFromTable(getUsername);
+        getUUIDFromRoomDB(getUsername);
         // TODO uuid값 sql lite에서 조회
     } // onCreate END
 
@@ -178,12 +180,29 @@ public class ChatSelect extends AppCompatActivity {
                 // 클릭한 아이템의 데이터 가져온다.
                 ChatListModel clickedItem = chatListAdapter.getChatModel(position);
                 you = chatRoomList.get(position).getThe_other();
+
                 // uuid 넘겨
-                Log.i(TAG, "you check : " + you);
+                getUUIDFromRoomDB(getUsername);
+                String foundValue = null;
 
-                getUUIDFromTable(getUsername);
-//                getStringWithYou(you);
+                for (String uuidValue : uuidValues) {
+                    Log.i(TAG, "uuid - for");
+                    if (uuidValue.contains(getUsername) && uuidValue.contains(you)) {
+                        Log.i(TAG, "uuid - if");
+                        foundValue = uuidValue;
+                        break;
+                    } // if END
+                } // for END
 
+                if (foundValue != null) {
+                    Log.i(TAG, "Found value with me and you: " + foundValue);
+                } else {
+                    Log.i(TAG, "No value found with me and you.");
+                } // else END
+
+                Log.i(TAG, "uuid - you check : " + you);
+
+                uuidForChat = foundValue;
                 Log.i(TAG, "uuid ForChat ; " + uuidForChat);
 
                 // 전달할 데이터를 인텐트에 추가
@@ -218,7 +237,79 @@ public class ChatSelect extends AppCompatActivity {
         setDeleteChatRoom();
     } // initial method END
 
-//    // TODO. UUID 가져오는 방식 변경 (레트로핏으로 서버에서 가져오다가, SQlite에서 가져오는 것으로)
+    private void getUUIDContainsYouMe(String mine, String yours) {
+        Log.i(TAG, "uuid - getUUIDContainsYouMe Method");
+        UUIDDatabase db = Room.databaseBuilder(getApplicationContext(), UUIDDatabase.class, "uuid")
+                .addMigrations(MainActivity.MIGRATION_1_2)
+                .build();
+
+        UuidDao uuidDao = db.uuidDao();
+
+        new Thread(() -> {
+            List<Uuid> allUuids = (List<Uuid>) uuidDao.getAll();
+            Log.i(TAG, "All UUIDs in the database: " + allUuids.toString());
+        }).start();
+
+        new Thread(() -> {
+            Log.i(TAG, "uuid - new Thread");
+            Log.i(TAG, "uuid - searching for mine: " + mine + " and yours: " + yours);
+            List<Uuid> uuidList = new ArrayList<>();
+            List<Uuid> tempList = uuidDao.getUuidByMeYou(mine, yours);
+
+            if (tempList.size() > 0) {
+                uuidList.clear();
+                uuidList.addAll(tempList);
+            }
+
+            Log.i(TAG, "uuid - check : " + uuidList.size());
+            if (uuidList != null && !uuidList.isEmpty()) {
+                Log.i(TAG, "uuid - !uuidList.isEmpty");
+                Log.i(TAG, "uuid - check : " + uuid);
+                // 결과 중 첫 번째 uuid 값을 String 변수에 저장합니다.
+                Log.i(TAG, "uuid - Entire uuidList: " + uuidList.toString());
+                String tempUUID = uuidList.get(0).uuid;
+                runOnUiThread(() -> {
+                    Log.i(TAG, "uuid - new Thread2");
+                    uuidFromDB = tempUUID;
+                    Log.i(TAG, "uuid - uuidForChat : " + tempUUID);
+                });
+                // String 변수를 사용하여 필요한 작업을 수행하세요.
+            } else {
+                Log.i(TAG, "uuid - uuidList.isEmpty");
+                runOnUiThread(() -> {
+                    Log.i(TAG, "uuid - new Thread3");
+                });
+            }
+        }).start(); // Thread END
+    } // getUUIDContainsYouMe method END
+
+    //    // TODO. UUID 가져오는 방식 변경 (레트로핏으로 서버에서 가져오다가, SQlite에서 가져오는 것으로)
+    private void getUUIDFromRoomDB(String me) {
+        Log.i(TAG, "uuid - getUUIDFromRoomDB Method");
+        UUIDDatabase db = Room.databaseBuilder(getApplicationContext(), UUIDDatabase.class, "uuid")
+                .addMigrations(MainActivity.MIGRATION_1_2)
+                .build();
+        UuidDao uuidDao = db.uuidDao();
+
+        runOnUiThread(() -> {
+            db.uuidDao().getAll().observe(ChatSelect.this, uuids -> {
+                if (uuids.isEmpty()) {
+                    Toast.makeText(ChatSelect.this, "데이터베이스가 비어 있습니다.", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    uuidValues = new ArrayList<>(); // 리스트 초기화
+
+                    StringBuilder sb = new StringBuilder();
+                    for (Uuid uuid : uuids) {
+                        uuidValues.add(uuid.uuid); // 값 추가
+                        sb.append("UUID : ").append(uuid.uuid).append("\n");
+                    } // for END
+                    Log.i(TAG, "UUID: " + sb.toString());
+                } // else END
+            }); // observer END
+        }); // runOnUiThread END
+    }
+
     private void getUUIDFromTable(String me) {
         Log.i(TAG, "getUUIDFRomToTable Method");
         Retrofit retrofit = new Retrofit.Builder()
@@ -235,8 +326,9 @@ public class ChatSelect extends AppCompatActivity {
             public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
                 if (response.isSuccessful()) {
                     // 성공적인 응답 처리
-//                    Toast.makeText(ChatSelect.this, "Data selected successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChatSelect.this, "Data selected successfully", Toast.LENGTH_SHORT).show();
                     ResponseModel responseModel = response.body();
+
                     // uuidFromResponse 전역 변수로 생성해서 값 넣어주면
                     // 변수의 값이 너무 늦게 들어가거나 안 들어가 = 통신해서 response 값 받아오는 게
                     // 원하는 생명주기 시점이 아니여서 != 채팅 목록 클릭 시
@@ -244,8 +336,6 @@ public class ChatSelect extends AppCompatActivity {
                     ;
                     if (responseModel != null) {
 
-                        // TODO 일주일에 기능 최소 두개씩 쳐내 ....
-                        // TODO uuid 해결하고, 어플 전체 발표 준비
                         List<String> uuidsFromResponse = responseModel.getUUIDs();
                         if (uuidsFromResponse != null) {
                             // 밑에 코드에서 uuidsFromResponse를 사용하여 처리 수행
@@ -256,7 +346,7 @@ public class ChatSelect extends AppCompatActivity {
                         Log.d(TAG, "uuid 1 : " + uuidsFromResponse);
                         // RoomDB에서 가져와서
                         // 나와 상대의 이름이 포함된 uuid 키 값을 변수에 넣어줘야 함
-                        uuidForChat = uuiidFromResponse;
+//                        uuidForChat = uuiidFromResponse;
                         Log.d(TAG, "uuid 2 : " + uuidForChat);
                         // 생성한 uuid
                         if (uuid == null) {
@@ -271,6 +361,26 @@ public class ChatSelect extends AppCompatActivity {
                             editor.commit();
                         }
 
+                        UUIDDatabase db = Room.databaseBuilder(getApplicationContext(), UUIDDatabase.class, "uuid")
+                                .allowMainThreadQueries()
+                                .addMigrations(MainActivity.MIGRATION_1_2)
+                                .build();
+                        UuidDao uuidDao = db.uuidDao();
+
+                        runOnUiThread(() -> {
+                            db.uuidDao().getAll().observe(ChatSelect.this, uuids -> {
+                                if (uuids.isEmpty()) {
+                                    Toast.makeText(ChatSelect.this, "데이터베이스가 비어 있습니다.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    StringBuilder sb = new StringBuilder();
+                                    for (Uuid uuid : uuids) {
+                                        sb.append("UUID : ").append(uuid.uuid).append("\n");
+                                    } // for END
+                                    Log.i(TAG, "UUID: " + sb.toString());
+                                } // else END
+                            }); // observer END
+                        }); // runOnUiThread END
+
                     } else {
                         Log.d(TAG, "uuid : " + "응답 데이터가 null 입니다.");
                     }
@@ -284,14 +394,9 @@ public class ChatSelect extends AppCompatActivity {
             public void onFailure(Call<ResponseModel> call, Throwable t) {
                 // 에러 처리
                 Toast.makeText(ChatSelect.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+            } // onFailure END
+        }); // call.enqueque END
     }
-
-
-
-
-
 
 
     @Override
@@ -445,7 +550,8 @@ public class ChatSelect extends AppCompatActivity {
 
                 super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
-        }).attachToRecyclerView(chat_list_recyclerView);;
+        }).attachToRecyclerView(chat_list_recyclerView);
+        ;
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration
                 (chat_list_recyclerView.getContext(), layoutManager.getOrientation());
@@ -491,24 +597,6 @@ public class ChatSelect extends AppCompatActivity {
                 // 에러 처리
                 Toast.makeText(ChatSelect.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
-        });
-    }
-
-    private void getStringWithYou(String you) {
-        UUIDDatabase db = Room.databaseBuilder(getApplicationContext(), UUIDDatabase.class, "uuid")
-                .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
-                .build();
-        UuidDao uuidDao = db.uuidDao();
-
-        uuidDao.findByQuery(you).observe(this, uuidsWithYou -> {
-            List<String> stringWithYou = new ArrayList<>();
-            for (Uuid uuid : uuidsWithYou) {
-                stringWithYou.add(uuid.uuid);
-            }
-
-            // 결과 출력
-            Log.i(TAG, "UUIDs containing 'you': " + String.join(", ", stringWithYou));
         });
     }
 
