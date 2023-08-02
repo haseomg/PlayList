@@ -2,9 +2,11 @@ package com.example.playlist;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.SeekBar;
@@ -26,8 +29,20 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Upload extends Activity {
 
@@ -36,8 +51,9 @@ public class Upload extends Activity {
     static final int REQUEST_READ_STORAGE = 2;
 
     String selectedAudioFilePath = "";
+    String getSelectedAudioFileName, getSelectedAudioFileUri, mimeType;
     TextView selectedAudio, songTime;
-    Button back, find, play;
+    Button back, find, play, upload;
 
     private MediaPlayer mediaPlayer;
     private SeekBar seekBar;
@@ -93,6 +109,18 @@ public class Upload extends Activity {
                 }
             }
         });
+
+        upload = findViewById(R.id.uploadButton);
+        upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "upload onClick");
+                // 1. 서버에 파일 업로드
+                uploadAudioToServer();
+                finish();
+                // 2. music 테이블에 name, artist, time, path 추가
+            } // onClick END
+        }); // setUpload
 
         selectedAudio = findViewById(R.id.selectedAudioTextView);
         seekBar = findViewById(R.id.uploadPreviewSeekBar);
@@ -183,15 +211,15 @@ public class Upload extends Activity {
                 }
             };
             handler.postDelayed(runnable, 1000);
-        }
-    }
+        } // if END
+    } //updateSeekBar END
 
     private void pickAudioFile() {
         if (checkReadStoragePermission()) {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(intent, REQUEST_PICK_AUDIO);
-        }
-    }
+        } // if END
+    } // pickAudioFile method END
 
     private boolean checkReadStoragePermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -202,8 +230,8 @@ public class Upload extends Activity {
             return false;
         } else {
             return true;
-        }
-    }
+        } // else END
+    } // checkReadStoragePermission END
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -214,22 +242,39 @@ public class Upload extends Activity {
                     // 권한 허용됨. 필요한 처리를 수행합니다.
                 } else {
                     // 권한 거부됨. 앱 기능을 사용할 수 없습니다.
-                }
+                } // else END
                 return;
-            }
-        }
+            } // case END
+        } // switch END
     } //on RequestPermissionResult End\
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_PICK_AUDIO && resultCode == RESULT_OK) {
+            Log.i(TAG, "onActivityResult (if) - requestCode check : " + requestCode);
             Uri uri = data.getData();
+
+            // MIME 타입 확인
+            mimeType = getContentResolver().getType(uri);
+            if (mimeType != null) {
+                Log.d(TAG, "MIME type: " + mimeType);
+            } else {
+                Log.e(TAG, "MIME type is null");
+            }
+
             selectedAudioFilePath = getRealPathFromUri(uri);
+            // TODO AudioFileName
             String selectedAudioFileName = getFileNameFromUri(uri);
+            getSelectedAudioFileName = selectedAudioFileName;
+            Log.i(TAG, "getSelected FileName : " + getSelectedAudioFileName);
+            getSelectedAudioFileUri = uri.toString();
+            Log.i(TAG, "getSelected FileUri : " + getSelectedAudioFileUri);
             selectedAudio.setText(selectedAudioFileName);
-        }
-    }
+        } else {
+            Log.i(TAG, "onActivityResult (else) - requestCode check : " + requestCode);
+        } // else END
+    } // onActivityResult END
 
     private String getFileNameFromUri(Uri uri) {
         String[] projection = {MediaStore.Audio.Media.DISPLAY_NAME};
@@ -242,8 +287,8 @@ public class Upload extends Activity {
             String fileName = cursor.getString(column_index);
             cursor.close();
             return fileName;
-        }
-    }
+        } // else END
+    } // getFileNameFromUri END
 
     private String getRealPathFromUri(Uri uri) {
         String[] data = {MediaStore.Audio.Media.DATA};
@@ -256,16 +301,16 @@ public class Upload extends Activity {
             String path = cursor.getString(index);
             cursor.close();
             return path;
-        }
+        } // else END
     } //getRealPathFromUri End
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
             return false;
-        }
+        } // if END
         return true;
-    }
+    } // onTouchEvent END
 
     public void spinners() {
 
@@ -295,13 +340,13 @@ public class Upload extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.i(TAG, "spinner vibe pick check : " + vibe.getSelectedItem().toString());
-            }
+            } // onItemSelected END
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
-            }
-        });
+            } // onNothingSelected END
+        }); // OnItemSelectedListener END
 
 
         ArrayList<String> seasonItems = new ArrayList<String>();
@@ -326,14 +371,128 @@ public class Upload extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.i(TAG, "spinner season pick check : " + season.getSelectedItem().toString());
-            }
+            } // onItemSelected
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
-            }
-        });
+            } // onNothingSelected
+        }); // setOnItemSelectedListener
+    } // spinners method END
 
-    }
 
-}
+    private void uploadAudioToServer() {
+        Log.i(TAG, "uploadAudioToServer method");
+        File file = new File(selectedAudioFilePath);
+        Log.i(TAG, "uploadAudioToServer selectedAudioFilePath : " + selectedAudioFilePath);
+
+        if (!file.exists()) {
+            Log.e(TAG, "File does not exist! Check the file path: " + selectedAudioFilePath);
+        } else {
+            Log.e(TAG, "File exist! Check the file path: " + selectedAudioFilePath);
+        }
+
+        // fileName, fileType
+//        getSelectedAudioFileName
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+
+        Retrofit.Builder builder = new Retrofit.Builder()
+                .baseUrl("http://54.180.155.66/")
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create());
+
+        Retrofit retrofit = builder.build();
+
+        ContentResolver contentResolver = Upload.this.getContentResolver();
+//        String mimType = contentResolver.getType(Uri.fromFile(file));
+
+        // create RequestBody instance from file
+        Log.i(TAG, "mimeType Check : " + mimeType);
+
+        String extension = MimeTypeMap.getFileExtensionFromUrl(file.getPath());
+        String mimType = getMimeType(file.getAbsolutePath());
+        String mmType = contentResolver.getType(Uri.parse(getSelectedAudioFileUri));
+        if (mimType == null) {
+            Log.e(TAG, "MIME Type not found for the file: " + file.getAbsolutePath());
+            return;
+        }
+        Log.i(TAG, "mime Type : " + mmType);
+        Log.i(TAG, "File extension: " + extension);
+        Log.i(TAG, "MIME Type: " + mimType);
+
+        RequestBody requestFile = RequestBody.create(MediaType.parse(mimType), file);
+// RequestBody requestFile = RequestBody.create(MediaType.parse(getContentResolver().getType(Uri.parse(getSelectedAudioFileUri))), file);
+
+
+        if (requestFile == null) {
+            Log.e(TAG, "requestFile is null! Please check the requestFile generation. : " + requestFile);
+        } else {
+            Log.e(TAG, "requestFile is not null! Please check the requestFile generation. : " + requestFile);
+
+        }
+
+        // MultipartBody.Part is used to send also the actual file name
+        MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+
+        // add another part within the multipart request
+//        ServerApi apiService = ApiClient.getApiClient().create(ServerApi.class);
+        ServerApi apiService = retrofit.create(ServerApi.class);
+//        Call<ResponseBody> call = apiService.uploadAudio(body);
+        Call<ResponseBody> call = apiService.uploadAudio(part);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    // Code to handle successful file upload
+                    Log.d(TAG, "File upload successful");
+
+                    // 추가: 응답 내용 확인
+                    ResponseBody responseBody = response.body();
+                    if (responseBody != null) {
+                        // 응답 본문의 문자열 가져오기 (이 경우, 전체 내용이 문자열로 반환됩니다)
+                        String responseContent = null;
+                        try {
+                            responseContent = responseBody.string();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } // catch END
+
+                        // 응답 내용을 로그로 출력
+                        if (responseContent != null) {
+                            Log.d(TAG, "Response content: " + responseContent);
+                        } else {
+                            Log.d(TAG, "Response content is null");
+                        } // else END
+                    } else {
+                        Log.d(TAG, "Response body is null");
+                    } // else END
+                } else {
+                    // Code to handle unsuccessful file upload
+                    Log.e(TAG, "File upload failed !!");
+                } // else END
+            } // onResponse END
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Code to handle unhandled exceptions
+                Log.e(TAG, "Error uploading file : ", t);
+            } // onFailure END
+        }); // call.enqueue END
+    } // uploadAudioToServer END
+
+    private String getMimeType(String path) {
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(path);
+            return retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE);
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "Error: " + e.getMessage());
+            return null;
+        } finally {
+            retriever.release();
+        } // finally END
+    } // getMimeType END
+
+
+} // CLASS END
