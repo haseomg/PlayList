@@ -2,8 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="350dp"
-    android:layout_height="350dp"
+    android:layout_width="300dp"
+    android:layout_height="200dp"
     android:background="#AAB9FF"
     android:layout_gravity="center"
     tools:context=".Comment">
@@ -49,30 +49,20 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <SeekBar
-        android:id="@+id/commentSickBar"
-        android:layout_width="200dp"
-        android:layout_height="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/commentFrame"
-        app:layout_constraintVertical_bias="0.29000002" />
-
     <EditText
         android:id="@+id/commentEditText"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:hint="Please enter 10 characters or less"
-        android:textColor="#AAB9FF"
-        android:textAlignment="center"
         android:fontFamily="sans-serif-black"
+        android:hint="Please enter 10 characters or less"
+        android:textAlignment="center"
+        android:textColor="#AAB9FF"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/commentFrame"
-        app:layout_constraintVertical_bias="0.45" />
+        app:layout_constraintVertical_bias="0.26" />
 
     <Button
         android:id="@+id/commentSubmitButton"
