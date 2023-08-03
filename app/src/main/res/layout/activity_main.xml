@@ -2,16 +2,19 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#AAB9FF"
-    android:id="@+id/mainLayout"
     tools:context=".MainActivity">
 
     <ImageView
         android:id="@+id/mainFull_ImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -201,12 +204,23 @@
         app:layout_constraintVertical_bias="0.13"
         tools:progress="40" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/commentView"
+        android:layout_width="150dp"
+        android:layout_height="85dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.41"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainSeekBar"
+        app:layout_constraintVertical_bias="0.0" />
+
     <Button
-        android:id="@+id/commentButton"
+        android:id="@+id/heartButton"
         android:layout_width="80dp"
         android:layout_height="50dp"
         android:background="#00FFFFFF"
-        android:text="•••"
+        android:text="♡"
         android:textColor="#7878E1"
         android:textSize="22sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -214,7 +228,23 @@
         app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mainPlayLayout"
-        app:layout_constraintVertical_bias="0.06" />
+        app:layout_constraintVertical_bias="0.04000002" />
+
+    <Button
+        android:id="@+id/commentButton"
+        android:layout_width="24dp"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        android:fontFamily="sans-serif-thin"
+        android:text="➤︎"
+        android:textColor="#7878E1"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/mainPlayingTime"
+        app:layout_constraintHorizontal_bias="0.96"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.655" />
 
     <Button
         android:id="@+id/uploadButton"
