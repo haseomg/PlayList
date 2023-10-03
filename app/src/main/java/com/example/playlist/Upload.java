@@ -29,6 +29,9 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -68,7 +71,6 @@ public class Upload extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_upload);
-
 
         spinners();
 
@@ -432,6 +434,9 @@ public class Upload extends Activity {
 
         }
 
+        String textData = "sample text.";
+        RequestBody textRequestBody = RequestBody.create(MediaType.parse("text/plain"), textData);
+
         // MultipartBody.Part is used to send also the actual file name
         MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
 
@@ -439,38 +444,70 @@ public class Upload extends Activity {
 //        ServerApi apiService = ApiClient.getApiClient().create(ServerApi.class);
         ServerApi apiService = retrofit.create(ServerApi.class);
 //        Call<ResponseBody> call = apiService.uploadAudio(body);
-        Call<ResponseBody> call = apiService.uploadAudio(part);
+//        Call<ResponseBody> call = apiService.uploadAudio(part);
+        Call<ResponseBody> call = apiService.uploadAudio(part, textRequestBody);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    // Code to handle successful file upload
-                    Log.d(TAG, "File upload successful");
+                    if (response.isSuccessful()) {
+                        // Code to handle successful file upload
+                        Log.d(TAG, "Response successful");
 
-                    // 추가: 응답 내용 확인
-                    ResponseBody responseBody = response.body();
-                    if (responseBody != null) {
-                        // 응답 본문의 문자열 가져오기 (이 경우, 전체 내용이 문자열로 반환됩니다)
-                        String responseContent = null;
+                        // 추가: 응답 내용 확인
+//                        ResponseBody responseBody = response.body();
+//                        if (responseBody != null) {
+//                            // 응답 본문의 문자열 가져오기 (이 경우, 전체 내용이 문자열로 반환됩니다)
+//                            String responseContent = null;
+//                            try {
+//                                responseContent = responseBody.string();
+//                                String responseText = response.body().string();
+//                                Log.i(TAG, "Response from server : " + responseText);
+//                                Toast.makeText(Upload.this, "Upload Successful", Toast.LENGTH_SHORT).show();
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                                Toast.makeText(Upload.this, "Error while reading server response", Toast.LENGTH_SHORT).show();
+//                            } // catch END
+//
+//                            // 응답 내용을 로그로 출력
+//                            if (responseContent != null) {
+//                                Log.d(TAG, "Response content: " + responseContent);
+//                            } else {
+//                                Log.d(TAG, "Response content is null");
+//                            } // else END
+//                        } else {
+//                            Log.d(TAG, "Response body is null");
+//                        } // else END
+//
+//                    } else {
+//                        // Code to handle unsuccessful file upload
+//                        Log.e(TAG, "Response failed !!");
+//                        Toast.makeText(Upload.this, "Upload failed, server response : " + response.message(), Toast.LENGTH_SHORT).show();
                         try {
-                            responseContent = responseBody.string();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } // catch END
+                            // 서버로부터 받은 응답을 문자열로 변환하여 출력
+                            String responseString = response.body().string();
+                            Log.i(TAG, "check) Response from server : " + responseString);
 
-                        // 응답 내용을 로그로 출력
-                        if (responseContent != null) {
-                            Log.d(TAG, "Response content: " + responseContent);
-                        } else {
-                            Log.d(TAG, "Response content is null");
-                        } // else END
+                            // 여기서 JSONException이 발생할 수 있다는 것을 주의하세요.
+                            JSONObject jsonResponse = new JSONObject(responseString);
+                            String receivedText = jsonResponse.getString("received_text");
+                            Log.i(TAG, "check) Received text from server : " + receivedText);
+
+                            Toast.makeText(Upload.this, "Upload successful", Toast.LENGTH_SHORT).show();
+                        } catch (IOException e) {
+
+                            Log.e(TAG, "IO error check : " + e);
+                            Toast.makeText(Upload.this, "Error while reading server response", Toast.LENGTH_SHORT).show();
+
+                        } catch (JSONException e) {
+                            Log.e(TAG, "JSON error check : " + e);
+                            Toast.makeText(Upload.this, "Error while parsing JSON response", Toast.LENGTH_SHORT).show();
+                        } // catch
+
                     } else {
-                        Log.d(TAG, "Response body is null");
+                        Log.e(TAG, "Upload error check : " + response.message());
+                        Toast.makeText(Upload.this, "Upload failed, server response: " + response.message(), Toast.LENGTH_SHORT).show();
                     } // else END
-                } else {
-                    // Code to handle unsuccessful file upload
-                    Log.e(TAG, "File upload failed !!");
-                } // else END
+
             } // onResponse END
 
             @Override
