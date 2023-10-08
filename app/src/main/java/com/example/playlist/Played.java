@@ -10,7 +10,17 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Played extends Activity {
 
@@ -68,5 +78,55 @@ public class Played extends Activity {
         Log.i(TAG, "setPlayedList");
 
     } // setPlayedList
+
+    void setPlayedSongs(String userName) {
+        Log.i(TAG, "setPlayed");
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        ServerApi playedFetchApi = retrofit.create(ServerApi.class);
+
+        // TODO. 유저 이름 기준으로 played_list 테이블에서 유저가 들었던 곡들 가져옴
+        Call<List<AllSongsModel>> call = playedFetchApi.getPlayedSongs(userName);
+        call.enqueue(new Callback<List<AllSongsModel>>() {
+            @Override
+            public void onResponse(Call<List<AllSongsModel>> call, Response<List<AllSongsModel>> response) {
+                Log.i(TAG, "setPlayed onResponse");
+
+                if (response.isSuccessful()) {
+                    String responseBody = new Gson().toJson(response.body());
+                    Log.i(TAG, "setPlayed onResponse : " + response.code());
+                    Log.i(TAG, "setPlayed Server ResponseBody: " + responseBody);
+                    Log.i(TAG, "setPlayed Server Response: " + response);
+                    Log.i(TAG, "setPlayed Server Response.message : " + response.message());
+                    Log.i(TAG, "setPlayed response.isSuccessful");
+                    List<AllSongsModel> playedList = response.body();
+
+                    for (AllSongsModel played : playedList) {
+                        Log.i(TAG, "setPlayed onResponse get PlayedList");
+                        if (!playedList.contains(null)) {
+//                            Log.i(TAG, "setPlayed contains !null : " + );
+                        }
+                    } // for
+
+                } else {
+
+                } // else
+            } // onResponse
+
+            @Override
+            public void onFailure(Call<List<AllSongsModel>> call, Throwable t) {
+                Log.i(TAG, "setPlayed onFailure : " + t.getMessage());
+
+            } // onFailure
+        }); // call
+    } // setPlayedSongs
 
 } // CLASS
