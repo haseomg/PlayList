@@ -17,6 +17,8 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -93,9 +95,16 @@ public class Played extends Activity {
                 .setLenient()
                 .create();
 
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(interceptor)
+                .build();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client)
                 .build();
 
         ServerApi playedFetchApi = retrofit.create(ServerApi.class);
@@ -111,15 +120,16 @@ public class Played extends Activity {
                 if (response.isSuccessful()) {
                     Log.i(TAG, "setPlayed response success");
                     String responseBody = new Gson().toJson(response.body());
-                    Log.i(TAG, "setPlayed onResponse : " + response.code());
-                    Log.i(TAG, "setPlayed Server ResponseBody: " + responseBody);
-                    Log.i(TAG, "setPlayed Server Response: " + response);
-                    Log.i(TAG, "setPlayed Server Response.message : " + response.message());
-                    Log.i(TAG, "setPlayed response.isSuccessful");
-                    playedAdapter.clearItems();
+                    Log.i(TAG, "setPlayed responseBody : " + responseBody);
+//                    Log.i(TAG, "setPlayed onResponse : " + response.code());
+//                    Log.i(TAG, "setPlayed Server ResponseBody: " + responseBody);
+//                    Log.i(TAG, "setPlayed Server Response: " + response);
+//                    Log.i(TAG, "setPlayed Server Response.message : " + response.message());
+//                    Log.i(TAG, "setPlayed response.isSuccessful");
                     List<AllSongsModel> played = response.body();
                     Log.i(TAG, "setPlayed response.body : " + played);
 
+                    playedAdapter.clearItems();
                     for (AllSongsModel playedLists : played) {
                         Log.i(TAG, "setPlayed onResponse get PlayedList");
 
@@ -132,7 +142,7 @@ public class Played extends Activity {
                     playedAdapter.notifyDataSetChanged();
 
                 } else {
-                    Log.i(TAG, "setPlayed response failed");
+                    Log.i(TAG, "setPlayed response failed : " + response.body());
                 } // else
             } // onResponse
 
