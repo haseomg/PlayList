@@ -1,6 +1,5 @@
 package com.example.playlist;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +11,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -26,8 +26,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
@@ -43,7 +46,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.user.model.Account;
 
@@ -79,10 +86,13 @@ public class MainActivity extends AppCompatActivity {
 
     Button logIn;
     Button select;
-    Button heart;
     Button upload;
-    Button songList;
+    Button comment;
+    ImageView songList;
     ImageView chatList;
+    ImageView heart, likedUser;
+    boolean isHeartFilled = false;
+    boolean isNowPlaying;
 
     TextView songTime;
     TextView mainLogo;
@@ -98,11 +108,15 @@ public class MainActivity extends AppCompatActivity {
     private int playPosition = -1;
     private boolean isDragging = false;
     private boolean isPlaying = false;
+    long startTime;
+    long totalPlayTime = 0;
 
     String castNum;
     String artist;
     String name;
     String time;
+    String now_song;
+    String played = "";
 
     // 프로그레스바 진행률을 위해 생성해준 변수들
     private Runnable runnable;
@@ -112,20 +126,21 @@ public class MainActivity extends AppCompatActivity {
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
 
-    String streamingRecordList;
-    String[] streamingArray;
-    static final String mediaPlayerKey = "media_player";
-
     String personName;
     String personEmail;
+
+    ArrayList<CommentModel> commentList = new ArrayList<>();
+    CommentAdapter commentAdapter;
+    RecyclerView commentView;
+    LinearLayoutManager commentLayoutManager;
+    String getUserName, getSongName, getSelectedTime, getMsg;
+
     int firstplayNum;
     int playlistNum;
     int num;
     int forRandomNumberCount = 0;
     String randomNumCheck;
     String firstRanNum = "";
-    int firstRanNumToInt;
-    int ranRanToInt;
     String nextRanNum;
     String leftPlay;
 
@@ -148,8 +163,12 @@ public class MainActivity extends AppCompatActivity {
     String pastNumBox = "";
     String ranRan;
 
-    ProgressDialog mProgressDialog;
+    PreferenceManager nowPlayingPreference;
+    String nowPlayingStr;
+
     SeekBar mainSeekBar;
+    String gifName;
+    int gifCount = 0;
 
     static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
@@ -171,7 +190,18 @@ public class MainActivity extends AppCompatActivity {
     androidx.constraintlayout.widget.ConstraintLayout mainPlayLayout;
     ImageView mainFull;
 
+    static final String BASE_URL = "http://54.180.155.66/";
+    int syncInterval = 3000; // 코멘트 동기화 간격 3초
+    static final int TIME_INTERVAL = 1;
+    // 3초 간격
+    static final int TIME_RANGE = 3;
+    Handler syncHandler;
+    Runnable syncRunnable;
+    long currentTimeForViewsIncrement;
+
     public final String TAG = "[Main Activity]";
+    private int totalPlayTimeSecondsForViewsCount;
+    ArrayList<UpdateLikedModel> selectLikedList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,6 +230,7 @@ public class MainActivity extends AppCompatActivity {
         randomEditor = randomShared.edit();
         randomNumCheck = randomShared.getString("randomNumbers", "");
 
+
         // TODO 랜덤 넘버 서버로부터 받아온당
         responseRandomNumbers();
         if (forRandomNumberCount == 0) {
@@ -213,6 +244,45 @@ public class MainActivity extends AppCompatActivity {
 
         // 받는 인텐트
         Intent intent = getIntent();
+        if (intent != null) {
+            String notificationData = intent.getStringExtra("test");
+            if (notificationData != null)
+                Log.d("FCM_TEST", notificationData);
+        }
+
+//        String token = FirebaseMessaging.getInstance().getToken().getResult();
+//        Log.e(TAG, "fcm token : " + token);
+
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            System.out.println("Fetching FCM registration token failed");
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+
+
+                        // Log and toast
+                        System.out.println("token : " + token);
+//                        Log.e(TAG, "token : " + token);
+//                        Toast.makeText(MainActivity.this, "Your device registration token is" + token
+//                                , Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(new OnSuccessListener<String>() {
+            @Override
+            public void onSuccess(String token) {
+                Log.i(TAG, "fcm onSuccess : " + token);
+            }
+        });
+
+
         fromSignUpNickName = intent.getStringExtra("nickName");
 
         // 쉐어드로부터 가져온 닉네임
@@ -230,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
             logIn.setText(fromSharedNickName);
             Log.i("logIn.setText Check1 : ", fromSharedNickName);
             getUUIDFromTable(fromSharedNickName);
-            Log.i(TAG, "UUID - getuuidTable 1 : " + fromSharedNickName);
+            Log.i(TAG, "uuid - getuuidTable 1 : " + fromSharedNickName);
         }
 
         // 쉐어드로부터 가져온 닉네임 비교해서 logIn 버튼 이름 설정
@@ -241,15 +311,17 @@ public class MainActivity extends AppCompatActivity {
             logIn.setText(fromSharedNickName);
             Log.i("logIn.setText Check3 : ", fromSharedNickName);
             Log.i(TAG, "fromSharedNickName String 값을 쉐어드에서 가져왔을 때 : " + fromSharedNickName);
-            getUUIDFromTable(fromSharedNickName);
-            Log.i(TAG, "UUID - getuuidTable 2 : " + fromSharedNickName);
+//            getUUIDFromTable(fromSharedNickName);
+            Log.i(TAG, "uuid - getuuidTable 2 : " + fromSharedNickName);
         }
         Log.i("[Main]", "login.getText.toString() : " + logIn.getText().toString());
         if (logIn.getText().toString().equals("null") || logIn.getText().toString().equals("")) {
             logIn.setText("LOG IN");
             Log.i("logIn.setText Check4 : ", logIn.getText().toString());
+        } //if
 
-        }
+        // TODO - User, Liked Match
+        selectLikes();
 
         // 쉐어드로부터 가져온 닉네임 길이에 따라서 글자 사이즈 설정
         if (fromSharedNickName.length() > 20) {
@@ -295,24 +367,48 @@ public class MainActivity extends AppCompatActivity {
             // personEmail.setText
         } // if END
 
-        // 클릭 이벤트 시 재생목록 생성
+        likedUser = findViewById(R.id.likedUserList);
+        likedUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "likedUser onClick");
+                Intent likedIntent = new Intent(MainActivity.this, LikedList.class);
+                Log.i(TAG, "now_song check: " + now_song);
+                likedIntent.putExtra( "selected_song", now_song);
+                startActivity(likedIntent);
+            } // onClick
+        }); // setOnCllickListener
+
+        // TODO songList clickEvent
         songList = findViewById(R.id.menuButton);
+        songList.setVisibility(View.GONE);
         songList.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "재생목록 버튼 클릭");
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("SongList See U Soon !");
-                builder.setPositiveButton("OK",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Log.i(TAG, "songList Button onClick()");
-                            }
-                        });
-                builder.show();
-            }
-        });
+
+                if (logIn.getText().toString().equals("LOG IN")) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("LOG IN PLEASE");
+                    builder.setPositiveButton("OK",
+                            new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Log.i(TAG, "songList Button onClick()");
+                                } // onClick
+                            }); // OnClickListener
+                    builder.show();
+
+                } else {
+                    Intent songListIntent = new Intent(MainActivity.this, SongList.class);
+                    startActivity(songListIntent);
+                } // else
+            } // Btn onClick
+        }); // setOnClickListener
+
+        setCommentView();
 
 
         // PICK 액티비티로 가는 버튼
@@ -322,27 +418,62 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "PICK 버튼 클릭");
                 Intent intent = new Intent(MainActivity.this, Selectable.class);
-
+                intent.putExtra("name", logIn.getText().toString());
                 startActivity(intent);
             }
         });
 
-        // heart 액티비티로 가는 버튼
-        heart = findViewById(R.id.commentButton);
+        // comment 액티비티
+        comment = findViewById(R.id.commentButton);
+        comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!logIn.getText().toString().equals("LOG IN")) {
+                    Intent intent = new Intent(MainActivity.this, Comment.class);
+                    // user_name, song_name, selected_time, msg
+                    intent.putExtra("user_name", logIn.getText().toString());
+                    Log.i(TAG, "comment user_name check : " + logIn.getText().toString());
+                    intent.putExtra("song_name", mainLogo.getText().toString());
+                    Log.i(TAG, "comment song_name check : " + mainLogo.getText().toString());
+                    intent.putExtra("selected_time", playingTime.getText().toString());
+                    Log.i(TAG, "comment selected_time check : " + playingTime.getText().toString());
+                    startActivity(intent);
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "로그인 후 음악을 재생해 주세요.", Toast.LENGTH_SHORT).show();
+                } // else END
+            } // onClick END
+        }); // setOnClickListener END
+        ;
+        heart = findViewById(R.id.heartImageView);
         heart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "heart 버튼 클릭");
-                String hearStatus = heart.getText().toString();
-                Toast.makeText(getApplicationContext(), "❤︎︎", Toast.LENGTH_SHORT);
-                if (hearStatus.equals("❤︎︎")) {
-                    heart.setText("♡");
+                onHeartClicked(v);
 
+                if (logIn.getText().toString().equals("LOG IN")) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+                    builder.setTitle("Please Check the Log In");
+                    builder.setMessage("로그인이 필요합니다.");
+
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.i(TAG, "heart Button - 로그인이 필요합니다. OK 버튼 클릭");
+                            Intent logInIntent = new Intent(mainCtx, LogIn.class);
+                            startActivity(logInIntent);
+                        }
+                    });
+                    builder.show();
                 } else {
-                    heart.setText("❤︎︎");
-                } // else END
+                    Log.i(TAG, "heart 버튼 클릭");
+
+                } // bigger else END
             } // onClick END
         });
+
+
         if (mediaPlayer.isPlaying()) {
             mainSeekBar.setVisibility(View.VISIBLE);
             playingTime.setVisibility(View.VISIBLE);
@@ -379,10 +510,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mainLogo = findViewById(R.id.mainLogo);
+
+        setNowPlayingShared("default");
 //        weather();
 
-
         mainSeekBar = findViewById(R.id.mainSeekBar);
+
         playingTime = findViewById(R.id.mainPlayingTime);
         toPlayTime = findViewById(R.id.mainToPlayTime);
         if (!mediaPlayer.isPlaying()) {
@@ -452,12 +585,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+
         // 메인 재생 버튼
         play = findViewById(R.id.mainPlayButton);
         play.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.Q)
             @Override
             public void onClick(View v) {
                 Log.i("메인 플레이 버튼 클릭", "");
+
+
+                currentTimeForViewsIncrement = System.currentTimeMillis();
 
                 if (logIn.getText().toString().equals("LOG IN")) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -468,22 +606,31 @@ public class MainActivity extends AppCompatActivity {
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
+                            Log.i(TAG, "로그인이 필요합니다. OK 버튼 클릭");
+                            Intent loginIntent = new Intent(mainCtx, LogIn.class);
+                            startActivity(loginIntent);
                         }
                     });
                     builder.show();
                 } else {
 
-
+                    setMediaPlayer();
 //                if (mediaPlayer.isPlaying()) {
-                    mainSeekBar.setVisibility(View.VISIBLE);
-                    playingTime.setVisibility(View.VISIBLE);
-                    toPlayTime.setVisibility(View.VISIBLE);
-                    heart.setVisibility(View.VISIBLE);
-                    Log.i(TAG, "mainSeekBar.getVisibility() 2 : " + mainSeekBar.getVisibility());
-                    Log.i(TAG, "playingTime.getVisibility() 2 : " + playingTime.getVisibility());
-                    Log.i(TAG, "toPlayTime.getVisibility() 2 : " + toPlayTime.getVisibility());
-                    Log.i(TAG, "heart.getVisibility() 2 : " + heart.getVisibility());
+                    if (logIn.getText().toString().equals("LOG IN")) {
+                        mainSeekBar.setVisibility(View.GONE);
+                        heart.setVisibility(View.GONE);
+                        playingTime.setVisibility(View.GONE);
+                        toPlayTime.setVisibility(View.GONE);
+                    } else {
+                        mainSeekBar.setVisibility(View.VISIBLE);
+                        heart.setVisibility(View.VISIBLE);
+                        playingTime.setVisibility(View.VISIBLE);
+                        toPlayTime.setVisibility(View.VISIBLE);
+                    }
+//                    Log.i(TAG, "mainSeekBar.getVisibility() 2 : " + mainSeekBar.getVisibility());
+//                    Log.i(TAG, "playingTime.getVisibility() 2 : " + playingTime.getVisibility());
+//                    Log.i(TAG, "toPlayTime.getVisibility() 2 : " + toPlayTime.getVisibility());
+//                    Log.i(TAG, "heart.getVisibility() 2 : " + heart.getVisibility());
 //                }
 
                     String playState = play.getText().toString();
@@ -503,6 +650,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                             if (!playState.equals("❚❚")) {
+
                                 Log.i("메인 플레이 버튼 클릭", "일시정지가 아닐 때");
                                 play.setText("❚❚");
                                 play.setTextSize(53);
@@ -536,7 +684,7 @@ public class MainActivity extends AppCompatActivity {
                                 Uri.Builder builder = new Uri.Builder()
                                         .appendQueryParameter("num", "1" + firstRanNum);
                                 String postParams = builder.build().getEncodedQuery();
-                                new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
+                                new getJSONData().execute("http://54.180.155.66/" + "file_sampling.php", postParams);
 
 
 //                             get 방식 파라미터 추가
@@ -574,6 +722,7 @@ public class MainActivity extends AppCompatActivity {
                                         // 서브 스레드 UI 변경할 경우 에러
                                         // 메인 스레드 UI 설정
                                         runOnUiThread(new Runnable() {
+                                            @RequiresApi(api = Build.VERSION_CODES.Q)
                                             @Override
                                             public void run() {
 
@@ -664,7 +813,7 @@ public class MainActivity extends AppCompatActivity {
                                                             // TODO gif 직접 추가
                                                             Glide.with(mainCtx)
                                                                     .asGif()
-                                                                    .load(R.drawable.sea_gif)
+                                                                    .load(R.drawable.gradation)
                                                                     .centerCrop()
                                                                     .listener(new RequestListener<GifDrawable>() {
                                                                         @Override
@@ -695,6 +844,9 @@ public class MainActivity extends AppCompatActivity {
                                                             mainLogo.setAlpha(0.8f);
                                                             upload.setAlpha(0.8f);
 
+                                                            // TODO setSongListButton
+                                                            songList.setVisibility(View.VISIBLE);
+                                                            likedUser.setVisibility(View.VISIBLE);
 
 //                                                        // TODO ADD for SeekBar Moving
                                                             if (mediaPlayer.isPlaying()) {
@@ -725,48 +877,13 @@ public class MainActivity extends AppCompatActivity {
 //                                                            mainSeekBar.setProgress(mediaPlayer.getCurrentPosition());
 //                                                            play.setText("▶");
 //                                                        }
-////
+///
 
-                                                            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                                                                @Override
-                                                                public void onPrepared(MediaPlayer mp) {
-                                                                    Log.i(TAG, "mediaPlayer.setOnPreparedListener");
-                                                                    mainSeekBar.setMax(mediaPlayer.getDuration());
-                                                                    mediaPlayer.start();
-                                                                    updateSeekBar();
-//                                                                changeSeekbar();
-                                                                    Log.i(TAG, "mediaPlayer.start()");
-                                                                }
-                                                            });
-
-//                                                        // TODO When SeekBar click, move to time from mp3 file
-                                                            mainSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                                                                @Override
-                                                                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                                                                    Log.i(TAG, "SeekBar onProgressChanged");
-                                                                    if (fromUser) {
-                                                                        mediaPlayer.seekTo(progress);
-                                                                    }
-                                                                }
-
-                                                                //
-                                                                @Override
-                                                                public void onStartTrackingTouch(SeekBar seekBar) {
-                                                                    Log.i(TAG, "SeekBar onStartTrackingTouch");
-                                                                    isDragging = true;
-                                                                }
-
-                                                                @Override
-                                                                public void onStopTrackingTouch(SeekBar seekBar) {
-                                                                    Log.i(TAG, "SeekBar onStopTrackingTouch");
-                                                                    isDragging = false;
-                                                                }
-                                                            });
 //
 //                                                        // TODO. END for SeekBar
 
                                                             // TODO TOAST
-//                                                        Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
                                                             toast.show();
 
                                                             updateSeekBar();
@@ -783,7 +900,14 @@ public class MainActivity extends AppCompatActivity {
 
                                                             Log.i(TAG, "song just name 확인 : " + reReName);
 
-                                                            mainLogo.setText(reReName);
+                                                            mainLogo.setText(reReName + " • " + artist);
+                                                            now_song = reReName;
+                                                            Log.i(TAG, "now_song now 1 : " + now_song);
+                                                            updateHeart();
+
+                                                            // TODO user Listened music Info add (first streaming)
+                                                            played = played + now_song + "//";
+                                                            Log.i(TAG, "User Played Check : " + played);
 
                                                             if (!responseData.equals(0)) {
 //                                                            responserData " + " 기준으로 잘라줘야 해
@@ -826,7 +950,7 @@ public class MainActivity extends AppCompatActivity {
                                 updateSeekBar();
                                 play.setText("❚❚");
 
-
+                                startTime = System.currentTimeMillis();
                                 if (mediaPlayer == null) {
                                     Log.i(TAG, "> btn on Click (mp == null)");
 //                    mediaPlayer = MediaPlayer.create(getApplicationContext()
@@ -852,6 +976,8 @@ public class MainActivity extends AppCompatActivity {
                                 play.setTextSize(53);
 
                                 nowPlaying = false;
+//                                commentAdapter.clearItems();
+//                                commentAdapter.notifyDataSetChanged();
 
 //                            seekBarMoving();
 //                            updateSeekBar();
@@ -859,14 +985,20 @@ public class MainActivity extends AppCompatActivity {
 //                    pauseAudio() 일단 안 씀
 //                    pauseAudio();
 
-
                                 if (mediaPlayer != null) {
+                                    Log.i(TAG, "mediaPlayer.pause");
                                     mediaPlayer.pause();
-                                    playPosition = mediaPlayer.getCurrentPosition();
-                                    Log.d("[PAUSE CHECK]", "" + playPosition);
-                                    Log.i(TAG, "playCheck : " + playCheck);
-
+//
+//
+                                } else {
+                                    Log.i(TAG, "mediaPlayer == null");
                                 }
+//
+                                playPosition = mediaPlayer.getCurrentPosition();
+                                Log.d("[PAUSE CHECK]", "" + playPosition);
+                                Log.i(TAG, "playCheck : " + playCheck);
+//
+//                                }
 
                             } else {
                                 // 재생 버튼이 일시정지 모양일 때
@@ -886,6 +1018,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 Log.i(TAG, "playCheck : " + playCheck);
+
             } // OnClick 메서드 닫아주는 중괄호
         });
 
@@ -895,65 +1028,8 @@ public class MainActivity extends AppCompatActivity {
         rightPlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (logIn.getText().toString().equals("LOG IN")) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-
-                    builder.setTitle("〈 Please Check the Log In 〉");
-
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    });
-                    builder.show();
-                } else {
-
-                    if (play.getText().toString().equals("")) {
-
-                        Log.i(TAG, "play의 모양이 아무것도 없을 때");
-
-                    } else {
-
-                        Log.i(TAG, "play의 모양이 아무것도 없지않을 때");
-
-                        play.setText("▶");
-
-                        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                            @Override
-                            public void onCompletion(MediaPlayer mp) {
-                                isPlaying = false;
-                                play.setText("❚❚");
-                                playCheck = true;
-                            }
-                        });
-
-                        Log.i(TAG, "RightPlay 버튼 클릭");
-                        Log.i(TAG, "RightPlay-------------------------------------------");
-
-
-                        if (mediaPlayer.isPlaying() || !playCheck) {
-                            Log.i(TAG, "mediaPlayer.isPlaying() || playCheck == false");
-                            play.setText("▶"); //TODO GOOD!
-                            if (play.getText().toString().equals("▶")) {
-                                Log.i(TAG, "[RightPlay] 플레이 모양이 재생일 때");
-
-                                onStopButtonClick();
-                            }
-                        } else {
-                            Log.i(TAG, "!mediaPlayer.isPlaying() || playCheck == true");
-
-                            Log.i(TAG, "mediaPlayer.isPlaying() || playCheck == false");
-                            play.setText("▶"); //TODO GOOD!
-                            if (play.getText().toString().equals("▶")) {
-                                Log.i(TAG, "[RightPlay] 플레이 모양이 재생일 때");
-
-                                onStopButtonClick();
-                            }
-                        }
-                    }
-                } // Big else End
+                gifCount++;
+                changeSong();
 
             } // onClick End
 
@@ -962,6 +1038,14 @@ public class MainActivity extends AppCompatActivity {
         Log.i("[Random] mediaPlayer Check : ", String.valueOf(mediaPlayer));
         Log.i("[Random] playCheck : ", String.valueOf(playCheck));
     }
+
+    void incrementSongCount() {
+        // 곡 조회수 누적 - 곡 이름, 곡 조회수
+        MusicClickListener musicClickListener = new MusicClickListener();
+        String songName = mainLogo.getText().toString().replace(" ", "_");
+        musicClickListener.onClick(songName + ".mp3");
+        Log.i(TAG, "increment check : " + songName + ".mp3");
+    } // incrementSongCount
 
     void setChatListButton() {
         chatList = findViewById(R.id.chatListButton);
@@ -1052,30 +1136,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "LifeCycle onResume()");
-//        if (!isPlaying) {
-//            Log.i(TAG, "change song check : " + mainSeekBar.getProgress());
-//            reMediaPlayer = new MediaPlayer();
-//            reMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//                @Override
-//                public void onCompletion(MediaPlayer mp) {
-//                    Log.i(TAG, "change song onCompletion() ");
-//                    // 다음곡을 재생하는 코드를 여기에 적어
-//                    reMediaPlayer.reset();
-//                    changeStreaming();
-//                    reMediaPlayer.start();
-//                    mainSeekBar.setProgress(0);
-//                    updateSeekBar();
-//
-//                }
-//            });
 
-//        }
         updateSeekBar();
         setChatListButton();
-    }
+        try {
+            if (!commentList.get(0).getMsg().equals("") || commentList.get(0).getMsg() != null) {
+                commentListAddItem();
+            } // if
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(TAG, "comment List IndexOutOfBoundsException e : " + e);
+        } // catch
+
+        // TODO activity start
+        updateHeart();
+    } // onResume
 
     protected void onPause() {
         super.onPause();
@@ -1091,7 +1169,6 @@ public class MainActivity extends AppCompatActivity {
         if (logIn.getText().toString().equals("LOG IN")) {
             stopAudio();
         }
-
     }
 
     protected void onDestroy() {
@@ -1107,6 +1184,7 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayer.release();
         mediaPlayer = null;
         handler.removeCallbacksAndMessages(null);
+        nowPlayingPreference.removeKey(getApplicationContext(), "now_playing");
         //
 //        }
     }
@@ -1136,7 +1214,7 @@ public class MainActivity extends AppCompatActivity {
 //        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.waves);
         mediaPlayer.start();
         // TODO TOAST
-//        Toast.makeText(this, "♫", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "♫", Toast.LENGTH_SHORT).show();
         toast.show();
     }
 
@@ -1433,22 +1511,29 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //    };
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     private void updateSeekBar() {
 
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+//                now_song = mainLogo.getText().toString();
+//                Log.i(TAG, "now_song in updateSeekBar : " + now_song);
                 currentPosition = mediaPlayer.getCurrentPosition();
                 mainSeekBar.setProgress(mediaPlayer.getCurrentPosition());
                 String progressText = String.format("%02d:%02d", currentPosition / 1000 / 60, currentPosition / 1000 % 60);
                 playingTime.setText(progressText);
                 updateSeekBar();
+//                commentAdapter.clearItems();
+//                commentAdapter.notifyDataSetChanged();
+
             }
         }, 1000);
-        if (mainSeekBar.getProgress() == 0) {
-            // 다음 음악 재생
-            Log.i(TAG, "mainSeekBar.getProgress Check : " + mainSeekBar.getProgress());
-        }
+//        if (mainSeekBar.getProgress() == 0) {
+//            // 다음 음악 재생
+//            Log.i(TAG, "Auto next 1 : " + mainSeekBar.getProgress());
+////            changeSong();
+//        }
     }
 
     public void onStopButtonClick() {
@@ -1460,8 +1545,6 @@ public class MainActivity extends AppCompatActivity {
 //            play.setText("❚❚");
             playCheck = false;
 //            playCheck = true;
-            // changeStreaming이 있어야지만 노래를 바꿀 수 있어
-            // 그런데 지금 과정이 뭔가 엉켜있어
             changeStreaming();
 
             mediaPlayer.start();
@@ -1480,15 +1563,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void changeStreaming() {
 
-
-        Log.i(TAG, "[RightPlay] playcheck Check : " + playCheck);
-//TODO randomNumber
+        Log.i(TAG, "onClick Check : " + playCheck);
         //        randomNumber();
-        Log.i(TAG, "[RightPlay] -----------------------------------------------");
+        Log.i(TAG, "[changeStreaming] -----------------------------------------------");
 
 
-        Log.i(TAG, "[RightPlay] changeStreaming Method");
-        Log.i(TAG, "[RightPlay] -----------------------------------------------");
+        Log.i(TAG, "[changeStreaming] changeStreaming Method");
+        Log.i(TAG, "[changeStreaming] -----------------------------------------------");
 
         String playState = play.getText().toString();
 
@@ -1499,14 +1580,14 @@ public class MainActivity extends AppCompatActivity {
             if (playCheck == false) {
 
 
-                Log.i("[RightPlay] 버튼 클릭", "재생");
-                Log.i(TAG, "[RightPlay] playCheck : " + playCheck);
-                Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                Log.i("[changeStreaming] 버튼 클릭", "재생");
+                Log.i(TAG, "[changeStreaming] playCheck : " + playCheck);
+                Log.i(TAG, "[changeStreaming] -----------------------------------------------");
 
 
-                if (!playState.equals("❚❚")) {
-                    Log.i("[RightPlay] 버튼 클릭", "일시정지가 아닐 때");
-                    Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                if (!playState.equals("❚❚") || playState.equals("❚❚")) {
+                    Log.i("[changeStreaming] 버튼 클릭", "일시정지가 아닐 때");
+                    Log.i(TAG, "[changeStreaming] -----------------------------------------------");
                     play.setText("❚❚");
                     play.setTextSize(53);
 
@@ -1522,11 +1603,11 @@ public class MainActivity extends AppCompatActivity {
                             nextRanNum = String.valueOf(next);
                         }
 //                    firstRanNumToInt = Integer.parseInt(firstRanNum);
-                        Log.i(TAG, "ran now check : " + nextRanNum);
+                        Log.i(TAG, "[changeStreaming] ran now check : " + nextRanNum);
 //                    ranRanRan = randomNumCheck;
                         if (ranRanRan.length() > 0) {
                             ranRanRan = ranRanRan.substring(1);
-                            Log.i(TAG, "ran nums substring(1) check : " + ranRanRan);
+                            Log.i(TAG, "[changeStreaming] ran nums substring(1) check : " + ranRanRan);
 //                        ranRanToInt = Integer.parseInt(ranRan);
                             randomShared = getSharedPreferences("randomNumbers", MODE_PRIVATE);
                             randomEditor = randomShared.edit();
@@ -1534,7 +1615,7 @@ public class MainActivity extends AppCompatActivity {
                             randomEditor.apply();
                             randomEditor.commit();
                             pastNumBox = nextRanNum + pastNumBox;
-                            Log.i(TAG, "ran past nums : " + pastNumBox);
+                            Log.i(TAG, "[changeStreaming]ran past nums : " + pastNumBox);
                         }
                     }
 
@@ -1543,12 +1624,12 @@ public class MainActivity extends AppCompatActivity {
 //                        nextRanNum = "1";
 //                        String reRan = randomShared.getString("randomNumbers", "");
                         String reRan = randomNumCheck;
-                        Log.i(TAG, "ran reRan check : " + reRan);
+                        Log.i(TAG, "[changeStreaming] ran reRan check : " + reRan);
                         char reNext = reRan.charAt(0);
                         nextRanNum = String.valueOf(reNext);
-                        Log.i(TAG, "ran now check : " + nextRanNum);
+                        Log.i(TAG, "[changeStreaming] ran now check : " + nextRanNum);
                         reRan = reRan.substring(1);
-                        Log.i(TAG, "ran nums substring(1) check : " + reRan);
+                        Log.i(TAG, "[changeStreaming] ran nums substring(1) check : " + reRan);
 //                        ranRanToInt = Integer.parseInt(ranRan);
                         randomShared = getSharedPreferences("randomNumbers", MODE_PRIVATE);
                         randomEditor = randomShared.edit();
@@ -1556,15 +1637,15 @@ public class MainActivity extends AppCompatActivity {
                         randomEditor.apply();
                         randomEditor.commit();
                         pastNumBox = reNext + pastNumBox;
-                        Log.i(TAG, "ran past  nums : " + pastNumBox);
+                        Log.i(TAG, "[changeStreaming] ran past  nums : " + pastNumBox);
                         if (reRan.length() > 0) {
                             String reRanRan = randomShared.getString("randomNumbers", "");
-                            Log.i(TAG, "ran reRanRan check : " + reRanRan);
+                            Log.i(TAG, "[changeStreaming] ran reRanRan check : " + reRanRan);
                             char next = reRanRan.charAt(0);
                             nextRanNum = String.valueOf(next);
-                            Log.i(TAG, "ran now check : " + nextRanNum);
+                            Log.i(TAG, "[changeStreaming] ran now check : " + nextRanNum);
                             reRanRan = reRanRan.substring(1);
-                            Log.i(TAG, "ran nums substring(1) check : " + reRanRan);
+                            Log.i(TAG, "[changeStreaming] ran nums substring(1) check : " + reRanRan);
 //                        ranRanToInt = Integer.parseInt(ranRan);
                             randomShared = getSharedPreferences("randomNumbers", MODE_PRIVATE);
                             randomEditor = randomShared.edit();
@@ -1572,7 +1653,7 @@ public class MainActivity extends AppCompatActivity {
                             randomEditor.apply();
                             randomEditor.commit();
                             pastNumBox = next + pastNumBox;
-                            Log.i(TAG, "ran past  nums : " + pastNumBox);
+                            Log.i(TAG, "[changeStreaming] ran past  nums : " + pastNumBox);
                         }
                     }
                     Uri.Builder builder = new Uri.Builder()
@@ -1585,12 +1666,22 @@ public class MainActivity extends AppCompatActivity {
                     HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/file_sampling.php").newBuilder();
                     urlBuilder.addQueryParameter("ver", "1.0");
                     String url = urlBuilder.build().toString();
-                    Log.i(TAG, "[RightPlay] String url 확인 : " + url);
-                    Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                    Log.i(TAG, "[changeStreaming] String url 확인 : " + url);
+                    Log.i(TAG, "[changeStreaming] -----------------------------------------------");
 
                     // post 파라미터 추가
+
+                    try {
+                        if (nextRanNum == null) {
+                            nextRanNum = "1";
+                        }
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                        nextRanNum = "1";
+                    }
+
                     RequestBody formBody = new FormBody.Builder()
-                            .add("num", "1" + nextRanNum.trim())
+                            .add("num", nextRanNum.trim())
                             .build();
                     // num을 보내고 -> 테이블의 num을 기준으로 path, name 가져올 거야
 
@@ -1606,18 +1697,19 @@ public class MainActivity extends AppCompatActivity {
                     client.newCall(request).enqueue(new Callback() {
                         @Override
                         public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                            Log.e(TAG, "[RightPlay] play callback onFailure : " + e);
-                            Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                            Log.e(TAG, "[changeStreaming] play callback onFailure : " + e);
+                            Log.i(TAG, "[changeStreaming]  -----------------------------------------------");
                         }
 
                         @Override
                         public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                            Log.i(TAG, "[RightPlay] play callback onResponse");
-                            Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                            Log.i(TAG, "[changeStreaming] play callback onResponse");
+                            Log.i(TAG, "[changeStreaming] -----------------------------------------------");
 
                             // 서브 스레드 UI 변경할 경우 에러
                             // 메인 스레드 UI 설정
                             runOnUiThread(new Runnable() {
+                                @RequiresApi(api = Build.VERSION_CODES.Q)
                                 @Override
                                 public void run() {
 
@@ -1625,93 +1717,83 @@ public class MainActivity extends AppCompatActivity {
 
                                         if (!response.isSuccessful()) {
                                             // 응답 실패
-                                            Log.e("tag", "[RightPlay] 응답 실패 : " + response);
+                                            Log.e(TAG, "[changeStreaming] 응답 실패 : " + response);
                                             Toast.makeText(getApplicationContext(), "네트워크 문제 발생", Toast.LENGTH_SHORT).show();
-                                            Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                                            Log.i(TAG, "[changeStreaming] -----------------------------------------------");
                                         } else {
                                             // 응답 성공
-                                            Log.i("tag", "[RightPlay] 응답 성공");
+                                            Log.i(TAG, "[changeStreaming] 응답 성공");
                                             final String responseData = response.body().string().trim();
-                                            Log.i("tag", "[RightPlay] responseData Check : " + responseData);
-                                            Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                                            Log.i(TAG, "[changeStreaming] responseData Check : " + responseData);
+                                            Log.i(TAG, "[changeStreaming] -----------------------------------------------");
                                             if (responseData.equals("1")) {
-                                                Log.i("[Main]", "[RightPlay] responseData 가 1일 때 : " + responseData);
-                                                Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                                                Log.i(TAG, "[changeStreaming] responseData 가 1일 때 : " + responseData);
+                                                Log.i(TAG, "[changeStreaming] -----------------------------------------------");
                                                 Toast.makeText(getApplicationContext(), "아이디 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show();
                                             } else {
-                                                Log.i("[Main]", "[RightPlay] responseData 가 1이 아닐 때 : " + responseData);
-                                                Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                                                Log.i(TAG, "[changeStreaming] responseData 가 1이 아닐 때 : " + responseData);
+                                                Log.i(TAG, "[changeStreaming] -----------------------------------------------");
 //                                                        startActivityString(MainActivity.class, "nickname", responseData);
 
                                                 String songInfo = responseData;
-                                                Log.i(TAG, "[RightPlay] songInfo Check : " + songInfo);
+                                                Log.i(TAG, "[changeStreaming] songInfo Check : " + songInfo);
 
                                                 String[] numCut = songInfo.split("___");
                                                 String num = numCut[0];
-                                                Log.i(TAG, "[RightPlay]songInfo num Check : " + num);
+                                                Log.i(TAG, "[changeStreaming] ongInfo num Check : " + num);
 
                                                 String deleteNum = numCut[1];
                                                 String[] artistCut = deleteNum.split("###");
                                                 artist = artistCut[0];
-                                                Log.i(TAG, "[RightPlay]songInfo artist Check : " + artist);
+                                                Log.i(TAG, "[changeStreaming] songInfo artist Check : " + artist);
 
                                                 String deleteArtist = artistCut[1];
                                                 String[] pathCut = deleteArtist.split("@@@");
                                                 String path = pathCut[0];
-                                                Log.i(TAG, "[RightPlay]songInfo path Check : " + path);
+                                                Log.i(TAG, "[changeStreaming] songInfo path Check : " + path);
 
                                                 time = pathCut[1];
-                                                Log.i(TAG, "[RightPlay]songInfo time Check : " + time);
+                                                Log.i(TAG, "[changeStreaming] songInfo time Check : " + time);
 
                                                 String[] nameCut = path.split("/");
                                                 name = nameCut[4];
                                                 String reName = name.replace("_", " ");
-                                                Log.i(TAG, "[RightPlay]songInfo name Check : " + name);
+                                                Log.i(TAG, "[changeStreaming] songInfo name Check : " + name);
 
-                                                Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                                                Log.i(TAG, "[changeStreaming]  -----------------------------------------------");
 
-//                                                          경로 가져와서 음악 재생 시켜준 뒤
-//                                                          초수 세팅
-
-                                                // TODO 4.close Player 조건 잘 세워야 함
-//                                                        closePlayer();
-//                                                        mediaPlayer = new MediaPlayer();
                                                 mediaPlayer.setLooping(false);
-                                                Log.i(TAG, "[RightPlay] MediaPlayer 생성");
+                                                Log.i(TAG, "[changeStreaming]  MediaPlayer 생성");
 
                                                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                                                Log.i(TAG, "[RightPlay] mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)");
+                                                Log.i(TAG, "[changeStreaming] mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)");
 
-
-                                                // 수정한 부분
+                                                // 경로
                                                 String uri = "http://54.180.155.66/" + name;
-                                                Log.i(TAG, "[RightPlay] file name from music table : " + uri);
-                                                //
+                                                Log.i(TAG, "[changeStreaming] file name from music table : " + uri);
 
                                                 mediaPlayer.setDataSource(uri);
 
                                                 isPlaying = true;
 //                                                play.setText("❚❚");
-                                                Log.i(TAG, "[RightPlay] mediaPlayer.setDataSource(path)");
-
+                                                Log.i(TAG, "[changeStreaming] mediaPlayer.setDataSource(path)");
 
                                                 mediaPlayer.prepareAsync();
-                                                Log.i(TAG, "[RightPlay] mediaPlayer.prepareAsync()");
+                                                Log.i(TAG, "[changeStreaming] mediaPlayer.prepareAsync()");
 
                                                 // TODO
                                                 mainSeekBar.setMax(mediaPlayer.getDuration());
-                                                //
 
                                                 mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
-                                                Log.i(TAG, "[RightPlay] mediaPlayer.setWakeMode");
-                                                Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                                                Log.i(TAG, "[changeStreaming] mediaPlayer.setWakeMode");
+                                                Log.i(TAG, "[changeStreaming]  -----------------------------------------------");
 
 //                                                gif.playing();
 
                                                 // TODO gif 직접추가
                                                 Glide.with(mainCtx)
                                                         .asGif()
-                                                        .load(R.drawable.sea_gif)
+                                                        .load(R.drawable.gradation)
                                                         .centerCrop()
                                                         .listener(new RequestListener<GifDrawable>() {
                                                             @Override
@@ -1742,7 +1824,7 @@ public class MainActivity extends AppCompatActivity {
                                                 mainLogo.setAlpha(0.8f);
                                                 upload.setAlpha(0.8f);
 
-//                                                        // TODO ADD for SeekBar Moving
+                                                // TODO ADD for SeekBar Moving
                                                 if (mediaPlayer.isPlaying()) {
                                                     mediaPlayer.stop();
                                                     try {
@@ -1761,69 +1843,9 @@ public class MainActivity extends AppCompatActivity {
                                                     Thread();
                                                 }
 
-                                                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                                                    @Override
-                                                    public void onCompletion(MediaPlayer mp) {
-                                                        // 다음곡을 재생하는 코드를 여기에 적어
-                                                        isPlaying = false;
-//                                                        rightPlayBtn.performClick();
-//                                                        mediaPlayer.reset();
-//                                                        changeStreaming();
-//                                                        mediaPlayer.start();
-//                                                        mainSeekBar.setProgress(0);
-//                                                        updateSeekBar();
-
-                                                    }
-                                                });
-
-                                                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                                                    @Override
-                                                    public void onPrepared(MediaPlayer mp) {
-                                                        Log.i(TAG, "[RightPlay] mediaPlayer.setOnPreparedListener");
-                                                        mainSeekBar.setMax(mediaPlayer.getDuration());
-                                                        mediaPlayer.start();
-                                                        updateSeekBar();
-//                                                                changeSeekbar();
-                                                        Log.i(TAG, "[RightPlay] mediaPlayer.start()");
-                                                        Log.i(TAG, "[RightPlay] -----------------------------------------------");
-                                                    }
-                                                });
-
-
-//                                                        // TODO When SeekBar click, move to time from mp3 file
-                                                mainSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                                                    @Override
-                                                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                                                        Log.i(TAG, "[RightPlay] SeekBar onProgressChanged");
-                                                        Log.i(TAG, "[RightPlay] -----------------------------------------------");
-                                                        if (fromUser) {
-                                                            mediaPlayer.seekTo(progress);
-                                                        }
-                                                    }
-
-                                                    //
-                                                    @Override
-                                                    public void onStartTrackingTouch(SeekBar seekBar) {
-                                                        Log.i(TAG, "[RightPlay] SeekBar onStartTrackingTouch");
-                                                        Log.i(TAG, "[RightPlay] -----------------------------------------------");
-                                                        isDragging = true;
-                                                    }
-
-                                                    @Override
-                                                    public void onStopTrackingTouch(SeekBar seekBar) {
-                                                        Log.i(TAG, "[RightPlay] SeekBar onStopTrackingTouch");
-                                                        Log.i(TAG, "[RightPlay] -----------------------------------------------");
-                                                        isDragging = false;
-                                                    }
-                                                });
-//
-//                                                        // TODO. END for SeekBar
-
-
                                                 // TODO TOAST
-//                                                Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
                                                 toast.show();
-
 
                                                 updateSeekBar();
 
@@ -1833,47 +1855,39 @@ public class MainActivity extends AppCompatActivity {
                                                 String[] exceptMp3 = name.split(".mp3");
                                                 String justName = exceptMp3[0];
                                                 String reReName = justName.replace("_", " ");
-                                                // _ <- 이거를 공백으로 대체할 수 있을까?
 
                                                 Log.i(TAG, "[RightPlay] song just name 확인 : " + reReName);
                                                 Log.i(TAG, "[RightPlay] -----------------------------------------------");
 
-
                                                 mainLogo = findViewById(R.id.mainLogo);
-                                                mainLogo.setText(reReName);
+                                                mainLogo.setText(reReName + " • " + artist);
+                                                now_song = reReName;
+                                                Log.i(TAG, "now_song now 3 : " + now_song);
+
+                                                // TODO selectLikes
+                                                updateHeart();
+
+                                                // TODO user Listened music Info add 2
+                                                // Arraylist로 변경
+                                                played = played + now_song + "//";
+                                                Log.i(TAG, "User Played Check : " + played);
 
                                                 if (!responseData.equals(0)) {
 //                                                            responserData " + " 기준으로 잘라줘야 해
                                                     Log.i("[RightPlay]", "responseData 가 0이 아닐 때 : " + responseData);
                                                     Log.i(TAG, "[RightPlay] -----------------------------------------------");
 
-
-                                                }
-
+                                                } // if
                                             }
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
-
                                 }
-
                             });
-
                         }
-
                     });
-
-//                        첫 재생 playAudio
-//                        playAudio();
-
-
-                    // 재생 됐는지 체크
-//                    playCheck = true;
-
-
                 }
-
 
                 // 아래 if (playCHeck == false 닫아주는 중괄호
             } else { // <-> if (playCheck == true
@@ -1891,6 +1905,7 @@ public class MainActivity extends AppCompatActivity {
 //                        // TODO 원래 new 연산자 안 썼는데 null 떠서 우선 생성해줌
 ////                                mediaPlayer = new MediaPlayer();
 //                        mediaPlayer.start();
+
                     } else if (!mediaPlayer.isPlaying()) {
 //                        mediaPlayer.seekTo(playPosition);
 //                        Log.i(TAG, "playPosition Check : " + playPosition);
@@ -1919,22 +1934,14 @@ public class MainActivity extends AppCompatActivity {
 //                        Log.i(TAG, "playCheck : " + playCheck);
 //
 //                    }
-//
-//                } // 재생 버튼이 일시정지 모양일 때
-//                // + 예외 처리
-//                else {
-//                    Log.i(TAG, "재생 버튼 모양이 재생도 일시정지도 아님");
                 }
-
             } // if (playCheck == true 닫아주는 중괄호
-
 
         } else {
             Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
+        } // else
+    } // changeStreaming
 
-        }
-
-    }
 
     // TODO randomNumber Method
     public void randomNumber() {
@@ -2417,6 +2424,7 @@ public class MainActivity extends AppCompatActivity {
                         // 서브 스레드 UI 변경할 경우 에러
                         // 메인 스레드 UI 설정
                         runOnUiThread(new Runnable() {
+                            @RequiresApi(api = Build.VERSION_CODES.Q)
                             @Override
                             public void run() {
 
@@ -2484,6 +2492,7 @@ public class MainActivity extends AppCompatActivity {
                                             Log.i(TAG, "[LeftPlay] mediaPlayer.setDataSource(path)");
 
 
+                                            //TODO past Streaming
                                             mediaPlayer.prepareAsync();
                                             Log.i(TAG, "[LeftPlay] mediaPlayer.prepareAsync()");
 
@@ -2500,7 +2509,7 @@ public class MainActivity extends AppCompatActivity {
                                             // TODO gif 직접추가
                                             Glide.with(mainCtx)
                                                     .asGif()
-                                                    .load(R.drawable.sea_gif)
+                                                    .load(R.drawable.gradation)
                                                     .centerCrop()
                                                     .listener(new RequestListener<GifDrawable>() {
                                                         @Override
@@ -2550,56 +2559,70 @@ public class MainActivity extends AppCompatActivity {
                                                 Thread();
                                             }
 
-                                            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                                                @Override
-                                                public void onCompletion(MediaPlayer mp) {
-                                                    // 다음곡을 재생하는 코드를 여기에 적어
-                                                    isPlaying = false;
-                                                    mainSeekBar.setProgress(0);
-//                                                        rightPlayBtn.performClick();
-                                                }
-                                            });
+//                                            // TODO - next song streaming (Left Play - Before Song)
+//                                            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                                                @Override
+//                                                public void onCompletion(MediaPlayer mp) {
+//                                                    long endTime = System.currentTimeMillis();
+//                                                    long playbackTime = endTime - startTime;
+//                                                    totalPlayTime += playbackTime;
+//                                                    int totalPlayTimeSeconds = (int) (totalPlayTime / 1000);
+//                                                    Log.i(TAG, "totalPlayTime Check left : " + totalPlayTimeSeconds);
+//
+//                                                    isPlaying = false;
+//                                                    play.setText("❚❚");
+//                                                    mainSeekBar.setProgress(0);
+//                                                    playCheck = true;
+//
+//                                                    changeStreaming();
+//                                                    mediaPlayer.start();
+//                                                    Log.i(TAG, "Auto changeStreaming 3");
+//                                                    commentAdapter.clearItems();
+//                                                    commentAdapter.notifyDataSetChanged();
+////                                                        rightPlayBtn.performClick();
+//                                                }
+//                                            });
 
-                                            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                                                @Override
-                                                public void onPrepared(MediaPlayer mp) {
-                                                    Log.i(TAG, "[LeftPlay] mediaPlayer.setOnPreparedListener");
-                                                    mainSeekBar.setMax(mediaPlayer.getDuration());
-                                                    mediaPlayer.start();
-                                                    updateSeekBar();
-//                                                                changeSeekbar();
-                                                    Log.i(TAG, "[LeftPlay] mediaPlayer.start()");
-                                                    Log.i(TAG, "[LeftPlay] -----------------------------------------------");
-                                                }
-                                            });
+//                                            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                                                @Override
+//                                                public void onPrepared(MediaPlayer mp) {
+//                                                    Log.i(TAG, "[LeftPlay] mediaPlayer.setOnPreparedListener");
+//                                                    mainSeekBar.setMax(mediaPlayer.getDuration());
+//                                                    mediaPlayer.start();
+//                                                    updateSeekBar();
+////                                                                changeSeekbar();
+//                                                    Log.i(TAG, "[LeftPlay] mediaPlayer.start()");
+//                                                    Log.i(TAG, "[LeftPlay] -----------------------------------------------");
+//                                                }
+//                                            });
 
 
 //                                                        // TODO When SeekBar click, move to time from mp3 file
-                                            mainSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                                                @Override
-                                                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                                                    Log.i(TAG, "[LeftPlay] SeekBar onProgressChanged");
-                                                    Log.i(TAG, "[LeftPlay] -----------------------------------------------");
-                                                    if (fromUser) {
-                                                        mediaPlayer.seekTo(progress);
-                                                    }
-                                                }
-
-                                                //
-                                                @Override
-                                                public void onStartTrackingTouch(SeekBar seekBar) {
-                                                    Log.i(TAG, "[LeftPlay] SeekBar onStartTrackingTouch");
-                                                    Log.i(TAG, "[LeftPlay] -----------------------------------------------");
-                                                    isDragging = true;
-                                                }
-
-                                                @Override
-                                                public void onStopTrackingTouch(SeekBar seekBar) {
-                                                    Log.i(TAG, "[LeftPlay] SeekBar onStopTrackingTouch");
-                                                    Log.i(TAG, "[LeftPlay] -----------------------------------------------");
-                                                    isDragging = false;
-                                                }
-                                            });
+//                                            mainSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//                                                @Override
+//                                                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                                                    Log.i(TAG, "[LeftPlay] SeekBar onProgressChanged");
+//                                                    Log.i(TAG, "[LeftPlay] -----------------------------------------------");
+//                                                    if (fromUser) {
+//                                                        mediaPlayer.seekTo(progress);
+//                                                    }
+//                                                }
+//
+//                                                //
+//                                                @Override
+//                                                public void onStartTrackingTouch(SeekBar seekBar) {
+//                                                    Log.i(TAG, "[LeftPlay] SeekBar onStartTrackingTouch");
+//                                                    Log.i(TAG, "[LeftPlay] -----------------------------------------------");
+//                                                    isDragging = true;
+//                                                }
+//
+//                                                @Override
+//                                                public void onStopTrackingTouch(SeekBar seekBar) {
+//                                                    Log.i(TAG, "[LeftPlay] SeekBar onStopTrackingTouch");
+//                                                    Log.i(TAG, "[LeftPlay] -----------------------------------------------");
+//                                                    isDragging = false;
+//                                                }
+//                                            });
                                             toast.show();
 
 
@@ -2618,7 +2641,8 @@ public class MainActivity extends AppCompatActivity {
 
 
                                             mainLogo = findViewById(R.id.mainLogo);
-                                            mainLogo.setText(reReName);
+                                            mainLogo.setText(reReName + " • " + artist);
+                                            now_song = reReName;
 
                                             if (!responseData.equals(0)) {
 //                                                            responserData " + " 기준으로 잘라줘야 해
@@ -2677,7 +2701,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(retrofit2.Call<ResponseModel> call, retrofit2.Response<ResponseModel> response) {
                 if (response.isSuccessful()) {
                     // 성공적인 응답 처리
-                    Toast.makeText(MainActivity.this, "Data selected successfully", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this, "Data selected successfully", Toast.LENGTH_SHORT).show();
                     ResponseModel responseModel = response.body();
 
                     if (responseModel != null) {
@@ -2703,31 +2727,29 @@ public class MainActivity extends AppCompatActivity {
                             UuidDao uuidDao = db.uuidDao();
 
                             new Thread(() -> {
-                               uuidDao.deleteAll();
-                            }).start();
+                                // 데이터베이스의 기존 UUID를 삭제합니다.
+                                uuidDao.deleteAll();
 
-                            new Thread(() -> {
+                                // 새로 받은 UUID를 데이터베이스에 삽입합���다.
                                 for (Uuid uuidEntity : uuidEntities) {
                                     uuidDao.insert(uuidEntity);
                                 }
-                            }).start();
-
 
                                 // 저장이 완료된 후 데이터베이스에서 모든 UUID를 가져와 출력합니다.
-                            runOnUiThread(() -> {
-                                db.uuidDao().getAll().observe(MainActivity.this, uuids -> {
-                                    if (uuids.isEmpty()) {
-                                        Toast.makeText(MainActivity.this, "데이터베이스가 비어 있습니다.", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        StringBuilder sb = new StringBuilder();
-                                        for (Uuid uuid : uuids) {
-                                            sb.append("UUID : ").append(uuid.uuid).append("\n");
-                                        } // for END
-                                        Log.i(TAG, "UUID: " + sb.toString());
-                                    } // else END
-                                }); // observer END
-                            }); // runOnUiThread END
-
+                                runOnUiThread(() -> {
+                                    db.uuidDao().getAll().observe(MainActivity.this, uuids -> {
+                                        if (uuids.isEmpty()) {
+                                            Toast.makeText(MainActivity.this, "데이터베이스가 비어 있습니다.", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            StringBuilder sb = new StringBuilder();
+                                            for (Uuid uuid : uuids) {
+                                                sb.append("UUID : ").append(uuid.uuid).append("\n");
+                                            }
+                                            Log.i(TAG, "UUID: " + sb.toString());
+                                        }
+                                    });
+                                });
+                            }).start();
                         } else {
                             Log.d(TAG, "uuids : " + "응답 데이터가 null 입니다.");
                             editor.putString("UUID", "none_uuid");
@@ -2750,5 +2772,520 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    void setCommentView() {
+        commentView = findViewById(R.id.commentView);
+        commentLayoutManager = new LinearLayoutManager(this);
+        commentView.setLayoutManager(commentLayoutManager);
+        commentView.setHasFixedSize(true);
+        commentAdapter = new CommentAdapter(this, commentList);
+        commentView.setAdapter(commentAdapter);
+    }
+
+    void commentListAddItem() {
+//        CommentModel commentModel = new CommentModel(user_name, song_name, selected_time, msg);
+        getUserName = getIntent().getStringExtra("user_name");
+        getSongName = getIntent().getStringExtra("song_name");
+        getSelectedTime = getIntent().getStringExtra("selected_time");
+        getMsg = getIntent().getStringExtra("msg");
+        Log.i(TAG, "commentList - getIntent getUserName : " + getUserName);
+        Log.i(TAG, "commentList - getIntent getSongName : " + getSongName);
+        Log.i(TAG, "commentList - getIntent getSelectedTime : " + getSelectedTime);
+        Log.i(TAG, "commentList - writeComment check : " + getMsg);
+
+        CommentModel item = new CommentModel(getMsg);
+        commentList.add(item);
+        commentAdapter.addItem(item);
+        commentAdapter.notifyDataSetChanged();
+    } // commentListAddItem
+
+    private void startSyncComments() {
+        Log.i(TAG, "startSyncComments");
+        syncHandler = new Handler();
+
+        syncRunnable = new Runnable() {
+            @RequiresApi(api = Build.VERSION_CODES.Q)
+            @Override
+            public void run() {
+                Log.i(TAG, "startSyncComments");
+                try {
+                    int currentPositionInMilliseconds = mediaPlayer.getCurrentPosition();
+                    int currentPositionSeconds = currentPositionInMilliseconds / 1000;
+                    int minutes = currentPositionSeconds / 60;
+                    int seconds = currentPositionSeconds % 60;
+                    Log.i(TAG, "startSyncComments currentPositionSeconds : " + currentPositionInMilliseconds);
+                    String timeFormatted = String.format("%02d:%02d", minutes, seconds);
+                    Log.i(TAG, "startSyncComments positionSecondsStr : " + timeFormatted);
+                    incrementSongView();
+
+                    fetchAndDisplayComments(timeFormatted);
+                    syncHandler.postDelayed(syncRunnable, syncInterval);
+
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                } // catch
+
+            } // run
+        }; // syncRunnable
+        syncHandler.postDelayed(syncRunnable, syncInterval);
+    } // startSyncComments
+
+    private void fetchAndDisplayComments(String currentTime) {
+        Log.i(TAG, "fetchAndDisplayComments method");
+
+        String songName = mainLogo.getText().toString();
+        Log.i(TAG, "now playing song name : " + songName);
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        ServerApi commentService = retrofit.create(ServerApi.class);
+
+        // TODO. 곡 이름 기준으로 모든 행 정보가져옴
+        retrofit2.Call<List<CommentModel>> call = commentService.getComments(songName);
+        call.enqueue(new retrofit2.Callback<List<CommentModel>>() {
+            @Override
+            public void onResponse(retrofit2.Call<List<CommentModel>> call, retrofit2.Response<List<CommentModel>> response) {
+
+                if (response.isSuccessful()) {
+                    String responseBody = new Gson().toJson(response.body());
+                    Log.i(TAG, "fetchAndDisplayComments onResponse : " + response.code());
+                    Log.i(TAG, "fetchAndDisplayComments Server ResponseBody: " + responseBody);
+                    Log.i(TAG, "fetchAndDisplayComments Server Response: " + response);
+                    Log.i(TAG, "fetchAndDisplayComments Server Response.message : " + response.message());
+                    Log.i(TAG, "fetchAndDisplayComments response.isSuccessful");
+                    List<CommentModel> comments = response.body();
+
+//                    if (comments != null) {
+                    Log.i(TAG, "fetchAndDisplayComments comment != null");
+                    commentAdapter.clearItems();
+                    Log.i(TAG, "fetchAndDisplayComments currentTime : " + currentTime);
+                    int currentTimeSeconds = timeStringToSeconds(currentTime);
+                    Log.i(TAG, "fetchAndDisplayComments currentTimeSeconds : " + currentTimeSeconds);
+                    int lowerBound = currentTimeSeconds - TIME_RANGE / 2;
+                    Log.i(TAG, "fetchAndDisplayComments lowerBound : " + lowerBound);
+                    int upperBound = currentTimeSeconds + TIME_RANGE / 2;
+                    Log.i(TAG, "fetchAndDisplayComments upperBound : " + upperBound);
+
+                    // TODO - for문 진입을 안 한 듯이 보임
+                    for (CommentModel comment : comments) {
+                        Log.i(TAG, "onResponse get Comment");
+                        if (!comments.contains(null)) {
+                            Log.i(TAG, "fetchAndDisplayComments contains !null : " + comments);
+//                        try {
+
+//                        if (getUserName != null || !getUserName.equals("")) {
+                            String user = comment.getUser_name();
+                            Log.i(TAG, "fetchAndDisplayComments user_name : " + user);
+                            String song = comment.getSong_name();
+                            Log.i(TAG, "fetchAndDisplayComments song_name : " + song);
+                            String selected_time = comment.getSelected_time();
+                            Log.i(TAG, "fetchAndDisplayComments selected_time : " + selected_time);
+                            int selectedTimeSeconds = timeStringToSeconds(selected_time);
+                            Log.i(TAG, "fetchAndDisplayComments selectedTimeSeconds : " + selectedTimeSeconds);
+                            // TODO selected_time int로 변환
+                            String msg = comment.getMsg();
+                            Log.i(TAG, "fetchAndDisplayComments message : " + msg);
+
+                            // TODO 현재는 곡 기준으로 다
+                            if (selectedTimeSeconds >= lowerBound && selectedTimeSeconds <= upperBound) {
+                                // 범위 내에 있을 경우, 리사이클러뷰에 추가
+                                Log.i(TAG, "fetchAndDisplayComments recyclerview add");
+                                commentList.add(comment);
+
+                            } else {
+                                Log.i(TAG, "fetchAndDisplayComments 범위에 해당되지 않습니다");
+                            } // else
+                        } else {
+                            Log.i(TAG, "fetchAndDisplayComments contains null : " + comments);
+                        }
+//                        } // if
+//                        } catch (NullPointerException e) {
+//                            Toast.makeText(MainActivity.this, "ERROR : " + e, Toast.LENGTH_SHORT).show();
+//                        } // catch
+                    } // for END
+                    commentAdapter.notifyDataSetChanged();
+//                    } // if (comments != null)
+                } else {
+                    Toast.makeText(MainActivity.this, "check the comment response", Toast.LENGTH_SHORT).show();
+                } // else
+            } // onResponse
+
+            @Override
+            public void onFailure(retrofit2.Call<List<CommentModel>> call, Throwable t) {
+                Log.i(TAG, "fetchAndDisplayComments onFailure : " + t.getMessage());
+            } // onFailure
+        }); // call.enqueque
+    } // method END
+
+    private int timeStringToSeconds(String timeString) {
+        String[] timeParts = timeString.split(":");
+        int minutes = Integer.parseInt(timeParts[0]);
+        int seconds = Integer.parseInt(timeParts[1]);
+
+        return minutes * 60 + seconds;
+    } // timeStringToSeconds
+
+    void incrementSongView() {
+        // TODO -
+        currentTimeForViewsIncrement = System.currentTimeMillis();
+        totalPlayTime += currentTimeForViewsIncrement - startTime;
+        totalPlayTimeSecondsForViewsCount = (int) (totalPlayTime / 1000);
+        Log.i(TAG, "totalPlayTimeSeconds Check : " + totalPlayTimeSecondsForViewsCount);
+
+        nowPlayingStr = nowPlayingPreference.getString(getApplicationContext(), "now_playing");
+        String nowState = mainLogo.getText().toString();
+        selectLikes();
+
+        // TODO total views
+        if (totalPlayTimeSecondsForViewsCount >= 100 && !nowState.equals(nowPlayingStr)) {
+            //  TODO - 해당 곡의 총 길이수에 % 기준으로 잘라와 *초수 기준말고
+            Log.i(TAG, "increment song - if) totalPlayTimeSeconds >= 5 : " + totalPlayTimeSecondsForViewsCount + " / " + nowState + " / " + nowPlayingStr);
+            // TODO 곡 조회수 누적
+            incrementSongCount();
+            setNowPlayingShared(nowState);
+
+        } else if (nowState.equals(nowPlayingStr)) {
+            Log.i(TAG, "increment song - else if) now playing == now playing shared : " + totalPlayTimeSecondsForViewsCount + " / " + nowState + " / " + nowPlayingStr);
+        } // else if
+//        else {
+//            Log.i(TAG, "totalPlayTimeSeconds <= 30 : " + totalPlayTimeSeconds);
+//        } // else END
+
+        playPosition = mediaPlayer.getCurrentPosition();
+        Log.d("[PAUSE CHECK]", "" + playPosition);
+        Log.i(TAG, "playCheck : " + playCheck);
+    } // incrementSongView END
+
+    void setNowPlayingShared(String now) {
+        nowPlayingPreference = new PreferenceManager();
+        nowPlayingPreference.settingShared(getApplicationContext(), "now_playing", now);
+    } // setNowPlayingShared
+
+    void onHeartClicked(View view) {
+
+        if (mainLogo.getText().equals("날씨 : 선선함")) {
+            Log.i(TAG, "updateLikes onHeartClicked if)");
+
+        } else {
+            Log.i(TAG, "updateLikes onHeartClicked else)");
+            String user_id = logIn.getText().toString();
+            Log.i(TAG, "updateLikes user : " + user_id);
+            String song_name = mainLogo.getText().toString();
+            Log.i(TAG, "updateLikes song : " + song_name);
+
+            if (isHeartFilled) {
+                // TODO - delete liked
+                updateLikes(user_id, song_name);
+                Log.i(TAG, "updateLikes onHeartClicked if) isHeartFilled : " + isHeartFilled);
+                heart.setImageResource(R.drawable.purple_empty_heart);
+
+            } else {
+                Log.i(TAG, "updateLikes onHeartClicked else) !isHeartFilled : " + isHeartFilled);
+
+//                if (mainLogo.getText().equals(getSongName)) {
+                // TODO - add liked
+                updateLikes(user_id, song_name);
+                heart.setImageResource(R.drawable.purple_full_heart);
+
+//                } else {
+//                    Log.i(TAG, "updateLikes onHexartClicked else) getSongName : " + getSongName);
+//
+//                } // else
+            } // else
+
+            isHeartFilled = !isHeartFilled;
+            Log.i(TAG, "onHeartClicked isHeartFilled check : " + isHeartFilled);
+        }
+    } // onHeartClicked
+
+    void updateLikes(String user_id, String song_name) {
+        Log.i(TAG, "updateLikes");
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        ServerApi updateLikesApi = retrofit.create(ServerApi.class);
+        retrofit2.Call<List<UpdateLikedModel>> call = updateLikesApi.updateLikes(user_id, song_name);
+
+        call.enqueue(new retrofit2.Callback<List<UpdateLikedModel>>() {
+            @Override
+            public void onResponse(retrofit2.Call<List<UpdateLikedModel>> call, retrofit2.Response<List<UpdateLikedModel>> response) {
+                Log.i(TAG, "updateLikes onResponse");
+
+                if (response.isSuccessful()) {
+                    String responseBody = new Gson().toJson(response.body());
+                    Log.i(TAG, "updateLikes response success : " + responseBody);
+                    List<UpdateLikedModel> updateLikedModels = response.body();
+                    Log.i(TAG, "updateLikes response.body : " + updateLikedModels);
+
+                } else {
+                    Log.i(TAG, "updateLikes response failed : " + response.body());
+
+                }
+            } // onResponse
+
+            @Override
+            public void onFailure(retrofit2.Call<List<UpdateLikedModel>> call, Throwable t) {
+                Log.i(TAG, "updateLikes onFailure : " + t.getMessage());
+            } // onFailure
+        });
+    } // updateLikes
+
+    void selectLikes() {
+        Log.i(TAG, "selectLikes : " + logIn.getText().toString());
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        String user_id = logIn.getText().toString();
+        Log.i(TAG, "selectLikes user : " + user_id);
+
+        ServerApi selectLikesApi = retrofit.create(ServerApi.class);
+        retrofit2.Call<List<UpdateLikedModel>> call = selectLikesApi.selectLikes(user_id);
+
+        call.enqueue(new retrofit2.Callback<List<UpdateLikedModel>>() {
+            @Override
+            public void onResponse(retrofit2.Call<List<UpdateLikedModel>> call, retrofit2.Response<List<UpdateLikedModel>> response) {
+                Log.i(TAG, "selectLikes onResponse");
+
+                if (response.isSuccessful()) {
+                    String responseBody = new Gson().toJson(response.body());
+                    Log.i(TAG, "selectLikes response success : " + responseBody);
+                    List<UpdateLikedModel> selectModels = response.body();
+                    Log.i(TAG, "selectLikes response.body : " + selectModels);
+
+                    for (UpdateLikedModel selectModel : selectModels) {
+                        String user = selectModel.getUser_id();
+                        Log.i(TAG, "selectLikes user : " + user);
+                        String song = selectModel.getSong_name();
+                        Log.i(TAG, "selectLikes song : " + song);
+
+                        selectLikedList.add(selectModel);
+                    }
+                } else {
+                    Log.i(TAG, "selectLikes response failed : " + response.body());
+
+                }
+            } // onResponse
+
+            @Override
+            public void onFailure(retrofit2.Call<List<UpdateLikedModel>> call, Throwable t) {
+                Log.i(TAG, "selectLikes onFailure : " + t.getMessage());
+            } // onFailure
+        });
+    } // selectLikes
+
+    void updateHeart() {
+        selectLikes();
+        String likedSongsCheck = "";
+
+        for (int i = 0; i < selectLikedList.size(); i++) {
+            likedSongsCheck = likedSongsCheck + selectLikedList.get(i).getSong_name() + ",  ";
+            Log.i(TAG, "isHeartFilled for check : " + likedSongsCheck + " / " + selectLikedList.get(i).getSong_name());
+
+            Log.i(TAG, "isHeartFilled now : " + now_song);
+            Log.i(TAG, "now_song now 2 : " + now_song);
+
+            try {
+
+                if (likedSongsCheck.contains(now_song)) {
+                    Log.i(TAG, "isHeartFilled check : " + now_song + " / " + likedSongsCheck + " / " + selectLikedList.get(i).getSong_name());
+                    isHeartFilled = true;
+                    heart.setImageResource(R.drawable.purple_full_heart);
+
+                } else {
+                    isHeartFilled = false;
+                    heart.setImageResource(R.drawable.purple_empty_heart);
+                } // else
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+            if (likedSongsCheck.length() > 100) {
+                selectLikedList.clear();
+            } // if
+        }
+    } // updateHeart
+
+    void setMediaPlayer() {
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @RequiresApi(api = Build.VERSION_CODES.Q)
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                Log.i(TAG, "mediaPlayer.setOnPreparedListener");
+                mainSeekBar.setProgress(0);
+                mainSeekBar.setMax(mediaPlayer.getDuration());
+                mediaPlayer.start();
+                isNowPlaying = true;
+                startTime = System.currentTimeMillis();
+                updateSeekBar();
+                if (mediaPlayer.isPlaying()) {
+                    startSyncComments();
+                } else {
+                    Log.i(TAG, "노래 일시정지");
+                }
+                Log.i(TAG, "mediaPlayer.start()");
+            }
+        });
+
+        // TODO When SeekBar click, move to time from mp3 file
+        mainSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                Log.i(TAG, "SeekBar onProgressChanged");
+                if (logIn.getText().toString().equals("LOG IN")) {
+
+                } else {
+                    if (fromUser) {
+                        mediaPlayer.seekTo(progress);
+                        Log.i(TAG, "fromUser");
+                    } // if
+
+                } // else END
+
+                // TODO progress bar 기준으로
+                if (progress == seekBar.getMax() && seekBar.getMax() > 0) {
+                    changeSong();
+                } // if
+            } // onProgressChanged
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                Log.i(TAG, "SeekBar onStartTrackingTouch");
+                isDragging = true;
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                Log.i(TAG, "SeekBar onStopTrackingTouch");
+                isDragging = false;
+            }
+        });
+
+        // TODO - next song streaming (Now Song)
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @RequiresApi(api = Build.VERSION_CODES.Q)
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                long endTime = System.currentTimeMillis();
+                long playbackTime = endTime - startTime;
+                totalPlayTime += playbackTime;
+                int totalPlayTimeSeconds = (int) (totalPlayTime / 1000);
+                Log.i(TAG, "totalPlayTime Check now : " + totalPlayTimeSeconds);
+
+                isPlaying = false;
+                play.setText("❚❚");
+                playCheck = true;
+
+//                changeSong();
+//                mediaPlayer.start();
+//                changeStreaming();
+//                Log.i(TAG, "Auto changeStreaming : " + mainSeekBar.getProgress() + " / " + mainSeekBar.getMax());
+//                if (mainSeekBar.getProgress() == mainSeekBar.getMax()) {
+//                    mainSeekBar.setProgress(0);
+//                    changeSong();
+//                }
+                commentAdapter.clearItems();
+                commentAdapter.notifyDataSetChanged();
+            }
+        });
+    } // setMediaPlayer END
+
+    void changeSong() {
+
+        Glide.with(mainCtx)
+                .asGif()
+                .load(R.drawable.gradation)
+                .centerCrop()
+                .listener(new RequestListener<GifDrawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<GifDrawable> target, boolean isFirstResource) {
+                        // GIF 파일 로드에 실패한 경우의 처리
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GifDrawable resource, Object model, Target<GifDrawable> target, DataSource dataSource, boolean isFirstResource) {
+                        // GIF 파일 로드에 성공한 경우의 처리
+                        resource.setLoopCount(GifDrawable.LOOP_FOREVER); // 반복 재생 설정
+                        resource.start(); // GIF 파일 재생 시작
+                        return false;
+                    }
+                }).into(mainFull);
+
+        Log.i(TAG, "Auto changeSong");
+        // TODO total views (exception
+        currentTimeForViewsIncrement = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
+        totalPlayTime = 0;
+        totalPlayTimeSecondsForViewsCount = 0;
+
+        if (logIn.getText().toString().equals("LOG IN")) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+            builder.setTitle("〈 Please Check the Log In 〉");
+
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            builder.show();
+        } else {
+            if (play.getText().toString().equals("")) {
+
+                Log.i(TAG, "play의 모양이 아무것도 없을 때");
+
+            } else {
+
+                Log.i(TAG, "play의 모양이 아무것도 없지않을 때");
+
+                play.setText("▶");
+
+                Log.i(TAG, "RightPlay 버튼 클릭");
+                Log.i(TAG, "RightPlay-------------------------------------------");
+
+
+                if (mediaPlayer.isPlaying() || !playCheck) {
+                    Log.i(TAG, "mediaPlayer.isPlaying() || playCheck == false");
+                    play.setText("▶"); //TODO GOOD!
+                    if (play.getText().toString().equals("▶")) {
+                        Log.i(TAG, "[RightPlay] 플레이 모양이 재생일 때");
+
+                        onStopButtonClick();
+                    }
+                } else {
+                    Log.i(TAG, "!mediaPlayer.isPlaying() || playCheck == true");
+
+                    Log.i(TAG, "mediaPlayer.isPlaying() || playCheck == false");
+                    play.setText("▶"); //TODO GOOD!
+                    if (play.getText().toString().equals("▶")) {
+                        Log.i(TAG, "[RightPlay] 플레이 모양이 재생일 때");
+
+                        onStopButtonClick();
+                    }
+                }
+            }
+        } // Big else End
+    } // changeSong
 
 } // MainActivity CLASS END
