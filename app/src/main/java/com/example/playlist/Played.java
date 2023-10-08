@@ -1,6 +1,7 @@
 package com.example.playlist;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -34,6 +35,7 @@ public class Played extends Activity {
     androidx.constraintlayout.widget.ConstraintLayout topBar;
     TextView title;
     Button close;
+    String userName;
 
     private static final String BASE_URL = "http://54.180.155.66/";
 
@@ -44,6 +46,7 @@ public class Played extends Activity {
         setContentView(R.layout.activity_played);
 
         initial();
+        setPlayedSongs(userName);
     } // onCreate
 
     private void initial() {
@@ -62,6 +65,10 @@ public class Played extends Activity {
         PlayedRecyclerView.setAdapter(playedAdapter);
 
         setPlayedList();
+
+        Intent intent = getIntent();
+        userName = intent.getStringExtra("userName");
+        Log.i(TAG, "setPlayed : " + userName);
 
     } // initial
 
@@ -95,29 +102,37 @@ public class Played extends Activity {
 
         // TODO. 유저 이름 기준으로 played_list 테이블에서 유저가 들었던 곡들 가져옴
         Call<List<AllSongsModel>> call = playedFetchApi.getPlayedSongs(userName);
+
         call.enqueue(new Callback<List<AllSongsModel>>() {
             @Override
             public void onResponse(Call<List<AllSongsModel>> call, Response<List<AllSongsModel>> response) {
                 Log.i(TAG, "setPlayed onResponse");
 
                 if (response.isSuccessful()) {
+                    Log.i(TAG, "setPlayed response success");
                     String responseBody = new Gson().toJson(response.body());
                     Log.i(TAG, "setPlayed onResponse : " + response.code());
                     Log.i(TAG, "setPlayed Server ResponseBody: " + responseBody);
                     Log.i(TAG, "setPlayed Server Response: " + response);
                     Log.i(TAG, "setPlayed Server Response.message : " + response.message());
                     Log.i(TAG, "setPlayed response.isSuccessful");
-                    List<AllSongsModel> playedList = response.body();
+                    playedAdapter.clearItems();
+                    List<AllSongsModel> played = response.body();
+                    Log.i(TAG, "setPlayed response.body : " + played);
 
-                    for (AllSongsModel played : playedList) {
+                    for (AllSongsModel playedLists : played) {
                         Log.i(TAG, "setPlayed onResponse get PlayedList");
-                        if (!playedList.contains(null)) {
-//                            Log.i(TAG, "setPlayed contains !null : " + );
-                        }
+
+                        String song_name = playedLists.getName();
+                        Log.i(TAG, "setPlayed song_name : " + song_name);
+
+                        Log.i(TAG, "setPlayed recyclerview add");
+                        playedList.add(playedLists);
                     } // for
+                    playedAdapter.notifyDataSetChanged();
 
                 } else {
-
+                    Log.i(TAG, "setPlayed response failed");
                 } // else
             } // onResponse
 
