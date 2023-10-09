@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#AAB9FF"
+    tools:context=".Selectable">
+
+    <Button
+        android:id="@+id/selectableBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        android:fontFamily="sans-serif-black"
+        android:text="HOME"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+
+    <TextView
+        android:id="@+id/myFavoriteTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:text="ღ︎ Liked List"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top3ListLayout"
+        app:layout_constraintVertical_bias="0.00999999" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/likedRecyclerView"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:background="#C7D3FD"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.512"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myFavoriteTextView"
+        app:layout_constraintVertical_bias="0.01999998">
+
+        <!--        <Button-->
+        <!--            android:id="@+id/favCoverImageView"-->
+        <!--            android:layout_width="80dp"-->
+        <!--            android:layout_height="80dp"-->
+        <!--            android:background="#AAB9FF"-->
+        <!--            android:text="▶"-->
+        <!--            android:textSize="22sp"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.05"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent">-->
+        <!--        </Button>-->
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/top3TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:text="Top 3 Songs"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.03" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/top3ListLayout"
+        android:layout_width="300dp"
+        android:layout_height="110dp"
+        android:background="#C7D3FD"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top3TextView"
+        app:layout_constraintVertical_bias="0.01999998">
+
+        <FrameLayout
+            android:id="@+id/top1Frame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/top2Frame"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.39">
+
+            <View
+                android:id="@+id/top1View"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="#AAB9FF"
+                android:fontFamily="sans-serif-black"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/top2View"
+                app:layout_constraintHorizontal_bias="0.333"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.133" />
+
+            <ImageView
+                android:layout_width="30sp"
+                android:layout_height="30sp"
+                android:src="@drawable/gold_medal" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/top1"
+            android:layout_width="70sp"
+            android:layout_height="35sp"
+            android:fontFamily="sans-serif-black"
+            android:text="top 1"
+            android:textAlignment="center"
+            android:textColor="#7878E1"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="@+id/top1Frame"
+            app:layout_constraintEnd_toEndOf="@+id/top1Frame"
+            app:layout_constraintStart_toStartOf="@+id/top1Frame"
+            app:layout_constraintTop_toTopOf="@+id/top1Frame"
+            app:layout_constraintVertical_bias="0.88" />
+
+        <TextView
+            android:id="@+id/top1Text"
+            android:layout_width="80dp"
+            android:layout_height="15dp"
+            android:fontFamily="sans-serif-black"
+            android:text="top1"
+            android:textAlignment="center"
+            android:textColor="#7878E1"
+            android:textSize="9dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.07"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/top1Frame"
+            app:layout_constraintVertical_bias="0.68" />
+
+        <FrameLayout
+            android:id="@+id/top2Frame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/top3Frame"
+            app:layout_constraintStart_toEndOf="@+id/top1Frame"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.39">
+
+            <View
+                android:id="@+id/top2View"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="#AAB9FF"
+                android:fontFamily="sans-serif-black"
+                android:text="top 2"
+                android:textColor="#7878E1"
+                android:textSize="11dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/top3View"
+                app:layout_constraintHorizontal_bias="0.839"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.133" />
+
+            <ImageView
+                android:layout_width="30sp"
+                android:layout_height="30sp"
+                android:src="@drawable/silver_medal" />
+
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/top2"
+            android:layout_width="70sp"
+            android:layout_height="35sp"
+            android:fontFamily="sans-serif-black"
+            android:text="top 2"
+            android:textAlignment="center"
+            android:textColor="#7878E1"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="@+id/top2Frame"
+            app:layout_constraintEnd_toEndOf="@+id/top2Frame"
+            app:layout_constraintStart_toStartOf="@+id/top2Frame"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.88" />
+
+        <TextView
+            android:id="@+id/top2Text"
+            android:layout_width="80dp"
+            android:layout_height="15dp"
+            android:fontFamily="sans-serif-black"
+            android:text="top2"
+            android:textAlignment="center"
+            android:textColor="#7878E1"
+            android:textSize="9dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/top2Frame"
+            app:layout_constraintVertical_bias="0.68" />
+
+        <FrameLayout
+            android:id="@+id/top3Frame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/top2Frame"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.39">
+
+            <View
+                android:id="@+id/top3View"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="#AAB9FF"
+                android:fontFamily="sans-serif-black"
+                android:text="top 3"
+                android:textColor="#7878E1"
+                android:textSize="11dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.96"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.13" />
+
+            <ImageView
+                android:layout_width="30sp"
+                android:layout_height="30sp"
+                android:src="@drawable/bronze_medal" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/top3"
+            android:layout_width="70sp"
+            android:layout_height="35sp"
+            android:fontFamily="sans-serif-black"
+            android:text="top 3"
+            android:textAlignment="center"
+            android:textColor="#7878E1"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="@+id/top3Frame"
+            app:layout_constraintEnd_toEndOf="@+id/top3Frame"
+            app:layout_constraintStart_toStartOf="@+id/top3Frame"
+            app:layout_constraintTop_toTopOf="@+id/top3Frame"
+            app:layout_constraintVertical_bias="0.88" />
+
+        <TextView
+            android:id="@+id/top3Text"
+            android:layout_width="80dp"
+            android:layout_height="15dp"
+            android:fontFamily="sans-serif-black"
+            android:text="top3"
+            android:textAlignment="center"
+            android:textColor="#7878E1"
+            android:textSize="9dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.93"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/top3Frame"
+            app:layout_constraintVertical_bias="0.68" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/allTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:text="ALL Songs"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/likedRecyclerView"
+        app:layout_constraintVertical_bias="0.015" />
+
+    <SeekBar
+        android:id="@+id/allSeekBar"
+        android:layout_width="330dp"
+        android:layout_height="15dp"
+        android:progress="0"
+        android:max="100"
+        android:progressTint="#7878E1"
+        android:thumbTint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.52"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/allRecyclerView"
+        app:layout_constraintVertical_bias="0.17000002" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/allRecyclerView"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:background="#B57878E1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/allTextView"
+        app:layout_constraintVertical_bias="0.16000003" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

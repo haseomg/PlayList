@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#AAB9FF"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/mainFull_ImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <Button
+        android:id="@+id/selectableButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        android:fontFamily="sans-serif-black"
+        android:text="pick"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.01" />
+
+    <TextView
+        android:id="@+id/mainLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:text="날씨 : 선선함"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.29000002" />
+
+    <ImageView
+        android:id="@+id/chatListButton"
+        android:layout_width="30dp"
+        android:layout_height="20dp"
+        android:background="#00FFFFFF"
+        android:fontFamily="sans-serif-black"
+        android:src="@drawable/img"
+        android:text="✉"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/logInButton"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/selectableButton"
+        app:layout_constraintTop_toTopOf="@+id/mainFull_ImageView"
+        app:layout_constraintVertical_bias="0.03" />
+
+    <Button
+        android:id="@+id/logInButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        android:fontFamily="sans-serif-black"
+        android:text="Log In"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.97"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.00999999" />
+
+    <ImageView
+        android:id="@+id/menuButton"
+        android:layout_width="62dp"
+        android:layout_height="62dp"
+        android:src="@drawable/playlist_purple"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rightPlayButton"
+        app:layout_constraintVertical_bias="0.93" />
+
+    <Button
+        android:id="@+id/leftPlayButton"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:background="#00FFFFFF"
+        android:fontFamily="sans-serif-black"
+        android:gravity="center"
+        android:text="〈"
+        android:textColor="#7878E1"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/mainPlayLayout"
+        app:layout_constraintHorizontal_bias="0.27"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.45999998" />
+
+    <Button
+        android:id="@+id/rightPlayButton"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:background="#00FFFFFF"
+        android:fontFamily="sans-serif-black"
+        android:gravity="center"
+        android:text="〉"
+        android:textColor="#7878E1"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/mainPlayLayout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.45999998" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainPlayLayout"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:background="#7878E1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.45">
+
+        <Button
+            android:id="@+id/mainPlayButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00FFFFFF"
+            android:text="▶"
+            android:textSize="53sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/mainPlayingTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:text="00:00"
+        android:textColor="#7878E1"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.271"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainPlayLayout"
+        app:layout_constraintVertical_bias="0.08" />
+
+    <TextView
+        android:id="@+id/mainToPlayTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:text="00:00"
+        android:textColor="#7878E1"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.626"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainPlayLayout"
+        app:layout_constraintVertical_bias="0.08" />
+
+
+    <SeekBar
+        android:id="@+id/mainSeekBar"
+        android:layout_width="160dp"
+        android:layout_height="15dp"
+        android:max='100'
+        android:maxHeight="40dp"
+        android:progress="0"
+        android:min='0'
+        android:minHeight="40dp"
+        android:paddingStart="7.2dp"
+        android:paddingEnd="7.2dp"
+        android:progressTint="#7878E1"
+        android:thumbTint="#7878E1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.42"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainPlayLayout"
+        app:layout_constraintVertical_bias="0.13" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/commentView"
+        android:layout_width="wrap_content"
+        android:layout_height="83dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.42"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainSeekBar"
+        app:layout_constraintVertical_bias="0.00999999" />
+
+    <ImageView
+        android:id="@+id/heartImageView"
+        android:layout_width="28dp"
+        android:layout_height="27dp"
+        android:layout_centerInParent="true"
+        android:clickable="true"
+        android:onClick="onHeartClicked"
+        android:src="@drawable/purple_empty_heart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.11"
+        app:layout_constraintStart_toEndOf="@+id/mainSeekBar"
+        app:layout_constraintTop_toBottomOf="@+id/mainPlayLayout"
+        app:layout_constraintVertical_bias="0.086" />
+
+    <ImageView
+        android:id="@+id/likedUserList"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@drawable/liked_user"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.09"
+        app:layout_constraintStart_toEndOf="@+id/heartImageView"
+        app:layout_constraintTop_toBottomOf="@+id/mainPlayLayout"
+        app:layout_constraintVertical_bias="0.075" />
+
+    <Button
+        android:id="@+id/commentButton"
+        android:layout_width="24dp"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        android:fontFamily="sans-serif-thin"
+        android:text="➤︎"
+        android:textColor="#7878E1"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/mainPlayingTime"
+        app:layout_constraintHorizontal_bias="0.96"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.655" />
+
+    <Button
+        android:id="@+id/uploadButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        android:fontFamily="sans-serif-thin"
+        android:text="+"
+        android:textColor="#7878E1"
+        android:textSize="80sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

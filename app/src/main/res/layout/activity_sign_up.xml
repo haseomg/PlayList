@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#AAB9FF"
+    tools:context=".SignUp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/signUpLogoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="#7878E1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/signUpLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-black"
+            android:text="Sign Up"
+            android:textColor="@color/white"
+            android:textSize="35sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <EditText
+        android:id="@+id/signUpIdEditText"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:hint="ID (no kr 4 or more)"
+        android:textColor="#7878E1"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.38"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25" />
+
+    <Button
+        android:id="@+id/idDuCheckButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00ff0000"
+        android:fontFamily="sans-serif-black"
+        android:text="중복체크️"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.78"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25" />
+
+    <EditText
+        android:id="@+id/signUpPwEditText"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:hint="PW (just number 4)"
+        android:inputType="textPassword"
+        android:textSize="18sp"
+        android:textColor="#7878E1"
+        android:fontFamily="sans-serif-black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpIdEditText"
+        app:layout_constraintVertical_bias="0.100000024" />
+
+
+    <TextView
+        android:id="@+id/pwSameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:text="비밀번호가 일치합니다."
+        android:textColor="#191970"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.32"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpLogoLayout"
+        app:layout_constraintVertical_bias="0.51" />
+
+    <EditText
+        android:id="@+id/signUpPwCheckEditText"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:hint="PW Check"
+        android:inputType="textPassword"
+        android:textSize="18sp"
+        android:textColor="#7878E1"
+        android:fontFamily="sans-serif-black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpPwEditText"
+        app:layout_constraintVertical_bias="0.100000024" />
+
+    <TextView
+        android:id="@+id/pwDiffTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:text="비밀번호가 일치하지 않습니다."
+        android:textColor="#C01515"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.38"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpPwCheckEditText"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <EditText
+        android:id="@+id/signUpNickNameEditText"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:hint="NickName (2 or more)"
+        android:textSize="18sp"
+        android:textColor="#7878E1"
+        android:fontFamily="sans-serif-black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpPwCheckEditText"
+        app:layout_constraintVertical_bias="0.110000014" />
+
+    <ImageView
+        android:id="@+id/kakaoBtn"
+        android:layout_width="37dp"
+        android:layout_height="37dp"
+        android:layout_margin="20dp"
+        android:src="@drawable/kakao"
+        app:flow_horizontalBias="5"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpNickNameEditText"
+        app:layout_constraintVertical_bias="0.39999998" />
+
+    <Button
+        android:id="@+id/kakaoBtnMent"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:background="#00ff0000"
+        android:fontFamily="sans-serif-black"
+        android:text="KAKAO LOGIN"
+        android:textColor="#7878E1"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/signUpSubmitButton"
+        app:layout_constraintHorizontal_bias="0.34"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpNickNameEditText"
+        app:layout_constraintVertical_bias="0.6" />
+
+    <ImageView
+        android:id="@+id/googleBtn"
+        android:layout_width="43dp"
+        android:layout_height="43dp"
+        android:layout_margin="20dp"
+        android:src="@drawable/google_logo"
+        app:flow_horizontalBias="5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.48"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpNickNameEditText"
+        app:layout_constraintVertical_bias="0.39" />
+
+    <Button
+        android:id="@+id/googleBtnMent"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:background="#00ff0000"
+        android:fontFamily="sans-serif-black"
+        android:text="GOOGLE LOGIN"
+        android:textColor="#7878E1"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.48"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpNickNameEditText"
+        app:layout_constraintVertical_bias="0.6" />
+
+    <Button
+        android:id="@+id/signUpSubmitButton"
+        android:layout_width="70dp"
+        android:layout_height="78dp"
+        android:background="#7878E1"
+        android:fontFamily="sans-serif-black"
+        android:text="now page submit"
+        android:textColor="#AAB9FF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpNickNameEditText"
+        app:layout_constraintVertical_bias="0.49" />
+
+    <Button
+        android:id="@+id/goHomeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00ff0000"
+        android:fontFamily="sans-serif-black"
+        android:text="i have an id"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.939"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpSubmitButton"
+        app:layout_constraintVertical_bias="0.686" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
