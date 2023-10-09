@@ -39,7 +39,8 @@ public class Played extends Activity {
     androidx.constraintlayout.widget.ConstraintLayout topBar;
     TextView title;
     Button close;
-    String userName, played, getPlayedListFromShared;
+    String userName, getPlayedListFromShared;
+    String played = "";
 
     SharedPreferences shared;
     SharedPreferences.Editor editor;
@@ -63,25 +64,6 @@ public class Played extends Activity {
         Intent intent = getIntent();
         userName = intent.getStringExtra("userName");
         Log.i(TAG, "setPlayed : " + userName);
-
-        shared = getSharedPreferences("PlayedList", MODE_PRIVATE);
-        editor = shared.edit();
-        try {
-            if (getPlayedListFromShared == "" | getPlayedListFromShared == null) {
-                // TODO Insert Into Shared PlayedList
-                for (int i = 0; i < playedList.size(); i++) {
-//                    played =
-                } // for
-                editor.putString(userName, played);
-                editor.commit();
-                Log.i(TAG, "getPlayedListFromShared check : " + shared.getString(userName, "default"));
-
-            } else {
-                // TODO getPlayedList From Shared
-            } // else
-        } catch (NullPointerException e) {
-            Log.e(TAG, "getPlayedListFromShared Null : " + e);
-        } // catch END
 
         PlayedRecyclerView = findViewById(R.id.songListRecyclerView);
         topBar = findViewById(R.id.songListTopBar);
@@ -176,6 +158,7 @@ public class Played extends Activity {
                         Log.i(TAG, "playedList check> " + playedList.get(i).getSong_name());
                     } // for
                     playedAdapter.notifyDataSetChanged();
+                    playedListInsertIntoShared();
 
                 } else {
                     Log.i(TAG, "setPlayed response failed : " + response.body());
@@ -188,6 +171,32 @@ public class Played extends Activity {
 
             } // onFailure
         }); // call
+
+        playedListInsertIntoShared();
     } // setPlayedSongs
+
+    void playedListInsertIntoShared() {
+        shared = getSharedPreferences("played_list", MODE_PRIVATE);
+        editor = shared.edit();
+
+        try {
+            if (getPlayedListFromShared == "" || getPlayedListFromShared == null) {
+                // TODO Insert Into Shared PlayedList
+                for (int i = 0; i < playedList.size(); i++) {
+                    played = played + playedList.get(i).getSong_name() + "//";
+                    Log.i(TAG, "getPlayedListFromShared String played check : " + played);
+                } // for
+                editor.putString(userName, played);
+                editor.commit();
+                Log.i(TAG, "getPlayedListFromShared check (shared 값 X) : " + shared.getString(userName, "default"));
+
+            } else {
+                // TODO getPlayedList From Shared
+                Log.i(TAG, "getPlayedListFromShared check (shared 값 O) : " + shared.getString(userName, "default"));
+            } // else
+        } catch (NullPointerException e) {
+            Log.e(TAG, "getPlayedListFromShared Null : " + e);
+        } // catch END
+    } // playedListInsertIntoShared
 
 } // CLASS

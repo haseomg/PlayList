@@ -162,6 +162,9 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences pastShared;
     SharedPreferences.Editor pastEditor;
 
+    SharedPreferences playedListShared;
+    SharedPreferences.Editor playedListEditor;
+
     String fromSignUpNickName;
     String fromSharedNickName;
     String pastNumBox = "";
@@ -234,6 +237,9 @@ public class MainActivity extends AppCompatActivity {
         randomShared = getSharedPreferences("randomNumbers", MODE_PRIVATE);
         randomEditor = randomShared.edit();
         randomNumCheck = randomShared.getString("randomNumbers", "");
+
+        playedListShared = getSharedPreferences("played_list", MODE_PRIVATE);
+        playedListEditor = playedListShared.edit();
 
         // TODO 랜덤 넘버 서버로부터 받아온당
         responseRandomNumbers();
@@ -3340,7 +3346,17 @@ public class MainActivity extends AppCompatActivity {
 
     public void cutLastPlayedSong() {
         // TODO < 버튼 클릭 시 playedList 마지막 아이템의 해당 곡 제목 기준으로 서버로 스트리밍 요청
+        String pastSongs = playedListShared.getString(logIn.getText().toString(), "");
+        Log.i(TAG, "cutLastPlayedSong pastSongs check : " + pastSongs);
 
+        String [] cutPastSongs = pastSongs.split("//");
+        String beforeSong = cutPastSongs[cutPastSongs.length - 1];
+        Log.i(TAG, "cutLastPlayedSong beforeSong : " + beforeSong);
+
+        // TODO (1) 버튼 클릭 시 직전 노래 스트리밍
+        // TODO (2) 문자열에서 직전 노래 잘라주고 다시 쉐어드(played_list)에 넣기
+        // TODO (3) 잘라준 직전 노래 쉐어드(next_song)에 넣기
+        // TODO (4) > 버튼 클릭 시 쉐어드(next_song)에서 값 가져와서 서버로 스트리밍 요청
     } // cutLastPlayedSong
 
 } // MainActivity CLASS END
