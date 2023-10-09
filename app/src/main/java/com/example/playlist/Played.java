@@ -51,8 +51,6 @@ public class Played extends Activity {
         setPlayedSongs(userName);
     } // onCreate
 
-    String Hello;
-
     private void initial() {
         topBar = findViewById(R.id.songListTopBar);
         PlayedRecyclerView = findViewById(R.id.songListRecyclerView);
