@@ -61,7 +61,8 @@ public class Played extends Activity {
 
         PlayedRecyclerView = findViewById(R.id.songListRecyclerView);
         songListLayoutManager = new LinearLayoutManager(this);
-//        songListLayoutManager.setReverseLayout(true);
+        songListLayoutManager.setReverseLayout(true);
+        songListLayoutManager.setStackFromEnd(true);
         PlayedRecyclerView.setLayoutManager(songListLayoutManager);
         PlayedRecyclerView.setHasFixedSize(true);
         playedAdapter = new PlayedAdapter(this, playedList);
