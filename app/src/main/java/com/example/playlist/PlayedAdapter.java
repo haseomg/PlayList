@@ -13,10 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class PlayedAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PlayedAdapter  extends RecyclerView.Adapter<PlayedAdapter.ViewHolder> {
 
     private Context context;
-    private ArrayList<AllSongsModel> playedList;
+    private ArrayList<PlayedModel> playedList;
     private OnItemClickListener onItemClickListener;
     private int position;
     String TAG = "[PlayedAdapter]";
@@ -25,7 +25,7 @@ public class PlayedAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.onItemClickListener = onItemClickListener;
     } // setOnItemClickListener END
 
-    PlayedAdapter(Context context, ArrayList<AllSongsModel> playedList) {
+    PlayedAdapter(Context context, ArrayList<PlayedModel> playedList) {
         Log.i(TAG, "LikedAdapter constructor (context, arraylist)");
         this.context = context;
         this.playedList = playedList;
@@ -33,44 +33,42 @@ public class PlayedAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Log.i(TAG, "onCreateViewHolder");
         View view;
         view = LayoutInflater.from(context).inflate(R.layout.played_item, parent, false);
         Log.i(TAG, "view check : " + view);
-        return new PlayedHolder(view);
+        return new ViewHolder(view);
     } // onCreateViewHolder END
 
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.i(TAG, "onBindViewHolder Method");
-        if (holder instanceof PlayedHolder) {
-            AllSongsModel playedModel = playedList.get(position);
+            PlayedModel playedModel = playedList.get(position);
             Log.i(TAG, "playedModel onBindViewHolder : " + playedModel);
 
             // TODO. Now songName null
 
             try {
-                String songName = playedModel.getName();
+                String songName = playedModel.getSong_name();
                 Log.i(TAG, "setPlayed onBindViewHolder: " + songName);
 
                 if (songName.contains("_")) {
                     String realName = songName.replace("_", " ");
-                    ((PlayedHolder) holder).song_name.setText(realName);
+                    holder.song_name.setText(realName);
 
                 } else {
-                    ((PlayedHolder) holder).song_name.setText(songName);
+                    holder.song_name.setText(playedList.get(position).getSong_name());
                 } // else
 
             } catch (NullPointerException e) {
                 Log.e(TAG, "onBindViewHolder Null " + e);
             } // catch
-        } // if
     } // onBindViewHolder
 
-    public void addItem(AllSongsModel allSongsModel) {
-        playedList.add(allSongsModel);
+    public void addItem(PlayedModel playedModel) {
+        playedList.add(playedModel);
     } // addItem
 
     public int getPosition() {
@@ -87,7 +85,7 @@ public class PlayedAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder
         notifyDataSetChanged();
     } // removeItem
 
-    public PlayedAdapter(ArrayList<AllSongsModel> playedList) {
+    public PlayedAdapter(ArrayList<PlayedModel> playedList) {
         this.playedList = playedList;
     } // Constructor
 
@@ -96,14 +94,14 @@ public class PlayedAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return playedList.size();
     }
 
-    private class PlayedHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public final TextView song_name;
-        public final TextView artistAndTime;
-        public final ImageView music_image;
-        public final ImageView played_list;
+        TextView song_name;
+        TextView artistAndTime;
+        ImageView music_image;
+        ImageView played_list;
 
-        public PlayedHolder(View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
             song_name = itemView.findViewById(R.id.played_song_name);
             song_name.setSelected(true);

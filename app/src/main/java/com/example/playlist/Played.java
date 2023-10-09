@@ -29,9 +29,9 @@ public class Played extends Activity {
 
     String TAG = "[SongList Activity]";
     LinearLayoutManager songListLayoutManager;
-    ArrayList<AllSongsModel> playedList = new ArrayList<>();
+    ArrayList<PlayedModel> playedList = new ArrayList<>();
     PlayedAdapter playedAdapter;
-    AllSongsModel allSongsModel;
+    PlayedModel playedModel;
     androidx.recyclerview.widget.RecyclerView PlayedRecyclerView;
 
     androidx.constraintlayout.widget.ConstraintLayout topBar;
@@ -61,6 +61,7 @@ public class Played extends Activity {
 
         PlayedRecyclerView = findViewById(R.id.songListRecyclerView);
         songListLayoutManager = new LinearLayoutManager(this);
+//        songListLayoutManager.setReverseLayout(true);
         PlayedRecyclerView.setLayoutManager(songListLayoutManager);
         PlayedRecyclerView.setHasFixedSize(true);
         playedAdapter = new PlayedAdapter(this, playedList);
@@ -111,11 +112,11 @@ public class Played extends Activity {
         ServerApi playedFetchApi = retrofit.create(ServerApi.class);
 
         // TODO. 유저 이름 기준으로 played_list 테이블에서 유저가 들었던 곡들 가져옴
-        Call<List<AllSongsModel>> call = playedFetchApi.getPlayedSongs(userName);
+        Call<List<PlayedModel>> call = playedFetchApi.getPlayedSongs(userName);
 
-        call.enqueue(new Callback<List<AllSongsModel>>() {
+        call.enqueue(new Callback<List<PlayedModel>>() {
             @Override
-            public void onResponse(Call<List<AllSongsModel>> call, Response<List<AllSongsModel>> response) {
+            public void onResponse(Call<List<PlayedModel>> call, Response<List<PlayedModel>> response) {
                 Log.i(TAG, "setPlayed onResponse");
 
                 if (response.isSuccessful()) {
@@ -127,15 +128,15 @@ public class Played extends Activity {
 //                    Log.i(TAG, "setPlayed Server Response: " + response);
 //                    Log.i(TAG, "setPlayed Server Response.message : " + response.message());
 //                    Log.i(TAG, "setPlayed response.isSuccessful");
-                    List<AllSongsModel> played = response.body();
+                    List<PlayedModel> played = response.body();
                     Log.i(TAG, "setPlayed response.body : " + played);
 
                     playedAdapter.clearItems();
 
-                    for (AllSongsModel playedLists : played) {
+                    for (PlayedModel playedLists : played) {
                         Log.i(TAG, "setPlayed onResponse get PlayedList");
 
-                        String song_name = playedLists.getName();
+                        String song_name = playedLists.getSong_name();
                         Log.i(TAG, "setPlayed song_name : " + song_name);
 
                         Log.i(TAG, "setPlayed recyclerview add");
@@ -144,7 +145,7 @@ public class Played extends Activity {
                     } // for
 
                     for (int i = 0; i < playedList.size(); i ++) {
-                        Log.i(TAG, "playedList check> " + playedList.get(i).getName());
+                        Log.i(TAG, "playedList check> " + playedList.get(i).getSong_name());
                     } // for
                     playedAdapter.notifyDataSetChanged();
 
@@ -154,7 +155,7 @@ public class Played extends Activity {
             } // onResponse
 
             @Override
-            public void onFailure(Call<List<AllSongsModel>> call, Throwable t) {
+            public void onFailure(Call<List<PlayedModel>> call, Throwable t) {
                 Log.i(TAG, "setPlayed onFailure : " + t.getMessage());
 
             } // onFailure

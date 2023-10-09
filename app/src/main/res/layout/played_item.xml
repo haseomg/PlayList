@@ -32,14 +32,14 @@
         android:singleLine="true"
         android:text="song name"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="#BDC7F6"
+        android:textColor="#7878E1"
         android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.03"
         app:layout_constraintStart_toEndOf="@+id/played_album"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.19999999" />
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <TextView
         android:id="@+id/played_artist_time"
@@ -57,13 +57,13 @@
         android:text="artist_name • 00:00"
         android:textColor="#E440407F"
         android:textSize="16sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.03"
+        app:layout_constraintHorizontal_bias="0.033"
         app:layout_constraintStart_toEndOf="@+id/played_album"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.81" />
-
+        app:layout_constraintVertical_bias="0.789" />
 
     <ImageView
         android:id="@+id/playedListImageView"
@@ -80,7 +80,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#AAB9FF"
+        android:background="#7878E1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
