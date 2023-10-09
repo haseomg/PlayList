@@ -14,9 +14,8 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" name="Changes" comment="test commit (commit issue)">
+    <list default="true" id="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" name="Changes" comment="test commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/Played.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/Played.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -293,9 +292,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.PlayList [sourceSets]" />
+        <item itemvalue="Gradle.PlayList [signingReport]" />
+        <item itemvalue="Gradle.PlayList" />
         <item itemvalue="Gradle.PlayList" />
         <item itemvalue="Gradle.PlayList [signingReport]" />
-        <item itemvalue="Gradle.PlayList [sourceSets]" />
       </list>
     </recent_temporary>
   </component>
@@ -307,34 +308,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1664901750508</updated>
-    </task>
-    <task id="LOCAL-00093" summary="Profile - nickname change with server ok">
-      <created>1681933747922</created>
-      <option name="number" value="00093" />
-      <option name="presentableId" value="LOCAL-00093" />
-      <option name="project" value="LOCAL" />
-      <updated>1681933747922</updated>
-    </task>
-    <task id="LOCAL-00094" summary="Profile - nickname change with server ok">
-      <created>1681933763436</created>
-      <option name="number" value="00094" />
-      <option name="presentableId" value="LOCAL-00094" />
-      <option name="project" value="LOCAL" />
-      <updated>1681933763436</updated>
-    </task>
-    <task id="LOCAL-00095" summary="manifest">
-      <created>1681933910323</created>
-      <option name="number" value="00095" />
-      <option name="presentableId" value="LOCAL-00095" />
-      <option name="project" value="LOCAL" />
-      <updated>1681933910323</updated>
-    </task>
-    <task id="LOCAL-00096" summary="weather">
-      <created>1681933998698</created>
-      <option name="number" value="00096" />
-      <option name="presentableId" value="LOCAL-00096" />
-      <option name="project" value="LOCAL" />
-      <updated>1681933998698</updated>
     </task>
     <task id="LOCAL-00097" summary="sign up">
       <created>1681934034489</created>
@@ -651,7 +624,35 @@
       <option name="project" value="LOCAL" />
       <updated>1696858130599</updated>
     </task>
-    <option name="localTasksCounter" value="142" />
+    <task id="LOCAL-00142" summary="test commit">
+      <created>1696859215433</created>
+      <option name="number" value="00142" />
+      <option name="presentableId" value="LOCAL-00142" />
+      <option name="project" value="LOCAL" />
+      <updated>1696859215433</updated>
+    </task>
+    <task id="LOCAL-00143" summary="test commit">
+      <created>1696859359101</created>
+      <option name="number" value="00143" />
+      <option name="presentableId" value="LOCAL-00143" />
+      <option name="project" value="LOCAL" />
+      <updated>1696859359101</updated>
+    </task>
+    <task id="LOCAL-00144" summary="test commit">
+      <created>1696859465498</created>
+      <option name="number" value="00144" />
+      <option name="presentableId" value="LOCAL-00144" />
+      <option name="project" value="LOCAL" />
+      <updated>1696859465498</updated>
+    </task>
+    <task id="LOCAL-00145" summary="test commit">
+      <created>1696862411624</created>
+      <option name="number" value="00145" />
+      <option name="presentableId" value="LOCAL-00145" />
+      <option name="project" value="LOCAL" />
+      <updated>1696862411624</updated>
+    </task>
+    <option name="localTasksCounter" value="146" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -683,7 +684,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="chat implementation" />
     <MESSAGE value="채팅 문제 해결 중 - 방 이름 (DB &lt;-&gt; Room 활용 중) , 채팅 목록에서 채팅 방 왼쪽으로 스와이프해서 삭제 (+ DB에서도 삭제 - 서버 측 코드 확인 중)" />
     <MESSAGE value="get uuid - from chat_messages table in server on Intro Activity" />
     <MESSAGE value="get uuid - receive it when you want." />
@@ -708,7 +708,8 @@
     <MESSAGE value="Chatting" />
     <MESSAGE value="All Files Commit" />
     <MESSAGE value="test commit (commit issue)" />
-    <option name="LAST_COMMIT_MESSAGE" value="test commit (commit issue)" />
+    <MESSAGE value="test commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="test commit" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/PlayList$PlayList__signingReport_.ic" NAME="PlayList [signingReport] Coverage Results" MODIFIED="1668181066866" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
