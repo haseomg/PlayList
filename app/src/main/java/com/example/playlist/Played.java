@@ -59,6 +59,7 @@ public class Played extends Activity {
 
         setClose();
 
+
         PlayedRecyclerView = findViewById(R.id.songListRecyclerView);
         songListLayoutManager = new LinearLayoutManager(this);
         songListLayoutManager.setReverseLayout(true);
