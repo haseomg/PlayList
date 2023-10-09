@@ -57,6 +57,7 @@ public class Played extends Activity {
         title = findViewById(R.id.songListTitle);
         close = findViewById(R.id.songListClose);
 
+
         setClose();
 
 
