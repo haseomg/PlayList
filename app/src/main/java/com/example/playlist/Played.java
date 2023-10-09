@@ -1,7 +1,9 @@
 package com.example.playlist;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -37,7 +39,12 @@ public class Played extends Activity {
     androidx.constraintlayout.widget.ConstraintLayout topBar;
     TextView title;
     Button close;
-    String userName;
+    String userName, played, getPlayedListFromShared;
+
+    SharedPreferences shared;
+    SharedPreferences.Editor editor;
+
+    static Context playedContext;
 
     private static final String BASE_URL = "http://54.180.155.66/";
 
@@ -52,14 +59,36 @@ public class Played extends Activity {
     } // onCreate
 
     private void initial() {
-        topBar = findViewById(R.id.songListTopBar);
+        playedContext = Played.this;
+        Intent intent = getIntent();
+        userName = intent.getStringExtra("userName");
+        Log.i(TAG, "setPlayed : " + userName);
+
+        shared = getSharedPreferences("PlayedList", MODE_PRIVATE);
+        editor = shared.edit();
+        try {
+            if (getPlayedListFromShared == "" | getPlayedListFromShared == null) {
+                // TODO Insert Into Shared PlayedList
+                for (int i = 0; i < playedList.size(); i++) {
+//                    played =
+                } // for
+                editor.putString(userName, played);
+                editor.commit();
+                Log.i(TAG, "getPlayedListFromShared check : " + shared.getString(userName, "default"));
+
+            } else {
+                // TODO getPlayedList From Shared
+            } // else
+        } catch (NullPointerException e) {
+            Log.e(TAG, "getPlayedListFromShared Null : " + e);
+        } // catch END
+
         PlayedRecyclerView = findViewById(R.id.songListRecyclerView);
+        topBar = findViewById(R.id.songListTopBar);
         title = findViewById(R.id.songListTitle);
         close = findViewById(R.id.songListClose);
 
-
         setClose();
-
 
         PlayedRecyclerView = findViewById(R.id.songListRecyclerView);
         songListLayoutManager = new LinearLayoutManager(this);
@@ -71,10 +100,6 @@ public class Played extends Activity {
         PlayedRecyclerView.setAdapter(playedAdapter);
 
         setPlayedList();
-
-        Intent intent = getIntent();
-        userName = intent.getStringExtra("userName");
-        Log.i(TAG, "setPlayed : " + userName);
 
     } // initial
 
@@ -147,7 +172,7 @@ public class Played extends Activity {
                         playedList.add(playedLists);
                     } // for
 
-                    for (int i = 0; i < playedList.size(); i ++) {
+                    for (int i = 0; i < playedList.size(); i++) {
                         Log.i(TAG, "playedList check> " + playedList.get(i).getSong_name());
                     } // for
                     playedAdapter.notifyDataSetChanged();

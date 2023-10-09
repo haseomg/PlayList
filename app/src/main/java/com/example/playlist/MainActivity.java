@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
     LinearLayoutManager commentLayoutManager;
     String getUserName, getSongName, getSelectedTime, getMsg;
 
-    ArrayList<AllSongsModel> playedList = new ArrayList<>();
+    ArrayList<PlayedModel> playedList = new ArrayList<>();
     ServerApi serverApi;
     AllSongsModel allSongsModel;
 
@@ -1128,7 +1128,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "leftPlay 버튼 클릭");
-
+                cutLastPlayedSong();
 //                pastStreaming();
 
             }
@@ -1875,7 +1875,8 @@ public class MainActivity extends AppCompatActivity {
                                                 // playedList = song name, artist name, time add
 //                                                            played = played + now_song + "//";
                                                 setPlayedInsertToTable(logIn.getText().toString(), now_song);
-                                                Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);;
+                                                Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
+                                                ;
 
 
                                                 // TODO selectLikes
@@ -2662,8 +2663,8 @@ public class MainActivity extends AppCompatActivity {
                                             // playedList = song name, artist name, time add
 //                                                            played = played + now_song + "//";
                                             setPlayedInsertToTable(logIn.getText().toString(), now_song);
-                                            Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);;
-
+                                            Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
+                                            ;
 
 
                                             if (!responseData.equals(0)) {
@@ -3335,7 +3336,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "played - onFailure : " + t.getMessage());
             } // onFailure
         }); // call
-
     } // setPlayedInsertToTable
+
+    public void cutLastPlayedSong() {
+        // TODO < 버튼 클릭 시 playedList 마지막 아이템의 해당 곡 제목 기준으로 서버로 스트리밍 요청
+
+    } // cutLastPlayedSong
 
 } // MainActivity CLASS END

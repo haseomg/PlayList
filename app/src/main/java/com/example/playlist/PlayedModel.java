@@ -30,6 +30,10 @@ public class PlayedModel {
         this.views = views;
     } // Constructor END
 
+    public PlayedModel() {
+
+    } // Default Constructor
+
     public String getSong_name() {
         return song_name;
     }
@@ -73,4 +77,4 @@ public class PlayedModel {
     public void setPlayedList(ArrayList<PlayedModel> playedList) {
         this.playedList = playedList;
     } // setPlayedList
-}
+} // PlayedModel END
