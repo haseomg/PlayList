@@ -36,7 +36,7 @@ public class PlayedAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Log.i(TAG, "onCreateViewHolder");
         View view;
-        view = LayoutInflater.from(context).inflate(R.layout.music_item, parent, false);
+        view = LayoutInflater.from(context).inflate(R.layout.played_item, parent, false);
         Log.i(TAG, "view check : " + view);
         return new PlayedHolder(view);
     } // onCreateViewHolder END
@@ -50,16 +50,22 @@ public class PlayedAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder
             Log.i(TAG, "playedModel onBindViewHolder : " + playedModel);
 
             // TODO. Now songName null
-            String songName = playedModel.getName();
-            Log.i(TAG, "setPlayed onBindViewHolder: " + songName);
 
-            if (songName.contains("_")) {
-                String realName = songName.replace("_", " ");
-                ((PlayedHolder) holder).song_name.setText(realName);
+            try {
+                String songName = playedModel.getName();
+                Log.i(TAG, "setPlayed onBindViewHolder: " + songName);
 
-            } else {
-                ((PlayedHolder) holder).song_name.setText(songName);
-            } // else
+                if (songName.contains("_")) {
+                    String realName = songName.replace("_", " ");
+                    ((PlayedHolder) holder).song_name.setText(realName);
+
+                } else {
+                    ((PlayedHolder) holder).song_name.setText(songName);
+                } // else
+
+            } catch (NullPointerException e) {
+                Log.e(TAG, "onBindViewHolder Null " + e);
+            } // catch
         } // if
     } // onBindViewHolder
 
@@ -95,23 +101,19 @@ public class PlayedAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public final TextView song_name;
         public final TextView artistAndTime;
         public final ImageView music_image;
-        public final ImageView liked_list;
-        public final ImageView feed;
+        public final ImageView played_list;
 
         public PlayedHolder(View itemView) {
             super(itemView);
-            song_name = itemView.findViewById(R.id.song_name);
+            song_name = itemView.findViewById(R.id.played_song_name);
             song_name.setSelected(true);
-            artistAndTime = itemView.findViewById(R.id.artistAndTime);
+            artistAndTime = itemView.findViewById(R.id.played_artist_time);
             artistAndTime.setSelected(true);
-            music_image = itemView.findViewById(R.id.music_image);
-            liked_list = itemView.findViewById(R.id.likedListImageView);
-            feed = itemView.findViewById(R.id.feedIcon);
+            music_image = itemView.findViewById(R.id.played_album);
+            played_list = itemView.findViewById(R.id.playedListImageView);
 
-            artistAndTime.setVisibility(View.GONE);
-            music_image.setVisibility(View.GONE);
-            liked_list.setVisibility(View.GONE);
-            feed.setVisibility(View.GONE);
+            artistAndTime.setVisibility(View.INVISIBLE);
+            music_image.setVisibility(View.VISIBLE);
         } // Constructor
     } // CLASS
 

@@ -88,6 +88,7 @@ public class Played extends Activity {
 
     } // setPlayedList
 
+    // TODO 월요일에 끝낸다!
     void setPlayedSongs(String userName) {
         Log.i(TAG, "setPlayed");
 
@@ -130,6 +131,7 @@ public class Played extends Activity {
                     Log.i(TAG, "setPlayed response.body : " + played);
 
                     playedAdapter.clearItems();
+
                     for (AllSongsModel playedLists : played) {
                         Log.i(TAG, "setPlayed onResponse get PlayedList");
 
@@ -137,7 +139,12 @@ public class Played extends Activity {
                         Log.i(TAG, "setPlayed song_name : " + song_name);
 
                         Log.i(TAG, "setPlayed recyclerview add");
+
                         playedList.add(playedLists);
+                    } // for
+
+                    for (int i = 0; i < playedList.size(); i ++) {
+                        Log.i(TAG, "playedList check> " + playedList.get(i).getName());
                     } // for
                     playedAdapter.notifyDataSetChanged();
 
