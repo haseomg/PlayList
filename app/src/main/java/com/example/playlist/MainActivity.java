@@ -924,8 +924,23 @@ public class MainActivity extends AppCompatActivity {
                                                                 Log.i(TAG, "artist check (2) " + artist);
                                                             }
                                                             now_song = reReName;
-                                                            Log.i(TAG, "now_song now 1 : " + now_song);
+                                                            Log.i(TAG, "now_song now 1 (first play) : " + now_song);
                                                             updateHeart();
+
+                                                            // TODO now_song이 null이여서 빈 값이 들어가
+                                                            try {
+                                                                Log.i(TAG, "now_song now 5 (before insert) : " + now_song);
+
+                                                                // TODO divide check point (1)
+//                                                                if (now_song.length() > 2 || now_song != null) {
+//                                                                    Log.i(TAG, "now_song now 3 (when insert) : " + now_song);
+//                                                                    setPlayedInsertToTable(logIn.getText().toString(), now_song);
+//                                                                } // if
+
+                                                            } catch (NullPointerException e) {
+                                                                Log.e(TAG, "now_song now NULL : " + e);
+                                                            } // catch
+//                } // if
 
                                                             if (!responseData.equals(0)) {
 //                                                            responserData " + " 기준으로 잘라줘야 해
@@ -1023,11 +1038,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "playCheck : " + playCheck);
 
                 // TODO now_song이 null이여서 빈 값이 들어가
-                if (now_song != null || !now_song.equals("")) {
-                    Log.i(TAG, "now_song now 3 (insert) : " + now_song);
-                    setPlayedInsertToTable(logIn.getText().toString(), now_song);
+//                if (now_song != null || !now_song.equals("")) {
+//                Log.i(TAG, "now_song now 3 (insert) : " + now_song);
+//                setPlayedInsertToTable(logIn.getText().toString(), now_song);
 
-                } // if
+//                } // if
             } // OnClick 메서드 닫아주는 중괄호
         });
 
@@ -1140,7 +1155,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "leftPlay 버튼 클릭");
                 pastSongisPlayingCheckEditor.putString("now", "past");
                 pastSongisPlayingCheckEditor.commit();
-                Log.i(TAG, "divide - bring get shared song timing check : " + pastSongisPlayingCheckShared.getString("now", "default"));;
+                Log.i(TAG, "divide - bring get shared song timing check : " + pastSongisPlayingCheckShared.getString("now", "default"));
+                ;
                 cutLastPlayedSong();
                 changeSong();
 //                pastStreaming();
@@ -1669,11 +1685,15 @@ public class MainActivity extends AppCompatActivity {
                     if (needSongTimingCheck == "past" || needSongTimingCheck.equals("past")) {
                         Log.i(TAG, "divide - songTiming (if past) : " + needSongTimingCheck);
                         if (!pastSongName.equals("") || pastSongName != "") {
-                            Uri.Builder builder = new Uri.Builder()
-                                    .appendQueryParameter("past_song", pastSongName);
-                            String postParams = builder.build().getEncodedQuery();
-                            new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
-                        }
+                            if (pastSongName.contains(" ")) {
+                                String rePastSongName = pastSongName.replace(" ", "_");
+                                Log.i(TAG, "divide rePastSongName Check : " + rePastSongName);
+                                Uri.Builder builder = new Uri.Builder()
+                                        .appendQueryParameter("past_song", pastSongName);
+                                String postParams = builder.build().getEncodedQuery();
+                                new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
+                            } // if
+                        } // if
 
                     } else {
                         Log.i(TAG, "divide - songTiming (else) : " + needSongTimingCheck);
@@ -1909,7 +1929,7 @@ public class MainActivity extends AppCompatActivity {
                                                     Log.i(TAG, "artist check (4) " + artist);
                                                 }
                                                 now_song = reReName;
-                                                Log.i(TAG, "now_song now 3 : " + now_song);
+                                                Log.i(TAG, "now_song now 4 (change streaming) : " + now_song);
 
                                                 // TODO selectLikes
                                                 updateHeart();
@@ -3163,7 +3183,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "isHeartFilled for check : " + likedSongsCheck + " / " + selectLikedList.get(i).getSong_name());
 
             Log.i(TAG, "isHeartFilled now : " + now_song);
-            Log.i(TAG, "now_song now 2 : " + now_song);
+            Log.i(TAG, "now_song now 2 (updateHeart) : " + now_song);
 
             try {
 
