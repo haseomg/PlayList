@@ -184,7 +184,7 @@
 
     <SeekBar
         android:id="@+id/mainSeekBar"
-        android:layout_width="160dp"
+        android:layout_width="180dp"
         android:layout_height="15dp"
         android:max='100'
         android:maxHeight="40dp"
