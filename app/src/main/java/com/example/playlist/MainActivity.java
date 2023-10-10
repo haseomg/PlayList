@@ -611,7 +611,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i("메인 플레이 버튼 클릭", "");
 
-
                 currentTimeForViewsIncrement = System.currentTimeMillis();
 
                 if (logIn.getText().toString().equals("LOG IN")) {
@@ -702,7 +701,6 @@ public class MainActivity extends AppCompatActivity {
                                         .appendQueryParameter("num", "1" + firstRanNum);
                                 String postParams = builder.build().getEncodedQuery();
                                 new getJSONData().execute("http://54.180.155.66/" + "file_sampling.php", postParams);
-
 
 //                             get 방식 파라미터 추가
                                 HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/file_sampling.php").newBuilder();
@@ -882,7 +880,7 @@ public class MainActivity extends AppCompatActivity {
                                                                 mediaPlayer.start();
 
                                                                 Thread();
-                                                            }
+                                                            } // else
 
 
 //                                                        if (mediaPlayer != null) {
@@ -932,15 +930,12 @@ public class MainActivity extends AppCompatActivity {
                                                             if (!responseData.equals(0)) {
 //                                                            responserData " + " 기준으로 잘라줘야 해
                                                                 Log.i("[Main]", "responseData 가 0이 아닐 때 : " + responseData);
-
-
                                                             } // if
                                                         }
                                                     }
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
                                                 } // catch
-
                                             }
                                         });
                                     }
@@ -949,13 +944,10 @@ public class MainActivity extends AppCompatActivity {
 //                        첫 재생 playAudio
 //                        playAudio();
 
-
                                 // 재생 됐는지 체크
                                 playCheck = true;
-
                             }
                             responseRandomNumbers();
-
 
                             // 아래 if (playCHeck == false 닫아주는 중괄호
                         } else { // <-> if (playCheck == true
@@ -1005,8 +997,7 @@ public class MainActivity extends AppCompatActivity {
                                 if (mediaPlayer != null) {
                                     Log.i(TAG, "mediaPlayer.pause");
                                     mediaPlayer.pause();
-//
-//
+
                                 } else {
                                     Log.i(TAG, "mediaPlayer == null");
                                 }
@@ -1014,27 +1005,24 @@ public class MainActivity extends AppCompatActivity {
                                 playPosition = mediaPlayer.getCurrentPosition();
                                 Log.d("[PAUSE CHECK]", "" + playPosition);
                                 Log.i(TAG, "playCheck : " + playCheck);
-//
 //                                }
-
                             } else {
                                 // 재생 버튼이 일시정지 모양일 때
                                 // + 예외 처리
                                 Log.i(TAG, "재생 버튼 모양이 재생도 일시정지도 아님");
                             }
-
                         } // if (playCheck == true 닫아주는 중괄호
-
 
                     } else {
                         Log.i(TAG, "playCheck : " + playCheck);
                         Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
 
-                    }
+                    } // else
                 } // First biggest else end
 
-
                 Log.i(TAG, "playCheck : " + playCheck);
+                Log.i(TAG, "onClick now check : " + now_song);
+                setPlayedInsertToTable(logIn.getText().toString(), now_song);
             } // OnClick 메서드 닫아주는 중괄호
         });
 
@@ -1777,8 +1765,7 @@ public class MainActivity extends AppCompatActivity {
 
                                                     Log.i(TAG, "[changeStreaming]  -----------------------------------------------");
 
-                                                }
-                                                else {
+                                                } else {
                                                     // TODO check (1) < 버튼 클릭 시 name에 값 넣어주고 여기서 확인
                                                     // TODO check (2) > 버튼 클릭 시 name에 값을 넣어주고
                                                     name = pastSongName;
@@ -1791,7 +1778,8 @@ public class MainActivity extends AppCompatActivity {
                                                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                                                 Log.i(TAG, "[changeStreaming] mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)");
 
-                                                Log.i(TAG, "[changeStreaming] song name before streaming check : " + name);;
+                                                Log.i(TAG, "[changeStreaming] song name before streaming check : " + name);
+                                                ;
                                                 String uri = "http://54.180.155.66/" + name;
                                                 Log.i(TAG, "[changeStreaming] file name from music table : " + uri);
                                                 // 경로
@@ -1898,22 +1886,6 @@ public class MainActivity extends AppCompatActivity {
                                                 now_song = reReName;
                                                 Log.i(TAG, "now_song now 3 : " + now_song);
 
-                                                // TODO user Listened music Info add (first streaming)
-                                                // playedList = song name, artist name, time add
-//                                                            played = played + now_song + "//";
-                                                // TODO 다음 곡 들을 때만
-                                                String playTimingCheck = pastSongisPlayingCheckShared.getString("now", "none");
-                                                if (playTimingCheck.equals("next")) {
-                                                    setPlayedInsertToTable(logIn.getText().toString(), now_song);
-                                                    Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
-                                                    Log.i(TAG, "playTimingCheck (next) : " + playTimingCheck);
-
-                                                } else {
-                                                    Log.i(TAG, "playTimingCheck (past) : " + playTimingCheck);
-                                                } // else
-
-
-
                                                 // TODO selectLikes
                                                 updateHeart();
 
@@ -1990,8 +1962,20 @@ public class MainActivity extends AppCompatActivity {
         // Arraylist로 변경
 //                                                played = played + now_song + "//";
 //                                                Log.i(TAG, "User Played Check : " + played);
-    } // changeStreaming
+        // TODO user Listened music Info add (first streaming)
+//                                                 playedList = song name, artist name, time add
+        played = played + now_song + "//";
+//                                                 TODO 다음 곡 들을 때만
+        String playTimingCheck = pastSongisPlayingCheckShared.getString("now", "none");
+        if (playTimingCheck.equals("next")) {
+            setPlayedInsertToTable(logIn.getText().toString(), now_song);
+            Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
+            Log.i(TAG, "playTimingCheck (next) : " + playTimingCheck);
 
+        } else {
+            Log.i(TAG, "playTimingCheck (past) : " + playTimingCheck);
+        } // else
+    } // changeStreaming
 
     // TODO randomNumber Method
     public void randomNumber() {
@@ -2695,14 +2679,6 @@ public class MainActivity extends AppCompatActivity {
                                             Log.i(TAG, "artist check (5) " + artist);
                                             now_song = reReName;
 
-                                            // TODO user Listened music Info add (first streaming)
-                                            // playedList = song name, artist name, time add
-//                                                            played = played + now_song + "//";
-                                            setPlayedInsertToTable(logIn.getText().toString(), now_song);
-                                            Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
-                                            ;
-
-
                                             if (!responseData.equals(0)) {
 //                                                            responserData " + " 기준으로 잘라줘야 해
                                                 Log.i("[LeftPlay]", "responseData 가 0이 아닐 때 : " + responseData);
@@ -2715,15 +2691,10 @@ public class MainActivity extends AppCompatActivity {
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 } // catch
-
                             }
-
                         });
-
                     }
-
                 });
-
 
                 // 아래 if (playCHeck == false 닫아주는 중괄호
             } else { // <-> if (playCheck == true
@@ -2740,7 +2711,12 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
 
-        }
+        } // else
+        // TODO user Listened music Info add (first streaming)
+        // playedList = song name, artist name, time add
+//                                                            played = played + now_song + "//";
+//                                            setPlayedInsertToTable(logIn.getText().toString(), now_song);
+        Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
     }
 
     // TODO. UUID 가져오는 방식 변경 (레트로핏으로 서버에서 가져오고, SQlite에 insert)
@@ -3399,26 +3375,34 @@ public class MainActivity extends AppCompatActivity {
 
     public void cutLastPlayedSong() {
         // TODO < 버튼 클릭 시 playedList 마지막 아이템의 해당 곡 제목 기준으로 서버로 스트리밍 요청
-        String pastSongs = playedListShared.getString(logIn.getText().toString(), "");
-        Log.i(TAG, "cutLastPlayedSong pastSongs check : " + pastSongs);
+        try {
+            String pastSongs = playedListShared.getString(logIn.getText().toString(), "");
+            Log.i(TAG, "cutLastPlayedSong pastSongs check : " + pastSongs);
 
-        String [] cutPastSongs = pastSongs.split("//");
-        String beforeSong = cutPastSongs[cutPastSongs.length - 1];
-        Log.i(TAG, "cutLastPlayedSong beforeSong : " + beforeSong);
+            String[] cutPastSongs = pastSongs.split("//");
+            String beforeSong = cutPastSongs[cutPastSongs.length - 1];
+            Log.i(TAG, "cutLastPlayedSong beforeSong : " + beforeSong);
 
-        // TODO 아래에서 name에 값을 넣어주고, 곡 제목과 아티스트가 다르게 나오게 됐을 확률 높음
+            // TODO 아래에서 name에 값을 넣어주고, 곡 제목과 아티스트가 다르게 나오게 됐을 확률 높음
 //        pastSongName = beforeSong + ".mp3";
 //        Log.i(TAG, "cutLastPlayedSong song name check : " + name);
 
-        // TODO 끝부분 잘라서 다시 쉐어드에 넣기
-        String[] cutNowPlaySongName = pastSongs.split(beforeSong + "//");
-        String rePutStringInShared = cutNowPlaySongName[0];
-        Log.i(TAG, "cutLastPlayedSong rePutStringInShared check : " + rePutStringInShared);;
-        playedListEditor.putString(logIn.getText().toString(), rePutStringInShared);
-        playedListEditor.commit();
+            // TODO 끝부분 잘라서 다시 쉐어드에 넣기
+            String[] cutNowPlaySongName = pastSongs.split(beforeSong + "//");
+            String rePutStringInShared = cutNowPlaySongName[0];
+            Log.i(TAG, "cutLastPlayedSong rePutStringInShared check : " + rePutStringInShared);
+            ;
+            playedListEditor.putString(logIn.getText().toString(), rePutStringInShared);
+            playedListEditor.commit();
 
-        // TODO 서버랑 통신해서 이전 재생 곡 지워주기
-        setPlayedDeleteToTable(logIn.getText().toString(), beforeSong);
+            // TODO 서버랑 통신해서 이전 재생 곡 지워주기
+            setPlayedDeleteToTable(logIn.getText().toString(), beforeSong);
+
+        } catch (ArrayIndexOutOfBoundsException e) {
+            Log.e(TAG, "cutLastPlayedSong ArrayIndexOutOfBoundsException : " + e);
+            pastSongisPlayingCheckEditor.putString("now", "next");
+            pastSongisPlayingCheckEditor.commit();
+        } // catch
 
     } // cutLastPlayedSong
 
