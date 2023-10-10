@@ -1021,8 +1021,13 @@ public class MainActivity extends AppCompatActivity {
                 } // First biggest else end
 
                 Log.i(TAG, "playCheck : " + playCheck);
-                Log.i(TAG, "onClick now check : " + now_song);
-                setPlayedInsertToTable(logIn.getText().toString(), now_song);
+
+                // TODO now_song이 null이여서 빈 값이 들어가
+                if (now_song != null || !now_song.equals("")) {
+                    Log.i(TAG, "now_song now 3 (insert) : " + now_song);
+                    setPlayedInsertToTable(logIn.getText().toString(), now_song);
+
+                } // if
             } // OnClick 메서드 닫아주는 중괄호
         });
 
@@ -1135,6 +1140,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "leftPlay 버튼 클릭");
                 pastSongisPlayingCheckEditor.putString("now", "past");
                 pastSongisPlayingCheckEditor.commit();
+                Log.i(TAG, "divide - bring get shared song timing check : " + pastSongisPlayingCheckShared.getString("now", "default"));;
                 cutLastPlayedSong();
                 changeSong();
 //                pastStreaming();
@@ -1656,17 +1662,21 @@ public class MainActivity extends AppCompatActivity {
                         } // if
                     } // if
                     // TODO name or num?
-                    String needSongTimingCheck = playedListShared.getString("now", "none");
-                    Log.i(TAG, "needSongTimingCheck : " + needSongTimingCheck);
-                    Log.i(TAG, "needSongTimingCheck : " + needSongTimingCheck);
+                    String needSongTimingCheck = pastSongisPlayingCheckShared.getString("now", "none");
+                    Log.i(TAG, "divide - needSongTimingCheck : " + needSongTimingCheck);
+                    Log.i(TAG, "divide - pastSongName Check : " + pastSongName);
 
                     if (needSongTimingCheck == "past" || needSongTimingCheck.equals("past")) {
-                        Uri.Builder builder = new Uri.Builder()
-                                .appendQueryParameter("past_song", pastSongName);
-                        String postParams = builder.build().getEncodedQuery();
-                        new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
+                        Log.i(TAG, "divide - songTiming (if past) : " + needSongTimingCheck);
+                        if (!pastSongName.equals("") || pastSongName != "") {
+                            Uri.Builder builder = new Uri.Builder()
+                                    .appendQueryParameter("past_song", pastSongName);
+                            String postParams = builder.build().getEncodedQuery();
+                            new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
+                        }
 
                     } else {
+                        Log.i(TAG, "divide - songTiming (else) : " + needSongTimingCheck);
                         Uri.Builder builder = new Uri.Builder()
                                 .appendQueryParameter("num", "1" + nextRanNum);
                         String postParams = builder.build().getEncodedQuery();
