@@ -1669,7 +1669,6 @@ public class MainActivity extends AppCompatActivity {
 //                                new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
 //                            } // if
 //                        } // if
-//
 //                    } else {
                         Log.i(TAG, "divide - songTiming (else) : " + needSongTimingCheck);
                         Uri.Builder builder = new Uri.Builder()
