@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
     String castNum;
     String artist;
     String name;
+    String pastSongName;
     String time;
     String now_song;
     String played = "";
@@ -913,8 +914,10 @@ public class MainActivity extends AppCompatActivity {
                                                             if (artist.contains("_")) {
                                                                 String artistName = artist.replace("_", " ");
                                                                 mainLogo.setText(reReName + " • " + artistName);
+                                                                Log.i(TAG, "artist check (1) " + artistName);
                                                             } else {
                                                                 mainLogo.setText(reReName + " • " + artist);
+                                                                Log.i(TAG, "artist check (2) " + artist);
                                                             }
                                                             now_song = reReName;
                                                             Log.i(TAG, "now_song now 1 : " + now_song);
@@ -1073,9 +1076,9 @@ public class MainActivity extends AppCompatActivity {
                     Log.i(TAG, "ChatList Button onClick()");
                     Intent intent = new Intent(getApplicationContext(), ChatSelect.class);
                     String me = shared.getString("nickname", "");
-                    String name = logIn.getText().toString();
-                    intent.putExtra("username", name);
-                    chat_editor.putString("name", name);
+                    String user_name = logIn.getText().toString();
+                    intent.putExtra("username", user_name);
+                    chat_editor.putString("name", user_name);
                     chat_editor.commit();
                     // User로
                     Log.i(TAG, "-> ChatSelect Class / Shared nickname check : " + me);
@@ -1135,6 +1138,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "leftPlay 버튼 클릭");
                 cutLastPlayedSong();
+                changeSong();
 //                pastStreaming();
 
             }
@@ -1175,8 +1179,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (logIn.getText().toString().equals("LOG IN")) {
             stopAudio();
-        }
-    }
+        } // if
+    } // onStop
 
     protected void onDestroy() {
         super.onDestroy();
@@ -1286,7 +1290,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.i(TAG, "사용자 정보 요청 성공" +
                             "\n회원번호: " + user.getId() +
                             "\n이메일: " + user.getKakaoAccount().getEmail());
-
                 }
                 Account user1 = user.getKakaoAccount();
                 System.out.println("사용자 계정 : " + user1);
@@ -1306,7 +1309,6 @@ public class MainActivity extends AppCompatActivity {
 
                 int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
                 if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
-
 
                     // GET 방식 파라미터
                     HttpUrl.Builder builder = HttpUrl.parse("http://54.180.155.66/login_kakao.php").newBuilder();
@@ -1333,7 +1335,7 @@ public class MainActivity extends AppCompatActivity {
                         public void onFailure(@NonNull Call call, @NonNull IOException e) {
                             e.printStackTrace();
                             Log.i(TAG, "CALLBACK ERROR CHECK : ", e);
-                        }
+                        } //  onFailure
 
                         @Override
                         public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
@@ -1354,15 +1356,15 @@ public class MainActivity extends AppCompatActivity {
 
                                             if (responseData.equals("1")) {
                                                 Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
+                                            } // if
+                                        } // else
 
                                     } catch (Exception e) {
                                         e.printStackTrace();
-                                    }
-                                }
-                            });
-                        }
+                                    } // catch
+                                } // run
+                            }); // runOnUiThread
+                        } // onResponse
                     });
                 }
 
@@ -1461,26 +1463,19 @@ public class MainActivity extends AppCompatActivity {
                                     } else {
                                         Log.i("[Google]", "responseData.equals(\"0\") else : " + responseData);
 //                                                Toast.makeText(getApplicationContext(), "Sign Up Failed", Toast.LENGTH_SHORT).show();
-                                    }
-
-
-                                }
-
+                                    } // else
+                                } // else
 
                             } catch (Exception e) {
                                 e.printStackTrace();
-                            }
-                        }
-                    });
-
-
-                }
-            });
-        }
-
+                            } // catch
+                        } // run
+                    }); // runOnUiThread
+                } // onResponse
+            }); // client.newCall
+        } // if
         Log.i(TAG, "GOOGLE INSERT INTO TABLE COMPLETE? CHECKING!");
-
-    }
+    } // method
 
     class getJSONData extends AsyncTask<String, Void, String> {
 
@@ -1763,11 +1758,21 @@ public class MainActivity extends AppCompatActivity {
                                                 Log.i(TAG, "[changeStreaming] songInfo time Check : " + time);
 
                                                 String[] nameCut = path.split("/");
-                                                name = nameCut[4];
-                                                String reName = name.replace("_", " ");
-                                                Log.i(TAG, "[changeStreaming] songInfo name Check : " + name);
 
-                                                Log.i(TAG, "[changeStreaming]  -----------------------------------------------");
+                                                if (pastSongName == "" || pastSongName == null || pastSongName.equals("")) {
+                                                    name = nameCut[4];
+                                                    String reName = name.replace("_", " ");
+                                                    Log.i(TAG, "changeStreaming - songInfo name Check *if : " + name);
+
+                                                    Log.i(TAG, "[changeStreaming]  -----------------------------------------------");
+
+                                                }
+                                                else {
+                                                    // TODO check (1) < 버튼 클릭 시 name에 값 넣어주고 여기서 확인
+                                                    // TODO check (2) > 버튼 클릭 시 name에 값을 넣어주고
+                                                    name = pastSongName;
+                                                    Log.i(TAG, "changeStreaming - songInfo name Check *else : " + name);
+                                                } // else
 
                                                 mediaPlayer.setLooping(false);
                                                 Log.i(TAG, "[changeStreaming]  MediaPlayer 생성");
@@ -1775,10 +1780,10 @@ public class MainActivity extends AppCompatActivity {
                                                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                                                 Log.i(TAG, "[changeStreaming] mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)");
 
-                                                // 경로
+                                                Log.i(TAG, "[changeStreaming] song name before streaming check : " + name);;
                                                 String uri = "http://54.180.155.66/" + name;
                                                 Log.i(TAG, "[changeStreaming] file name from music table : " + uri);
-
+                                                // 경로
                                                 mediaPlayer.setDataSource(uri);
 
                                                 isPlaying = true;
@@ -1807,7 +1812,7 @@ public class MainActivity extends AppCompatActivity {
                                                             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<GifDrawable> target, boolean isFirstResource) {
                                                                 // GIF 파일 로드에 실패한 경우의 처리
                                                                 return false;
-                                                            }
+                                                            } // onLoadFailed
 
                                                             @Override
                                                             public boolean onResourceReady(GifDrawable resource, Object model, Target<GifDrawable> target, DataSource dataSource, boolean isFirstResource) {
@@ -1815,7 +1820,7 @@ public class MainActivity extends AppCompatActivity {
                                                                 resource.setLoopCount(GifDrawable.LOOP_FOREVER); // 반복 재생 설정
                                                                 resource.start(); // GIF 파일 재생 시작
                                                                 return false;
-                                                            }
+                                                            } // onResourceReady
                                                         }).into(mainFull);
                                                 playingTime.setTextColor(Color.WHITE);
                                                 toPlayTime.setTextColor(Color.WHITE);
@@ -1834,21 +1839,24 @@ public class MainActivity extends AppCompatActivity {
                                                 // TODO ADD for SeekBar Moving
                                                 if (mediaPlayer.isPlaying()) {
                                                     mediaPlayer.stop();
+
                                                     try {
                                                         mediaPlayer.prepare();
+
                                                     } catch (IllegalStateException e) {
                                                         e.printStackTrace();
+
                                                     } catch (IOException e) {
                                                         e.printStackTrace();
-                                                    }
+                                                    } // catch
                                                     mediaPlayer.seekTo(0);
-
                                                     mainSeekBar.setProgress(0);
+
                                                 } else {
                                                     mediaPlayer.start();
 
                                                     Thread();
-                                                }
+                                                } // else
 
                                                 // TODO TOAST
                                                 Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
@@ -1870,9 +1878,11 @@ public class MainActivity extends AppCompatActivity {
                                                 if (artist.contains("_")) {
                                                     String artistName = artist.replace("_", " ");
                                                     mainLogo.setText(reReName + " • " + artistName);
+                                                    Log.i(TAG, "artist check (3) " + artistName);
 
                                                 } else {
                                                     mainLogo.setText(reReName + " • " + artist);
+                                                    Log.i(TAG, "artist check (4) " + artist);
                                                 }
                                                 now_song = reReName;
                                                 Log.i(TAG, "now_song now 3 : " + now_song);
@@ -2663,6 +2673,7 @@ public class MainActivity extends AppCompatActivity {
 
                                             mainLogo = findViewById(R.id.mainLogo);
                                             mainLogo.setText(reReName + " • " + artist);
+                                            Log.i(TAG, "artist check (5) " + artist);
                                             now_song = reReName;
 
                                             // TODO user Listened music Info add (first streaming)
@@ -3249,7 +3260,7 @@ public class MainActivity extends AppCompatActivity {
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<GifDrawable> target, boolean isFirstResource) {
                         // GIF 파일 로드에 실패한 경우의 처리
                         return false;
-                    }
+                    } // onLoadFailed
 
                     @Override
                     public boolean onResourceReady(GifDrawable resource, Object model, Target<GifDrawable> target, DataSource dataSource, boolean isFirstResource) {
@@ -3257,7 +3268,7 @@ public class MainActivity extends AppCompatActivity {
                         resource.setLoopCount(GifDrawable.LOOP_FOREVER); // 반복 재생 설정
                         resource.start(); // GIF 파일 재생 시작
                         return false;
-                    }
+                    } // onResourceReady
                 }).into(mainFull);
 
         Log.i(TAG, "Auto changeSong");
@@ -3276,36 +3287,34 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
-                }
-            });
+                } // dialog setPositiveButton onClick
+            }); // builder.setPositiveButton
             builder.show();
-        } else {
-            if (play.getText().toString().equals("")) {
 
+        } else {
+
+            if (play.getText().toString().equals("")) {
                 Log.i(TAG, "play의 모양이 아무것도 없을 때");
 
             } else {
-
                 Log.i(TAG, "play의 모양이 아무것도 없지않을 때");
 
                 play.setText("▶");
 
-                Log.i(TAG, "RightPlay 버튼 클릭");
-                Log.i(TAG, "RightPlay-------------------------------------------");
-
+                Log.i(TAG, "RightPlay 버튼 클릭-------------------------------------------");
 
                 if (mediaPlayer.isPlaying() || !playCheck) {
                     Log.i(TAG, "mediaPlayer.isPlaying() || playCheck == false");
                     play.setText("▶"); //TODO GOOD!
+
                     if (play.getText().toString().equals("▶")) {
                         Log.i(TAG, "[RightPlay] 플레이 모양이 재생일 때");
 
                         onStopButtonClick();
                     } // if
+
                 } else {
                     Log.i(TAG, "!mediaPlayer.isPlaying() || playCheck == true");
-
-                    Log.i(TAG, "mediaPlayer.isPlaying() || playCheck == false");
                     play.setText("▶"); //TODO GOOD!
                     if (play.getText().toString().equals("▶")) {
                         Log.i(TAG, "[RightPlay] 플레이 모양이 재생일 때");
@@ -3353,10 +3362,20 @@ public class MainActivity extends AppCompatActivity {
         String beforeSong = cutPastSongs[cutPastSongs.length - 1];
         Log.i(TAG, "cutLastPlayedSong beforeSong : " + beforeSong);
 
-        // TODO (1) 버튼 클릭 시 직전 노래 스트리밍
-        // TODO (2) 문자열에서 직전 노래 잘라주고 다시 쉐어드(played_list)에 넣기
-        // TODO (3) 잘라준 직전 노래 쉐어드(next_song)에 넣기
-        // TODO (4) > 버튼 클릭 시 쉐어드(next_song)에서 값 가져와서 서버로 스트리밍 요청
+        // TODO 아래에서 name에 값을 넣어주고, 곡 제목과 아티스트가 다르게 나오게 됐을 확률 높음
+//        pastSongName = beforeSong + ".mp3";
+//        Log.i(TAG, "cutLastPlayedSong song name check : " + name);
+
+        // TODO 끝부분 잘라서 다시 쉐어드에 넣기
+        String[] cutNowPlaySongName = pastSongs.split(beforeSong + "//");
+        String rePutStringInShared = cutNowPlaySongName[0];
+        Log.i(TAG, "cutLastPlayedSong rePutStringInShared check : " + rePutStringInShared);;
+        playedListEditor.putString(logIn.getText().toString(), rePutStringInShared);
+        playedListEditor.commit();
+
+        // TODO 서버랑 통신해서 이전 재생 곡 지워주기
+
+
     } // cutLastPlayedSong
 
 } // MainActivity CLASS END
