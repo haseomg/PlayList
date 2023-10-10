@@ -1655,10 +1655,24 @@ public class MainActivity extends AppCompatActivity {
                             Log.i(TAG, "[changeStreaming] ran past  nums : " + pastNumBox);
                         } // if
                     } // if
-                    Uri.Builder builder = new Uri.Builder()
-                            .appendQueryParameter("num", "1" + nextRanNum);
-                    String postParams = builder.build().getEncodedQuery();
-                    new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
+                    // TODO name or num?
+                    String needSongTimingCheck = playedListShared.getString("now", "none");
+                    Log.i(TAG, "needSongTimingCheck : " + needSongTimingCheck);
+                    Log.i(TAG, "needSongTimingCheck : " + needSongTimingCheck);
+
+                    if (needSongTimingCheck == "past" || needSongTimingCheck.equals("past")) {
+                        Uri.Builder builder = new Uri.Builder()
+                                .appendQueryParameter("past_song", pastSongName);
+                        String postParams = builder.build().getEncodedQuery();
+                        new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
+
+                    } else {
+                        Uri.Builder builder = new Uri.Builder()
+                                .appendQueryParameter("num", "1" + nextRanNum);
+                        String postParams = builder.build().getEncodedQuery();
+                        new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
+
+                    } // else
 
 //                             get 방식 파라미터 추가
                     HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/file_sampling.php").newBuilder();
@@ -1736,6 +1750,7 @@ public class MainActivity extends AppCompatActivity {
                                                 Log.i(TAG, "[changeStreaming] -----------------------------------------------");
 //                                                        startActivityString(MainActivity.class, "nickname", responseData);
 
+                                                // TODO songInfo reponse need change (past song playing)
                                                 String songInfo = responseData;
                                                 Log.i(TAG, "[changeStreaming] songInfo Check : " + songInfo);
 
@@ -1899,7 +1914,7 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
-                                    }
+                                    } // catch
                                 }
                             });
                         }
@@ -3384,8 +3399,8 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "cutLastPlayedSong beforeSong : " + beforeSong);
 
             // TODO 아래에서 name에 값을 넣어주고, 곡 제목과 아티스트가 다르게 나오게 됐을 확률 높음
-//        pastSongName = beforeSong + ".mp3";
-//        Log.i(TAG, "cutLastPlayedSong song name check : " + name);
+            pastSongName = beforeSong + ".mp3";
+            Log.i(TAG, "cutLastPlayedSong song name check : " + pastSongName);
 
             // TODO 끝부분 잘라서 다시 쉐어드에 넣기
             String[] cutNowPlaySongName = pastSongs.split(beforeSong + "//");
