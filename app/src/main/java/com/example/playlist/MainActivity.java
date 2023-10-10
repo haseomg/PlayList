@@ -166,6 +166,9 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences playedListShared;
     SharedPreferences.Editor playedListEditor;
 
+    SharedPreferences pastSongisPlayingCheckShared;
+    SharedPreferences.Editor pastSongisPlayingCheckEditor;
+
     String fromSignUpNickName;
     String fromSharedNickName;
     String pastNumBox = "";
@@ -241,6 +244,9 @@ public class MainActivity extends AppCompatActivity {
 
         playedListShared = getSharedPreferences("played_list", MODE_PRIVATE);
         playedListEditor = playedListShared.edit();
+
+        pastSongisPlayingCheckShared = getSharedPreferences("past_song", MODE_PRIVATE);
+        pastSongisPlayingCheckEditor = pastSongisPlayingCheckShared.edit();
 
         // TODO 랜덤 넘버 서버로부터 받아온당
         responseRandomNumbers();
@@ -784,7 +790,7 @@ public class MainActivity extends AppCompatActivity {
                                                             name = nameCut[4];
                                                             Log.i(TAG, "songInfo name Check : " + name);
 
-                                                            insertIntoPastMusicTable();
+//                                                            insertIntoPastMusicTable();
 //                                                            deleteFromMusicTable();
 
                                                             // TODO 4.close Player 조건 잘 세워야 함
@@ -1038,6 +1044,8 @@ public class MainActivity extends AppCompatActivity {
         rightPlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pastSongisPlayingCheckEditor.putString("now", "next");
+                pastSongisPlayingCheckEditor.commit();
                 gifCount++;
                 changeSong();
 
@@ -1137,14 +1145,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "leftPlay 버튼 클릭");
+                pastSongisPlayingCheckEditor.putString("now", "past");
+                pastSongisPlayingCheckEditor.commit();
                 cutLastPlayedSong();
                 changeSong();
 //                pastStreaming();
 
-            }
-        });
-
-    }
+            } // onClick
+        }); // setOnClickListener
+    } // onStart
 
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
@@ -1595,15 +1604,15 @@ public class MainActivity extends AppCompatActivity {
 
                     if (randomNumCheck.equals("") || randomNumCheck.length() == 0) {
                         responseRandomNumbers();
-                    }
-
+                    } // if
 
                     String ranRanRan = randomShared.getString("randomNumbers", "");
                     if (ranRanRan.length() != 0) {
+
                         if (randomNumCheck.length() > 0) {
                             char next = ranRanRan.charAt(0);
                             nextRanNum = String.valueOf(next);
-                        }
+                        } // if
 //                    firstRanNumToInt = Integer.parseInt(firstRanNum);
                         Log.i(TAG, "[changeStreaming] ran now check : " + nextRanNum);
 //                    ranRanRan = randomNumCheck;
@@ -1618,7 +1627,7 @@ public class MainActivity extends AppCompatActivity {
                             randomEditor.commit();
                             pastNumBox = nextRanNum + pastNumBox;
                             Log.i(TAG, "[changeStreaming]ran past nums : " + pastNumBox);
-                        }
+                        } // if
                     }
 
                     if (ranRanRan.length() == 0 || ranRanRan.equals("")) {
@@ -1656,13 +1665,12 @@ public class MainActivity extends AppCompatActivity {
                             randomEditor.commit();
                             pastNumBox = next + pastNumBox;
                             Log.i(TAG, "[changeStreaming] ran past  nums : " + pastNumBox);
-                        }
-                    }
+                        } // if
+                    } // if
                     Uri.Builder builder = new Uri.Builder()
                             .appendQueryParameter("num", "1" + nextRanNum);
                     String postParams = builder.build().getEncodedQuery();
                     new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
-
 
 //                             get 방식 파라미터 추가
                     HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/file_sampling.php").newBuilder();
@@ -1672,15 +1680,16 @@ public class MainActivity extends AppCompatActivity {
                     Log.i(TAG, "[changeStreaming] -----------------------------------------------");
 
                     // post 파라미터 추가
-
                     try {
+
                         if (nextRanNum == null) {
                             nextRanNum = "1";
-                        }
+                        } // if
+
                     } catch (NullPointerException e) {
                         e.printStackTrace();
                         nextRanNum = "1";
-                    }
+                    } // catch
 
                     RequestBody formBody = new FormBody.Builder()
                             .add("num", nextRanNum.trim())
@@ -1694,14 +1703,13 @@ public class MainActivity extends AppCompatActivity {
                             .post(formBody)
                             .build();
 
-
                     // 응답 콜백
                     client.newCall(request).enqueue(new Callback() {
                         @Override
                         public void onFailure(@NonNull Call call, @NonNull IOException e) {
                             Log.e(TAG, "[changeStreaming] play callback onFailure : " + e);
                             Log.i(TAG, "[changeStreaming]  -----------------------------------------------");
-                        }
+                        } // onFailure
 
                         @Override
                         public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
@@ -1722,16 +1730,19 @@ public class MainActivity extends AppCompatActivity {
                                             Log.e(TAG, "[changeStreaming] 응답 실패 : " + response);
                                             Toast.makeText(getApplicationContext(), "네트워크 문제 발생", Toast.LENGTH_SHORT).show();
                                             Log.i(TAG, "[changeStreaming] -----------------------------------------------");
+
                                         } else {
                                             // 응답 성공
                                             Log.i(TAG, "[changeStreaming] 응답 성공");
                                             final String responseData = response.body().string().trim();
                                             Log.i(TAG, "[changeStreaming] responseData Check : " + responseData);
                                             Log.i(TAG, "[changeStreaming] -----------------------------------------------");
+
                                             if (responseData.equals("1")) {
                                                 Log.i(TAG, "[changeStreaming] responseData 가 1일 때 : " + responseData);
                                                 Log.i(TAG, "[changeStreaming] -----------------------------------------------");
                                                 Toast.makeText(getApplicationContext(), "아이디 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show();
+
                                             } else {
                                                 Log.i(TAG, "[changeStreaming] responseData 가 1이 아닐 때 : " + responseData);
                                                 Log.i(TAG, "[changeStreaming] -----------------------------------------------");
@@ -1890,9 +1901,17 @@ public class MainActivity extends AppCompatActivity {
                                                 // TODO user Listened music Info add (first streaming)
                                                 // playedList = song name, artist name, time add
 //                                                            played = played + now_song + "//";
-                                                setPlayedInsertToTable(logIn.getText().toString(), now_song);
-                                                Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
-                                                ;
+                                                // TODO 다음 곡 들을 때만
+                                                String playTimingCheck = pastSongisPlayingCheckShared.getString("now", "none");
+                                                if (playTimingCheck.equals("next")) {
+                                                    setPlayedInsertToTable(logIn.getText().toString(), now_song);
+                                                    Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
+                                                    Log.i(TAG, "playTimingCheck (next) : " + playTimingCheck);
+
+                                                } else {
+                                                    Log.i(TAG, "playTimingCheck (past) : " + playTimingCheck);
+                                                } // else
+
 
 
                                                 // TODO selectLikes
@@ -3353,6 +3372,31 @@ public class MainActivity extends AppCompatActivity {
         }); // call
     } // setPlayedInsertToTable
 
+    void setPlayedDeleteToTable(String user, String pastSong) {
+        // TODO 곡 들을 때마다 서버로 곡 기록 보내주기
+        Log.i(TAG, "played - setPlayedDeleteToTable");
+
+        retrofit2.Call<Void> call = serverApi.deletePlayedRecord(user, pastSong);
+        call.enqueue(new retrofit2.Callback<Void>() {
+            @Override
+            public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Log.i(TAG, "played - setPlayedDeleteToTable onResponse() isSuccessful");
+                    Log.i(TAG, "played - Insert (response success)  and response.body check : " + response.body());
+
+                } else {
+                    Log.i(TAG, "played - setPlayedDeleteToTable onResponse() !!!!!isSuccessful");
+                    Log.i(TAG, "played - Insert (response not successful)  and response.body check : " + response.body());
+                } // else
+            } // onResponse
+
+            @Override
+            public void onFailure(retrofit2.Call<Void> call, Throwable t) {
+                Log.i(TAG, "played - onFailure : " + t.getMessage());
+            } // onFailure
+        }); // call.enqueue
+    } // setPlayedDeleteToTable
+
     public void cutLastPlayedSong() {
         // TODO < 버튼 클릭 시 playedList 마지막 아이템의 해당 곡 제목 기준으로 서버로 스트리밍 요청
         String pastSongs = playedListShared.getString(logIn.getText().toString(), "");
@@ -3374,7 +3418,7 @@ public class MainActivity extends AppCompatActivity {
         playedListEditor.commit();
 
         // TODO 서버랑 통신해서 이전 재생 곡 지워주기
-
+        setPlayedDeleteToTable(logIn.getText().toString(), beforeSong);
 
     } // cutLastPlayedSong
 

@@ -142,4 +142,11 @@ public interface ServerApi {
             @Field("playedSongs") String playedSongs
     );
 
+    @FormUrlEncoded
+    @POST("delete_played.php")
+    Call<Void> deletePlayedRecord(
+            @Field("user") String user,
+            @Field("song_name") String song_name
+    );
+
 }
