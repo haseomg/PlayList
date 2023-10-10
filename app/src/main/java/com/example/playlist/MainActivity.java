@@ -794,6 +794,7 @@ public class MainActivity extends AppCompatActivity {
                                                             // TODO 4.close Player 조건 잘 세워야 함
 //                                                        closePlayer();
 //                                                        mediaPlayer = new MediaPlayer();
+
                                                             // TODO 연속 재생 시켜야 해서 한 곡 반복 해제
                                                             mediaPlayer.setLooping(false);
                                                             Log.i(TAG, "MediaPlayer 생성");
@@ -932,10 +933,10 @@ public class MainActivity extends AppCompatActivity {
                                                                 Log.i(TAG, "now_song now 5 (before insert) : " + now_song);
 
                                                                 // TODO divide check point (1)
-//                                                                if (now_song.length() > 2 || now_song != null) {
-//                                                                    Log.i(TAG, "now_song now 3 (when insert) : " + now_song);
-//                                                                    setPlayedInsertToTable(logIn.getText().toString(), now_song);
-//                                                                } // if
+                                                                if (now_song.length() > 2 || now_song != null) {
+                                                                    Log.i(TAG, "now_song now 3 (when insert) : " + now_song);
+                                                                    setPlayedInsertToTable(logIn.getText().toString(), now_song);
+                                                                } // if
 
                                                             } catch (NullPointerException e) {
                                                                 Log.e(TAG, "now_song now NULL : " + e);
@@ -1036,11 +1037,6 @@ public class MainActivity extends AppCompatActivity {
                 } // First biggest else end
 
                 Log.i(TAG, "playCheck : " + playCheck);
-
-                // TODO now_song이 null이여서 빈 값이 들어가
-//                if (now_song != null || !now_song.equals("")) {
-//                Log.i(TAG, "now_song now 3 (insert) : " + now_song);
-//                setPlayedInsertToTable(logIn.getText().toString(), now_song);
 
 //                } // if
             } // OnClick 메서드 닫아주는 중괄호
@@ -1780,7 +1776,7 @@ public class MainActivity extends AppCompatActivity {
                                                 Log.i(TAG, "[changeStreaming] -----------------------------------------------");
 //                                                        startActivityString(MainActivity.class, "nickname", responseData);
 
-                                                // TODO songInfo reponse need change (past song playing)
+                                                // TODO 이전 곡 재생할 때 원하는 정보를 못 가져오고, 랜덤 곡의 정보를 가져온다.
                                                 String songInfo = responseData;
                                                 Log.i(TAG, "[changeStreaming] songInfo Check : " + songInfo);
 
@@ -2012,6 +2008,7 @@ public class MainActivity extends AppCompatActivity {
         played = played + now_song + "//";
 //                                                 TODO 다음 곡 들을 때만
         String playTimingCheck = pastSongisPlayingCheckShared.getString("now", "none");
+
         if (playTimingCheck.equals("next")) {
             setPlayedInsertToTable(logIn.getText().toString(), now_song);
             Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
