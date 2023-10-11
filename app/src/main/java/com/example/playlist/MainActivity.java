@@ -1556,6 +1556,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    // TODO - Use setPastSongName
     public void changeStreaming() {
 
         Log.i(TAG, "onClick Check : " + playCheck);
@@ -1630,6 +1631,7 @@ public class MainActivity extends AppCompatActivity {
                         randomEditor.commit();
                         pastNumBox = reNext + pastNumBox;
                         Log.i(TAG, "[changeStreaming] ran past  nums : " + pastNumBox);
+
                         if (reRan.length() > 0) {
                             String reRanRan = randomShared.getString("randomNumbers", "");
                             Log.i(TAG, "[changeStreaming] ran reRanRan check : " + reRanRan);
@@ -1648,35 +1650,289 @@ public class MainActivity extends AppCompatActivity {
                             Log.i(TAG, "[changeStreaming] ran past  nums : " + pastNumBox);
                         } // if
                     } // if
+
+
+
+
+
+
+
+
+
                     // TODO name or num?
                     String needSongTimingCheck = pastSongisPlayingCheckShared.getString("now", "none");
                     Log.i(TAG, "divide - needSongTimingCheck : " + needSongTimingCheck);
                     Log.i(TAG, "divide - pastSongName Check : " + pastSongName);
 
-//                    if (needSongTimingCheck == "past" || needSongTimingCheck.equals("past")) {
-//                        Log.i(TAG, "divide - songTiming (if past) : " + needSongTimingCheck);
-//
-//                        if (!pastSongName.equals("") || pastSongName != "") {
-//
-//                            if (pastSongName.contains(" ")) {
-//                                String rePastSongName = pastSongName.replace(" ", "_");
-//                                Log.i(TAG, "divide rePastSongName Check : " + rePastSongName);
-//                                Uri.Builder builder = new Uri.Builder()
-//                                        .appendQueryParameter("past_song", pastSongName);
-//                                String postParams = builder.build().getEncodedQuery();
-//                                new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
-//                            } // if
-//                        } // if
-//
-//                    } else {
-                    Log.i(TAG, "divide - songTiming (else) : " + needSongTimingCheck);
-                    Uri.Builder builder = new Uri.Builder()
-                            .appendQueryParameter("num", "1" + nextRanNum);
-                    String postParams = builder.build().getEncodedQuery();
-                    new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
+                    if (needSongTimingCheck == "past" || needSongTimingCheck.equals("past")) {
+                        // 이전 곡 재생을 눌렀을 때
+                        Log.i(TAG, "divide - songTiming (if past) : " + needSongTimingCheck);
 
-//                    } // else
+                        if (!pastSongName.equals("") || pastSongName != "") {
+                            // 직전 곡 이름의 문자열이 빈값이 아니거나 빈값을 포함하고 있지 않을 때
 
+                            if (pastSongName.contains(" ")) {
+                                // 직전 곡 이름의 띄어쓰기가 포함되어있을 경우 언더바로 대체
+                                String rePastSongName = pastSongName.replace(" ", "_");
+                                Log.i(TAG, "divide rePastSongName Check : " + rePastSongName);
+
+                                Uri.Builder builder = new Uri.Builder()
+                                        .appendQueryParameter("past_song", pastSongName);
+                                String postParams = builder.build().getEncodedQuery();
+                                new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
+                            } // else
+//                             get 방식 파라미터 추가
+                            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/file_sampling.php").newBuilder();
+                            urlBuilder.addQueryParameter("ver", "1.0");
+                            String url = urlBuilder.build().toString();
+                            Log.i(TAG, "[changeStreaming] String url 확인 : " + url);
+                            Log.i(TAG, "[changeStreaming] -----------------------------------------------");
+
+                                // 직전 곡 이름의 문자열이 빈값이 아니거나 빈값을 포함하고 있지 않을 때
+                                RequestBody formBody = new FormBody.Builder()
+                                        .add("past_song", pastSongName)
+                                        .build();
+                                // past_song 보내고 -> 테이블의 pastSongName 기준으로 path, name 가져올 거야
+
+                                // 요청 만들기
+                                OkHttpClient client = new OkHttpClient();
+                                Request request = new Request.Builder()
+                                        .url(url)
+                                        .post(formBody)
+                                        .build();
+                                // 응답 콜백
+                                client.newCall(request).enqueue(new Callback() {
+                                    @Override
+                                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                        Log.e(TAG, "[changeStreaming] play callback onFailure : " + e);
+                                        Log.i(TAG, "[changeStreaming]  -----------------------------------------------");
+                                    } // onFailure
+
+                                    @Override
+                                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                                        Log.i(TAG, "[changeStreaming] play callback onResponse");
+                                        Log.i(TAG, "[changeStreaming] -----------------------------------------------");
+
+                                        // 서브 스레드 UI 변경할 경우 에러
+                                        // 메인 스레드 UI 설정
+                                        runOnUiThread(new Runnable() {
+                                            @RequiresApi(api = Build.VERSION_CODES.Q)
+                                            @Override
+                                            public void run() {
+
+                                                try {
+
+                                                    if (!response.isSuccessful()) {
+                                                        // 응답 실패
+                                                        Log.e(TAG, "[changeStreaming] 응답 실패 : " + response);
+                                                        Toast.makeText(getApplicationContext(), "네트워크 문제 발생", Toast.LENGTH_SHORT).show();
+                                                        Log.i(TAG, "[changeStreaming] -----------------------------------------------");
+
+                                                    } else {
+                                                        // 응답 성공
+                                                        Log.i(TAG, "[changeStreaming] 응답 성공");
+                                                        final String responseData = response.body().string().trim();
+                                                        Log.i(TAG, "[changeStreaming] responseData Check : " + responseData);
+                                                        Log.i(TAG, "[changeStreaming] -----------------------------------------------");
+
+                                                        if (responseData.equals("1")) {
+                                                            Log.i(TAG, "[changeStreaming] responseData 가 1일 때 : " + responseData);
+                                                            Log.i(TAG, "[changeStreaming] -----------------------------------------------");
+                                                            Toast.makeText(getApplicationContext(), "아이디 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show();
+
+                                                        } else {
+                                                            Log.i(TAG, "[changeStreaming] responseData 가 1이 아닐 때 : " + responseData);
+                                                            Log.i(TAG, "[changeStreaming] -----------------------------------------------");
+//                                                        startActivityString(MainActivity.class, "nickname", responseData);
+
+                                                            String songInfo = responseData;
+                                                            Log.i(TAG, "[changeStreaming] songInfo Check : " + songInfo);
+
+                                                            String[] numCut = songInfo.split("___");
+                                                            String num = numCut[0];
+                                                            Log.i(TAG, "[changeStreaming] ongInfo num Check : " + num);
+
+                                                            String deleteNum = numCut[1];
+                                                            String[] artistCut = deleteNum.split("###");
+                                                            artist = artistCut[0];
+                                                            Log.i(TAG, "[changeStreaming] songInfo artist Check : " + artist);
+
+                                                            String deleteArtist = artistCut[1];
+                                                            String[] pathCut = deleteArtist.split("@@@");
+                                                            String path = pathCut[0];
+                                                            Log.i(TAG, "[changeStreaming] songInfo path Check : " + path);
+
+                                                            time = pathCut[1];
+                                                            Log.i(TAG, "[changeStreaming] songInfo time Check : " + time);
+
+                                                            String[] nameCut = path.split("/");
+
+                                                            if (pastSongName == "" || pastSongName == null || pastSongName.equals("")) {
+                                                                name = nameCut[4];
+                                                                String reName = name.replace("_", " ");
+                                                                Log.i(TAG, "changeStreaming - songInfo name Check *if : " + name);
+
+                                                                Log.i(TAG, "[changeStreaming]  -----------------------------------------------");
+
+                                                            } else {
+                                                                // TODO check (1) < 버튼 클릭 시 name에 값 넣어주고 여기서 확인
+                                                                // TODO check (2) > 버튼 클릭 시 name에 값을 넣어주고
+                                                                name = pastSongName;
+                                                                Log.i(TAG, "changeStreaming - songInfo name Check *else : " + name);
+                                                            } // else
+
+                                                            mediaPlayer.setLooping(false);
+                                                            Log.i(TAG, "[changeStreaming]  MediaPlayer 생성");
+
+                                                            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                                            Log.i(TAG, "[changeStreaming] mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)");
+
+                                                            Log.i(TAG, "[changeStreaming] song name before streaming check : " + name);
+                                                            ;
+                                                            String uri = "http://54.180.155.66/" + name;
+                                                            Log.i(TAG, "[changeStreaming] file name from music table : " + uri);
+                                                            // 경로
+                                                            mediaPlayer.setDataSource(uri);
+
+                                                            isPlaying = true;
+//                                                play.setText("❚❚");
+                                                            Log.i(TAG, "[changeStreaming] mediaPlayer.setDataSource(path)");
+
+                                                            mediaPlayer.prepareAsync();
+                                                            Log.i(TAG, "[changeStreaming] mediaPlayer.prepareAsync()");
+
+                                                            // TODO
+                                                            mainSeekBar.setMax(mediaPlayer.getDuration());
+
+                                                            mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+                                                            Log.i(TAG, "[changeStreaming] mediaPlayer.setWakeMode");
+                                                            Log.i(TAG, "[changeStreaming]  -----------------------------------------------");
+
+//                                                gif.playing();
+
+                                                            // TODO gif 직접추가
+                                                            Glide.with(mainCtx)
+                                                                    .asGif()
+                                                                    .load(R.drawable.gradation)
+                                                                    .centerCrop()
+                                                                    .listener(new RequestListener<GifDrawable>() {
+                                                                        @Override
+                                                                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<GifDrawable> target, boolean isFirstResource) {
+                                                                            // GIF 파일 로드에 실패한 경우의 처리
+                                                                            return false;
+                                                                        } // onLoadFailed
+
+                                                                        @Override
+                                                                        public boolean onResourceReady(GifDrawable resource, Object model, Target<GifDrawable> target, DataSource dataSource, boolean isFirstResource) {
+                                                                            // GIF 파일 로드에 성공한 경우의 처리
+                                                                            resource.setLoopCount(GifDrawable.LOOP_FOREVER); // 반복 재생 설정
+                                                                            resource.start(); // GIF 파일 재생 시작
+                                                                            return false;
+                                                                        } // onResourceReady
+                                                                    }).into(mainFull);
+                                                            playingTime.setTextColor(Color.WHITE);
+                                                            toPlayTime.setTextColor(Color.WHITE);
+                                                            // TODO background
+                                                            mainPlayLayout.setBackgroundColor(Color.parseColor("#00ff0000"));
+                                                            play.setTextColor(Color.WHITE);
+                                                            play.setAlpha(0.7f);
+                                                            leftPlayBtn.setAlpha(0.7f);
+                                                            rightPlayBtn.setAlpha(0.7f);
+                                                            playingTime.setAlpha(0.7f);
+                                                            toPlayTime.setAlpha(0.7f);
+
+                                                            mainLogo.setAlpha(0.8f);
+                                                            upload.setAlpha(0.8f);
+
+                                                            // TODO ADD for SeekBar Moving
+                                                            if (mediaPlayer.isPlaying()) {
+                                                                mediaPlayer.stop();
+
+                                                                try {
+                                                                    mediaPlayer.prepare();
+
+                                                                } catch (IllegalStateException e) {
+                                                                    e.printStackTrace();
+
+                                                                } catch (IOException e) {
+                                                                    e.printStackTrace();
+                                                                } // catch
+                                                                mediaPlayer.seekTo(0);
+                                                                mainSeekBar.setProgress(0);
+
+                                                            } else {
+                                                                mediaPlayer.start();
+                                                                Thread();
+                                                            } // else
+
+                                                            // TODO TOAST
+                                                            Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
+                                                            toast.show();
+
+                                                            updateSeekBar();
+
+                                                            songTime = findViewById(R.id.mainToPlayTime);
+                                                            songTime.setText(time);
+
+                                                            String[] exceptMp3 = name.split(".mp3");
+                                                            String justName = exceptMp3[0];
+                                                            String reReName = justName.replace("_", " ");
+
+                                                            Log.i(TAG, "[RightPlay] song just name 확인 : " + reReName);
+                                                            Log.i(TAG, "[RightPlay] -----------------------------------------------");
+
+                                                            mainLogo = findViewById(R.id.mainLogo);
+                                                            if (artist.contains("_")) {
+                                                                String artistName = artist.replace("_", " ");
+                                                                mainLogo.setText(reReName + " • " + artistName);
+                                                                Log.i(TAG, "artist check (3) " + artistName);
+
+                                                            } else {
+                                                                mainLogo.setText(reReName + " • " + artist);
+                                                                Log.i(TAG, "artist check (4) " + artist);
+                                                            }
+
+                                                            now_song = reReName;
+                                                            Log.i(TAG, "now_song now 4 (change streaming) : " + now_song);
+                                                            // TODO setPlayedInsert (3) in changeStreaming
+                                                            String playTimingCheck = pastSongisPlayingCheckShared.getString("now", "none");
+                                                            if (playTimingCheck.equals("next")) {
+                                                                setPlayedInsertToTable(logIn.getText().toString(), now_song);
+                                                                Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
+                                                                Log.i(TAG, "played - playTimingCheck (next) : " + playTimingCheck);
+                                                                Log.i(TAG, "played - now_song now 4 *if (change Streaming) : " + now_song);
+
+                                                            } else {
+                                                                Log.i(TAG, "played - playTimingCheck (past) : " + playTimingCheck);
+                                                                Log.i(TAG, "played - now_song now 4 *else (change Streaming) : " + now_song);
+                                                            } // else
+
+                                                            // TODO selectLikes
+                                                            updateHeart();
+
+                                                            if (!responseData.equals(0)) {
+//                                                            responserData " + " 기준으로 잘라줘야 해
+                                                                Log.i("[RightPlay]", "responseData 가 0이 아닐 때 : " + responseData);
+                                                                Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                                                            } // if
+                                                        }
+                                                    }
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                } // catch
+                                            }
+                                        });
+                                    }
+                                });
+                        } // if
+//                  직전 곡 재생일 때 상황 종료
+                    } else {
+                        Log.i(TAG, "divide - songTiming (else) : " + needSongTimingCheck);
+                        Uri.Builder builder = new Uri.Builder()
+                                .appendQueryParameter("num", "1" + nextRanNum);
+                        String postParams = builder.build().getEncodedQuery();
+                        new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
+                    } // else
 //                             get 방식 파라미터 추가
                     HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/file_sampling.php").newBuilder();
                     urlBuilder.addQueryParameter("ver", "1.0");
@@ -1695,242 +1951,254 @@ public class MainActivity extends AppCompatActivity {
                         nextRanNum = "1";
                     } // catch
 
-                    RequestBody formBody = new FormBody.Builder()
-                            .add("num", nextRanNum.trim())
-                            .build();
-                    // num을 보내고 -> 테이블의 num을 기준으로 path, name 가져올 거야
+                    if (needSongTimingCheck == "past" || needSongTimingCheck.equals("past")) {
+                        // 이전 곡 재생을 눌렀을 때
+                        Log.i(TAG, "divide - songTiming (if past) : " + needSongTimingCheck);
 
-                    // 요청 만들기
-                    OkHttpClient client = new OkHttpClient();
-                    Request request = new Request.Builder()
-                            .url(url)
-                            .post(formBody)
-                            .build();
+                        if (!pastSongName.equals("") || pastSongName != "") {
 
-                    // 응답 콜백
-                    client.newCall(request).enqueue(new Callback() {
-                        @Override
-                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                            Log.e(TAG, "[changeStreaming] play callback onFailure : " + e);
-                            Log.i(TAG, "[changeStreaming]  -----------------------------------------------");
-                        } // onFailure
 
-                        @Override
-                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                            Log.i(TAG, "[changeStreaming] play callback onResponse");
-                            Log.i(TAG, "[changeStreaming] -----------------------------------------------");
+                        }
+                    } else {
+                        // 직전 곡 이름의 문자열이 빈값이 아니거나 빈값을 포함하고 있지 않을 때
+                        RequestBody formBody = new FormBody.Builder()
+                                .add("num", nextRanNum.trim())
+                                .build();
+                        // num을 보내고 -> 테이블의 num을 기준으로 path, name 가져올 거야
 
-                            // 서브 스레드 UI 변경할 경우 에러
-                            // 메인 스레드 UI 설정
-                            runOnUiThread(new Runnable() {
-                                @RequiresApi(api = Build.VERSION_CODES.Q)
-                                @Override
-                                public void run() {
+                        // 요청 만들기
+                        OkHttpClient client = new OkHttpClient();
+                        Request request = new Request.Builder()
+                                .url(url)
+                                .post(formBody)
+                                .build();
+                        // 응답 콜백
+                        client.newCall(request).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                Log.e(TAG, "[changeStreaming] play callback onFailure : " + e);
+                                Log.i(TAG, "[changeStreaming]  -----------------------------------------------");
+                            } // onFailure
 
-                                    try {
+                            @Override
+                            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                                Log.i(TAG, "[changeStreaming] play callback onResponse");
+                                Log.i(TAG, "[changeStreaming] -----------------------------------------------");
 
-                                        if (!response.isSuccessful()) {
-                                            // 응답 실패
-                                            Log.e(TAG, "[changeStreaming] 응답 실패 : " + response);
-                                            Toast.makeText(getApplicationContext(), "네트워크 문제 발생", Toast.LENGTH_SHORT).show();
-                                            Log.i(TAG, "[changeStreaming] -----------------------------------------------");
+                                // 서브 스레드 UI 변경할 경우 에러
+                                // 메인 스레드 UI 설정
+                                runOnUiThread(new Runnable() {
+                                    @RequiresApi(api = Build.VERSION_CODES.Q)
+                                    @Override
+                                    public void run() {
 
-                                        } else {
-                                            // 응답 성공
-                                            Log.i(TAG, "[changeStreaming] 응답 성공");
-                                            final String responseData = response.body().string().trim();
-                                            Log.i(TAG, "[changeStreaming] responseData Check : " + responseData);
-                                            Log.i(TAG, "[changeStreaming] -----------------------------------------------");
+                                        try {
 
-                                            if (responseData.equals("1")) {
-                                                Log.i(TAG, "[changeStreaming] responseData 가 1일 때 : " + responseData);
+                                            if (!response.isSuccessful()) {
+                                                // 응답 실패
+                                                Log.e(TAG, "[changeStreaming] 응답 실패 : " + response);
+                                                Toast.makeText(getApplicationContext(), "네트워크 문제 발생", Toast.LENGTH_SHORT).show();
                                                 Log.i(TAG, "[changeStreaming] -----------------------------------------------");
-                                                Toast.makeText(getApplicationContext(), "아이디 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show();
 
                                             } else {
-                                                Log.i(TAG, "[changeStreaming] responseData 가 1이 아닐 때 : " + responseData);
+                                                // 응답 성공
+                                                Log.i(TAG, "[changeStreaming] 응답 성공");
+                                                final String responseData = response.body().string().trim();
+                                                Log.i(TAG, "[changeStreaming] responseData Check : " + responseData);
                                                 Log.i(TAG, "[changeStreaming] -----------------------------------------------");
-//                                                        startActivityString(MainActivity.class, "nickname", responseData);
 
-                                                String songInfo = responseData;
-                                                Log.i(TAG, "[changeStreaming] songInfo Check : " + songInfo);
-
-                                                String[] numCut = songInfo.split("___");
-                                                String num = numCut[0];
-                                                Log.i(TAG, "[changeStreaming] ongInfo num Check : " + num);
-
-                                                String deleteNum = numCut[1];
-                                                String[] artistCut = deleteNum.split("###");
-                                                artist = artistCut[0];
-                                                Log.i(TAG, "[changeStreaming] songInfo artist Check : " + artist);
-
-                                                String deleteArtist = artistCut[1];
-                                                String[] pathCut = deleteArtist.split("@@@");
-                                                String path = pathCut[0];
-                                                Log.i(TAG, "[changeStreaming] songInfo path Check : " + path);
-
-                                                time = pathCut[1];
-                                                Log.i(TAG, "[changeStreaming] songInfo time Check : " + time);
-
-                                                String[] nameCut = path.split("/");
-
-                                                if (pastSongName == "" || pastSongName == null || pastSongName.equals("")) {
-                                                    name = nameCut[4];
-                                                    String reName = name.replace("_", " ");
-                                                    Log.i(TAG, "changeStreaming - songInfo name Check *if : " + name);
-
-                                                    Log.i(TAG, "[changeStreaming]  -----------------------------------------------");
+                                                if (responseData.equals("1")) {
+                                                    Log.i(TAG, "[changeStreaming] responseData 가 1일 때 : " + responseData);
+                                                    Log.i(TAG, "[changeStreaming] -----------------------------------------------");
+                                                    Toast.makeText(getApplicationContext(), "아이디 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show();
 
                                                 } else {
-                                                    // TODO check (1) < 버튼 클릭 시 name에 값 넣어주고 여기서 확인
-                                                    // TODO check (2) > 버튼 클릭 시 name에 값을 넣어주고
-                                                    name = pastSongName;
-                                                    Log.i(TAG, "changeStreaming - songInfo name Check *else : " + name);
-                                                } // else
+                                                    Log.i(TAG, "[changeStreaming] responseData 가 1이 아닐 때 : " + responseData);
+                                                    Log.i(TAG, "[changeStreaming] -----------------------------------------------");
+//                                                        startActivityString(MainActivity.class, "nickname", responseData);
 
-                                                mediaPlayer.setLooping(false);
-                                                Log.i(TAG, "[changeStreaming]  MediaPlayer 생성");
+                                                    String songInfo = responseData;
+                                                    Log.i(TAG, "[changeStreaming] songInfo Check : " + songInfo);
 
-                                                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                                                Log.i(TAG, "[changeStreaming] mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)");
+                                                    String[] numCut = songInfo.split("___");
+                                                    String num = numCut[0];
+                                                    Log.i(TAG, "[changeStreaming] ongInfo num Check : " + num);
 
-                                                Log.i(TAG, "[changeStreaming] song name before streaming check : " + name);
-                                                ;
-                                                String uri = "http://54.180.155.66/" + name;
-                                                Log.i(TAG, "[changeStreaming] file name from music table : " + uri);
-                                                // 경로
-                                                mediaPlayer.setDataSource(uri);
+                                                    String deleteNum = numCut[1];
+                                                    String[] artistCut = deleteNum.split("###");
+                                                    artist = artistCut[0];
+                                                    Log.i(TAG, "[changeStreaming] songInfo artist Check : " + artist);
 
-                                                isPlaying = true;
+                                                    String deleteArtist = artistCut[1];
+                                                    String[] pathCut = deleteArtist.split("@@@");
+                                                    String path = pathCut[0];
+                                                    Log.i(TAG, "[changeStreaming] songInfo path Check : " + path);
+
+                                                    time = pathCut[1];
+                                                    Log.i(TAG, "[changeStreaming] songInfo time Check : " + time);
+
+                                                    String[] nameCut = path.split("/");
+
+                                                    if (pastSongName == "" || pastSongName == null || pastSongName.equals("")) {
+                                                        name = nameCut[4];
+                                                        String reName = name.replace("_", " ");
+                                                        Log.i(TAG, "changeStreaming - songInfo name Check *if : " + name);
+
+                                                        Log.i(TAG, "[changeStreaming]  -----------------------------------------------");
+
+                                                    } else {
+                                                        // TODO check (1) < 버튼 클릭 시 name에 값 넣어주고 여기서 확인
+                                                        // TODO check (2) > 버튼 클릭 시 name에 값을 넣어주고
+                                                        name = pastSongName;
+                                                        Log.i(TAG, "changeStreaming - songInfo name Check *else : " + name);
+                                                    } // else
+
+                                                    mediaPlayer.setLooping(false);
+                                                    Log.i(TAG, "[changeStreaming]  MediaPlayer 생성");
+
+                                                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                                    Log.i(TAG, "[changeStreaming] mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)");
+
+                                                    Log.i(TAG, "[changeStreaming] song name before streaming check : " + name);
+                                                    ;
+                                                    String uri = "http://54.180.155.66/" + name;
+                                                    Log.i(TAG, "[changeStreaming] file name from music table : " + uri);
+                                                    // 경로
+                                                    mediaPlayer.setDataSource(uri);
+
+                                                    isPlaying = true;
 //                                                play.setText("❚❚");
-                                                Log.i(TAG, "[changeStreaming] mediaPlayer.setDataSource(path)");
+                                                    Log.i(TAG, "[changeStreaming] mediaPlayer.setDataSource(path)");
 
-                                                mediaPlayer.prepareAsync();
-                                                Log.i(TAG, "[changeStreaming] mediaPlayer.prepareAsync()");
+                                                    mediaPlayer.prepareAsync();
+                                                    Log.i(TAG, "[changeStreaming] mediaPlayer.prepareAsync()");
 
-                                                // TODO
-                                                mainSeekBar.setMax(mediaPlayer.getDuration());
+                                                    // TODO
+                                                    mainSeekBar.setMax(mediaPlayer.getDuration());
 
-                                                mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
-                                                Log.i(TAG, "[changeStreaming] mediaPlayer.setWakeMode");
-                                                Log.i(TAG, "[changeStreaming]  -----------------------------------------------");
+                                                    mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+                                                    Log.i(TAG, "[changeStreaming] mediaPlayer.setWakeMode");
+                                                    Log.i(TAG, "[changeStreaming]  -----------------------------------------------");
 
 //                                                gif.playing();
 
-                                                // TODO gif 직접추가
-                                                Glide.with(mainCtx)
-                                                        .asGif()
-                                                        .load(R.drawable.gradation)
-                                                        .centerCrop()
-                                                        .listener(new RequestListener<GifDrawable>() {
-                                                            @Override
-                                                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<GifDrawable> target, boolean isFirstResource) {
-                                                                // GIF 파일 로드에 실패한 경우의 처리
-                                                                return false;
-                                                            } // onLoadFailed
+                                                    // TODO gif 직접추가
+                                                    Glide.with(mainCtx)
+                                                            .asGif()
+                                                            .load(R.drawable.gradation)
+                                                            .centerCrop()
+                                                            .listener(new RequestListener<GifDrawable>() {
+                                                                @Override
+                                                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<GifDrawable> target, boolean isFirstResource) {
+                                                                    // GIF 파일 로드에 실패한 경우의 처리
+                                                                    return false;
+                                                                } // onLoadFailed
 
-                                                            @Override
-                                                            public boolean onResourceReady(GifDrawable resource, Object model, Target<GifDrawable> target, DataSource dataSource, boolean isFirstResource) {
-                                                                // GIF 파일 로드에 성공한 경우의 처리
-                                                                resource.setLoopCount(GifDrawable.LOOP_FOREVER); // 반복 재생 설정
-                                                                resource.start(); // GIF 파일 재생 시작
-                                                                return false;
-                                                            } // onResourceReady
-                                                        }).into(mainFull);
-                                                playingTime.setTextColor(Color.WHITE);
-                                                toPlayTime.setTextColor(Color.WHITE);
-                                                // TODO background
-                                                mainPlayLayout.setBackgroundColor(Color.parseColor("#00ff0000"));
-                                                play.setTextColor(Color.WHITE);
-                                                play.setAlpha(0.7f);
-                                                leftPlayBtn.setAlpha(0.7f);
-                                                rightPlayBtn.setAlpha(0.7f);
-                                                playingTime.setAlpha(0.7f);
-                                                toPlayTime.setAlpha(0.7f);
+                                                                @Override
+                                                                public boolean onResourceReady(GifDrawable resource, Object model, Target<GifDrawable> target, DataSource dataSource, boolean isFirstResource) {
+                                                                    // GIF 파일 로드에 성공한 경우의 처리
+                                                                    resource.setLoopCount(GifDrawable.LOOP_FOREVER); // 반복 재생 설정
+                                                                    resource.start(); // GIF 파일 재생 시작
+                                                                    return false;
+                                                                } // onResourceReady
+                                                            }).into(mainFull);
+                                                    playingTime.setTextColor(Color.WHITE);
+                                                    toPlayTime.setTextColor(Color.WHITE);
+                                                    // TODO background
+                                                    mainPlayLayout.setBackgroundColor(Color.parseColor("#00ff0000"));
+                                                    play.setTextColor(Color.WHITE);
+                                                    play.setAlpha(0.7f);
+                                                    leftPlayBtn.setAlpha(0.7f);
+                                                    rightPlayBtn.setAlpha(0.7f);
+                                                    playingTime.setAlpha(0.7f);
+                                                    toPlayTime.setAlpha(0.7f);
 
-                                                mainLogo.setAlpha(0.8f);
-                                                upload.setAlpha(0.8f);
+                                                    mainLogo.setAlpha(0.8f);
+                                                    upload.setAlpha(0.8f);
 
-                                                // TODO ADD for SeekBar Moving
-                                                if (mediaPlayer.isPlaying()) {
-                                                    mediaPlayer.stop();
+                                                    // TODO ADD for SeekBar Moving
+                                                    if (mediaPlayer.isPlaying()) {
+                                                        mediaPlayer.stop();
 
-                                                    try {
-                                                        mediaPlayer.prepare();
+                                                        try {
+                                                            mediaPlayer.prepare();
 
-                                                    } catch (IllegalStateException e) {
-                                                        e.printStackTrace();
+                                                        } catch (IllegalStateException e) {
+                                                            e.printStackTrace();
 
-                                                    } catch (IOException e) {
-                                                        e.printStackTrace();
-                                                    } // catch
-                                                    mediaPlayer.seekTo(0);
-                                                    mainSeekBar.setProgress(0);
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();
+                                                        } // catch
+                                                        mediaPlayer.seekTo(0);
+                                                        mainSeekBar.setProgress(0);
 
-                                                } else {
-                                                    mediaPlayer.start();
-                                                    Thread();
-                                                } // else
+                                                    } else {
+                                                        mediaPlayer.start();
+                                                        Thread();
+                                                    } // else
 
-                                                // TODO TOAST
-                                                Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
-                                                toast.show();
+                                                    // TODO TOAST
+                                                    Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
+                                                    toast.show();
 
-                                                updateSeekBar();
+                                                    updateSeekBar();
 
-                                                songTime = findViewById(R.id.mainToPlayTime);
-                                                songTime.setText(time);
+                                                    songTime = findViewById(R.id.mainToPlayTime);
+                                                    songTime.setText(time);
 
-                                                String[] exceptMp3 = name.split(".mp3");
-                                                String justName = exceptMp3[0];
-                                                String reReName = justName.replace("_", " ");
+                                                    String[] exceptMp3 = name.split(".mp3");
+                                                    String justName = exceptMp3[0];
+                                                    String reReName = justName.replace("_", " ");
 
-                                                Log.i(TAG, "[RightPlay] song just name 확인 : " + reReName);
-                                                Log.i(TAG, "[RightPlay] -----------------------------------------------");
-
-                                                mainLogo = findViewById(R.id.mainLogo);
-                                                if (artist.contains("_")) {
-                                                    String artistName = artist.replace("_", " ");
-                                                    mainLogo.setText(reReName + " • " + artistName);
-                                                    Log.i(TAG, "artist check (3) " + artistName);
-
-                                                } else {
-                                                    mainLogo.setText(reReName + " • " + artist);
-                                                    Log.i(TAG, "artist check (4) " + artist);
-                                                }
-
-                                                now_song = reReName;
-                                                Log.i(TAG, "now_song now 4 (change streaming) : " + now_song);
-                                                // TODO setPlayedInsert (3) in changeStreaming
-                                                String playTimingCheck = pastSongisPlayingCheckShared.getString("now", "none");
-                                                if (playTimingCheck.equals("next")) {
-                                                    setPlayedInsertToTable(logIn.getText().toString(), now_song);
-                                                    Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
-                                                    Log.i(TAG, "played - playTimingCheck (next) : " + playTimingCheck);
-                                                    Log.i(TAG, "played - now_song now 4 *if (change Streaming) : " + now_song);
-
-                                                } else {
-                                                    Log.i(TAG, "played - playTimingCheck (past) : " + playTimingCheck);
-                                                    Log.i(TAG, "played - now_song now 4 *else (change Streaming) : " + now_song);
-                                                } // else
-
-                                                // TODO selectLikes
-                                                updateHeart();
-
-                                                if (!responseData.equals(0)) {
-//                                                            responserData " + " 기준으로 잘라줘야 해
-                                                    Log.i("[RightPlay]", "responseData 가 0이 아닐 때 : " + responseData);
+                                                    Log.i(TAG, "[RightPlay] song just name 확인 : " + reReName);
                                                     Log.i(TAG, "[RightPlay] -----------------------------------------------");
-                                                } // if
+
+                                                    mainLogo = findViewById(R.id.mainLogo);
+                                                    if (artist.contains("_")) {
+                                                        String artistName = artist.replace("_", " ");
+                                                        mainLogo.setText(reReName + " • " + artistName);
+                                                        Log.i(TAG, "artist check (3) " + artistName);
+
+                                                    } else {
+                                                        mainLogo.setText(reReName + " • " + artist);
+                                                        Log.i(TAG, "artist check (4) " + artist);
+                                                    }
+
+                                                    now_song = reReName;
+                                                    Log.i(TAG, "now_song now 4 (change streaming) : " + now_song);
+                                                    // TODO setPlayedInsert (3) in changeStreaming
+                                                    String playTimingCheck = pastSongisPlayingCheckShared.getString("now", "none");
+                                                    if (playTimingCheck.equals("next")) {
+                                                        setPlayedInsertToTable(logIn.getText().toString(), now_song);
+                                                        Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
+                                                        Log.i(TAG, "played - playTimingCheck (next) : " + playTimingCheck);
+                                                        Log.i(TAG, "played - now_song now 4 *if (change Streaming) : " + now_song);
+
+                                                    } else {
+                                                        Log.i(TAG, "played - playTimingCheck (past) : " + playTimingCheck);
+                                                        Log.i(TAG, "played - now_song now 4 *else (change Streaming) : " + now_song);
+                                                    } // else
+
+                                                    // TODO selectLikes
+                                                    updateHeart();
+
+                                                    if (!responseData.equals(0)) {
+//                                                            responserData " + " 기준으로 잘라줘야 해
+                                                        Log.i("[RightPlay]", "responseData 가 0이 아닐 때 : " + responseData);
+                                                        Log.i(TAG, "[RightPlay] -----------------------------------------------");
+                                                    } // if
+                                                }
                                             }
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    } // catch
-                                }
-                            });
-                        }
-                    });
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        } // catch
+                                    }
+                                });
+                            }
+                        });
+                    } // 다음곡 재생일 때 - else
+
+
                 }
                 // 아래 if (playCHeck == false 닫아주는 중괄호
             } else { // <-> if (playCheck == true
@@ -3382,9 +3650,9 @@ public class MainActivity extends AppCompatActivity {
             String beforeSong = cutPastSongs[cutPastSongs.length - 1];
             Log.i(TAG, "leftPlay - cutLastPlayedSong beforeSong : " + beforeSong);
 
-            // TODO
-//        pastSongName = beforeSong + ".mp3";
-//        Log.i(TAG, "cutLastPlayedSong song name check : " + pastSongName);
+            // TODO - setPastSongName
+            pastSongName = beforeSong + ".mp3";
+            Log.i(TAG, "cutLastPlayedSong song name check : " + pastSongName);
 
             // TODO 끝부분 잘라서 다시 쉐어드에 넣기
             String[] cutNowPlaySongName = pastSongs.split(beforeSong + "//");
