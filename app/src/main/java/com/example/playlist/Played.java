@@ -77,7 +77,7 @@ public class Played extends Activity {
 
 //        loadingDialog = new ProgressDialog(Played.this);
 //        loadingDialog.setProgressStyle(loadingDialog.STYLE_SPINNER);
-//        loadingDialog.setMessage(userName + " Played List Loading ∙∙∙");
+//        loadingDialog.setMessage("∙∙∙ " + userName + " Played List Loading ∙∙∙");
 //        loadingDialog.show();
 
         PlayedRecyclerView = findViewById(R.id.songListRecyclerView);
@@ -138,6 +138,7 @@ public class Played extends Activity {
                 Log.i(TAG, "setPlayed onResponse");
 
                 if (response.isSuccessful()) {
+//                    loadingDialog.dismiss();
                     Log.i(TAG, "setPlayed response success");
                     String responseBody = new Gson().toJson(response.body());
                     Log.i(TAG, "setPlayed responseBody : " + responseBody);
@@ -150,7 +151,6 @@ public class Played extends Activity {
                     Log.i(TAG, "setPlayed response.body : " + played);
 
                     playedAdapter.clearItems();
-//                    loadingDialog.dismiss();
                     for (PlayedModel playedLists : played) {
                         Log.i(TAG, "setPlayed onResponse get PlayedList");
 
