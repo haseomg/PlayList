@@ -874,9 +874,6 @@ public class MainActivity extends AppCompatActivity {
 //                                                            mainSeekBar.setProgress(mediaPlayer.getCurrentPosition());
 //                                                            play.setText("▶");
 //                                                        }
-
-                                                            // TODO. END for SeekBar
-
                                                             // TODO TOAST
                                                             Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
                                                             toast.show();
@@ -909,15 +906,16 @@ public class MainActivity extends AppCompatActivity {
 
                                                             // TODO now_song이 null이여서 빈 값이 들어가
                                                             try {
-                                                                Log.i(TAG, "now_song now 5 (before insert) : " + now_song);
+                                                                Log.i(TAG, "played - now_song now 5 (before insert) : " + now_song);
 
-//                                                                if (now_song.length() > 2 || now_song != null) {
-//                                                                    Log.i(TAG, "now_song now 3 (when insert) : " + now_song);
-//                                                                    setPlayedInsertToTable(logIn.getText().toString(), now_song);
-//                                                                } // if
+                                                                // TODO setPlayedInsert (1) in play.setOnClickListener
+                                                                if (now_song.length() > 2 || now_song != null) {
+                                                                    setPlayedInsertToTable(logIn.getText().toString(), now_song);
+                                                                    Log.i(TAG, "played - now_song now 3 (when insert) : " + now_song);
+                                                                } // if
 
                                                             } catch (NullPointerException e) {
-                                                                Log.e(TAG, "now_song now NULL : " + e);
+                                                                Log.e(TAG, "played - now_song now NULL : " + e);
                                                             } // catch
 //                } // if
                                                             if (!responseData.equals(0)) {
@@ -1014,7 +1012,7 @@ public class MainActivity extends AppCompatActivity {
                 } // First biggest else end
 
 //               Log.i(TAG, "playCheck : " + playCheck);
-//
+//                  TODO setPlayedInsert (2) in play.setOnClickListener
 //                // TODO now_song이 null이여서 빈 값이 들어가
 ////                if (now_song != null || !now_song.equals("")) {
 ////                Log.i(TAG, "now_song now 3 (insert) : " + now_song);
@@ -1669,12 +1667,13 @@ public class MainActivity extends AppCompatActivity {
 //                                new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
 //                            } // if
 //                        } // if
+//
 //                    } else {
-                        Log.i(TAG, "divide - songTiming (else) : " + needSongTimingCheck);
-                        Uri.Builder builder = new Uri.Builder()
-                                .appendQueryParameter("num", "1" + nextRanNum);
-                        String postParams = builder.build().getEncodedQuery();
-                        new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
+                    Log.i(TAG, "divide - songTiming (else) : " + needSongTimingCheck);
+                    Uri.Builder builder = new Uri.Builder()
+                            .appendQueryParameter("num", "1" + nextRanNum);
+                    String postParams = builder.build().getEncodedQuery();
+                    new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
 
 //                    } // else
 
@@ -1899,8 +1898,21 @@ public class MainActivity extends AppCompatActivity {
                                                     mainLogo.setText(reReName + " • " + artist);
                                                     Log.i(TAG, "artist check (4) " + artist);
                                                 }
+
                                                 now_song = reReName;
                                                 Log.i(TAG, "now_song now 4 (change streaming) : " + now_song);
+                                                // TODO setPlayedInsert (3) in changeStreaming
+                                                String playTimingCheck = pastSongisPlayingCheckShared.getString("now", "none");
+                                                if (playTimingCheck.equals("next")) {
+                                                    setPlayedInsertToTable(logIn.getText().toString(), now_song);
+                                                    Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
+                                                    Log.i(TAG, "played - playTimingCheck (next) : " + playTimingCheck);
+                                                    Log.i(TAG, "played - now_song now 4 *if (change Streaming) : " + now_song);
+
+                                                } else {
+                                                    Log.i(TAG, "played - playTimingCheck (past) : " + playTimingCheck);
+                                                    Log.i(TAG, "played - now_song now 4 *else (change Streaming) : " + now_song);
+                                                } // else
 
                                                 // TODO selectLikes
                                                 updateHeart();
@@ -1977,16 +1989,6 @@ public class MainActivity extends AppCompatActivity {
 //                                                 playedList = song name, artist name, time add
         played = played + now_song + "//";
 //                                                 TODO 다음 곡 들을 때만
-        String playTimingCheck = pastSongisPlayingCheckShared.getString("now", "none");
-
-//        if (playTimingCheck.equals("next")) {
-//            setPlayedInsertToTable(logIn.getText().toString(), now_song);
-//            Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
-//            Log.i(TAG, "playTimingCheck (next) : " + playTimingCheck);
-//
-//        } else {
-//            Log.i(TAG, "playTimingCheck (past) : " + playTimingCheck);
-//        } // else
     } // changeStreaming
 
     // TODO randomNumber Method
@@ -2714,8 +2716,9 @@ public class MainActivity extends AppCompatActivity {
         // TODO user Listened music Info add (first streaming)
         // playedList = song name, artist name, time add
 //                                                            played = played + now_song + "//";
-                                            setPlayedInsertToTable(logIn.getText().toString(), now_song);
-        Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
+//         TODO setPlayedInsert (4) in pastStreaming
+//        setPlayedInsertToTable(logIn.getText().toString(), now_song);
+//        Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
     }
 
     // TODO. UUID 가져오는 방식 변경 (레트로핏으로 서버에서 가져오고, SQlite에 insert)
@@ -3373,13 +3376,13 @@ public class MainActivity extends AppCompatActivity {
         // TODO < 버튼 클릭 시 playedList 마지막 아이템의 해당 곡 제목 기준으로 서버로 스트리밍 요청
         try {
             String pastSongs = playedListShared.getString(logIn.getText().toString(), "");
-            Log.i(TAG, "cutLastPlayedSong pastSongs check : " + pastSongs);
+            Log.i(TAG, "leftPlay - cutLastPlayedSong pastSongs check : " + pastSongs);
 
             String[] cutPastSongs = pastSongs.split("//");
             String beforeSong = cutPastSongs[cutPastSongs.length - 1];
-            Log.i(TAG, "cutLastPlayedSong beforeSong : " + beforeSong);
+            Log.i(TAG, "leftPlay - cutLastPlayedSong beforeSong : " + beforeSong);
 
-            // TODO 아래에서 name에 값을 넣어주고, 곡 제목과 아티스트가 다르게 나오게 됐을 확률 높음
+            // TODO
 //        pastSongName = beforeSong + ".mp3";
 //        Log.i(TAG, "cutLastPlayedSong song name check : " + pastSongName);
 
