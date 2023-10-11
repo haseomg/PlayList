@@ -1,6 +1,7 @@
 package com.example.playlist;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -45,6 +46,8 @@ public class Played extends Activity {
     SharedPreferences shared;
     SharedPreferences.Editor editor;
 
+    ProgressDialog loadingDialog;
+
     static Context playedContext;
 
     private static final String BASE_URL = "http://54.180.155.66/";
@@ -71,6 +74,11 @@ public class Played extends Activity {
         close = findViewById(R.id.songListClose);
 
         setClose();
+
+//        loadingDialog = new ProgressDialog(Played.this);
+//        loadingDialog.setProgressStyle(loadingDialog.STYLE_SPINNER);
+//        loadingDialog.setMessage(userName + " Played List Loading ∙∙∙");
+//        loadingDialog.show();
 
         PlayedRecyclerView = findViewById(R.id.songListRecyclerView);
         songListLayoutManager = new LinearLayoutManager(this);
@@ -142,7 +150,7 @@ public class Played extends Activity {
                     Log.i(TAG, "setPlayed response.body : " + played);
 
                     playedAdapter.clearItems();
-
+//                    loadingDialog.dismiss();
                     for (PlayedModel playedLists : played) {
                         Log.i(TAG, "setPlayed onResponse get PlayedList");
 
@@ -198,5 +206,4 @@ public class Played extends Activity {
             Log.e(TAG, "getPlayedListFromShared Null : " + e);
         } // catch END
     } // playedListInsertIntoShared
-
 } // CLASS
