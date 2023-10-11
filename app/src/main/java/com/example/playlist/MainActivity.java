@@ -1788,7 +1788,6 @@ public class MainActivity extends AppCompatActivity {
                                                             Log.i(TAG, "[changeStreaming] mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)");
 
                                                             Log.i(TAG, "[changeStreaming] song name before streaming check : " + name);
-                                                            ;
                                                             String uri = "http://54.180.155.66/" + name;
                                                             Log.i(TAG, "[changeStreaming] file name from music table : " + uri);
                                                             // 경로
