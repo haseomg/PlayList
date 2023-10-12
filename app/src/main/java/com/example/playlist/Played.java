@@ -51,6 +51,7 @@ public class Played extends Activity {
     static Context playedContext;
 
     private static final String BASE_URL = "http://54.180.155.66/";
+    private String song_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +91,7 @@ public class Played extends Activity {
         PlayedRecyclerView.setAdapter(playedAdapter);
 
         setPlayedList();
-
+        setSongItemClickListener();
     } // initial
 
     private void setClose() {
@@ -206,4 +207,21 @@ public class Played extends Activity {
             Log.e(TAG, "getPlayedListFromShared Null : " + e);
         } // catch END
     } // playedListInsertIntoShared
+
+    void setSongItemClickListener() {
+        Log.i(TAG, "setSongItemClickListener");
+
+        playedAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Log.i(TAG, "setSongItemClickListener position : " + position);
+                String songInfo = playedList.get(position).getSong_name();
+                Log.i(TAG, "setSongItemClickListener songInfo : " + songInfo);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//                startActivity(intent);
+                finish();
+            } // onItemClick
+        }); // setOnItemClickListener
+    } // setSongItemClickListener
+
 } // CLASS
