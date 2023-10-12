@@ -1569,6 +1569,7 @@ public class MainActivity extends AppCompatActivity {
             String timingStatus = forBeforeAndNextShared.getString("checking_timing", "default");
             Log.i(TAG, "onStopButtonClick timingStatus : " + timingStatus);
 
+
             if (needSongTimingCheck.equals("next") || needSongTimingCheck == "next" || !timingStatus.equals("after_song") || timingStatus != "after_song") {
                 // TODO (1) timingStatus = next_song
                 changeStreaming();
