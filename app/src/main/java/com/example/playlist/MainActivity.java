@@ -1556,6 +1556,7 @@ public class MainActivity extends AppCompatActivity {
             String needSongTimingCheck = pastSongisPlayingCheckShared.getString("now", "none");
             Log.i(TAG, "divide - needSongTimingCheck : " + needSongTimingCheck);
             String pastItemCheck = playedListShared.getString(logIn.getText().toString(), "default");
+
             if (needSongTimingCheck.equals("next") || needSongTimingCheck == "next") {
                 Log.i(TAG, "onStopButtonClick (if) : " + needSongTimingCheck);
                 changeStreaming();
