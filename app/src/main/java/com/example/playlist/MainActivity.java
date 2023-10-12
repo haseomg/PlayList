@@ -1152,7 +1152,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "leftPlay 버튼 클릭");
                 pastSongisPlayingCheckEditor.putString("now", "past");
                 pastSongisPlayingCheckEditor.commit();
-
                 changeSong();
 //                pastStreaming();
 
@@ -1560,27 +1559,42 @@ public class MainActivity extends AppCompatActivity {
 //            mediaPlayer.start();
 //            play.setText("❚❚");
             playCheck = false;
-            forBeforeAndNextEditor.putString("checking_timing", "next_song");
-            forBeforeAndNextEditor.commit();
+
+//            forBeforeAndNextEditor.putString("checking_timing", "next_song");
+//            forBeforeAndNextEditor.commit();
+
 //            playCheck = true;
             String needSongTimingCheck = pastSongisPlayingCheckShared.getString("now", "none");
             Log.i(TAG, "divide - needSongTimingCheck : " + needSongTimingCheck);
             String pastItemCheck = playedListShared.getString(logIn.getText().toString(), "default");
-            String timingStatus = forBeforeAndNextShared.getString("checking_timing", "default");
-            Log.i(TAG, "onStopButtonClick timingStatus : " + timingStatus);
+//            String timingStatus = forBeforeAndNextShared.getString("checking_timing", "default");
+//            Log.i(TAG, "onStopButtonClick timingStatus : " + timingStatus);
 
 
-            if (needSongTimingCheck.equals("next") || needSongTimingCheck == "next" || !timingStatus.equals("after_song") || timingStatus != "after_song") {
-                // TODO (1) timingStatus = next_song
+//            if (needSongTimingCheck.equals("next") || needSongTimingCheck == "next" || !timingStatus.equals("after_song") || timingStatus != "after_song") {
+//                // TODO (1) timingStatus = next_song
+//                changeStreaming();
+//                Log.i(TAG, "onStopButtonClick (if) : " + needSongTimingCheck + " / " + timingStatus);
+//
+//
+//            }
+//            if (needSongTimingCheck.equals("past") || needSongTimingCheck == "past" || timingStatus.equals("after_song") || timingStatus == "after_song") {
+//                // TODO (2) timingStatus = after_song
+//                pastStreaming();
+//                Log.i(TAG, "onStopButtonClick (else) : " + needSongTimingCheck + " / " + timingStatus);
+//            } // else
+
+            // 이전 곡 재생 후 다음 곡 재생하면, 곡 정보와 아티스트 이름 불일치
+            // TODO (1) timingStatus = next_song
+            if (needSongTimingCheck.equals("next") || needSongTimingCheck == "next") {
+                Log.i(TAG, "onStopButtonClick (if) : " + needSongTimingCheck);
                 changeStreaming();
-                Log.i(TAG, "onStopButtonClick (if) : " + needSongTimingCheck + " / " + timingStatus);
 
 
-            }
-            if (needSongTimingCheck.equals("past") || needSongTimingCheck == "past" || timingStatus.equals("after_song") || timingStatus == "after_song") {
                 // TODO (2) timingStatus = after_song
+            } else {
+                Log.i(TAG, "onStopButtonClick (else) : " + needSongTimingCheck);
                 pastStreaming();
-                Log.i(TAG, "onStopButtonClick (else) : " + needSongTimingCheck + " / " + timingStatus);
             } // else
 
 //            } else if (needSongTimingCheck.equals("past")) {
@@ -1612,8 +1626,8 @@ public class MainActivity extends AppCompatActivity {
         //        randomNumber();
         Log.i(TAG, "[changeStreaming] -----------------------------------------------");
 
-        forBeforeAndNextEditor.putString("checking_timing", "next_song");
-        forBeforeAndNextEditor.commit();
+//        forBeforeAndNextEditor.putString("checking_timing", "next_song");
+//        forBeforeAndNextEditor.commit();
 
         Log.i(TAG, "[changeStreaming] changeStreaming Method");
         Log.i(TAG, "[changeStreaming] -----------------------------------------------");
