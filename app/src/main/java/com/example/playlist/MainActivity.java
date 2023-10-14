@@ -777,7 +777,7 @@ public class MainActivity extends AppCompatActivity {
 
                                                             String[] nameCut = path.split("/");
                                                             name = nameCut[4];
-                                                            Log.i(TAG, "songInfo name Check : " + name);
+                                                            Log.i(TAG, "songInfo name Check (1) : " + name);
 
 //                                                            insertIntoPastMusicTable();
 //                                                            deleteFromMusicTable();
@@ -1865,10 +1865,16 @@ public class MainActivity extends AppCompatActivity {
 
                                                 if (pastSongName == "" || pastSongName == null || pastSongName.equals("")) {
                                                     name = nameCut[4];
+                                                    Log.i(TAG, "songInfo name Check (2) : " + name);
                                                     String reName = name.replace("_", " ");
                                                     Log.i(TAG, "changeStreaming - songInfo name Check *if : " + name);
 
                                                     Log.i(TAG, "[changeStreaming]  -----------------------------------------------");
+                                                } else {
+                                                    // changeStreaming 상황에서 조건식 설정 잘못했어서 곡을 스트리밍할 때 필요한 곡 이름이 세팅 안되어있었고,
+                                                    // 아래 코드 추가 후 해결
+                                                    name = nameCut[4];
+                                                    Log.i(TAG, "songInfo name Check (6) : " + name);
                                                 }
 
 //                                                if (timing.equals("next") || timing == "next") {
@@ -1990,7 +1996,8 @@ public class MainActivity extends AppCompatActivity {
                                                     mainLogo.setText(reReName + " • " + artist);
                                                     Log.i(TAG, "artist check (4) " + artist);
                                                 }
-                                                now_song = reReName;
+                                                // ㅇ기여기
+//                                                now_song = reReName;
                                                 Log.i(TAG, "now_song now 4 (change streaming) : " + now_song);
 
                                                 // TODO setPlayedInsert (3) in changeStreaming
@@ -2628,6 +2635,7 @@ public class MainActivity extends AppCompatActivity {
 
                                                 if (pastSongName == "" || pastSongName == null || pastSongName.equals("")) {
                                                     name = nameCut[4];
+                                                    Log.i(TAG, "songInfo name Check (3) : " + name);
                                                     String reName = name.replace("_", " ");
                                                     Log.i(TAG, "pastStreaming - songInfo name Check *if : " + name);
 
@@ -2636,7 +2644,9 @@ public class MainActivity extends AppCompatActivity {
                                                 } else {
                                                     // TODO check (1) < 버튼 클릭 시 name에 값 넣어주고 여기서 확인
                                                     // TODO check (2) > 버튼 클릭 시 name에 값을 넣어주고
+                                                    Log.i(TAG, "songInfo name Check (4) before : " + name);
                                                     name = rePastSongName;
+                                                    Log.i(TAG, "songInfo name Check (4) after : " + name);
                                                     Log.i(TAG, "pastStreaming - songInfo name Check *else : " + name);
                                                 } // else
 
@@ -3675,6 +3685,7 @@ public class MainActivity extends AppCompatActivity {
 
                                                 if (pastSongName == "" || pastSongName == null || pastSongName.equals("")) {
                                                     name = nameCut[4];
+                                                    Log.i(TAG, "songInfo name Check (5) : " + name);
                                                     String reName = name.replace("_", " ");
                                                     Log.i(TAG, "pastStreaming - songInfo name Check *if : " + name);
 
@@ -3683,8 +3694,9 @@ public class MainActivity extends AppCompatActivity {
                                                 } else {
                                                     // TODO check (1) < 버튼 클릭 시 name에 값 넣어주고 여기서 확인
                                                     // TODO check (2) > 버튼 클릭 시 name에 값을 넣어주고
+                                                    Log.i(TAG, "pastStreaming - songInfo name Check *else before : " + name);
                                                     name = rePastSongName;
-                                                    Log.i(TAG, "pastStreaming - songInfo name Check *else : " + name);
+                                                    Log.i(TAG, "pastStreaming - songInfo name Check *else after : " + name);
                                                 } // else
 
                                                 mediaPlayer.setLooping(false);
