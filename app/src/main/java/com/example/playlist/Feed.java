@@ -1,10 +1,12 @@
 package com.example.playlist;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +16,8 @@ import java.util.ArrayList;
 
 public class Feed extends AppCompatActivity {
 
+    ImageView genreFirst, genreSecond, genreThird, profile;
+    TextView genreFirst_textView, genreSecond_textView, genreThird_textView;
     TextView feedLogo, profileMusic;
     Button close;
     ArrayList<FeedCommentModel> feedCommentList = new ArrayList<>();
@@ -24,6 +28,7 @@ public class Feed extends AppCompatActivity {
 
     private static final String BASE_URL = "http://54.180.155.66/";
     private String song_name;
+    private final int GET_GALLERY_IMAGE = 200;
 
     @Override
     public void onBackPressed() {
@@ -44,6 +49,14 @@ public class Feed extends AppCompatActivity {
         feedLogo = findViewById(R.id.feedLogo);
         profileMusic = findViewById(R.id.feedProfileMusic);
         close = findViewById(R.id.feedCloseButton);
+        profile = findViewById(R.id.feedProfileImage);
+
+        genreFirst = findViewById(R.id.genre_first);
+        genreSecond = findViewById(R.id.genre_second);
+        genreThird = findViewById(R.id.genre_third);
+        genreFirst_textView = findViewById(R.id.genre_first_textView);
+        genreSecond_textView = findViewById(R.id.genre_second_textView);
+        genreThird_textView = findViewById(R.id.genre_third_textView);
 
         Intent intent = getIntent();
         String user = intent.getStringExtra("user");
@@ -51,18 +64,20 @@ public class Feed extends AppCompatActivity {
         profileMusic.setText(user + " - hello ☁︎");
 
         feedCommentRecyclerVIew = findViewById(R.id.feedCommentRecyclerView);
-         feedCommentLayoutManager = new LinearLayoutManager(this);
-         feedCommentRecyclerVIew.setLayoutManager(feedCommentLayoutManager);
-         feedCommentRecyclerVIew.setHasFixedSize(true);
-         feedCommentAdapter = new FeedCommentAdapter(this, feedCommentList);
-         feedCommentRecyclerVIew.setAdapter(feedCommentAdapter);
+        feedCommentLayoutManager = new LinearLayoutManager(this);
+        feedCommentRecyclerVIew.setLayoutManager(feedCommentLayoutManager);
+        feedCommentRecyclerVIew.setHasFixedSize(true);
+        feedCommentAdapter = new FeedCommentAdapter(this, feedCommentList);
+        feedCommentRecyclerVIew.setAdapter(feedCommentAdapter);
 
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
-        });
+        }); // close
+
+        setProfile();
     } // initial END
 
     @Override
@@ -72,5 +87,51 @@ public class Feed extends AppCompatActivity {
         }
         return true;
     } // onTouchEvent
+
+    void setGenreOnClick() {
+        genreFirst.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            } // onClick
+        }); // genreFirst.setOnClickListener
+
+        genreSecond.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            } // onClick
+        }); //genreSecond.setOnClickListener
+
+        genreThird.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            } // onClick
+        }); //genreSecond.setOnClickListener
+    } // setGenre
+
+    void setProfile() {
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                startActivityForResult(intent, GET_GALLERY_IMAGE);
+            } // onClick
+        }); // profile.setOnClickListener
+    } // setProfile
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+            Uri selectedImageUri = data.getData();
+            profile.setImageURI(selectedImageUri);
+
+        } // if
+    } // onActivityResult
 
 } // CLASS END
