@@ -9,8 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -227,8 +225,9 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public final TextView song_name;
         public final TextView artistAndTime;
         public final ImageView music_image;
-        public final ImageView liked_list;
+        public final ImageView allSonsAlbum;
         public final ImageView feed;
+        public final androidx.constraintlayout.widget.ConstraintLayout allSongsView;
 
         public AllSongsHolder(View itemView) {
             super(itemView);
@@ -237,42 +236,21 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             artistAndTime = itemView.findViewById(R.id.artistAndTime);
             artistAndTime.setSelected(true);
             music_image = itemView.findViewById(R.id.music_image);
-            liked_list = itemView.findViewById(R.id.likedListImageView);
+            allSonsAlbum = itemView.findViewById(R.id.allSonsAlbum);
             feed = itemView.findViewById(R.id.feedIcon);
+            allSongsView = itemView.findViewById(R.id.allSongsView);
 
-            feed.setOnClickListener(new View.OnClickListener() {
+            allSongsView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i(TAG, "liked_list click");
+                    Log.i(TAG, "allSongsAdapter allSongsView click");
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
                         AllSongsModel clickedItem = allSongsList.get(position);
                         String songName = clickedItem.getName();
 
-                        Intent intent = new Intent(context, LikedList.class);
-
-                        // 인탠트에 추가 데이터 넣기 (여기서는 선택한 곡의 이름)
-                        String[] fileTypeCut = songName.split(".mp3");
-                        String selected_song = fileTypeCut[0];
-                        intent.putExtra("selected_song", selected_song);
-
-                        // 액티비터 시작
-                        context.startActivity(intent);
-                    }
-                } // onClick
-            }); // setOnClickListener
-
-            liked_list.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.i(TAG, "liked_list click");
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        AllSongsModel clickedItem = allSongsList.get(position);
-                        String songName = clickedItem.getName();
-
-                        // 새로운 액티비티로 이동 (여기서는 LikedList 가정)
-                        Intent intent = new Intent(context, LikedList.class);
+                        // 새로운 액티비티로 이동 (여기서는 MainActiviy 가정)
+                        Intent intent = new Intent(context, MainActivity.class);
 
                         // 인탠트에 추가 데이터 넣기 (여기서는 선택한 곡의 이름)
                         String[] fileTypeCut = songName.split(".mp3");
@@ -288,23 +266,58 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i(TAG, "onClick()");
+//                    Log.i(TAG, "allSongsAdapter itemView onClick()");
+//
+//                    if (onItemClickListener != null) {
+//                        int position = getAdapterPosition();
+//
+//                        if (position != RecyclerView.NO_POSITION) {
+//                            float xTranslationValue = 0f; // 슬라이드 위치 값 설정
+//                            float yTranslationValue = 0f;
+//                            long animationDuration = 500; // 애니메이션 지속 시간 설정
+//
+//                            Animation slideAnimation = new TranslateAnimation(0f, xTranslationValue, 0f, yTranslationValue);
+//                            slideAnimation.setDuration(animationDuration);
+//                            v.startAnimation(slideAnimation);
+//
+//                            onItemClickListener.onItemClick(position);
+//                        } // if
+//                    } // if != null
 
-                    if (onItemClickListener != null) {
-                        int position = getAdapterPosition();
 
-                        if (position != RecyclerView.NO_POSITION) {
-                            float xTranslationValue = 0f; // 슬라이드 위치 값 설정
-                            float yTranslationValue = 0f;
-                            long animationDuration = 500; // 애니메이션 지속 시간 설정
+                    Log.i(TAG, "allSongsAdapter allSongsView click");
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        AllSongsModel clickedItem = allSongsList.get(position);
+                        String songName = clickedItem.getName();
 
-                            Animation slideAnimation = new TranslateAnimation(0f, xTranslationValue, 0f, yTranslationValue);
-                            slideAnimation.setDuration(animationDuration);
-                            v.startAnimation(slideAnimation);
+                        //
+//                        float xTranslationValue = 0f; // 슬라이드 위치 값 설정
+//                        float yTranslationValue = 0f;
+//                        long animationDuration = 500; // 애니메이션 지속 시간 설정
+//
+//                        Animation slideAnimation = new TranslateAnimation(0f, xTranslationValue, 0f, yTranslationValue);
+//                        slideAnimation.setDuration(animationDuration);
+//                        v.startAnimation(slideAnimation);
+                        //
 
-                            onItemClickListener.onItemClick(position);
-                        } // if
-                    } // if != null
+                        // 새로운 액티비티로 이동 (여기서는 MainActiviy 가정)
+                        Intent intent = new Intent(context, MainActivity.class);
+
+                        // 인탠트에 추가 데이터 넣기 (여기서는 선택한 곡의 이름)
+                        String[] fileTypeCut = songName.split(".mp3");
+                        String selected_song = fileTypeCut[0];
+                        intent.putExtra("selected_song", selected_song);
+
+                        //
+//                        onItemClickListener.onItemClick(position);
+                        //
+
+                        // 액티비터 시작
+                        context.startActivity(intent);
+                    } // if
+
+
                 } // onClick END
             }); // itemView.setOnClickListener END
         } // constructor END

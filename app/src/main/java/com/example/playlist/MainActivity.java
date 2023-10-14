@@ -1595,18 +1595,18 @@ public class MainActivity extends AppCompatActivity {
 //                changeStreaming();
 //
 //            } else {
-                // TODO 첫 재생, 이전 곡 재생
-                if (needSongTimingCheck.equals("next") || needSongTimingCheck == "next") {
-                    Log.i(TAG, "pastStreaming - StopButtonClick (if) : " + needSongTimingCheck);
-                    // TODO 1. 현재는 이전 곡 재생 이후 다음곡 재생 시 changeStreaming으로 넘어가서 랜덤 넘버 기준으로 곡 정보 가져오는 중
-                    // TODO 2. 아니지 맞지
-                    changeStreaming();
+            // TODO 첫 재생, 이전 곡 재생
+            if (needSongTimingCheck.equals("next") || needSongTimingCheck == "next") {
+                Log.i(TAG, "pastStreaming - StopButtonClick (if) : " + needSongTimingCheck);
+                // TODO 1. 현재는 이전 곡 재생 이후 다음곡 재생 시 changeStreaming으로 넘어가서 랜덤 넘버 기준으로 곡 정보 가져오는 중
+                // TODO 2. 아니지 맞지
+                changeStreaming();
 
-                    // TODO (2) timingStatus = after_song
-                } else {
-                    Log.i(TAG, "pastStreaming - onStopButtonClick (else) : " + needSongTimingCheck);
-                    pastStreaming();
-                } // else
+                // TODO (2) timingStatus = after_song
+            } else {
+                Log.i(TAG, "pastStreaming - onStopButtonClick (else) : " + needSongTimingCheck);
+                pastStreaming();
+            } // else
 
 //            } // else
 
@@ -2002,16 +2002,16 @@ public class MainActivity extends AppCompatActivity {
 
                                                 // TODO setPlayedInsert (3) in changeStreaming
                                                 String playTimingCheck = pastSongisPlayingCheckShared.getString("now", "none");
-                                                if (playTimingCheck.equals("next")) {
-                                                    setPlayedInsertToTable(logIn.getText().toString(), now_song);
-                                                    Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
-                                                    Log.i(TAG, "played - playTimingCheck (next) : " + playTimingCheck);
-                                                    Log.i(TAG, "played - now_song now 4 *if (change Streaming) : " + now_song);
-
-                                                } else {
-                                                    Log.i(TAG, "played - playTimingCheck (past) : " + playTimingCheck);
-                                                    Log.i(TAG, "played - now_song now 4 *else (change Streaming) : " + now_song);
-                                                } // else
+//                                                if (playTimingCheck.equals("next")) {
+                                                setPlayedInsertToTable(logIn.getText().toString(), now_song);
+                                                Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
+                                                Log.i(TAG, "played - playTimingCheck (next) : " + playTimingCheck);
+                                                Log.i(TAG, "played - now_song now 4 *if (change Streaming) : " + now_song);
+//
+//                                                } else {
+//                                                    Log.i(TAG, "played - playTimingCheck (past) : " + playTimingCheck);
+//                                                    Log.i(TAG, "played - now_song now 4 *else (change Streaming) : " + now_song);
+//                                                } // else
 
                                                 // TODO selectLikes
                                                 updateHeart();
@@ -3814,16 +3814,16 @@ public class MainActivity extends AppCompatActivity {
 
                                                 // TODO setPlayedInsert (3) in changeStreaming
                                                 String playTimingCheck = pastSongisPlayingCheckShared.getString("now", "none");
-                                                if (playTimingCheck.equals("next")) {
-                                                    setPlayedInsertToTable(logIn.getText().toString(), now_song);
-                                                    Log.i(TAG, "pastStreaming - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
-                                                    Log.i(TAG, "pastStreaming - playTimingCheck (next) : " + playTimingCheck);
-                                                    Log.i(TAG, "pastStreaming - now_song now 4 *if (change Streaming) : " + now_song);
+//                                                if (playTimingCheck.equals("next")) {
+                                                setPlayedInsertToTable(logIn.getText().toString(), now_song);
+                                                Log.i(TAG, "pastStreaming - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
+                                                Log.i(TAG, "pastStreaming - playTimingCheck (next) : " + playTimingCheck);
+                                                Log.i(TAG, "pastStreaming - now_song now 4 *if (change Streaming) : " + now_song);
 
-                                                } else {
-                                                    Log.i(TAG, "pastStreaming - playTimingCheck (past) : " + playTimingCheck);
-                                                    Log.i(TAG, "pastStreaming - now_song now 4 *else (change Streaming) : " + now_song);
-                                                } // else
+//                                                } else {
+                                                Log.i(TAG, "pastStreaming - playTimingCheck (past) : " + playTimingCheck);
+                                                Log.i(TAG, "pastStreaming - now_song now 4 *else (change Streaming) : " + now_song);
+//                                                } // else
 
                                                 // TODO selectLikes
                                                 updateHeart();
