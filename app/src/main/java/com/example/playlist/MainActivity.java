@@ -607,6 +607,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i("메인 플레이 버튼 클릭", "");
 
+                forBeforeAndNextEditor.putString("checking_timing", "now_song");
+                forBeforeAndNextEditor.commit();
                 currentTimeForViewsIncrement = System.currentTimeMillis();
 
                 if (logIn.getText().toString().equals("LOG IN")) {
@@ -1586,16 +1588,27 @@ public class MainActivity extends AppCompatActivity {
 
             // 이전 곡 재생 후 다음 곡 재생하면, 곡 정보와 아티스트 이름 불일치
             // TODO (1) timingStatus = next_song
-            if (needSongTimingCheck.equals("next") || needSongTimingCheck == "next") {
-                Log.i(TAG, "onStopButtonClick (if) : " + needSongTimingCheck);
-                changeStreaming();
+            String check_timing = forBeforeAndNextShared.getString("checking_timing", "default");
 
+//            if (check_timing.equals("after_song") || check_timing == "after_song") {
+//                Log.i(TAG, "pastStreaming - onStopButtonClick : " + needSongTimingCheck);
+//                changeStreaming();
+//
+//            } else {
+                // TODO 첫 재생, 이전 곡 재생
+                if (needSongTimingCheck.equals("next") || needSongTimingCheck == "next") {
+                    Log.i(TAG, "pastStreaming - StopButtonClick (if) : " + needSongTimingCheck);
+                    // TODO 1. 현재는 이전 곡 재생 이후 다음곡 재생 시 changeStreaming으로 넘어가서 랜덤 넘버 기준으로 곡 정보 가져오는 중
+                    // TODO 2. 아니지 맞지
+                    changeStreaming();
 
-                // TODO (2) timingStatus = after_song
-            } else {
-                Log.i(TAG, "onStopButtonClick (else) : " + needSongTimingCheck);
-                pastStreaming();
-            } // else
+                    // TODO (2) timingStatus = after_song
+                } else {
+                    Log.i(TAG, "pastStreaming - onStopButtonClick (else) : " + needSongTimingCheck);
+                    pastStreaming();
+                } // else
+
+//            } // else
 
 //            } else if (needSongTimingCheck.equals("past")) {
 //                Log.i(TAG, "onStopButtonClick (past)");
@@ -1626,8 +1639,8 @@ public class MainActivity extends AppCompatActivity {
         //        randomNumber();
         Log.i(TAG, "[changeStreaming] -----------------------------------------------");
 
-//        forBeforeAndNextEditor.putString("checking_timing", "next_song");
-//        forBeforeAndNextEditor.commit();
+        forBeforeAndNextEditor.putString("checking_timing", "next_song");
+        forBeforeAndNextEditor.commit();
 
         Log.i(TAG, "[changeStreaming] changeStreaming Method");
         Log.i(TAG, "[changeStreaming] -----------------------------------------------");
@@ -1858,14 +1871,14 @@ public class MainActivity extends AppCompatActivity {
                                                     Log.i(TAG, "[changeStreaming]  -----------------------------------------------");
                                                 }
 
-                                                if (timing.equals("next") || timing == "next") {
-                                                    Log.i(TAG, "changeStreaming - songInfo name Check *if next : " + name);
-                                                } else {
-                                                    // TODO check (1) < 버튼 클릭 시 name에 값 넣어주고 여기서 확인
-                                                    // TODO check (2) > 버튼 클릭 시 name에 값을 넣어주고
-                                                    name = pastSongName;
-                                                    Log.i(TAG, "changeStreaming - songInfo name Check *else : " + name);
-                                                } // else
+//                                                if (timing.equals("next") || timing == "next") {
+//                                                    Log.i(TAG, "changeStreaming - songInfo name Check *if next : " + name);
+//                                                } else {
+//                                                    // TODO check (1) < 버튼 클릭 시 name에 값 넣어주고 여기서 확인
+//                                                    // TODO check (2) > 버튼 클릭 시 name에 값을 넣어주고
+//                                                    name = pastSongName;
+//                                                    Log.i(TAG, "changeStreaming - songInfo name Check *else : " + name);
+//                                                } // else
 
                                                 mediaPlayer.setLooping(false);
                                                 Log.i(TAG, "[changeStreaming]  MediaPlayer 생성");
