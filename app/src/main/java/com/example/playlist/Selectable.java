@@ -49,6 +49,11 @@ public class Selectable extends AppCompatActivity {
     String TAG = "[Selectable CLASS]";
 
     @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selectable);
@@ -57,7 +62,6 @@ public class Selectable extends AppCompatActivity {
         setLikeSongs();
         setTopSongs();
         setAllSongs();
-        setLikedScrolled();
     } // onCreate END
 
     private void initial() {
@@ -350,32 +354,32 @@ public class Selectable extends AppCompatActivity {
                 } // else
             } // onScrolled
 
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                Log.i(TAG, "onScrollStateChanged");
-
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {  // 스크롤이 멈췄을 때
-                    Log.i(TAG, "onScrollStateChanged: " + newState);
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                            int lastVisibleItemPos = layoutManager.findLastVisibleItemPosition();
-
-                            if (lastVisibleItemPos < layoutManager.getItemCount() - 1) {
-                                // 화면에 보이는 아이템의 다음 아이템이 존재하면 그라데이션 표시
-                                allSongsListAdapter.applyGradientEffect();
-
-                            } else {
-                                // 화면에 보이는 아이템의 다음 아이템이 존재하지 않으면 그라데이션 효과 없음
-                                allSongsListAdapter.clearGradientEffect();
-                            } // else
-                        } // run
-                    }, 100);
-                } // if
-            } // onScrollStateChanged
+//            @Override
+//            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//                Log.i(TAG, "onScrollStateChanged");
+//
+//                if (newState == RecyclerView.SCROLL_STATE_IDLE) {  // 스크롤이 멈췄을 때
+//                    Log.i(TAG, "onScrollStateChanged: " + newState);
+//
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+//                            int lastVisibleItemPos = layoutManager.findLastVisibleItemPosition();
+//
+//                            if (lastVisibleItemPos < layoutManager.getItemCount() - 1) {
+//                                // 화면에 보이는 아이템의 다음 아이템이 존재하면 그라데이션 표시
+//                                allSongsListAdapter.applyGradientEffect();
+//
+//                            } else {
+//                                // 화면에 보이는 아이템의 다음 아이템이 존재하지 않으면 그라데이션 효과 없음
+//                                allSongsListAdapter.clearGradientEffect();
+//                            } // else
+//                        } // run
+//                    }, 100);
+//                } // if
+//            } // onScrollStateChanged
         }); // addOnScrollListener
     } // allSongsScrolled
 

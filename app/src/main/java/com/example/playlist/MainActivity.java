@@ -3913,4 +3913,9 @@ public class MainActivity extends AppCompatActivity {
 //        } // else
     }
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    }
+
 } // MainActivity CLASS END

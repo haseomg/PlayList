@@ -58,7 +58,6 @@ public class SignUp extends AppCompatActivity {
 
     TextView pwSame, pwDiff;
 
-
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
 
@@ -83,6 +82,10 @@ public class SignUp extends AppCompatActivity {
 
     EditText idEdit, pwEdit, pwCheckEdit, nicknameEdit;
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

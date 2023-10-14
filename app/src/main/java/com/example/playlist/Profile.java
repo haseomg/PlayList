@@ -72,6 +72,10 @@ public class Profile extends AppCompatActivity {
 
     static Context ctx;
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

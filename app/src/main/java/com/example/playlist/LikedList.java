@@ -40,6 +40,11 @@ public class LikedList extends Activity {
     private static final String BASE_URL = "http://54.180.155.66/";
 
     @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);

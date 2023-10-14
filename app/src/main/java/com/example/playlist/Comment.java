@@ -25,6 +25,10 @@ public class Comment extends Activity {
     // final = 변하지 않는 상수 - 다른 사람이 이 코드를 봐도 작성한 사람이 변하지 않게 설정한 것으로 알 수 있음
     public final String TAG = "[Comment Activity]";
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
