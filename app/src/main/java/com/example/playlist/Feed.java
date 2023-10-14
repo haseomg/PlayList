@@ -78,6 +78,7 @@ public class Feed extends AppCompatActivity {
         }); // close
 
         setProfile();
+        setGenreOnClick();
     } // initial END
 
     @Override
@@ -92,7 +93,9 @@ public class Feed extends AppCompatActivity {
         genreFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // TODO (1) dialog? activity? select
+                // TODO (2) genre type arrangement
+                // TODO (3) genre pick -> setGenre, genre pick check
             } // onClick
         }); // genreFirst.setOnClickListener
 
