@@ -181,7 +181,6 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 //                // else if (position > lastVisibleItemPosition) {
 //                drawable.setAlpha(0);
 //            } // else
-
         } catch (NullPointerException e) {
             e.printStackTrace();
         } // catch
