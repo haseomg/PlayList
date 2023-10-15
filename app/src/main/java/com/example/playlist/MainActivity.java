@@ -1997,21 +1997,21 @@ public class MainActivity extends AppCompatActivity {
                                                     Log.i(TAG, "artist check (4) " + artist);
                                                 }
                                                 // ㅇ기여기
-//                                                now_song = reReName;
+                                                now_song = reReName;
                                                 Log.i(TAG, "now_song now 4 (change streaming) : " + now_song);
 
                                                 // TODO setPlayedInsert (3) in changeStreaming
                                                 String playTimingCheck = pastSongisPlayingCheckShared.getString("now", "none");
-//                                                if (playTimingCheck.equals("next")) {
+                                                if (playTimingCheck.equals("next")) {
                                                 setPlayedInsertToTable(logIn.getText().toString(), now_song);
                                                 Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
                                                 Log.i(TAG, "played - playTimingCheck (next) : " + playTimingCheck);
                                                 Log.i(TAG, "played - now_song now 4 *if (change Streaming) : " + now_song);
-//
-//                                                } else {
-//                                                    Log.i(TAG, "played - playTimingCheck (past) : " + playTimingCheck);
-//                                                    Log.i(TAG, "played - now_song now 4 *else (change Streaming) : " + now_song);
-//                                                } // else
+
+                                                } else {
+                                                    Log.i(TAG, "played - playTimingCheck (past) : " + playTimingCheck);
+                                                    Log.i(TAG, "played - now_song now 4 *else (change Streaming) : " + now_song);
+                                                } // else
 
                                                 // TODO selectLikes
                                                 updateHeart();
