@@ -1,8 +1,10 @@
 package com.example.playlist;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -1179,13 +1181,16 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO activity start
         updateHeart();
+
+        registerReceiver(playMusicReceiver,
+                new IntentFilter("com.example.playlist.PLAY_MUSIC"));
     } // onResume
 
     protected void onPause() {
         super.onPause();
         Log.i(TAG, "LifeCycle onPause()");
         handler.removeCallbacksAndMessages(null);
-    }
+    } // onPause
 
     protected void onStop() {
         super.onStop();
@@ -1213,6 +1218,7 @@ public class MainActivity extends AppCompatActivity {
         nowPlayingPreference.removeKey(getApplicationContext(), "now_playing");
         //
 //        }
+        unregisterReceiver(playMusicReceiver);
     }
 
     // 카카오 로그아웃
@@ -1597,14 +1603,14 @@ public class MainActivity extends AppCompatActivity {
 //            } else {
             // TODO 첫 재생, 이전 곡 재생
             if (needSongTimingCheck.equals("next") || needSongTimingCheck == "next") {
-                Log.i(TAG, "pastStreaming - StopButtonClick (if) : " + needSongTimingCheck);
+                Log.i(TAG, "checking pastStreaming - StopButtonClick (if) : " + needSongTimingCheck);
                 // TODO 1. 현재는 이전 곡 재생 이후 다음곡 재생 시 changeStreaming으로 넘어가서 랜덤 넘버 기준으로 곡 정보 가져오는 중
                 // TODO 2. 아니지 맞지
                 changeStreaming();
 
                 // TODO (2) timingStatus = after_song
             } else {
-                Log.i(TAG, "pastStreaming - onStopButtonClick (else) : " + needSongTimingCheck);
+                Log.i(TAG, "checking pastStreaming - onStopButtonClick (else) : " + needSongTimingCheck);
                 pastStreaming();
             } // else
 
@@ -2612,24 +2618,24 @@ public class MainActivity extends AppCompatActivity {
 //                                                        startActivityString(MainActivity.class, "nickname", responseData);
 
                                                 String songInfo = responseData;
-                                                Log.i(TAG, "[pastStreaming] songInfo Check : " + songInfo);
+                                                Log.i(TAG, "checking [pastStreaming] songInfo Check : " + songInfo);
 
                                                 String[] numCut = songInfo.split("___");
                                                 String num = numCut[0];
-                                                Log.i(TAG, "[pastStreaming] ongInfo num Check : " + num);
+                                                Log.i(TAG, "checking [pastStreaming] ongInfo num Check : " + num);
 
                                                 String deleteNum = numCut[1];
                                                 String[] artistCut = deleteNum.split("###");
                                                 artist = artistCut[0];
-                                                Log.i(TAG, "[pastStreaming] songInfo artist Check : " + artist);
+                                                Log.i(TAG, "checking [pastStreaming] songInfo artist Check : " + artist);
 
                                                 String deleteArtist = artistCut[1];
                                                 String[] pathCut = deleteArtist.split("@@@");
                                                 String path = pathCut[0];
-                                                Log.i(TAG, "[pastStreaming] songInfo path Check : " + path);
+                                                Log.i(TAG, "checking [pastStreaming] songInfo path Check : " + path);
 
                                                 time = pathCut[1];
-                                                Log.i(TAG, "[pastStreaming] songInfo time Check : " + time);
+                                                Log.i(TAG, "checking [pastStreaming] songInfo time Check : " + time);
 
                                                 String[] nameCut = path.split("/");
 
@@ -3525,6 +3531,7 @@ public class MainActivity extends AppCompatActivity {
             String beforeSong = cutPastSongs[cutPastSongs.length - 1];
             Log.i(TAG, "cutLastPlayedSong beforeSong : " + beforeSong);
 
+            // TODO 테이블 지우는 내용은 여기만 설정
             setPlayedDeleteToTable(beforeSong, logIn.getText().toString());
             Log.i(TAG, "setDelete : " + beforeSong + " / " + logIn.getText().toString());
 
@@ -3917,5 +3924,32 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         //super.onBackPressed();
     }
+
+    private final BroadcastReceiver playMusicReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String songName = intent.getStringExtra("selected_song");
+            Log.i(TAG, "checking now_song (before) : " + name);
+            name = songName;
+            rePastSongName = songName;
+            Log.i(TAG, "checking now_song (after) : " + name);
+            String timing = pastSongisPlayingCheckShared.getString("now", "default");
+
+            if (mediaPlayer != null && mediaPlayer.isPlaying()) {  // 현재 재생 중인 경우
+                Log.i(TAG, "checking timing (before) 1 : " + timing);
+                pastSongisPlayingCheckEditor.putString("now", "past");
+                pastSongisPlayingCheckEditor.commit();
+                Log.i(TAG, "checking timing (after) 2 : " + timing);
+                changeSong();
+
+            } else {  // 현재 재생 중이 아닐 경우
+                Log.i(TAG, "checking timing (before) 3 : " + timing);
+                pastSongisPlayingCheckEditor.putString("now", "past");
+                pastSongisPlayingCheckEditor.commit();
+                Log.i(TAG, "checking timing (after) 4 : " + timing);
+                changeSong();
+            } // else
+        } // onReceive
+    }; // BroadcastReceiver
 
 } // MainActivity CLASS END
