@@ -402,7 +402,7 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO songList clickEvent
         songList = findViewById(R.id.menuButton);
-        songList.setVisibility(View.GONE);
+//        songList.setVisibility(View.GONE);
         songList.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -1609,10 +1609,23 @@ public class MainActivity extends AppCompatActivity {
                 changeStreaming();
 
                 // TODO (2) timingStatus = after_song
-            } else {
+            }
+//            else if (needSongTimingCheck.equals("pick") || needSongTimingCheck == "pick") {
+//                setItemClickStreaming(name);
+//
+//            }
+            else {
                 Log.i(TAG, "checking pastStreaming - onStopButtonClick (else) : " + needSongTimingCheck);
                 pastStreaming();
             } // else
+
+//            else if (needSongTimingCheck.equals("past") || needSongTimingCheck == "past"){
+//                Log.i(TAG, "checking pastStreaming - onStopButtonClick (else) : " + needSongTimingCheck);
+//                pastStreaming();
+//            } else {
+//                Log.i(TAG, "checking setItemClickStreaming : " + reSongName);
+//                setItemClickStreaming(reSongName);
+//            } // else
 
 //            } // else
 
@@ -2009,10 +2022,10 @@ public class MainActivity extends AppCompatActivity {
                                                 // TODO setPlayedInsert (3) in changeStreaming
                                                 String playTimingCheck = pastSongisPlayingCheckShared.getString("now", "none");
                                                 if (playTimingCheck.equals("next")) {
-                                                setPlayedInsertToTable(logIn.getText().toString(), now_song);
-                                                Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
-                                                Log.i(TAG, "played - playTimingCheck (next) : " + playTimingCheck);
-                                                Log.i(TAG, "played - now_song now 4 *if (change Streaming) : " + now_song);
+                                                    setPlayedInsertToTable(logIn.getText().toString(), now_song);
+                                                    Log.i(TAG, "played - Insert check (setPlayedInsertToTable) : " + logIn.getText().toString() + " / " + now_song);
+                                                    Log.i(TAG, "played - playTimingCheck (next) : " + playTimingCheck);
+                                                    Log.i(TAG, "played - now_song now 4 *if (change Streaming) : " + now_song);
 
                                                 } else {
                                                     Log.i(TAG, "played - playTimingCheck (past) : " + playTimingCheck);
@@ -3931,21 +3944,22 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String songName = intent.getStringExtra("selected_song");
             Log.i(TAG, "checking now_song (before) : " + name);
+            // TODO setting issue for select song streaming (now - last song item streaming)
             name = songName;
-            pastSongName = songName;
+            reSongName = songName;
             Log.i(TAG, "checking now_song (after) : " + name);
             String timing = pastSongisPlayingCheckShared.getString("now", "default");
 
             if (mediaPlayer != null && mediaPlayer.isPlaying()) {  // 현재 재생 중인 경우
                 Log.i(TAG, "checking timing (before) 1 : " + timing);
-                pastSongisPlayingCheckEditor.putString("now", "past");
+                pastSongisPlayingCheckEditor.putString("now", "pick");
                 pastSongisPlayingCheckEditor.commit();
                 Log.i(TAG, "checking timing (after) 2 : " + timing);
                 changeSong();
 
             } else {  // 현재 재생 중이 아닐 경우
                 Log.i(TAG, "checking timing (before) 3 : " + timing);
-                pastSongisPlayingCheckEditor.putString("now", "past");
+                pastSongisPlayingCheckEditor.putString("now", "pick");
                 pastSongisPlayingCheckEditor.commit();
                 Log.i(TAG, "checking timing (after) 4 : " + timing);
                 changeSong();
