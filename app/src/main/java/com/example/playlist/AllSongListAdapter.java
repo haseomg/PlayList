@@ -268,29 +268,13 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 public void onClick(View v) {
 //                    Log.i(TAG, "allSongsAdapter itemView onClick()");
 //
-//                    if (onItemClickListener != null) {
-//                        int position = getAdapterPosition();
-//
-//                        if (position != RecyclerView.NO_POSITION) {
-//                            float xTranslationValue = 0f; // 슬라이드 위치 값 설정
-//                            float yTranslationValue = 0f;
-//                            long animationDuration = 500; // 애니메이션 지속 시간 설정
-//
-//                            Animation slideAnimation = new TranslateAnimation(0f, xTranslationValue, 0f, yTranslationValue);
-//                            slideAnimation.setDuration(animationDuration);
-//                            v.startAnimation(slideAnimation);
-//
-//                            onItemClickListener.onItemClick(position);
-//                        } // if
-//                    } // if != null
-
-
                     Log.i(TAG, "allSongsAdapter allSongsView click");
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
                         AllSongsModel clickedItem = allSongsList.get(position);
                         String songName = clickedItem.getName();
 
+                        allSongsView.setBackgroundColor(Color.parseColor("#AAB9FF"));
                         //
 //                        float xTranslationValue = 0f; // 슬라이드 위치 값 설정
 //                        float yTranslationValue = 0f;
@@ -302,19 +286,19 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         //
 
                         // 새로운 액티비티로 이동 (여기서는 MainActiviy 가정)
-                        Intent intent = new Intent(context, MainActivity.class);
+//                        Intent intent = new Intent(context, MainActivity.class);
 
                         // 인탠트에 추가 데이터 넣기 (여기서는 선택한 곡의 이름)
                         String[] fileTypeCut = songName.split(".mp3");
                         String selected_song = fileTypeCut[0];
-                        intent.putExtra("selected_song", selected_song);
+//                        intent.putExtra("selected_song", selected_song);
 
                         //
 //                        onItemClickListener.onItemClick(position);
                         //
 
                         // 액티비터 시작
-                        context.startActivity(intent);
+//                        context.startActivity(intent);
                     } // if
 
 
