@@ -1,6 +1,7 @@
 package com.example.playlist;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,6 +50,7 @@ public class PlayedAdapter extends RecyclerView.Adapter<PlayedAdapter.ViewHolder
         Log.i(TAG, "onBindViewHolder Method");
         PlayedModel playedModel = playedList.get(position);
         Log.i(TAG, "playedModel onBindViewHolder : " + playedModel);
+
 
         // TODO. Now songName null
 
@@ -128,6 +130,7 @@ public class PlayedAdapter extends RecyclerView.Adapter<PlayedAdapter.ViewHolder
                 @Override
                 public void onClick(View v) {
                     Log.i(TAG, "itemView) PlayedAdapter allSongsView click");
+                    int position = getAdapterPosition();
                     // (1) 해당 곡 재생
                     // (2) 해당 곡 아이템 백그라운드 컬러 변경 (고를 때마다 해당 곡만)
 
@@ -145,7 +148,12 @@ public class PlayedAdapter extends RecyclerView.Adapter<PlayedAdapter.ViewHolder
                         String fileTypeAdd = songName + ".mp3";
 
                         notifyItemChanged(position);
+
+                        Intent intent = new Intent("com.playlist.CHANGE_MUSIC");
+                        intent.putExtra("selected_song", songName);
+                        context.sendBroadcast(intent);
                     } // if
+
                 } // onClick
             }); // itemView.setOnClickListener
         } // Constructor
