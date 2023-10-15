@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/allSongsView"
     android:layout_width="300dp"
     android:layout_height="wrap_content">
 
@@ -66,7 +67,7 @@
 
 
     <ImageView
-        android:id="@+id/likedListImageView"
+        android:id="@+id/allSonsAlbum"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:src="@drawable/light_purple_full_heart"
