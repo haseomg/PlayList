@@ -240,6 +240,7 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             feed = itemView.findViewById(R.id.feedIcon);
             allSongsView = itemView.findViewById(R.id.allSongsView);
 
+
             allSongsView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -262,13 +263,22 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     } // if
                 }
             });
+            // TODO itemView onClick()
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                  (1) 해당 곡 재생
+//                  (2) 해당 곡 아이템 백그라운드 컬러 변경 (고를 때마다 해당 곡만)
+
+                } // onClick
+            }); // itemView.setOnClickListener
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 //                    Log.i(TAG, "allSongsAdapter itemView onClick()");
 //
-                    Log.i(TAG, "allSongsAdapter allSongsView click");
+                    Log.i(TAG, "itemView) allSongsAdapter allSongsView click");
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
                         AllSongsModel clickedItem = allSongsList.get(position);

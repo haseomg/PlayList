@@ -104,6 +104,17 @@ public class LikedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             heart = itemView.findViewById(R.id.likedHeart);
             layout = itemView.findViewById(R.id.likedUserLayout);
 
+            // TODO itemView onClick()
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                   (1) 해당 곡 재생
+//                   (2) 해당 곡 아이템 백그라운드 컬러 변경 (고를 때마다 해당 곡만)
+
+
+                } // onClick
+            }); // itemView.setOnClickListener
+
             user.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
