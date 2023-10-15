@@ -1,7 +1,6 @@
 package com.example.playlist;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -26,6 +25,7 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private boolean applyGradient = true;
     private boolean isGradientEnabled = true;
     private int lastVisibleItemPosition;
+    private int selected_position = -1;
 
     private OnItemClickListener onItemClickListener;
 
@@ -159,32 +159,40 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         convertViews(viewsCount);
         Log.i(TAG, "setAllSongs) views : " + countToStr);
 
-        if (applyGradient && position == lastVisibleItemPosition && lastVisibleItemPosition != -1) {
-            applyGradient(holder.itemView);
-            ((AllSongsHolder) holder).artistAndTime.setTextColor(Color.parseColor("#7C40407F"));
+//        if (applyGradient && position == lastVisibleItemPosition && lastVisibleItemPosition != -1) {
+//            applyGradient(holder.itemView);
+//            ((AllSongsHolder) holder).artistAndTime.setTextColor(Color.parseColor("#7C40407F"));
+//
+//        } else {
+//            clearGradient(holder.itemView);
+//            ((AllSongsHolder) holder).artistAndTime.setTextColor(Color.parseColor("#E440407F"));
+//        } // else
 
-        } else {
-            clearGradient(holder.itemView);
-            ((AllSongsHolder) holder).artistAndTime.setTextColor(Color.parseColor("#E440407F"));
-        } // else
-
-        GradientDrawable drawable = (GradientDrawable) holder.itemView.getBackground();
+//        GradientDrawable drawable = (GradientDrawable) holder.itemView.getBackground();
 
         try {
             Log.i(TAG, "onBindViewHolder Gradient able : " + isGradientEnabled);
             Log.i(TAG, "onBindViewHolder Gradient position : " + position);
             Log.i(TAG, "onBindViewHolder Gradient lastVisibleItemPosition : " + lastVisibleItemPosition);
-            if (isGradientEnabled) {
-                //  && position <= lastVisibleItemPosition
-                drawable.setAlpha(255);
-            } else {
-                // else if (position > lastVisibleItemPosition) {
-                drawable.setAlpha(0);
-            } // else
+//            if (isGradientEnabled) {
+//                //  && position <= lastVisibleItemPosition
+//                drawable.setAlpha(255);
+//            } else {
+//                // else if (position > lastVisibleItemPosition) {
+//                drawable.setAlpha(0);
+//            } // else
 
         } catch (NullPointerException e) {
             e.printStackTrace();
         } // catch
+
+        if (selected_position == position) {
+            holder.itemView.setBackgroundColor(Color.parseColor("#AAB9FF"));
+            ((AllSongsHolder) holder).song_name.setTextColor(Color.parseColor("#B57878E1"));
+        } else {
+            holder.itemView.setBackgroundColor(Color.parseColor("#B57878E1"));  // 원래 색상으로 설정
+            ((AllSongsHolder) holder).song_name.setTextColor(Color.parseColor("#BDC7F6"));
+        }
 
     } // onBindViewHolder END
 
@@ -240,61 +248,23 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             feed = itemView.findViewById(R.id.feedIcon);
             allSongsView = itemView.findViewById(R.id.allSongsView);
 
-
-            allSongsView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.i(TAG, "allSongsAdapter allSongsView click");
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        AllSongsModel clickedItem = allSongsList.get(position);
-                        String songName = clickedItem.getName();
-
-                        // 새로운 액티비티로 이동 (여기서는 MainActiviy 가정)
-                        Intent intent = new Intent(context, MainActivity.class);
-
-                        // 인탠트에 추가 데이터 넣기 (여기서는 선택한 곡의 이름)
-                        String[] fileTypeCut = songName.split(".mp3");
-                        String selected_song = fileTypeCut[0];
-                        intent.putExtra("selected_song", selected_song);
-
-                        // 액티비터 시작
-                        context.startActivity(intent);
-                    } // if
-                }
-            });
             // TODO itemView onClick()
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                  (1) 해당 곡 재생
-//                  (2) 해당 곡 아이템 백그라운드 컬러 변경 (고를 때마다 해당 곡만)
-
-                } // onClick
-            }); // itemView.setOnClickListener
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    Log.i(TAG, "allSongsAdapter itemView onClick()");
-//
                     Log.i(TAG, "itemView) allSongsAdapter allSongsView click");
                     int position = getAdapterPosition();
+
+                    if (selected_position != getAdapterPosition()) {
+                        notifyItemChanged(selected_position);
+                        selected_position = getAdapterPosition();
+                    }
+
                     if (position != RecyclerView.NO_POSITION) {
                         AllSongsModel clickedItem = allSongsList.get(position);
                         String songName = clickedItem.getName();
 
-                        allSongsView.setBackgroundColor(Color.parseColor("#AAB9FF"));
-                        //
-//                        float xTranslationValue = 0f; // 슬라이드 위치 값 설정
-//                        float yTranslationValue = 0f;
-//                        long animationDuration = 500; // 애니메이션 지속 시간 설정
-//
-//                        Animation slideAnimation = new TranslateAnimation(0f, xTranslationValue, 0f, yTranslationValue);
-//                        slideAnimation.setDuration(animationDuration);
-//                        v.startAnimation(slideAnimation);
-                        //
-
+                        v.setBackgroundColor(Color.parseColor("#AAB9FF"));
                         // 새로운 액티비티로 이동 (여기서는 MainActiviy 가정)
 //                        Intent intent = new Intent(context, MainActivity.class);
 
@@ -303,13 +273,24 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         String selected_song = fileTypeCut[0];
 //                        intent.putExtra("selected_song", selected_song);
 
-                        //
-//                        onItemClickListener.onItemClick(position);
-                        //
-
                         // 액티비터 시작
 //                        context.startActivity(intent);
+                        notifyItemChanged(position);
                     } // if
+
+                    //
+//                        float xTranslationValue = 0f; // 슬라이드 위치 값 설정
+//                        float yTranslationValue = 0f;
+//                        long animationDuration = 500; // 애니메이션 지속 시간 설정
+//
+//                        Animation slideAnimation = new TranslateAnimation(0f, xTranslationValue, 0f, yTranslationValue);
+//                        slideAnimation.setDuration(animationDuration);
+//                        v.startAnimation(slideAnimation);
+                    //
+
+                    //
+//                        onItemClickListener.onItemClick(position);
+                    //
 
 
                 } // onClick END
