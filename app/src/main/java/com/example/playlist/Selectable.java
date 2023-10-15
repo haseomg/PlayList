@@ -93,6 +93,7 @@ public class Selectable extends AppCompatActivity {
         allSongsListAdapter = new AllSongListAdapter(this, allSongsList);
         all_songs_recyclerView.setAdapter(allSongsListAdapter);
         allSeekBar = findViewById(R.id.allSeekBar);
+        allSeekBar.setVisibility(View.GONE);
 
         allSongsListAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
