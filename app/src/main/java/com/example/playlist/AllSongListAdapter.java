@@ -197,7 +197,7 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 GradientDrawable.Orientation.TOP_BOTTOM,
                 new int[]{Color.TRANSPARENT, Color.parseColor("#AAB9FF")});
 
-        itemView.setBackground(gradientDrawable);
+//        itemView.setBackground(gradientDrawable);
     } // clearGradient
 
     private void applyToBottomGradient(View itemView) {
