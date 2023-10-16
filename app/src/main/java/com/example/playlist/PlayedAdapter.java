@@ -21,6 +21,7 @@ public class PlayedAdapter extends RecyclerView.Adapter<PlayedAdapter.ViewHolder
     private ArrayList<PlayedModel> playedList;
     private OnItemClickListener onItemClickListener;
     private int position;
+    private int oldPosition;
     private int selected_position = -1;
     String TAG = "[PlayedAdapter]";
 
@@ -79,9 +80,11 @@ public class PlayedAdapter extends RecyclerView.Adapter<PlayedAdapter.ViewHolder
         // TODO (2) issue - 1번의 상태에서 다른 아이템 클릭 시 추가적으로 체킹 (색상 변경) 되는 상황
         // TODO (3) want - 체킹 (색상 변경) 아이템은 한 개만 되어 있어야 함
         if (selected_position == position || playedList.get(position).getSong_name().equals(realName)) {
+            Log.i(TAG, "changeColor onBindViewHolder *if : " + selected_position + " / " + playedList.get(position).getSong_name());
             holder.itemView.setBackgroundColor(Color.parseColor("#7878E1"));
             holder.song_name.setTextColor(Color.parseColor("#AAB9FF"));
         } else {
+            Log.i(TAG, "changeColor onBindViewHolder *else: " + selected_position + " / " + playedList.get(position).getSong_name());
             holder.itemView.setBackgroundColor(Color.parseColor("#AAB9FF"));
             holder.song_name.setTextColor(Color.parseColor("#7878E1"));
         } // else
@@ -149,30 +152,33 @@ public class PlayedAdapter extends RecyclerView.Adapter<PlayedAdapter.ViewHolder
                     int position = getAdapterPosition();
                     // (1) 해당 곡 재생
                     // (2) 해당 곡 아이템 백그라운드 컬러 변경 (고를 때마다 해당 곡만)
-
-                    if (selected_position != getAdapterPosition()) {
-                        notifyItemChanged(selected_position);
-                        selected_position = getAdapterPosition();
-                    } // if
-
                     if (position != RecyclerView.NO_POSITION) {
+                        if (selected_position != position) {
+                            oldPosition = selected_position;
+                            Log.i(TAG, "changeColor position) onClick oldPosition : " + oldPosition);
+                            selected_position = position;
+                            Log.i(TAG, "changeColor position) onClick selected_position : " + selected_position);
+
+                            notifyItemChanged(oldPosition);
+                            notifyItemChanged(selected_position);
+                        } // if
+
                         PlayedModel clickedItem = playedList.get(position);
                         String songName = clickedItem.getSong_name();
 
                         v.setBackgroundColor(Color.parseColor("#7878E1"));
 
-                        String fileTypeAdd = songName + ".mp3";
-
-                        notifyItemChanged(position);
+//                        String fileTypeAdd = songName + ".mp3";
 
                         Intent intent = new Intent("com.example.playlist.PLAY_MUSIC");
                         Log.i(TAG, "checking playedItem onClick : " + songName);
                         intent.putExtra("selected_song", songName);
+
                         context.sendBroadcast(intent);
                     } // if
-
                 } // onClick
             }); // itemView.setOnClickListener
+
         } // Constructor
     } // CLASS
 
