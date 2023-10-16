@@ -1,5 +1,6 @@
 package com.example.playlist;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,10 +44,13 @@ public class Selectable extends AppCompatActivity {
     RecyclerView horizontalRecyclerView;
 
     String getUserName, countToStr;
+    public int playing_position = -1;
 
     private static final String BASE_URL = "http://54.180.155.66/";
 
     String TAG = "[Selectable CLASS]";
+
+    static Context selectableCtx;
 
     @Override
     public void onBackPressed() {
@@ -65,6 +69,8 @@ public class Selectable extends AppCompatActivity {
     } // onCreate END
 
     private void initial() {
+
+        selectableCtx = Selectable.this;
 
         // TODO - TOP 3
         top1 = findViewById(R.id.top1);
@@ -94,6 +100,16 @@ public class Selectable extends AppCompatActivity {
         all_songs_recyclerView.setAdapter(allSongsListAdapter);
         allSeekBar = findViewById(R.id.allSeekBar);
         allSeekBar.setVisibility(View.GONE);
+
+        Log.i(TAG, "allSongCheck songName : " + getUserName);
+
+        for (int i = 0; i < allSongsList.size(); i++) {
+            if (allSongsList.get(i).getName().equals(getUserName)) {
+                playing_position = i;
+                Log.i(TAG, "allSongCheck) Played playing_position: " + playing_position);
+                break;
+            } // if
+        } // for
 
         allSongsListAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override

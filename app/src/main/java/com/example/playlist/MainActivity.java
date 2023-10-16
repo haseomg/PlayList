@@ -444,7 +444,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "PICK 버튼 클릭");
                 Intent intent = new Intent(MainActivity.this, Selectable.class);
-                intent.putExtra("name", logIn.getText().toString());
+                String mainLogoText = mainLogo.getText().toString();
+                String [] cutMainLogo = mainLogoText.split(" • ");
+                String songName = cutMainLogo[0];
+                intent.putExtra("name", songName);
                 startActivity(intent);
             }
         });
