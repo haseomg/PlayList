@@ -452,6 +452,8 @@ public class Upload extends Activity {
 //        Call<ResponseBody> call = apiService.uploadAudio(body);
 //        Call<ResponseBody> call = apiService.uploadAudio(part);
         Call<ResponseBody> call = apiService.uploadAudio(part, textRequestBody);
+
+
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
