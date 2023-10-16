@@ -1,6 +1,7 @@
 package com.example.playlist;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -24,8 +25,11 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private SharedPreferences preferences;
     private boolean applyGradient = true;
     private boolean isGradientEnabled = true;
+    private int oldPosition;
+    private int playing_position = 0;
     private int lastVisibleItemPosition;
     private int selected_position = -1;
+    String songName;
 
     private OnItemClickListener onItemClickListener;
 
@@ -137,6 +141,7 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         Log.i(TAG, "onBindViewHolder Method");
         AllSongsModel allSongsModel = allSongsList.get(position);
 
+        playing_position = ((Selectable) Selectable.selectableCtx).playing_position;
 //            ((AllSongsHolder) holder).music_image.setI(allSongsList.get(position).getTime());
         String songName = allSongsList.get(position).getName();
         String[] cutFileFormat = songName.split("\\.mp3");
@@ -184,14 +189,31 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         } catch (NullPointerException e) {
             e.printStackTrace();
         } // catch
+        // TODO (1)  to did - check "Selectable" 액티비티 시작 시 현재 메인에서 재생 중인 음악 아이템 체킹 (색상 변경) 되어있음
+        // TODO (2) issue - 1번의 상태에서 다른 아이템 클릭 시 추가적으로 체킹 (색상 변경) 되는 상황
+        // TODO (3) want - 체킹 (색상 변경) 아이템은 한 개만 되어 있어야 함
+        // 현재 체킹되어있는 아이템의 포지션 값을 찾아야 해
+        String playingSong = ((MainActivity) MainActivity.mainCtx).mainLogo.getText().toString();
+        String[] cutPlayingSong = playingSong.split(" • ");
+        String reRealName = cutPlayingSong[0];
+        String changeName = reRealName.replace(" ", "_");
+        Log.i(TAG, "playingSong) onBindViewHolder check : " + reRealName);
+        String originalName = allSongsList.get(position).getName();
+        Log.i(TAG, "allSongCheck) song name : " + originalName);
+        if (position == playing_position) {
+            Log.i(TAG, "allSongCheck onBindViewHolder *if : " + playing_position + " / " + originalName + " / " + changeName + ".mp3");
+            holder.itemView.setBackgroundColor(Color.parseColor("#B57878E1"));
+            ((AllSongsHolder) holder).song_name.setTextColor(Color.parseColor("#BDC7F6"));
 
-        if (selected_position == position) {
-            holder.itemView.setBackgroundColor(Color.parseColor("#AAB9FF"));
-            ((AllSongsHolder) holder).song_name.setTextColor(Color.parseColor("#B57878E1"));
+        } else if (selected_position == position || allSongsList.get(position).getName().equals(changeName + ".mp3")) {
+            Log.i(TAG, "allSongCheck) onBindViewHolder *else if : " + selected_position + " / " + originalName + " / " + changeName + ".mp3");
+            holder.itemView.setBackgroundColor(Color.parseColor("#A0B1FF"));
+            ((AllSongsHolder) holder).song_name.setTextColor(Color.parseColor("#E440407F"));
         } else {
+            Log.i(TAG, "allSongCheck) onBindViewHolder *else : " + selected_position + " / " + originalName + " / " + changeName + ".mp3");
             holder.itemView.setBackgroundColor(Color.parseColor("#B57878E1"));  // 원래 색상으로 설정
             ((AllSongsHolder) holder).song_name.setTextColor(Color.parseColor("#BDC7F6"));
-        }
+        } // else
 
     } // onBindViewHolder END
 
@@ -253,17 +275,27 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 public void onClick(View v) {
                     Log.i(TAG, "itemView) allSongsAdapter allSongsView click");
                     int position = getAdapterPosition();
-
-                    if (selected_position != getAdapterPosition()) {
-                        notifyItemChanged(selected_position);
-                        selected_position = getAdapterPosition();
-                    }
-
                     if (position != RecyclerView.NO_POSITION) {
-                        AllSongsModel clickedItem = allSongsList.get(position);
-                        String songName = clickedItem.getName();
+                        if (selected_position != position) {
+                            oldPosition = selected_position;
+                            Log.i(TAG, "changeColor position) onClick oldPosition : " + oldPosition);
+                            selected_position = position;
+                            Log.i(TAG, "changeColor position) onClick selected_position : " + selected_position);
 
-                        v.setBackgroundColor(Color.parseColor("#AAB9FF"));
+                            notifyItemChanged(oldPosition);
+                            notifyItemChanged(selected_position);
+                        }
+
+                        if (playing_position != RecyclerView.NO_POSITION) {
+                            notifyItemChanged(playing_position);
+                        } // if
+
+                        playing_position = position;
+
+                        AllSongsModel clickedItem = allSongsList.get(position);
+                        songName = clickedItem.getName();
+
+                        v.setBackgroundColor(Color.parseColor("#A0B1FF"));
                         // 새로운 액티비티로 이동 (여기서는 MainActiviy 가정)
 //                        Intent intent = new Intent(context, MainActivity.class);
 
@@ -272,6 +304,11 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         String selected_song = fileTypeCut[0];
 //                        intent.putExtra("selected_song", selected_song);
 
+                        Intent intent = new Intent("com.example.playlist.PLAY_MUSIC");
+                        Log.i(TAG, "checking playedItem onClick : " + selected_song);
+                        intent.putExtra("selected_song", selected_song);
+
+                        context.sendBroadcast(intent);
                         // 액티비터 시작
 //                        context.startActivity(intent);
                         notifyItemChanged(position);
@@ -290,7 +327,6 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     //
 //                        onItemClickListener.onItemClick(position);
                     //
-
 
                 } // onClick END
             }); // itemView.setOnClickListener END
