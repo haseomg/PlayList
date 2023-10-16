@@ -22,7 +22,9 @@ public class PlayedAdapter extends RecyclerView.Adapter<PlayedAdapter.ViewHolder
     private OnItemClickListener onItemClickListener;
     private int position;
     private int oldPosition;
+    private int playing_position = 0;
     private int selected_position = -1;
+    private String songName;
     String TAG = "[PlayedAdapter]";
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -71,18 +73,31 @@ public class PlayedAdapter extends RecyclerView.Adapter<PlayedAdapter.ViewHolder
             Log.e(TAG, "onBindViewHolder Null " + e);
         } // catch
 
+        playing_position = ((Played) Played.playedContext).playing_position;
+        Log.i(TAG, "changeColor) onBindViewHolder playing_position: " + playing_position);
         // TODO 아이템 색상 체킹
         String playingSong = ((MainActivity) MainActivity.mainCtx).mainLogo.getText().toString();
         String[] cutPlayingSong = playingSong.split(" • ");
         String realName = cutPlayingSong[0];
         Log.i(TAG, "playingSong) onBindViewHolder check : " + realName);
+
         // TODO (1)  to did - check "Played" 액티비티 시작 시 현재 메인에서 재생 중인 음악 아이템 체킹 (색상 변경) 되어있음
         // TODO (2) issue - 1번의 상태에서 다른 아이템 클릭 시 추가적으로 체킹 (색상 변경) 되는 상황
         // TODO (3) want - 체킹 (색상 변경) 아이템은 한 개만 되어 있어야 함
-        if (selected_position == position || playedList.get(position).getSong_name().equals(realName)) {
-            Log.i(TAG, "changeColor onBindViewHolder *if : " + selected_position + " / " + playedList.get(position).getSong_name());
+        // 현재 체킹되어있는 아이템의 포지션 값을 찾아야 해
+        if (position == playing_position) {
+            Log.i(TAG, "changeColor onBindViewHolder *if : " + playing_position + " / " + playedList.get(position).getSong_name());
             holder.itemView.setBackgroundColor(Color.parseColor("#7878E1"));
             holder.song_name.setTextColor(Color.parseColor("#AAB9FF"));
+
+        } else if (selected_position == position || playedList.get(position).getSong_name().equals(realName)) {
+            Log.i(TAG, "changeColor onBindViewHolder *else if : " + selected_position + " / " + playedList.get(position).getSong_name());
+            holder.itemView.setBackgroundColor(Color.parseColor("#7878E1"));
+            holder.song_name.setTextColor(Color.parseColor("#AAB9FF"));
+
+            if (playedList.get(position).getSong_name().equals(realName)) {
+
+            }  // if
         } else {
             Log.i(TAG, "changeColor onBindViewHolder *else: " + selected_position + " / " + playedList.get(position).getSong_name());
             holder.itemView.setBackgroundColor(Color.parseColor("#AAB9FF"));
@@ -163,8 +178,14 @@ public class PlayedAdapter extends RecyclerView.Adapter<PlayedAdapter.ViewHolder
                             notifyItemChanged(selected_position);
                         } // if
 
+                        if (playing_position != RecyclerView.NO_POSITION) {
+                            notifyItemChanged(playing_position);
+                        } // if
+
+                        playing_position = position;
+
                         PlayedModel clickedItem = playedList.get(position);
-                        String songName = clickedItem.getSong_name();
+                        songName = clickedItem.getSong_name();
 
                         v.setBackgroundColor(Color.parseColor("#7878E1"));
 

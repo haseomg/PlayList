@@ -35,12 +35,13 @@ public class Played extends Activity {
     ArrayList<PlayedModel> playedList = new ArrayList<>();
     PlayedAdapter playedAdapter;
     PlayedModel playedModel;
+    public int playing_position = -1;
     androidx.recyclerview.widget.RecyclerView PlayedRecyclerView;
 
     androidx.constraintlayout.widget.ConstraintLayout topBar;
     TextView title;
     Button close;
-    String userName, getPlayedListFromShared;
+    String userName, songName, getPlayedListFromShared;
     String played = "";
 
     SharedPreferences shared;
@@ -73,8 +74,17 @@ public class Played extends Activity {
         Intent intent = getIntent();
         userName = intent.getStringExtra("userName");
         Log.i(TAG, "setPlayed : " + userName);
+        songName = intent.getStringExtra("playingSongName");
+        Log.i(TAG, "changeColor songName : " + songName);
 
-        PlayedRecyclerView = findViewById(R.id.songListRecyclerView);
+        for (int i = 0; i < playedList.size(); i++) {
+            if (playedList.get(i).getSong_name().equals(songName)) {
+                playing_position = i;
+                Log.i(TAG, "changeColor) Played playing_position: " + playing_position);
+                break;
+            } // if
+            PlayedRecyclerView = findViewById(R.id.songListRecyclerView);
+        } // for
         topBar = findViewById(R.id.songListTopBar);
         title = findViewById(R.id.songListTitle);
         close = findViewById(R.id.songListClose);
