@@ -426,6 +426,10 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Intent songListIntent = new Intent(MainActivity.this, Played.class);
                     songListIntent.putExtra("userName", logIn.getText().toString());
+                    String nowPlayingSong = mainLogo.getText().toString();
+                    String[] cutName = nowPlayingSong.split(" • ");
+                    String realName = cutName[0];
+                    songListIntent.putExtra("playingSongName", realName);
                     startActivity(songListIntent);
                 } // else
             } // Btn onClick
@@ -693,7 +697,7 @@ public class MainActivity extends AppCompatActivity {
                                 // num 보내고
                                 // TODO 랜덤
                                 Uri.Builder builder = new Uri.Builder()
-                                        .appendQueryParameter("num", firstRanNum);
+                                        .appendQueryParameter("num", 1 + firstRanNum);
                                 String postParams = builder.build().getEncodedQuery();
                                 new getJSONData().execute("http://54.180.155.66/" + "file_sampling.php", postParams);
 
@@ -706,7 +710,7 @@ public class MainActivity extends AppCompatActivity {
                                 // post 파라미터 추가
                                 // TODO 랜덤
                                 RequestBody formBody = new FormBody.Builder()
-                                        .add("num", firstRanNum.trim())
+                                        .add("num", 1 + firstRanNum.trim())
                                         .build();
                                 // num을 보내고 -> 테이블의 num을 기준으로 path, name 가져올 거야
 
@@ -1777,7 +1781,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     Log.i(TAG, "divide - songTiming (else) : " + needSongTimingCheck);
                     Uri.Builder builder = new Uri.Builder()
-                            .appendQueryParameter("num", nextRanNum);
+                            .appendQueryParameter("num", 1 + nextRanNum);
                     String postParams = builder.build().getEncodedQuery();
                     new getJSONData().execute("http://54.180.155.66/" + "/file_sampling.php", postParams);
 
@@ -1802,7 +1806,7 @@ public class MainActivity extends AppCompatActivity {
                     } // catch
 
                     RequestBody formBody = new FormBody.Builder()
-                            .add("num", nextRanNum.trim())
+                            .add("num", 1 + nextRanNum.trim())
                             .build();
                     // num을 보내고 -> 테이블의 num을 기준으로 path, name 가져올 거야
 
