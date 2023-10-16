@@ -3704,7 +3704,7 @@ public class MainActivity extends AppCompatActivity {
                                                     // TODO check (1) < 버튼 클릭 시 name에 값 넣어주고 여기서 확인
                                                     // TODO check (2) > 버튼 클릭 시 name에 값을 넣어주고
                                                     Log.i(TAG, "checking - selectStreaming  - songInfo name Check *else before : " + reSongName);
-                                                    name = reSongName;
+                                                    name = reSongName + ".mp3";
                                                     Log.i(TAG, "checking - selectStreaming  - songInfo name Check *else after : " + reSongName);
                                                 } // else
 
