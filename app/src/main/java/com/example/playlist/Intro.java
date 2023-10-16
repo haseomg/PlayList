@@ -79,7 +79,7 @@ public class Intro extends AppCompatActivity {
                     finish();
                 }
             }
-        }, 2000);
+        }, 3000);
     }
 
     private void initial() {
