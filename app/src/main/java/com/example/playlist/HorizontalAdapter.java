@@ -16,8 +16,13 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
 
     private Context context;
     private ArrayList<UpdateLikedModel> likedList;
-    private OnItemClickListener onItemClickListener;
+    private int oldPosition;
+    private int playing_position = 0;
+    private int lastVisibleItemPosition;
     private int selected_position = -1;
+    String songName;
+
+    private OnItemClickListener onItemClickListener;
 
     String TAG = "[HorizontalAdapter]";
 
@@ -44,6 +49,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.i(TAG, "onBindViewHolder Method");
         holder.likedButton.setText(likedList.get(position).getSong_name());
+//        holder.
 
 //        if (selected_position == position) {
 //            holder.itemView.setBackgroundColor(Color.parseColor("#7878E1"));

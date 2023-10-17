@@ -12,7 +12,7 @@
         android:background="#AAB9FF"
         android:fontFamily="sans-serif-black"
         android:text="song name"
-        android:textColor="#7878E1"
+        android:textColor="#E440407F"
         android:textSize="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

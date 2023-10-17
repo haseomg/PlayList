@@ -40,7 +40,7 @@
         android:id="@+id/likedRecyclerView"
         android:layout_width="300dp"
         android:layout_height="100dp"
-        android:background="#7878E1"
+        android:background="#B57878E1"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -85,7 +85,7 @@
         android:id="@+id/top3ListLayout"
         android:layout_width="288dp"
         android:layout_height="110dp"
-        android:background="#7878E1"
+        android:background="#B57878E1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -117,8 +117,8 @@
                 app:layout_constraintVertical_bias="0.133" />
 
             <ImageView
-                android:layout_width="30sp"
-                android:layout_height="30sp"
+                android:layout_width="25sp"
+                android:layout_height="25sp"
                 android:src="@drawable/gold_medal" />
 
         </FrameLayout>
@@ -130,7 +130,7 @@
             android:fontFamily="sans-serif-black"
             android:text="top 1"
             android:textAlignment="center"
-            android:textColor="#7878E1"
+            android:textColor="#E440407F"
             android:textSize="12dp"
             app:layout_constraintBottom_toBottomOf="@+id/top1Frame"
             app:layout_constraintEnd_toEndOf="@+id/top1Frame"
@@ -145,7 +145,7 @@
             android:fontFamily="sans-serif-black"
             android:text="top1"
             android:textAlignment="center"
-            android:textColor="#AAB9FF"
+            android:textColor="#C8D2FF"
             android:textSize="9dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -195,7 +195,7 @@
             android:fontFamily="sans-serif-black"
             android:text="top 2"
             android:textAlignment="center"
-            android:textColor="#7878E1"
+            android:textColor="#E440407F"
             android:textSize="12dp"
             app:layout_constraintBottom_toBottomOf="@+id/top2Frame"
             app:layout_constraintEnd_toEndOf="@+id/top2Frame"
@@ -210,11 +210,11 @@
             android:fontFamily="sans-serif-black"
             android:text="top2"
             android:textAlignment="center"
-            android:textColor="#AAB9FF"
+            android:textColor="#FFC8D2FF"
             android:textSize="9dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/top3Text"
+            app:layout_constraintStart_toEndOf="@+id/top1Text"
             app:layout_constraintTop_toBottomOf="@+id/top2Frame"
             app:layout_constraintVertical_bias="0.68" />
 
@@ -258,7 +258,7 @@
             android:fontFamily="sans-serif-black"
             android:text="top 3"
             android:textAlignment="center"
-            android:textColor="#7878E1"
+            android:textColor="#E440407F"
             android:textSize="12dp"
             app:layout_constraintBottom_toBottomOf="@+id/top3Frame"
             app:layout_constraintEnd_toEndOf="@+id/top3Frame"
@@ -273,7 +273,7 @@
             android:fontFamily="sans-serif-black"
             android:text="top3"
             android:textAlignment="center"
-            android:textColor="#AAB9FF"
+            android:textColor="#FFC8D2FF"
             android:textSize="9dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

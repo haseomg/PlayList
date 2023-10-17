@@ -28,6 +28,7 @@ public class LikedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private int playing_position = -1;
     private int lastVisibleItemPosition;
     private int selected_position = -1;
+    String songName;
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
@@ -139,8 +140,38 @@ public class LikedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     Log.i(TAG, "itemView) LikedAdapter allSongsView click");
 //                   (1) 해당 곡 재생
 //                   (2) 해당 곡 아이템 백그라운드 컬러 변경 (고를 때마다 해당 곡만)
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        oldPosition = selected_position;
+                        Log.i(TAG, "likedSongCheck position) onClick oldPosition : " + oldPosition);
+                        selected_position = position;
+                        Log.i(TAG, "likedSongCheck position) onClick selected_position : " + selected_position);
 
+                        notifyItemChanged(oldPosition);
+                        notifyItemChanged(selected_position);
+                    } // if
 
+                    if (playing_position != RecyclerView.NO_POSITION) {
+                        notifyItemChanged(playing_position);
+                    } // if
+
+                    playing_position = position;
+
+                    LikedModel clickedItem = likedList.get(position);
+                    songName = clickedItem.getSelected_song();
+
+                    v.setBackgroundColor(Color.parseColor("#AAB9FF"));
+
+                    String[] fileTypeCut = songName.split(".mp3");
+                    String selected_song = fileTypeCut[0];
+
+                    Intent intent = new Intent("com.example.playlist.PLAY_MUSIC");
+                    Log.i(TAG, "likedSongCheck playedItem onClick : " + selected_song);
+                    intent.putExtra("selected_song", selected_song);
+
+                    context.sendBroadcast(intent);
+                    // 액티비터 시작
+                    notifyItemChanged(position);
                 } // onClick
             }); // itemView.setOnClickListener
 

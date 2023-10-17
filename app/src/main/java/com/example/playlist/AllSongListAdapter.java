@@ -207,7 +207,7 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         } else if (selected_position == position || allSongsList.get(position).getName().equals(changeName + ".mp3")) {
             Log.i(TAG, "allSongCheck) onBindViewHolder *else if : " + selected_position + " / " + originalName + " / " + changeName + ".mp3");
-            holder.itemView.setBackgroundColor(Color.parseColor("#A0B1FF"));
+            holder.itemView.setBackgroundColor(Color.parseColor("#FFE2E7FB"));
             ((AllSongsHolder) holder).song_name.setTextColor(Color.parseColor("#E440407F"));
         } else {
             Log.i(TAG, "allSongCheck) onBindViewHolder *else : " + selected_position + " / " + originalName + " / " + changeName + ".mp3");
@@ -295,7 +295,7 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         AllSongsModel clickedItem = allSongsList.get(position);
                         songName = clickedItem.getName();
 
-                        v.setBackgroundColor(Color.parseColor("#A0B1FF"));
+                        v.setBackgroundColor(Color.parseColor("#B57878E1"));
                         // 새로운 액티비티로 이동 (여기서는 MainActiviy 가정)
 //                        Intent intent = new Intent(context, MainActivity.class);
 
