@@ -1,8 +1,8 @@
 package com.example.playlist;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 public class Feed extends AppCompatActivity {
 
+    private static final String TAG = "FEED";
     ImageView genreFirst, genreSecond, genreThird, profile;
     TextView genreFirst_textView, genreSecond_textView, genreThird_textView;
     TextView feedLogo, profileMusic;
@@ -97,6 +98,14 @@ public class Feed extends AppCompatActivity {
                 // TODO (2) genre type arrangement
                 // TODO (3) genre pick -> setGenre, genre pick check
 
+                GenreSelectDialog dialog = new GenreSelectDialog();
+                dialog.setListener(new GenreSelectDialog.OnGenreSelectedListener() {
+                    @Override
+                    public void onGenresSelected(ArrayList<String> selectedGenres) {
+
+                    } // onGenresSelected
+                }); // setListener
+                dialog.show(getSupportFragmentManager(), "GenreSelect");
             } // onClick
         }); // genreFirst.setOnClickListener
 
@@ -107,6 +116,14 @@ public class Feed extends AppCompatActivity {
                 // TODO (2) genre type arrangement
                 // TODO (3) genre pick -> setGenre, genre pick check
 
+                GenreSelectDialog dialog = new GenreSelectDialog();
+                dialog.setListener(new GenreSelectDialog.OnGenreSelectedListener() {
+                    @Override
+                    public void onGenresSelected(ArrayList<String> selectedGenres) {
+
+                    } // onGenresSelected
+                }); // setListener
+                dialog.show(getSupportFragmentManager(), "GenreSelect");
             } // onClick
         }); //genreSecond.setOnClickListener
 
@@ -117,6 +134,14 @@ public class Feed extends AppCompatActivity {
                 // TODO (2) genre type arrangement
                 // TODO (3) genre pick -> setGenre, genre pick check
 
+                GenreSelectDialog dialog = new GenreSelectDialog();
+                dialog.setListener(new GenreSelectDialog.OnGenreSelectedListener() {
+                    @Override
+                    public void onGenresSelected(ArrayList<String> selectedGenres) {
+
+                    } // onGenresSelected
+                }); // setListener
+                dialog.show(getSupportFragmentManager(), "GenreSelect");
             } // onClick
         }); //genreSecond.setOnClickListener
     } // setGenre
@@ -134,13 +159,14 @@ public class Feed extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
-            Uri selectedImageUri = data.getData();
-            profile.setImageURI(selectedImageUri);
-
+        if (resultCode == RESULT_OK) {
+            ArrayList<String> selected_genres = data.getStringArrayListExtra("selected_genres");
+            for (String genre : selected_genres) {
+                Log.i(TAG, "Selected genre: " + genre);
+                // Here you can update your image view based on the selected genres
+            } // for
         } // if
     } // onActivityResult
 

@@ -447,7 +447,8 @@ public class MainActivity extends AppCompatActivity {
                 String mainLogoText = mainLogo.getText().toString();
                 String [] cutMainLogo = mainLogoText.split(" • ");
                 String songName = cutMainLogo[0];
-                intent.putExtra("name", songName);
+                intent.putExtra("user_name", logIn.getText().toString());
+                intent.putExtra("song_name", songName);
                 startActivity(intent);
             }
         });

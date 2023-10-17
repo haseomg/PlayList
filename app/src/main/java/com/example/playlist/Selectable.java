@@ -43,7 +43,7 @@ public class Selectable extends AppCompatActivity {
     RecyclerView all_songs_recyclerView;
     RecyclerView horizontalRecyclerView;
 
-    String getUserName, countToStr;
+    String getUserName, countToStr, getSongName;
     public int playing_position = -1;
 
     private static final String BASE_URL = "http://54.180.155.66/";
@@ -81,8 +81,10 @@ public class Selectable extends AppCompatActivity {
         top3Text = findViewById(R.id.top3Text);
 
         Intent intent = getIntent();
-        getUserName = intent.getStringExtra("name");
-        Log.i(TAG, "getUserName : " + getUserName);
+        getUserName = intent.getStringExtra("user_name");
+        Log.i(TAG, "getIntent) getUserName : " + getUserName);
+        getSongName = intent.getStringExtra("song_name");
+        Log.i(TAG, "getIntent) getSongName : " + getSongName);
 
         // TODO - Liked
         horizontalRecyclerView = findViewById(R.id.likedRecyclerView);
@@ -101,10 +103,10 @@ public class Selectable extends AppCompatActivity {
         allSeekBar = findViewById(R.id.allSeekBar);
         allSeekBar.setVisibility(View.GONE);
 
-        Log.i(TAG, "allSongCheck songName : " + getUserName);
+        Log.i(TAG, "allSongCheck songName : " + getSongName);
 
         for (int i = 0; i < allSongsList.size(); i++) {
-            if (allSongsList.get(i).getName().equals(getUserName)) {
+            if (allSongsList.get(i).getName().equals(getSongName)) {
                 playing_position = i;
                 Log.i(TAG, "allSongCheck) Played playing_position: " + playing_position);
                 break;
