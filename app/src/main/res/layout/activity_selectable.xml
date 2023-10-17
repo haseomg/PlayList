@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         android:background="#00FFFFFF"
         android:fontFamily="sans-serif-black"
-        android:text="HOME"
+        android:text="홈"
+        android:textSize="23dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -293,13 +294,13 @@
         android:fontFamily="sans-serif-black"
         android:text="추천 곡"
         android:textColor="@color/white"
-        android:textSize="20sp"
+        android:textSize="20.5sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/likedRecyclerView"
-        app:layout_constraintVertical_bias="0.01999998" />
+        app:layout_constraintVertical_bias="0.03" />
 
 <!--    <SeekBar-->
 <!--        android:id="@+id/allSeekBar"-->
@@ -319,7 +320,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/allRecyclerView"
         android:layout_width="380dp"
-        android:layout_height="325dp"
+        android:layout_height="315dp"
         android:background="#B57878E1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -17,15 +17,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
+<!--Hyun - 차트 아이콘이 깔금 (그래프), 나침반-->
     <Button
         android:id="@+id/selectableButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#00FFFFFF"
         android:fontFamily="sans-serif-black"
-        android:text="pick"
-        android:textSize="15sp"
+        android:text="차트"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -70,7 +70,7 @@
         android:layout_height="wrap_content"
         android:background="#00FFFFFF"
         android:fontFamily="sans-serif-black"
-        android:text="Log In"
+        android:text="로그인"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
