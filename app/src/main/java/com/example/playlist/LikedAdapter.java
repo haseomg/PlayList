@@ -24,6 +24,8 @@ public class LikedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private boolean applyGradient = true;
     private boolean isGradientEnabled = true;
+    private int oldPosition;
+    private int playing_position = -1;
     private int lastVisibleItemPosition;
     private int selected_position = -1;
 
