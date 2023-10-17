@@ -1,6 +1,7 @@
 package com.example.playlist;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,13 +52,38 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
         holder.likedButton.setText(likedList.get(position).getSong_name());
 //        holder.
 
-//        if (selected_position == position) {
-//            holder.itemView.setBackgroundColor(Color.parseColor("#7878E1"));
-//            holder.likedButton.setTextColor(Color.parseColor("#AAB9FF"));
+        // TODO (1)  to did - check "Selectable" 액티비티 시작 시 현재 메인에서 재생 중인 음악 아이템 체킹 (색상 변경) 되어있음
+        // TODO (2) issue - 1번의 상태에서 다른 아이템 클릭 시 추가적으로 체킹 (색상 변경) 되는 상황
+        // TODO (3) want - 체킹 (색상 변경) 아이템은 한 개만 되어 있어야 함
+        // 현재 체킹되어있는 아이템의 포지션 값을 찾아야 해
+        String playingSong = ((MainActivity) MainActivity.mainCtx).mainLogo.getText().toString();
+        String[] cutPlayingSong = playingSong.split(" • ");
+        String reRealName = cutPlayingSong[0];
+        String changeName = reRealName.replace(" ", "_");
+        Log.i(TAG, "likedSongCheck) onBindViewHolder check : " + reRealName);
+        String originalName = likedList.get(position).getSong_name();
+        Log.i(TAG, "likedSongCheck) song name : " + originalName);
+//        if (position == playing_position) {
+//            Log.i(TAG, "likedSongCheck onBindViewHolder *if : " + playing_position + " / " + originalName + " / " + changeName + ".mp3");
+//            holder.likedButton.setBackgroundColor(Color.parseColor("#B57878E1"));
+//            holder.likedButton.setTextColor(Color.parseColor("#BDC7F6"));
+//
+//        } else if (selected_position == position || likedList.get(position).getSong_name().equals(changeName + ".mp3")) {
+//            Log.i(TAG, "likedSongCheck) onBindViewHolder *else if : " + selected_position + " / " + originalName + " / " + changeName + ".mp3");
+//            holder.likedButton.setBackgroundColor(Color.parseColor("#B57878E1"));
+//            holder.likedButton.setTextColor(Color.parseColor("#BDC7F6"));
 //        } else {
-//            holder.itemView.setBackgroundColor(Color.parseColor("#AAB9FF"));
-//            holder.likedButton.setTextColor(Color.parseColor("#7878E1"));
+//            Log.i(TAG, "likedSongCheck) onBindViewHolder *else : " + selected_position + " / " + originalName + " / " + changeName + ".mp3");
+//            holder.likedButton.setBackgroundColor(Color.parseColor("#B57878E1"));
+//            holder.likedButton.setTextColor(Color.parseColor("#BDC7F6"));
 //        } // else
+
+        holder.likedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onClick (onBindViewHolder)");
+            } // onClick
+        }); // setOnClickListener
     } // onBindViewHolder
 
     @Override
@@ -74,24 +100,34 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
             super(itemView);
             likedButton = itemView.findViewById(R.id.likedItem);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+            likedButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.i(TAG, "onClick (ViewHolder Constructor)");
                     int position = getAdapterPosition();
-                    if (selected_position != getAdapterPosition()) {
-                        notifyItemChanged(selected_position);
-                        selected_position = getAdapterPosition();
-                    } // if
-
                     if (position != RecyclerView.NO_POSITION) {
+
+                        if (selected_position != getAdapterPosition()) {
+                            notifyItemChanged(selected_position);
+                            selected_position = getAdapterPosition();
+                        } // if
+
                         UpdateLikedModel clickedItem = likedList.get(position);
-                        String songName = clickedItem.getSong_name();
+                        songName = clickedItem.getSong_name();
+                        Log.i(TAG, "likedSongCheck) onClick songName : " + songName);
 
-//                        v.setBackgroundColor(Color.parseColor("#7878E1"));
+                        String[] fileTypeCut = songName.split(".mp3");
+                        String selected_song = fileTypeCut[0];
 
-                        String fileType = songName + ".mp3";
+                        Intent intent = new Intent("com.example.playlist.PLAY_MUSIC");
+                        Log.i(TAG, "likedSongCheck) playedItem onClick : " + selected_song);
+                        intent.putExtra("selected_song", selected_song);
+
+                        context.sendBroadcast(intent);
+                        // 액티비터 시작
+//                        context.startActivity(intent);
                         notifyItemChanged(position);
-                    }
+                    } // if
                 } // onClick
             }); // itemView.setOnClickListener
         } // ViewHolder Constructor
