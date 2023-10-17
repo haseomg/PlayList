@@ -94,6 +94,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
                 holder.likedButton.setTextColor(Color.parseColor("#AAB9FF"));
                 context.sendBroadcast(intent);
                 notifyItemChanged(position);
+
             } // onClick
         }); // setOnClickListener
 
