@@ -100,8 +100,8 @@ public class Selectable extends AppCompatActivity {
         all_songs_recyclerView.setHasFixedSize(true);
         allSongsListAdapter = new AllSongListAdapter(this, allSongsList);
         all_songs_recyclerView.setAdapter(allSongsListAdapter);
-        allSeekBar = findViewById(R.id.allSeekBar);
-        allSeekBar.setVisibility(View.GONE);
+//        allSeekBar = findViewById(R.id.allSeekBar);
+//        allSeekBar.setVisibility(View.GONE);
 
         Log.i(TAG, "allSongCheck songName : " + getSongName);
 

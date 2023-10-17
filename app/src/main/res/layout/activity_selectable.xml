@@ -26,19 +26,20 @@
         android:id="@+id/myFavoriteTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-condensed-medium"
-        android:text="ღ︎ Liked List"
+        android:fontFamily="sans-serif-black"
+        android:text="좋아요 보관함"
         android:textColor="@color/white"
-        android:textSize="25sp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/top3ListLayout"
-        app:layout_constraintVertical_bias="0.00999999" />
+        app:layout_constraintVertical_bias="0.01999998" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/likedRecyclerView"
-        android:layout_width="300dp"
+        android:layout_width="380dp"
         android:layout_height="100dp"
         android:background="#B57878E1"
         android:orientation="horizontal"
@@ -69,22 +70,22 @@
         android:id="@+id/top3TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-condensed-medium"
-        android:text="Top 3 Songs"
+        android:fontFamily="sans-serif-black"
+        android:text="인기곡"
         android:textColor="@color/white"
-        android:textSize="25sp"
+        android:textSize="23sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintEnd_toStartOf="@+id/selectableBack"
+        app:layout_constraintHorizontal_bias="0.06"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.03" />
+        app:layout_constraintVertical_bias="0.015" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/top3ListLayout"
-        android:layout_width="288dp"
-        android:layout_height="110dp"
+        android:layout_width="380dp"
+        android:layout_height="150dp"
         android:background="#B57878E1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -100,12 +101,12 @@
             app:layout_constraintEnd_toStartOf="@+id/top2Frame"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.39">
+            app:layout_constraintVertical_bias="0.35000002">
 
             <View
                 android:id="@+id/top1View"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:background="#AAB9FF"
                 android:fontFamily="sans-serif-black"
                 android:textAlignment="center"
@@ -117,8 +118,8 @@
                 app:layout_constraintVertical_bias="0.133" />
 
             <ImageView
-                android:layout_width="25sp"
-                android:layout_height="25sp"
+                android:layout_width="45sp"
+                android:layout_height="45sp"
                 android:src="@drawable/gold_medal" />
 
         </FrameLayout>
@@ -126,12 +127,12 @@
         <TextView
             android:id="@+id/top1"
             android:layout_width="70sp"
-            android:layout_height="35sp"
+            android:layout_height="40sp"
             android:fontFamily="sans-serif-black"
             android:text="top 1"
             android:textAlignment="center"
             android:textColor="#E440407F"
-            android:textSize="12dp"
+            android:textSize="15dp"
             app:layout_constraintBottom_toBottomOf="@+id/top1Frame"
             app:layout_constraintEnd_toEndOf="@+id/top1Frame"
             app:layout_constraintStart_toStartOf="@+id/top1Frame"
@@ -140,16 +141,16 @@
 
         <TextView
             android:id="@+id/top1Text"
-            android:layout_width="80dp"
-            android:layout_height="15dp"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
             android:fontFamily="sans-serif-black"
             android:text="top1"
             android:textAlignment="center"
             android:textColor="#C8D2FF"
-            android:textSize="9dp"
+            android:textSize="13dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.06"
+            app:layout_constraintHorizontal_bias="0.07"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/top1Frame"
             app:layout_constraintVertical_bias="0.68" />
@@ -166,8 +167,8 @@
 
             <View
                 android:id="@+id/top2View"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:background="#AAB9FF"
                 android:fontFamily="sans-serif-black"
                 android:text="top 2"
@@ -181,8 +182,8 @@
                 app:layout_constraintVertical_bias="0.133" />
 
             <ImageView
-                android:layout_width="30sp"
-                android:layout_height="30sp"
+                android:layout_width="35sp"
+                android:layout_height="35sp"
                 android:src="@drawable/silver_medal" />
 
 
@@ -205,15 +206,16 @@
 
         <TextView
             android:id="@+id/top2Text"
-            android:layout_width="80dp"
-            android:layout_height="15dp"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
             android:fontFamily="sans-serif-black"
             android:text="top2"
             android:textAlignment="center"
             android:textColor="#FFC8D2FF"
-            android:textSize="9dp"
+            android:textSize="13dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/top3Text"
+            app:layout_constraintHorizontal_bias="0.51"
             app:layout_constraintStart_toEndOf="@+id/top1Text"
             app:layout_constraintTop_toBottomOf="@+id/top2Frame"
             app:layout_constraintVertical_bias="0.68" />
@@ -230,8 +232,8 @@
 
             <View
                 android:id="@+id/top3View"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:background="#AAB9FF"
                 android:fontFamily="sans-serif-black"
                 android:text="top 3"
@@ -245,8 +247,8 @@
                 app:layout_constraintVertical_bias="0.13" />
 
             <ImageView
-                android:layout_width="30sp"
-                android:layout_height="30sp"
+                android:layout_width="35sp"
+                android:layout_height="35sp"
                 android:src="@drawable/bronze_medal" />
 
         </FrameLayout>
@@ -268,16 +270,16 @@
 
         <TextView
             android:id="@+id/top3Text"
-            android:layout_width="80dp"
-            android:layout_height="15dp"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
             android:fontFamily="sans-serif-black"
             android:text="top3"
             android:textAlignment="center"
             android:textColor="#FFC8D2FF"
-            android:textSize="9dp"
+            android:textSize="13dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.945"
+            app:layout_constraintHorizontal_bias="0.93"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/top3Frame"
             app:layout_constraintVertical_bias="0.68" />
@@ -288,41 +290,42 @@
         android:id="@+id/allTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-condensed-medium"
-        android:text="ALL Songs"
+        android:fontFamily="sans-serif-black"
+        android:text="추천 곡"
         android:textColor="@color/white"
-        android:textSize="25sp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/likedRecyclerView"
-        app:layout_constraintVertical_bias="0.015" />
+        app:layout_constraintVertical_bias="0.01999998" />
 
-    <SeekBar
-        android:id="@+id/allSeekBar"
-        android:layout_width="330dp"
-        android:layout_height="15dp"
-        android:progress="0"
-        android:max="100"
-        android:progressTint="#7878E1"
-        android:thumbTint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.52"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/allRecyclerView"
-        app:layout_constraintVertical_bias="0.17000002" />
+<!--    <SeekBar-->
+<!--        android:id="@+id/allSeekBar"-->
+<!--        android:layout_width="330dp"-->
+<!--        android:layout_height="15dp"-->
+<!--        android:progress="0"-->
+<!--        android:max="100"-->
+<!--        android:progressTint="#7878E1"-->
+<!--        android:thumbTint="#FFFFFF"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.52"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/allRecyclerView"-->
+<!--        app:layout_constraintVertical_bias="0.17000002" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/allRecyclerView"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="380dp"
+        android:layout_height="345dp"
         android:background="#B57878E1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/allTextView"
-        app:layout_constraintVertical_bias="0.16000003" />
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
