@@ -82,6 +82,30 @@ public class LikedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             e.printStackTrace();
         } // catch
 
+        // TODO (1)  to did - check "Selectable" 액티비티 시작 시 현재 메인에서 재생 중인 음악 아이템 체킹 (색상 변경) 되어있음
+        // TODO (2) issue - 1번의 상태에서 다른 아이템 클릭 시 추가적으로 체킹 (색상 변경) 되는 상황
+        // TODO (3) want - 체킹 (색상 변경) 아이템은 한 개만 되어 있어야 함
+        // 현재 체킹되어있는 아이템의 포지션 값을 찾아야 해
+        String playingSong = ((MainActivity) MainActivity.mainCtx).mainLogo.getText().toString();
+        String[] cutPlayingSong = playingSong.split(" • ");
+        String reRealName = cutPlayingSong[0];
+        String changeName = reRealName.replace(" ", "_");
+        Log.i(TAG, "likedSongCheck) onBindViewHolder check : " + reRealName);
+        String originalName = likedList.get(position).getSelected_song();
+        Log.i(TAG, "likedSongCheck) song name : " + originalName);
+
+        if (position == playing_position) {
+            Log.i(TAG, "likedSongCheck) onBindViewHolder *if : " + playing_position + " / " + originalName + " / " + changeName + ".mp3");
+            holder.itemView.setBackgroundColor(Color.parseColor("#B57878E1"));
+
+        } else if (selected_position == position || likedList.get(position).getSelected_song().equals(changeName + ".mp3")) {
+            Log.i(TAG, "likedSongCheck) onBindViewHolder *else if : " + selected_position + " / " + originalName + " / " + changeName + ".mp3");
+            holder.itemView.setBackgroundColor(Color.parseColor("#A0B1FF"));
+
+        } else {
+            Log.i(TAG, "likedSongCheck) onBindViewHolder *else : " + selected_position + " / " + originalName + " / " + changeName + ".mp3");
+            holder.itemView.setBackgroundColor(Color.parseColor("#B57878E1"));  // 원래 색상으로 설정
+        } // else
     } // onBindViewHolder
 
     @Override

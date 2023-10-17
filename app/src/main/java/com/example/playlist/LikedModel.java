@@ -15,6 +15,9 @@ public class LikedModel {
 
     public String getUser() {
         return user;
-    } // getUser
+    } // getUser\
 
+    public String getSelected_song() {
+        return selected_song;
+    }
 } // CLASS
