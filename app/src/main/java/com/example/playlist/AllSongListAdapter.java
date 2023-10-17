@@ -207,7 +207,7 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         } else if (selected_position == position || allSongsList.get(position).getName().equals(changeName + ".mp3")) {
             Log.i(TAG, "allSongCheck) onBindViewHolder *else if : " + selected_position + " / " + originalName + " / " + changeName + ".mp3");
-            holder.itemView.setBackgroundColor(Color.parseColor("#FFE2E7FB"));
+            holder.itemView.setBackgroundColor(Color.parseColor("#FFF1F4FF"));
             ((AllSongsHolder) holder).song_name.setTextColor(Color.parseColor("#E440407F"));
         } else {
             Log.i(TAG, "allSongCheck) onBindViewHolder *else : " + selected_position + " / " + originalName + " / " + changeName + ".mp3");

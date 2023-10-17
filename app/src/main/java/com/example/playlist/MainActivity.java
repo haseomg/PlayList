@@ -658,13 +658,13 @@ public class MainActivity extends AppCompatActivity {
 //                    Log.i(TAG, "heart.getVisibility() 2 : " + heart.getVisibility());
 //                }
 
-                    String playState = play.getText().toString();
 
                     int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
                     if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
 
                         // 첫 재생시 재생목록 3개만 생성해보자 (현재 곡 개수 8개)
                         // 재생목록 어떻게 보여줄까?
+                        String playState = play.getText().toString();
 
                         if (!playCheck) {
                             Log.i("메인 플레이 버튼 클릭", "첫 재생");
@@ -3901,24 +3901,23 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String songName = intent.getStringExtra("selected_song");
-            Log.i(TAG, "checking now_song (before) : " + name + " / " + selected_song);
+            Log.i(TAG, "likedSongCheck now_song (before) : " + name + " / " + selected_song);
             // TODO setting issue for select song streaming (now - last song item streaming)
             selected_song = songName;
-            Log.i(TAG, "checking now_song (after) : " + name + " / " + selected_song);
+            Log.i(TAG, "likedSongCheck now_song (after) : " + name + " / " + selected_song);
             String timing = pastSongisPlayingCheckShared.getString("now", "default");
+            songList.setVisibility(View.VISIBLE);
 
             if (mediaPlayer != null && mediaPlayer.isPlaying()) {  // 현재 재생 중인 경우
-                Log.i(TAG, "checking timing (before) 1 : " + timing);
+                Log.i(TAG, "likedSongCheck timing (before) 1 : " + timing);
                 pastSongisPlayingCheckEditor.putString("now", "pick");
                 pastSongisPlayingCheckEditor.commit();
-                Log.i(TAG, "checking timing (after) 2 : " + timing);
+                Log.i(TAG, "likedSongCheck timing (after) 2 : " + timing);
                 changeSong();
 
             } else {  // 현재 재생 중이 아닐 경우
-                Log.i(TAG, "checking timing (before) 3 : " + timing);
-                pastSongisPlayingCheckEditor.putString("now", "pick");
-                pastSongisPlayingCheckEditor.commit();
-                Log.i(TAG, "checking timing (after) 4 : " + timing);
+                Log.i(TAG, "likedSongCheck timing (before) 3 : " + timing);
+                // TODO (첫 재생할 때 로직 추가 *하지만 곡 이름 기준 스트리밍)
                 changeSong();
             } // else
         } // onReceive

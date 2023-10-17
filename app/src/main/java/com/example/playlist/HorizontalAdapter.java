@@ -1,7 +1,9 @@
 package com.example.playlist;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,9 +49,10 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
     } // onCreateViewHolder
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Log.i(TAG, "onBindViewHolder Method");
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        Log.i(TAG, "onBindViewHolder Method position check : " + position);
         holder.likedButton.setText(likedList.get(position).getSong_name());
+        String selectSong = likedList.get(position).getSong_name();
 //        holder.
 
         // TODO (1)  to did - check "Selectable" 액티비티 시작 시 현재 메인에서 재생 중인 음악 아이템 체킹 (색상 변경) 되어있음
@@ -81,9 +84,21 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
         holder.likedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "onClick (onBindViewHolder)");
+                Log.i(TAG, "likedSongCheck onClick (onBindViewHolder)");
+
+                Intent intent = new Intent("com.example.playlist.PLAY_MUSIC");
+                Log.i(TAG, "likedSongCheck clickedItem : " + selectSong);
+                intent.putExtra("selected_song", selectSong);
+
+                holder.likedButton.setBackgroundColor(Color.parseColor("#B57878E1"));
+                holder.likedButton.setTextColor(Color.parseColor("#AAB9FF"));
+                context.sendBroadcast(intent);
+                notifyItemChanged(position);
             } // onClick
         }); // setOnClickListener
+
+        holder.likedButton.setBackgroundColor(Color.parseColor("#AAB9FF"));
+        holder.likedButton.setTextColor(Color.parseColor("#B57878E1"));
     } // onBindViewHolder
 
     @Override
@@ -99,37 +114,36 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             likedButton = itemView.findViewById(R.id.likedItem);
-
-            likedButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.i(TAG, "onClick (ViewHolder Constructor)");
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-
-                        if (selected_position != getAdapterPosition()) {
-                            notifyItemChanged(selected_position);
-                            selected_position = getAdapterPosition();
-                        } // if
-
-                        UpdateLikedModel clickedItem = likedList.get(position);
-                        songName = clickedItem.getSong_name();
-                        Log.i(TAG, "likedSongCheck) onClick songName : " + songName);
-
-                        String[] fileTypeCut = songName.split(".mp3");
-                        String selected_song = fileTypeCut[0];
-
-                        Intent intent = new Intent("com.example.playlist.PLAY_MUSIC");
-                        Log.i(TAG, "likedSongCheck) playedItem onClick : " + selected_song);
-                        intent.putExtra("selected_song", selected_song);
-
-                        context.sendBroadcast(intent);
-                        // 액티비터 시작
-//                        context.startActivity(intent);
-                        notifyItemChanged(position);
-                    } // if
-                } // onClick
-            }); // itemView.setOnClickListener
+//            likedButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Log.i(TAG, "likedSongCheck onClick (ViewHolder Constructor)");
+//                    int position = getAdapterPosition();
+//                    if (position != RecyclerView.NO_POSITION) {
+//
+//                        if (selected_position != getAdapterPosition()) {
+//                            notifyItemChanged(selected_position);
+//                            selected_position = getAdapterPosition();
+//                        } // if
+//
+//                        UpdateLikedModel clickedItem = likedList.get(position);
+//                        songName = clickedItem.getSong_name();
+//                        Log.i(TAG, "likedSongCheck) onClick songName : " + songName);
+//
+//                        String[] fileTypeCut = songName.split(".mp3");
+//                        String selected_song = fileTypeCut[0];
+//
+//                        Intent intent = new Intent("com.example.playlist.PLAY_MUSIC");
+//                        Log.i(TAG, "likedSongCheck) playedItem onClick : " + selected_song);
+//                        intent.putExtra("selected_song", selected_song);
+//
+//                        context.sendBroadcast(intent);
+//                        // 액티비터 시작
+////                        context.startActivity(intent);
+//                        notifyItemChanged(position);
+//                    } // if
+//                } // onClick
+//            }); // itemView.setOnClickListener
         } // ViewHolder Constructor
     } // ViewHolder
 
