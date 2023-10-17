@@ -5,7 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +17,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
     private Context context;
     private ArrayList<UpdateLikedModel> likedList;
     private OnItemClickListener onItemClickListener;
+    private int selected_position = -1;
 
     String TAG = "[HorizontalAdapter]";
 
@@ -42,7 +43,15 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.i(TAG, "onBindViewHolder Method");
-        holder.textView.setText(likedList.get(position).getSong_name());
+        holder.likedButton.setText(likedList.get(position).getSong_name());
+
+//        if (selected_position == position) {
+//            holder.itemView.setBackgroundColor(Color.parseColor("#7878E1"));
+//            holder.likedButton.setTextColor(Color.parseColor("#AAB9FF"));
+//        } else {
+//            holder.itemView.setBackgroundColor(Color.parseColor("#AAB9FF"));
+//            holder.likedButton.setTextColor(Color.parseColor("#7878E1"));
+//        } // else
     } // onBindViewHolder
 
     @Override
@@ -53,11 +62,32 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textView;
+        Button likedButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.likedItem);
+            likedButton = itemView.findViewById(R.id.likedItem);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (selected_position != getAdapterPosition()) {
+                        notifyItemChanged(selected_position);
+                        selected_position = getAdapterPosition();
+                    } // if
+
+                    if (position != RecyclerView.NO_POSITION) {
+                        UpdateLikedModel clickedItem = likedList.get(position);
+                        String songName = clickedItem.getSong_name();
+
+//                        v.setBackgroundColor(Color.parseColor("#7878E1"));
+
+                        String fileType = songName + ".mp3";
+                        notifyItemChanged(position);
+                    }
+                } // onClick
+            }); // itemView.setOnClickListener
         } // ViewHolder Constructor
     } // ViewHolder
 

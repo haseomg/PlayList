@@ -25,6 +25,7 @@ public class LikedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private boolean applyGradient = true;
     private boolean isGradientEnabled = true;
     private int lastVisibleItemPosition;
+    private int selected_position = -1;
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
@@ -78,6 +79,7 @@ public class LikedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         } catch (NullPointerException e) {
             e.printStackTrace();
         } // catch
+
     } // onBindViewHolder
 
     @Override
@@ -108,6 +110,7 @@ public class LikedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.i(TAG, "itemView) LikedAdapter allSongsView click");
 //                   (1) 해당 곡 재생
 //                   (2) 해당 곡 아이템 백그라운드 컬러 변경 (고를 때마다 해당 곡만)
 
