@@ -99,7 +99,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
         }); // setOnClickListener
 
         holder.likedButton.setBackgroundColor(Color.parseColor("#AAB9FF"));
-        holder.likedButton.setTextColor(Color.parseColor("#B57878E1"));
+        holder.likedButton.setTextColor(Color.parseColor("#7878E1"));
     } // onBindViewHolder
 
     @Override

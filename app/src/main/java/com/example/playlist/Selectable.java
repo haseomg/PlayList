@@ -351,11 +351,11 @@ public class Selectable extends AppCompatActivity {
                 Log.i(TAG, "All Songs onScrolled ");
 
                 int itemCount = all_songs_recyclerView.getAdapter().getItemCount();
-                allSeekBar.setMax(allSongsListAdapter.getItemCount() - 5);
+//                allSeekBar.setMax(allSongsListAdapter.getItemCount() - 5);
 
                 int firstVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
                 Log.i(TAG, "onScrolled firstVisibleItemPosition: " + firstVisibleItemPosition);
-                allSeekBar.setProgress(firstVisibleItemPosition);
+//                allSeekBar.setProgress(firstVisibleItemPosition);
                 int lastVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
                 Log.i(TAG, "onScrolled lastVisibleItemPosition: " + lastVisibleItemPosition);
                 int totalItemCount = recyclerView.getAdapter().getItemCount() - 1;
@@ -445,25 +445,25 @@ public class Selectable extends AppCompatActivity {
 
     public void setAllSeekBar() {
 
-        allSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) { // 사용자가 직접 드래그한 경우에만 실행합니다.
-                    ((LinearLayoutManager) all_songs_recyclerView.getLayoutManager()).scrollToPositionWithOffset(progress, 0);
-                    // progress 값에 해당하는 위치로 RecyclerView 스크롤
-                }
-            } // onProgressChanged
+//        allSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                if (fromUser) { // 사용자가 직접 드래그한 경우에만 실행합니다.
+//                    ((LinearLayoutManager) all_songs_recyclerView.getLayoutManager()).scrollToPositionWithOffset(progress, 0);
+//                    // progress 값에 해당하는 위치로 RecyclerView 스크롤
+//                }
+//            } / onProgressChanged
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                allSongsListAdapter.disableGradientEffect();
-            } // onStartTrackingTouch
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                allSongsListAdapter.enableGradientEffect();
-            } // onStopTrackingTouch
-        }); // setOnSeekBarChangeListener
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//                allSongsListAdapter.disableGradientEffect();
+//            } // onStartTrackingTouch
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+//                allSongsListAdapter.enableGradientEffect();
+//            } // onStopTrackingTouch
+//        }); // setOnSeekBarChangeListener
     } // setAllSeekBar
 
 } // Selectable CLASS END

@@ -106,13 +106,13 @@ public class Upload extends Activity {
             public void onClick(View v) {
                 if (play.getText().toString().equals("Play")) {
                     playAudio();
-                    play.setText("Pause");
+                    play.setText("일시 정지");
                 } else if (play.getText().toString().equals("Pause")) {
                     pauseAudio();
-                    play.setText("Resume");
+                    play.setText("재생");
                 } else if (play.getText().toString().equals("Resume")) {
                     resumeAudio();
-                    play.setText("Pause");
+                    play.setText("중지");
                 }
             }
         });
