@@ -95,7 +95,7 @@ public class Upload extends Activity {
             @Override
             public void onClick(View v) {
                 pickAudioFile();
-                play.setText("Play");
+                play.setText("재생");
             }
         });
 
@@ -104,15 +104,15 @@ public class Upload extends Activity {
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (play.getText().toString().equals("Play")) {
+                if (play.getText().toString().equals("재생")) {
                     playAudio();
-                    play.setText("Pause");
-                } else if (play.getText().toString().equals("Pause")) {
+                    play.setText("일시 정지");
+                } else if (play.getText().toString().equals("일시 정지")) {
                     pauseAudio();
-                    play.setText("Resume");
-                } else if (play.getText().toString().equals("Resume")) {
+                    play.setText("재개");
+                } else if (play.getText().toString().equals("재개")) {
                     resumeAudio();
-                    play.setText("Pause");
+                    play.setText("일시 정지");
                 }
             }
         });
@@ -334,7 +334,7 @@ public class Upload extends Activity {
         vibeItems.add("eccentric (괴짜)");
         vibeItems.add("mysterious (신비로움)");
         vibeItems.add("etc (기타 *직접 입력)");
-        vibeItems.add("VIBE");
+        vibeItems.add("분위기");
 
         vibe = findViewById(R.id.vibeSpinner);
         SpinnerAdapter vibeAdapter = new SpinnerAdapter
@@ -365,7 +365,7 @@ public class Upload extends Activity {
         seasonItems.add("winter (겨울)");
         seasonItems.add("midwinter (한겨울)");
         seasonItems.add("etc (기타 *직접 입력)");
-        seasonItems.add("SEASON");
+        seasonItems.add("계절감");
 
         season = findViewById(R.id.seasonSpinner);
         SpinnerAdapter seasonAdapter = new SpinnerAdapter

@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -33,6 +34,7 @@ public class Selectable extends AppCompatActivity {
     SeekBar allSeekBar;
     TextView top1, top2, top3;
     TextView top1Text, top2Text, top3Text;
+    ImageView home;
     LinearLayoutManager allLayoutManager;
 
     ArrayList<AllSongsModel> allSongsList = new ArrayList<>();
@@ -129,6 +131,14 @@ public class Selectable extends AppCompatActivity {
 
             } // onItemClick END
         }); // setOnItemClickListener END
+
+        home = findViewById(R.id.homeImage);
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            } // onClick
+        }); // setOnClickListener
 
         back = findViewById(R.id.selectableBack);
         back.setOnClickListener(new View.OnClickListener() {

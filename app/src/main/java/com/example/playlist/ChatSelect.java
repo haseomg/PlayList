@@ -55,11 +55,11 @@ public class ChatSelect extends AppCompatActivity {
     Intent intent;
     String uuidFromDB, getUsername, getRoomName, myName, yourName, uuidForChat, uuid, you, uuidResponse;
     private ArrayList<String> uuidValues;
-    Button enterButton;
+    Button enterButton, chatHomeBtn;
     TextView name, list_name, list_msg, list_time;
     LinearLayoutManager layoutManager;
     EditText write_chat_person;
-    ImageView profile_image, red_circle;
+    ImageView profile_image, red_circle, chatHomeImage;
 
     ArrayList<ChatListModel> chatRoomList = new ArrayList<>();
     ChatListAdapter chatListAdapter;
@@ -167,6 +167,22 @@ public class ChatSelect extends AppCompatActivity {
         list_msg = findViewById(R.id.list_lastMsg); // 채팅 목록 - 마지막 메시지 내용
         list_time = findViewById(R.id.list_msgTime);  // 채팅 목록 - 마지막 메시지 시간
 //        red_circle = findViewById(R.id.red_circle); // 아직 안 읽은 메시지 존재 시 Visible (= is_read가 1인 게 있으면)
+
+        chatHomeBtn = findViewById(R.id.chatHomeText);
+        chatHomeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            } // onClick
+        });
+
+        chatHomeImage = findViewById(R.id.chatHomeImage);
+        chatHomeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            } // onClick
+        });
 
         profile_image = findViewById(R.id.profile_image); // 우선 기본 이미지 설정
 //        enterButton = findViewById(R.id.enterButton); // 채팅 목록에 없는 상대 적고 누르는 버튼
@@ -611,16 +627,15 @@ public class ChatSelect extends AppCompatActivity {
 //                    Toast.makeText(ChatSelect.this, "Failed to delete data", Toast.LENGTH_SHORT).show();
                     Log.i(TAG, "Delete (response failed)  and response.body check 1 : " + responseModel);
                     Log.i(TAG, "Delete (response failed)  and response.body check 2 : " + response_check);
-                }
+                } // else
             }
 
             @Override
             public void onFailure(Call<ResponseModel> call, Throwable t) {
                 // 에러 처리
                 Toast.makeText(ChatSelect.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
+            } // onFailure
         });
     }
-
 
 } // Select CLASS END

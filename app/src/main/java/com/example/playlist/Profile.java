@@ -164,14 +164,14 @@ public class Profile extends AppCompatActivity {
                 // TextView -> editText로 변경
                 // Button = 변경 -> 완료로 변경
 
-                if (nickNameChangeBtn.getText().toString().equals("change")) {
+                if (nickNameChangeBtn.getText().toString().equals("닉네임 변경")) {
                     Log.i(TAG, "닉네임 우측 버튼이 'change'일 때");
 
                     nickName.setVisibility(View.GONE); // 텍스트뷰 숨기고
                     nickNameChange.setVisibility(View.VISIBLE); // 에딧텍스트 보여주기
-                    nickNameChange.setHint(nickName.getText().toString() + " (NOW)");
+                    nickNameChange.setHint(nickName.getText().toString() + " (현재)");
                     nickNameChange.setText("");
-                    nickNameChangeBtn.setText("complete");
+                    nickNameChangeBtn.setText("변경 완료");
 
                 } else {
 
@@ -180,7 +180,7 @@ public class Profile extends AppCompatActivity {
                         nickName.setText(nickName.getText().toString());
                         nickName.setVisibility(View.VISIBLE);
                         nickNameChange.setVisibility(View.GONE);
-                        nickNameChangeBtn.setText("change");
+                        nickNameChangeBtn.setText("닉네임 변경");
                     } else {
                         Log.i(TAG, "닉네임 우측 버튼이 'change'가 아닐 때");
 
@@ -252,12 +252,11 @@ public class Profile extends AppCompatActivity {
                         nickName.setText(nickNameChange.getText().toString());
                         nickName.setVisibility(View.VISIBLE);
                         nickNameChange.setVisibility(View.GONE);
-                        nickNameChangeBtn.setText("change");
+                        nickNameChangeBtn.setText("닉네임 변경");
 
 
                     }
                 }
-
             }
         });
 
@@ -275,14 +274,14 @@ public class Profile extends AppCompatActivity {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
 
-                    builder.setTitle("Are you sure want to log out?");
+                    builder.setTitle("로그아웃 하시겠습니까?");
 
                     // app.dialog 여서 버튼이 앞에부터 순서대로 쌓이는데, 아무래도 커스텀 해야 할 것 같다.
                     builder.setPositiveButton("YES",
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Log.i(TAG, "로그아웃하시겠습니까? 네");
+                                    Log.i(TAG, "로그아웃 하시겠습니까? 네");
 
                                     // 로그아웃 버튼 클릭 시
                                     signOut();

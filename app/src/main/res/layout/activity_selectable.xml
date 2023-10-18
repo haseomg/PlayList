@@ -7,6 +7,18 @@
     android:background="#AAB9FF"
     tools:context=".Selectable">
 
+    <ImageView
+        android:id="@+id/homeImage"
+        android:layout_width="33dp"
+        android:layout_height="30dp"
+        android:src="@drawable/home"
+        app:layout_constraintBottom_toBottomOf="@+id/selectableBack"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.48000002" />
+
     <Button
         android:id="@+id/selectableBack"
         android:layout_width="wrap_content"
@@ -14,8 +26,8 @@
         android:background="#00FFFFFF"
         android:fontFamily="sans-serif-black"
         android:text="홈으로"
+        android:textColor="#FFFFFF"
         android:textSize="23dp"
-        android:textColor="#E440407F"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
