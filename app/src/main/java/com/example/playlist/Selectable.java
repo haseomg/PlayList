@@ -2,6 +2,7 @@ package com.example.playlist;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -32,6 +33,7 @@ public class Selectable extends AppCompatActivity {
 
     Button back;
     SeekBar allSeekBar;
+    View top1View, top2View, top3View;
     TextView top1, top2, top3;
     TextView top1Text, top2Text, top3Text;
     ImageView home;
@@ -81,6 +83,9 @@ public class Selectable extends AppCompatActivity {
         top1Text = findViewById(R.id.top1Text);
         top2Text = findViewById(R.id.top2Text);
         top3Text = findViewById(R.id.top3Text);
+        top1View = findViewById(R.id.top1View);
+        top2View = findViewById(R.id.top2View);
+        top3View = findViewById(R.id.top3View);
 
         Intent intent = getIntent();
         getUserName = intent.getStringExtra("user_name");
@@ -217,6 +222,7 @@ public class Selectable extends AppCompatActivity {
                 Log.i(TAG, "setTopSongs onFailure : " + t);
             } // onFailure
         }); // call.enqueque
+        setTopClickListener();
     } // setTopSongs
 
     void setAllSongs() {
@@ -475,5 +481,71 @@ public class Selectable extends AppCompatActivity {
 //            } // onStopTrackingTouch
 //        }); // setOnSeekBarChangeListener
     } // setAllSeekBar
+
+    void setClickStreaming(View view, TextView textView) {
+        Log.i(TAG, "top) setClickStreaming");
+        String clicked = textView.getText().toString();
+        Intent intent = new Intent("com.example.playlist.PLAY_MUSIC");
+        Log.i(TAG, "top) setClickStreaming clickedItem : " + clicked);
+        view.setBackgroundColor(Color.parseColor("#7878E1"));
+        textView.setTextColor(Color.parseColor("#AAB9FF"));
+
+        selectableCtx.sendBroadcast(intent);
+    } // setClickStreaming
+
+    void setTopOriginalColor(View view, TextView textView) {
+        view.setBackgroundColor(Color.parseColor("#AAB9FF"));
+        textView.setTextColor(Color.parseColor("#E440407F"));
+    } // setTopOriginalColor
+
+    void setTopClickListener() {
+        top1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setClickStreaming(top1View, top1);
+                setTopOriginalColor(top1View, top1);
+            } // onClick
+        }); // setOnClickListener
+
+        top2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setClickStreaming(top2View, top2);
+                setTopOriginalColor(top2View, top2);
+            } // onClick
+        }); // setOnClickListener
+
+        top3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setClickStreaming(top3View, top3);
+                setTopOriginalColor(top3View, top3);
+            } // onClick
+        }); // setOnClickListener
+
+        top1View.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setClickStreaming(top1View, top1);
+                setTopOriginalColor(top1View, top1);
+            } // onClick
+        }); // setOnClickListener
+
+        top2View.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setClickStreaming(top2View, top2);
+                setTopOriginalColor(top2View, top2);
+            } // onClick
+        }); // setOnClickListener
+
+        top3View.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setClickStreaming(top3View, top3);
+                setTopOriginalColor(top3View, top3);
+            } // onClick
+        }); // setOnClickListener
+    } // setTopClickListener
 
 } // Selectable CLASS END
