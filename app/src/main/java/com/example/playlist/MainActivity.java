@@ -131,8 +131,7 @@ public class MainActivity extends AppCompatActivity {
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
 
-    String personName;
-    String personEmail;
+    String personName, personEmail;
 
     ArrayList<CommentModel> commentList = new ArrayList<>();
     CommentAdapter commentAdapter;
@@ -152,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
     String firstRanNum = "";
     String nextRanNum;
     String leftPlay;
+    String reName;
 
     Gif_Play gif;
 
@@ -445,7 +445,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "PICK 버튼 클릭");
                 Intent intent = new Intent(MainActivity.this, Selectable.class);
                 String mainLogoText = mainLogo.getText().toString();
-                String [] cutMainLogo = mainLogoText.split(" • ");
+                String[] cutMainLogo = mainLogoText.split(" • ");
                 String songName = cutMainLogo[0];
                 intent.putExtra("user_name", logIn.getText().toString());
                 intent.putExtra("song_name", songName);
@@ -1543,7 +1543,6 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //    };
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
     private void updateSeekBar() {
 
         handler.postDelayed(new Runnable() {
@@ -3917,17 +3916,22 @@ public class MainActivity extends AppCompatActivity {
 
             } else {  // 현재 재생 중이 아닐 경우
                 Log.i(TAG, "likedSongCheck timing (before) 3 : " + timing);
+                pastSongisPlayingCheckEditor.putString("now", "pick");
+                pastSongisPlayingCheckEditor.commit();
                 // TODO (첫 재생할 때 로직 추가 *하지만 곡 이름 기준 스트리밍)
-                changeSong();
+
+                setFirstStreaming(selected_song);
+//                changeSong();
             } // else
         } // onReceive
     }; // BroadcastReceiver
 
-    void setItemClickStreaming() {
+    void setFirstStreaming(String selected_song) {
+
+        currentTimeForViewsIncrement = System.currentTimeMillis();
+
         if (logIn.getText().toString().equals("LOG IN")) {
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-
-            currentTimeForViewsIncrement = System.currentTimeMillis();
 
             builder.setTitle("Please Check the Log In");
             builder.setMessage("로그인이 필요합니다.");
@@ -3935,12 +3939,13 @@ public class MainActivity extends AppCompatActivity {
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Log.i(TAG, "로그인이 필요합니다. OK 버튼 클릭");
+                    Log.i(TAG, "setFirstStreaming 로그인이 필요합니다. OK 버튼 클릭");
                     Intent loginIntent = new Intent(mainCtx, LogIn.class);
                     startActivity(loginIntent);
                 }
             });
             builder.show();
+
         } else {
             setMediaPlayer();
             if (logIn.getText().toString().equals("LOG IN")) {
@@ -3948,6 +3953,7 @@ public class MainActivity extends AppCompatActivity {
                 heart.setVisibility(View.GONE);
                 playingTime.setVisibility(View.GONE);
                 toPlayTime.setVisibility(View.GONE);
+
             } else {
                 mainSeekBar.setVisibility(View.VISIBLE);
                 heart.setVisibility(View.VISIBLE);
@@ -3957,24 +3963,282 @@ public class MainActivity extends AppCompatActivity {
 
             int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
             if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
-
                 String playState = play.getText().toString();
+
                 if (!playCheck) {
+                    Log.i("setFirstStreaming 메인 플레이 버튼 클릭", "첫 재생");
+                    Log.i(TAG, "setFirstStreaming playCheck : " + playCheck);
 
                     if (!playState.equals("❚❚")) {
+                        Log.i("setFirstStreaming 메인 플레이 버튼 클릭", "일시정지가 아닐 때");
                         play.setText("❚❚");
                         play.setTextSize(53);
-                    } // if
+
+                    } // if !playCheck
+
+                    if (selected_song.contains(" ")) {
+                        reName = selected_song.replace(" ", "_") + ".mp3";
+                        Log.i(TAG, "setFirstStreaming reName check : " + reName);
+                    } else {
+                        reName = selected_song + ".mp3";
+                    } // else
 
                     Uri.Builder builder = new Uri.Builder()
-                            .appendQueryParameter()
+                            .appendQueryParameter("selected_song", reName);
+                    String postParams = builder.build().getEncodedQuery();
+                    new getJSONData().execute("http://54.180.155.66/" + "select_file_sampling.php", postParams);
+
+                    HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/select_file_sampling.php").newBuilder();
+                    urlBuilder.addQueryParameter("ver", "1.0");
+                    String url = urlBuilder.build().toString();
+                    Log.i(TAG, "setFirstStreaming String url 확인 : " + url);
+
+                    RequestBody formBody = new FormBody.Builder()
+                            .add("selected_song", reName.trim())
+                            .build();
+
+                    OkHttpClient client = new OkHttpClient();
+                    Request request = new Request.Builder()
+                            .url(url)
+                            .post(formBody)
+                            .build();
+
+                    // 응답 콜백
+                    client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                            Log.e(TAG, "setFirstStreaming play callback onFailure : " + e);
+                        } // onFailure
+
+                        @Override
+                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                            Log.i(TAG, "setFirstStreaming play callback onResponse");
+
+                            // 서브 스레드 UI 변경할 경우 에러
+                            // 메인 스레드 UI 설정
+                            runOnUiThread(new Runnable() {
+                                @RequiresApi(api = Build.VERSION_CODES.Q)
+                                @Override
+                                public void run() {
+
+                                    try {
+                                        if (!response.isSuccessful()) {
+                                            // 응답 실패
+                                            Log.e("setFirstStreaming", "응답 실패 : " + response);
+                                            Toast.makeText(getApplicationContext(), "네트워크 문제 발생", Toast.LENGTH_SHORT).show();
+
+                                        } else {
+                                            Log.i("setFirstStreaming", "응답 성공");
+                                            final String responseData = response.body().string().trim();
+                                            Log.i("setFirstStreaming", responseData);
+                                            if (responseData.equals("1")) {
+                                                Log.i("[setFirstStreaming]", "responseData 가 1일 때 : " + responseData);
+//                                                            Toast.makeText(getApplicationContext(), "아이디 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Log.i("[setFirstStreaming]", "responseData 가 1이 아닐 때 : " + responseData);
+
+                                                String songInfo = responseData;
+                                                Log.i(TAG, "setFirstStreaming songInfo Check : " + songInfo);
+
+                                                String[] numCut = songInfo.split("___");
+                                                String num = numCut[0];
+                                                Log.i(TAG, "setFirstStreaming songInfo num Check : " + num);
+
+                                                String deleteNum = numCut[1];
+                                                String[] artistCut = deleteNum.split("###");
+                                                artist = artistCut[0];
+                                                Log.i(TAG, "setFirstStreaming songInfo artist Check : " + artist);
+
+                                                String deleteArtist = artistCut[1];
+                                                String[] pathCut = deleteArtist.split("@@@");
+                                                String path = pathCut[0];
+                                                Log.i(TAG, "setFirstStreaming songInfo path Check : " + path);
+
+                                                time = pathCut[1];
+                                                Log.i(TAG, "setFirstStreaming songInfo time Check : " + time);
+
+                                                String[] nameCut = path.split("/");
+                                                name = nameCut[4];
+                                                Log.i(TAG, "setFirstStreaming songInfo name Check (1) : " + name);
+
+                                                mediaPlayer.setLooping(false);
+
+                                                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                                Log.i(TAG, "setFirstStreaming mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)");
+
+                                                String uri = "http://54.180.155.66/" + name;
+                                                Log.i(TAG, "setFirstStreaming file name from music table : " + uri);
+
+                                                play.setText("❚❚");
+
+                                                mediaPlayer.setDataSource(uri);
+                                                Log.i(TAG, "setFirstStreaming mediaPlayer.setDataSource(path)");
+                                                isPlaying = true;
+
+
+                                                mediaPlayer.prepareAsync();
+                                                Log.i(TAG, "setFirstStreaming mediaPlayer.prepareAsync()");
+
+                                                // TODO
+                                                mainSeekBar.setMax(mediaPlayer.getDuration());
+
+                                                mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+                                                Log.i(TAG, "setFirstStreaming mediaPlayer.setWakeMode");
+
+                                                Glide.with(mainCtx)
+                                                        .asGif()
+                                                        .load(R.drawable.gradation)
+                                                        .centerCrop()
+                                                        .listener(new RequestListener<GifDrawable>() {
+                                                            @Override
+                                                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<GifDrawable> target, boolean isFirstResource) {
+                                                                // GIF 파일 로드에 실패한 경우의 처리
+                                                                return false;
+                                                            } // onLoadFailed
+
+                                                            @Override
+                                                            public boolean onResourceReady(GifDrawable resource, Object model, Target<GifDrawable> target, DataSource dataSource, boolean isFirstResource) {
+                                                                // GIF 파일 로드에 성공한 경우의 처리
+                                                                resource.setLoopCount(GifDrawable.LOOP_FOREVER); // 반복 재생 설정
+                                                                resource.start(); // GIF 파일 재생 시작
+                                                                return false;
+                                                            } // onResourceReady
+                                                        }).into(mainFull);
+                                                playingTime.setTextColor(Color.WHITE);
+                                                toPlayTime.setTextColor(Color.WHITE);
+                                                // TODO background
+                                                mainPlayLayout.setBackgroundColor(Color.parseColor("#00ff0000"));
+                                                play.setTextColor(Color.WHITE);
+                                                play.setAlpha(0.7f);
+                                                leftPlayBtn.setAlpha(0.7f);
+                                                rightPlayBtn.setAlpha(0.7f);
+                                                playingTime.setAlpha(0.7f);
+                                                toPlayTime.setAlpha(0.7f);
+
+                                                mainLogo.setAlpha(0.8f);
+                                                upload.setAlpha(0.8f);
+
+                                                // TODO setSongListButton
+                                                songList.setVisibility(View.VISIBLE);
+                                                likedUser.setVisibility(View.VISIBLE);
+
+//                                              // TODO ADD for SeekBar Moving
+                                                if (mediaPlayer.isPlaying()) {
+                                                    mediaPlayer.stop();
+
+                                                    try {
+                                                        mediaPlayer.prepare();
+                                                    } catch (IllegalStateException e) {
+                                                        e.printStackTrace();
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    } // catch
+                                                    mediaPlayer.seekTo(0);
+                                                    mainSeekBar.setProgress(0);
+
+                                                } else {
+                                                    mediaPlayer.start();
+
+                                                    Thread();
+                                                } // else
+                                                Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
+                                                toast.show();
+
+                                                updateSeekBar();
+
+                                                songTime = findViewById(R.id.mainToPlayTime);
+                                                songTime.setText(time);
+
+                                                String[] exceptMp3 = name.split(".mp3");
+                                                String justName = exceptMp3[0];
+                                                String reReName = justName.replace("_", " ");
+                                                Log.i(TAG, "setFirstStreaming song just name 확인 : " + reReName);
+
+                                                if (artist.contains("_")) {
+                                                    String artistName = artist.replace("_", " ");
+                                                    mainLogo.setText(reReName + " • " + artistName);
+                                                    Log.i(TAG, "setFirstStreaming artist check (1) " + artistName);
+                                                } else {
+                                                    mainLogo.setText(reReName + " • " + artist);
+                                                    Log.i(TAG, "setFirstStreaming artist check (2) " + artist);
+                                                } // else
+                                                now_song = reReName;
+                                                Log.i(TAG, "setFirstStreamingnow_song now 1 (first play) : " + now_song);
+                                                updateHeart();
+
+                                                // TODO now_song이 null이여서 빈 값이 들어가
+                                                try {
+                                                    Log.i(TAG, "setFirstStreaming now_song now 5 (before insert) : " + now_song);
+                                                    // TODO setPlayedInsert (1) in play.setOnClickListener
+                                                    if (now_song.length() > 2 || now_song != null) {
+                                                        setPlayedInsertToTable(logIn.getText().toString(), now_song);
+                                                        Log.i(TAG, "setFirstStreaming - now_song now 3 (when insert) : " + now_song);
+                                                    } // if
+
+                                                } catch (NullPointerException e) {
+                                                    Log.e(TAG, "setFirstStreaming now_song now NULL : " + e);
+                                                } // catch
+//                } // if
+                                                if (!responseData.equals(0)) {
+                                                    Log.i("[Main]", "setFirstStreaming responseData 가 0이 아닐 때 : " + responseData);
+                                                } // if
+                                            } // else
+                                        } // else
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } // catch
+                                } // run
+                            }); // runOnUi
+                        } // onResponse
+                    }); // if !playCheck
+                    playCheck = true;
+                } // if
+            } else {
+                String playState = play.getText().toString();
+
+                if (!playState.equals("❚❚")) {
+                    Log.i("setFirstStreaming 메인 플레이 버튼 클릭", "재시작");
+                    Log.i(TAG, "setFirstStreaming playCheck : " + playCheck);
+                    mediaPlayer.start();
+                    updateSeekBar();
+                    play.setText("❚❚");
+
+                    startTime = System.currentTimeMillis();
+                    if (mediaPlayer == null) {
+                        Log.i(TAG, "setFirstStreaming > btn on Click (mp == null)");
+                        mediaPlayer.start();
+
+                    } else if (!mediaPlayer.isPlaying()) {
+                        mediaPlayer.seekTo(playPosition);
+                        Log.i(TAG, "setFirstStreaming playPosition Check : " + playPosition);
+                        mediaPlayer.start();
+                    } // else if
+                }
+                if (playState.equals("❚❚")) {
+                    Log.i("setFirstStreaming 메인 플레이 버튼 클릭", "일시정지 상태일 때");
+                    Log.i(TAG, "setFirstStreaming playCheck : " + playCheck);
+
+                    play.setText("▶");
+                    play.setTextSize(53);
+
+                    nowPlaying = false;
+
+                    if (mediaPlayer != null) {
+                        Log.i(TAG, "setFirstStreaming mediaPlayer.pause");
+                        mediaPlayer.pause();
+
+                    } else {
+                        Log.i(TAG, "setFirstStreaming mediaPlayer == null");
+                    } // else
+
+                    playPosition = mediaPlayer.getCurrentPosition();
+                    Log.d("setFirstStreaming [PAUSE CHECK]", "" + playPosition);
+                    Log.i(TAG, "setFirstStreaming playCheck : " + playCheck);
                 } else {
-
+                    Log.i(TAG, "setFirstStreaming 재생 버튼 모양이 재생도 일시정지도 아님");
                 } // else
-            } // if
-
-        } // else
-
-    } // setItemClickStreaming
+            } // if (playCheck == true)
+        }
+    } // setFirstStreaming
 
 } // MainActivity CLASS END
