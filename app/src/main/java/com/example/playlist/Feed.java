@@ -19,7 +19,7 @@ public class Feed extends AppCompatActivity {
     private static final String TAG = "FEED";
     ImageView genreFirst, genreSecond, genreThird, profile;
     TextView genreFirst_textView, genreSecond_textView, genreThird_textView;
-    TextView feedLogo, profileMusic;
+    TextView feedLogo, profileMusic, feedProfile;
     Button close;
     ArrayList<FeedCommentModel> feedCommentList = new ArrayList<>();
     androidx.recyclerview.widget.RecyclerView feedCommentRecyclerVIew;
@@ -51,6 +51,7 @@ public class Feed extends AppCompatActivity {
         profileMusic = findViewById(R.id.feedProfileMusic);
         close = findViewById(R.id.feedCloseButton);
         profile = findViewById(R.id.feedProfileImage);
+        feedProfile = findViewById(R.id.feedProfileMusic);
 
         genreFirst = findViewById(R.id.genre_first);
         genreSecond = findViewById(R.id.genre_second);
@@ -169,5 +170,9 @@ public class Feed extends AppCompatActivity {
             } // for
         } // if
     } // onActivityResult
+
+    void setProfileMusic() {
+
+    } // setProfileMusic
 
 } // CLASS END
