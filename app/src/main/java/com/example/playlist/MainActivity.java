@@ -3923,4 +3923,58 @@ public class MainActivity extends AppCompatActivity {
         } // onReceive
     }; // BroadcastReceiver
 
+    void setItemClickStreaming() {
+        if (logIn.getText().toString().equals("LOG IN")) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+            currentTimeForViewsIncrement = System.currentTimeMillis();
+
+            builder.setTitle("Please Check the Log In");
+            builder.setMessage("로그인이 필요합니다.");
+
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.i(TAG, "로그인이 필요합니다. OK 버튼 클릭");
+                    Intent loginIntent = new Intent(mainCtx, LogIn.class);
+                    startActivity(loginIntent);
+                }
+            });
+            builder.show();
+        } else {
+            setMediaPlayer();
+            if (logIn.getText().toString().equals("LOG IN")) {
+                mainSeekBar.setVisibility(View.GONE);
+                heart.setVisibility(View.GONE);
+                playingTime.setVisibility(View.GONE);
+                toPlayTime.setVisibility(View.GONE);
+            } else {
+                mainSeekBar.setVisibility(View.VISIBLE);
+                heart.setVisibility(View.VISIBLE);
+                playingTime.setVisibility(View.VISIBLE);
+                toPlayTime.setVisibility(View.VISIBLE);
+            } // else
+
+            int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
+            if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
+
+                String playState = play.getText().toString();
+                if (!playCheck) {
+
+                    if (!playState.equals("❚❚")) {
+                        play.setText("❚❚");
+                        play.setTextSize(53);
+                    } // if
+
+                    Uri.Builder builder = new Uri.Builder()
+                            .appendQueryParameter()
+                } else {
+
+                } // else
+            } // if
+
+        } // else
+
+    } // setItemClickStreaming
+
 } // MainActivity CLASS END
