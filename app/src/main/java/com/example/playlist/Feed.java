@@ -81,6 +81,7 @@ public class Feed extends AppCompatActivity {
 
         setProfile();
         setGenreOnClick();
+        setProfileMusic();
     } // initial END
 
     @Override
@@ -161,6 +162,7 @@ public class Feed extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.i(TAG, "onActivityResult : " + resultCode);
 
         if (resultCode == RESULT_OK) {
             ArrayList<String> selected_genres = data.getStringArrayListExtra("selected_genres");
@@ -169,10 +171,31 @@ public class Feed extends AppCompatActivity {
                 // Here you can update your image view based on the selected genres
             } // for
         } // if
+
+        if (resultCode == RESULT_OK) {
+            ArrayList<String> selected_profileMusic = data.getStringArrayListExtra("selected_profileMusic");
+            for (String profile_music : selected_profileMusic) {
+                Log.i(TAG, "Selected profileMusic: " + profile_music);
+                profileMusic.setText(profile_music);
+            } // for
+        } // if
     } // onActivityResult
 
     void setProfileMusic() {
+        feedProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "profileMusic onClick");
+                ProfileMusicSelectDialog dialog = new ProfileMusicSelectDialog();
+                dialog.setListener(new ProfileMusicSelectDialog.OnProfileSelectedListener() {
+                    @Override
+                    public void onProfileSelected(ArrayList<String> selectedProfileMusic) {
 
+                    } // onProfileSelected
+                }); // setListener
+                dialog.show(getSupportFragmentManager(), "ProfileMusicSelect");
+            } // onClick
+        }); // setOnClickListener
     } // setProfileMusic
 
 } // CLASS END
