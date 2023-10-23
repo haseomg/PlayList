@@ -2,8 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="300dp"
-    android:layout_height="290dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="#AAB9FF"
     android:layout_gravity="center"
     tools:context=".Played">
@@ -11,7 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/songListTopBar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="70dp"
         android:background="#7878E1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,7 +27,7 @@
             android:fontFamily="sans-serif-black"
             android:text="재생 목록"
             android:textColor="#AAB9FF"
-            android:textSize="22sp"
+            android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/songListClose"
             app:layout_constraintHorizontal_bias="0.53"
@@ -37,7 +37,7 @@
         <Button
             android:id="@+id/songListClose"
             android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_height="70dp"
             android:background="#00ff0000"
             android:fontFamily="sans-serif-black"
             android:text="X"
@@ -56,7 +56,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/songListRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="240dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
