@@ -17,6 +17,15 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <!-- 배경색 -->
+        <item name="android:background">#7878E1</item>
+        <!-- 제목 텍스트 색상 -->
+        <item name="android:titleTextColor">#000000</item>
+        <!-- 메시지 텍스트 색상 -->
+        <item name="android:textColorPrimary">#AAB9FF</item>
+    </style>
+
     <style name="TransparentTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
