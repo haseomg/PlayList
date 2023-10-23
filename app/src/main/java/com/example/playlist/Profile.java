@@ -589,7 +589,7 @@ public class Profile extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
                 e.printStackTrace();
-            }
+            } // onFailure
 
             @Override
             public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
@@ -598,14 +598,14 @@ public class Profile extends AppCompatActivity {
                 } else {
                     Log.i("Update", "응답 성공 : " + response);
                     final String responseData = response.body().string();
+
                     if (responseData.equals("false")) {
                         Log.i("Update", "User Table match == 0");
                     } else {
                         Log.i("Update", "User Table match ok : " + responseData);
-                    }
-                }
-            }
-        });
+                    } // else
+                } // else
+            } // onResponse
+        }); //  client.newCall
     }
-
-}
+} // CLASS
