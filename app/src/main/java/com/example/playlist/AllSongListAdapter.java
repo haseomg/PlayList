@@ -275,6 +275,7 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 public void onClick(View v) {
                     Log.i(TAG, "itemView) allSongsAdapter allSongsView click");
                     int position = getAdapterPosition();
+                    notifyItemChanged(selected_position);
                     if (position != RecyclerView.NO_POSITION) {
                         if (selected_position != position) {
                             oldPosition = selected_position;
@@ -284,7 +285,8 @@ public class AllSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                             notifyItemChanged(oldPosition);
                             notifyItemChanged(selected_position);
-                        }
+                            notifyItemChanged(oldPosition, selected_position);
+                        } // if
 
                         if (playing_position != RecyclerView.NO_POSITION) {
                             notifyItemChanged(playing_position);

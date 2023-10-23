@@ -190,7 +190,7 @@ public class Feed extends AppCompatActivity {
                 dialog.setListener(new ProfileMusicSelectDialog.OnProfileSelectedListener() {
                     @Override
                     public void onProfileSelected(ArrayList<String> selectedProfileMusic) {
-
+                        Log.i(TAG, "profileMusic onProfileSelected : " + selectedProfileMusic);
                     } // onProfileSelected
                 }); // setListener
                 dialog.show(getSupportFragmentManager(), "ProfileMusicSelect");

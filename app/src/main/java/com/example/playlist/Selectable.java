@@ -487,13 +487,16 @@ public class Selectable extends AppCompatActivity {
         String clicked = textView.getText().toString();
         Intent intent = new Intent("com.example.playlist.PLAY_MUSIC");
         Log.i(TAG, "top) setClickStreaming clickedItem : " + clicked);
+        intent.putExtra("selected_song", clicked);
         view.setBackgroundColor(Color.parseColor("#7878E1"));
         textView.setTextColor(Color.parseColor("#AAB9FF"));
 
         selectableCtx.sendBroadcast(intent);
+
     } // setClickStreaming
 
     void setTopOriginalColor(View view, TextView textView) {
+        Log.i(TAG, "top) setTopOriginalColor");
         view.setBackgroundColor(Color.parseColor("#AAB9FF"));
         textView.setTextColor(Color.parseColor("#E440407F"));
     } // setTopOriginalColor
