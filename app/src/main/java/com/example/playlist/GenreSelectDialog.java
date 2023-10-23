@@ -30,7 +30,7 @@ public class GenreSelectDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogCustom);
         builder.setTitle("선호하는 장르를 선택해주세요. (최대 3개)")
                 .setMultiChoiceItems(allGenres, null,
                         new DialogInterface.OnMultiChoiceClickListener() {
