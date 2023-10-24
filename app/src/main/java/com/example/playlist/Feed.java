@@ -3,6 +3,7 @@ package com.example.playlist;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -39,7 +40,7 @@ public class Feed extends AppCompatActivity {
 
     int followNum, followingNum = 0;
     int genreFirstImageId, genreSecondImageId, genreThirdImageId;
-    String forNoneEditModeCheck;
+    String forNoneEditModeCheck, nowLoginUser, feedUser;
 
     @Override
     public void onBackPressed() {
@@ -57,6 +58,9 @@ public class Feed extends AppCompatActivity {
 
     private void initial() {
         feedCtx = Feed.this;
+        Intent intent = getIntent();
+        nowLoginUser = intent.getStringExtra("now_login_user");
+        user = intent.getStringExtra("user");
 
         feedLogo = findViewById(R.id.feedLogo);
         profileMusic = findViewById(R.id.feedProfileMusic);
@@ -88,11 +92,9 @@ public class Feed extends AppCompatActivity {
         profileDefaultCheck = R.drawable.gray_profile;
         profile.setImageResource(profileDefaultCheck);
 
-        Intent intent = getIntent();
-        user = intent.getStringExtra("user");
-
         // TODO 디비에 데이터를 넣고, 수정하고, 가져올 때 기준이 될 유저 이름 (user_name)
         userName.setText(user);
+        feedUser = userName.getText().toString();
         // TODO 저장 버튼 클릭 시 (feed_table)에 데이터(profile_music) 추가
         profileMusic.setText("프로필 뮤직을 선택해 주세요.");
         // TODO 나의 피드일 경우 팔로잉 버튼은 [프로필 편집] / 메시지는 [채팅 목록]
@@ -208,18 +210,27 @@ public class Feed extends AppCompatActivity {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!user.equals(userName.getText().toString())) {
-                    // 현재 로그인한 유저가 피드의 주인이 아닐 때
+                // TODO - Null Exception
+                try {
+                    if (!nowLoginUser.equals(userName.getText().toString())) {
+                        // 현재 로그인한 유저가 피드의 주인이 아닐 때
+                        Log.i(TAG, "profileImage onClick (if) : " + nowLoginUser + " / "  + userName.getText().toString());
 
-                } else if (followBtn.getText().toString().equals("피드 편집")) {
-                    // 현재 피드 편집 모드가 아닐 때
+                    } else if (followBtn.getText().toString().equals("피드 편집")) {
+                        // 현재 피드 편집 모드가 아닐 때
+                        Log.i(TAG, "profileImage onClick (else if) : " + nowLoginUser + " / "  + userName.getText().toString());
 
-                } else {
-                    Intent intent = new Intent(Intent.ACTION_PICK);
-                    intent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                    startActivityForResult(intent, GET_GALLERY_IMAGE);
+                    } else {
+                        Log.i(TAG, "profileImage onClick (else) : " + nowLoginUser + " / "  + userName.getText().toString());
+                        Intent intent = new Intent(Intent.ACTION_PICK);
+                        intent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                        startActivityForResult(intent, GET_GALLERY_IMAGE);
+                    } // else
 
-                } // else
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                } // catch
+
             } // onClick
         }); // profile.setOnClickListener
     } // setProfile
@@ -229,12 +240,24 @@ public class Feed extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         Log.i(TAG, "onActivityResult : " + resultCode);
 
+        if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            // TODO - DB에 넣어줄 이미지의 정보 (경로, 파일 형식)
+            Uri selectedImageUri = data.getData();
+            profile.setImageURI(selectedImageUri);
+            // 이미지는 잘 가져오는데 프로필 뮤직이 해제됨.
+        } // if
+
         if (resultCode == RESULT_OK) {
-            ArrayList<String> selected_genres = data.getStringArrayListExtra("selected_genres");
-            for (String genre : selected_genres) {
-                Log.i(TAG, "Selected genre: " + genre);
-                // Here you can update your image view based on the selected genres
-            } // for
+            try {
+                ArrayList<String> selected_genres = data.getStringArrayListExtra("selected_genres");
+                if (selected_genres != null) {
+                    for (String genre : selected_genres) {
+                        Log.i(TAG, "Selected genre: " + genre);
+                    } // for
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            } // catch
         } // if
 
         if (resultCode == RESULT_OK) {
@@ -250,23 +273,30 @@ public class Feed extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "profileMusic onClick");
 
-                if (!user.equals(userName.getText().toString())) {
-                    // 현재 로그인한 유저가 피드의 주인이 아닐 때
+                try {
+                    if (!nowLoginUser.equals(userName.getText().toString())) {
+                        // 현재 로그인한 유저가 피드의 주인이 아닐 때
+                        Log.i(TAG, "profileMusic onClick (if) : " + nowLoginUser + " / "  + userName.getText().toString());
 
-                } else if (followBtn.getText().toString().equals("피드 편집")) {
-                    // 현재 피드 편집 모드가 아닐 때
+                    } else if (followBtn.getText().toString().equals("피드 편집")) {
+                        // 현재 피드 편집 모드가 아닐 때
+                        Log.i(TAG, "profileMusic onClick (else if) : " + nowLoginUser + " / "  + userName.getText().toString());
 
-                } else {
-                    ProfileMusicSelectDialog dialog = new ProfileMusicSelectDialog();
-                    dialog.setListener(new ProfileMusicSelectDialog.OnProfileSelectedListener() {
-                        @Override
-                        public void onProfileSelected(ArrayList<String> selectedProfileMusic) {
-                            Log.i(TAG, "profileMusic onProfileSelected : " + selectedProfileMusic);
-                        } // onProfileSelected
-                    }); // setListener
-                    dialog.show(getSupportFragmentManager(), "ProfileMusicSelect");
+                    } else {
+                        ProfileMusicSelectDialog dialog = new ProfileMusicSelectDialog();
+                        dialog.setListener(new ProfileMusicSelectDialog.OnProfileSelectedListener() {
+                            @Override
+                            public void onProfileSelected(ArrayList<String> selectedProfileMusic) {
+                                Log.i(TAG, "profileMusic onProfileSelected (else) : " + selectedProfileMusic);
+                            } // onProfileSelected
+                        }); // setListener
+                        dialog.show(getSupportFragmentManager(), "ProfileMusicSelect");
 
-                } // else
+                    } // else
+
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                } // catch
             } // onClick
         }); // setOnClickListener
     } // setProfileMusic
@@ -284,7 +314,7 @@ public class Feed extends AppCompatActivity {
 
 //        String nowLoginUser = ((MainActivity) MainActivity.mainCtx).logIn.getText().toString();
 //        Log.i(TAG, "setUIForMe now login user check : " + nowLoginUser + " / " + user);
-        if (user.equals(userName.getText().toString())) {
+        if (feedUser.equals(nowLoginUser)) {
             followBtn.setText("피드 편집");
             followBtn.setTextSize(13.5F);
             msgBtn.setText("채팅 목록");
@@ -445,22 +475,30 @@ public class Feed extends AppCompatActivity {
     } // setMsgOrChatRoomBtn
 
     void setGenreSelect() {
-        if (!user.equals(userName.getText().toString())) {
-            // 현재 로그인한 유저가 피드의 주인이 아닐 때
+        try {
+            if (!nowLoginUser.equals(userName.getText().toString())) {
+                // 현재 로그인한 유저가 피드의 주인이 아닐 때
+                Log.i(TAG, "genreSelect onClick (if) : " + nowLoginUser + " / "  + userName.getText().toString());
 
-        } else if (followBtn.getText().toString().equals("피드 편집")) {
-            // 현재 피드 편집 모드가 아닐 때
+            } else if (followBtn.getText().toString().equals("피드 편집")) {
+                // 현재 피드 편집 모드가 아닐 때
+                Log.i(TAG, "genreSelect onClick (else if) : " + nowLoginUser + " / "  + userName.getText().toString());
 
-        } else {
-            GenreSelectDialog dialog = new GenreSelectDialog();
-            dialog.setListener(new GenreSelectDialog.OnGenreSelectedListener() {
-                @Override
-                public void onGenresSelected(ArrayList<String> selectedGenres) {
+            } else {
+                Log.i(TAG, "genreSelect onClick (else) : " + nowLoginUser + " / "  + userName.getText().toString());
+                GenreSelectDialog dialog = new GenreSelectDialog();
+                dialog.setListener(new GenreSelectDialog.OnGenreSelectedListener() {
+                    @Override
+                    public void onGenresSelected(ArrayList<String> selectedGenres) {
 
-                } // onGenresSelected
-            }); // setListener
-            dialog.show(getSupportFragmentManager(), "GenreSelect");
-        } // else
+                    } // onGenresSelected
+                }); // setListener
+                dialog.show(getSupportFragmentManager(), "GenreSelect");
+            } // else
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } // catch
     } // setGenreSelect
 
 } // CLASS END

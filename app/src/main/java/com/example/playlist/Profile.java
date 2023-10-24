@@ -327,7 +327,7 @@ public class Profile extends AppCompatActivity {
                     Log.i(TAG, "nickName이 빈 값일 때");
                 }
                 intent.putExtra("user", user);
-
+                intent.putExtra("now_login_user", nowLoginUser);
                 startActivity(intent);
 //                Toast.makeText(Profile.this, "개발 중입니다.", Toast.LENGTH_SHORT).show();
             } // onClick

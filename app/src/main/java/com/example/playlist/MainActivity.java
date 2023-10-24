@@ -529,7 +529,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.i(TAG, "버튼 이름이 [LOG IN]이 아닐 때 || 사용자 이름일 때");
 
                     Intent profileIntent = new Intent(MainActivity.this, Profile.class);
-//                    profileIntent.putExtra("now_login_user", logIn.getText().toString());
+                    profileIntent.putExtra("now_login_user", logIn.getText().toString());
                     startActivity(profileIntent);
                 }
             }
