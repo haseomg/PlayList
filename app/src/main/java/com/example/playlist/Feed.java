@@ -39,6 +39,7 @@ public class Feed extends AppCompatActivity {
 
     int followNum, followingNum = 0;
     int genreFirstImageId, genreSecondImageId, genreThirdImageId;
+    String forNoneEditModeCheck;
 
     @Override
     public void onBackPressed() {
@@ -141,15 +142,25 @@ public class Feed extends AppCompatActivity {
                 // TODO (1) dialog? activity? select
                 // TODO (2) genre type arrangement
                 // TODO (3) genre pick -> setGenre, genre pick check
+                setGenreSelect();
 
-                GenreSelectDialog dialog = new GenreSelectDialog();
-                dialog.setListener(new GenreSelectDialog.OnGenreSelectedListener() {
-                    @Override
-                    public void onGenresSelected(ArrayList<String> selectedGenres) {
+//                if (!user.equals(userName.getText().toString())) {
+//                    // 현재 로그인한 유저가 피드의 주인이 아닐 때
+//
+//                } else if (followBtn.getText().toString().equals("피드 저장")) {
+//                    // 현재 피드 편집 모드가 아닐 때
+//
+//                } else {
+//                    GenreSelectDialog dialog = new GenreSelectDialog();
+//                    dialog.setListener(new GenreSelectDialog.OnGenreSelectedListener() {
+//                        @Override
+//                        public void onGenresSelected(ArrayList<String> selectedGenres) {
+//
+//                        } // onGenresSelected
+//                    }); // setListener
+//                    dialog.show(getSupportFragmentManager(), "GenreSelect");
+//                } // else
 
-                    } // onGenresSelected
-                }); // setListener
-                dialog.show(getSupportFragmentManager(), "GenreSelect");
             } // onClick
         }); // genreFirst.setOnClickListener
 
@@ -160,14 +171,16 @@ public class Feed extends AppCompatActivity {
                 // TODO (2) genre type arrangement
                 // TODO (3) genre pick -> setGenre, genre pick check
 
-                GenreSelectDialog dialog = new GenreSelectDialog();
-                dialog.setListener(new GenreSelectDialog.OnGenreSelectedListener() {
-                    @Override
-                    public void onGenresSelected(ArrayList<String> selectedGenres) {
+                setGenreSelect();
 
-                    } // onGenresSelected
-                }); // setListener
-                dialog.show(getSupportFragmentManager(), "GenreSelect");
+//                GenreSelectDialog dialog = new GenreSelectDialog();
+//                dialog.setListener(new GenreSelectDialog.OnGenreSelectedListener() {
+//                    @Override
+//                    public void onGenresSelected(ArrayList<String> selectedGenres) {
+//
+//                    } // onGenresSelected
+//                }); // setListener
+//                dialog.show(getSupportFragmentManager(), "GenreSelect");
             } // onClick
         }); //genreSecond.setOnClickListener
 
@@ -177,15 +190,16 @@ public class Feed extends AppCompatActivity {
                 // TODO (1) dialog? activity? select
                 // TODO (2) genre type arrangement
                 // TODO (3) genre pick -> setGenre, genre pick check
+                setGenreSelect();
 
-                GenreSelectDialog dialog = new GenreSelectDialog();
-                dialog.setListener(new GenreSelectDialog.OnGenreSelectedListener() {
-                    @Override
-                    public void onGenresSelected(ArrayList<String> selectedGenres) {
-
-                    } // onGenresSelected
-                }); // setListener
-                dialog.show(getSupportFragmentManager(), "GenreSelect");
+//                GenreSelectDialog dialog = new GenreSelectDialog();
+//                dialog.setListener(new GenreSelectDialog.OnGenreSelectedListener() {
+//                    @Override
+//                    public void onGenresSelected(ArrayList<String> selectedGenres) {
+//
+//                    } // onGenresSelected
+//                }); // setListener
+//                dialog.show(getSupportFragmentManager(), "GenreSelect");
             } // onClick
         }); //genreSecond.setOnClickListener
     } // setGenre
@@ -194,9 +208,18 @@ public class Feed extends AppCompatActivity {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                startActivityForResult(intent, GET_GALLERY_IMAGE);
+                if (!user.equals(userName.getText().toString())) {
+                    // 현재 로그인한 유저가 피드의 주인이 아닐 때
+
+                } else if (followBtn.getText().toString().equals("피드 편집")) {
+                    // 현재 피드 편집 모드가 아닐 때
+
+                } else {
+                    Intent intent = new Intent(Intent.ACTION_PICK);
+                    intent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                    startActivityForResult(intent, GET_GALLERY_IMAGE);
+
+                } // else
             } // onClick
         }); // profile.setOnClickListener
     } // setProfile
@@ -226,14 +249,24 @@ public class Feed extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "profileMusic onClick");
-                ProfileMusicSelectDialog dialog = new ProfileMusicSelectDialog();
-                dialog.setListener(new ProfileMusicSelectDialog.OnProfileSelectedListener() {
-                    @Override
-                    public void onProfileSelected(ArrayList<String> selectedProfileMusic) {
-                        Log.i(TAG, "profileMusic onProfileSelected : " + selectedProfileMusic);
-                    } // onProfileSelected
-                }); // setListener
-                dialog.show(getSupportFragmentManager(), "ProfileMusicSelect");
+
+                if (!user.equals(userName.getText().toString())) {
+                    // 현재 로그인한 유저가 피드의 주인이 아닐 때
+
+                } else if (followBtn.getText().toString().equals("피드 편집")) {
+                    // 현재 피드 편집 모드가 아닐 때
+
+                } else {
+                    ProfileMusicSelectDialog dialog = new ProfileMusicSelectDialog();
+                    dialog.setListener(new ProfileMusicSelectDialog.OnProfileSelectedListener() {
+                        @Override
+                        public void onProfileSelected(ArrayList<String> selectedProfileMusic) {
+                            Log.i(TAG, "profileMusic onProfileSelected : " + selectedProfileMusic);
+                        } // onProfileSelected
+                    }); // setListener
+                    dialog.show(getSupportFragmentManager(), "ProfileMusicSelect");
+
+                } // else
             } // onClick
         }); // setOnClickListener
     } // setProfileMusic
@@ -248,13 +281,15 @@ public class Feed extends AppCompatActivity {
 
     void setUIForMe() {
         // TODO 나와 상대 피드 구별
-        String nowLoginUser = ((MainActivity) MainActivity.mainCtx).logIn.getText().toString();
-        Log.i(TAG, "setUIForMe now login user check : " + nowLoginUser + " / " + user);
-        if (nowLoginUser.equals(user)) {
+
+//        String nowLoginUser = ((MainActivity) MainActivity.mainCtx).logIn.getText().toString();
+//        Log.i(TAG, "setUIForMe now login user check : " + nowLoginUser + " / " + user);
+        if (user.equals(userName.getText().toString())) {
             followBtn.setText("피드 편집");
             followBtn.setTextSize(13.5F);
             msgBtn.setText("채팅 목록");
             msgBtn.setTextSize(13.5F);
+
         } else {
             followBtn.setText("팔로잉");
             msgBtn.setText("메시지");
@@ -355,7 +390,7 @@ public class Feed extends AppCompatActivity {
         followBtn.setText("피드 편집");
 
         if (genreFirstImageId == R.drawable.genre_pick && genreSecondImageId == R.drawable.genre_pick
-        && genreThirdImageId == R.drawable.genre_pick && profileDefaultCheck == R.drawable.gray_profile_edit) {
+                && genreThirdImageId == R.drawable.genre_pick && profileDefaultCheck == R.drawable.gray_profile_edit) {
             genreFirst.setImageResource(R.drawable.genre_default);
             genreFirstImageId = R.drawable.genre_default;  // update the image ID
 
@@ -408,5 +443,24 @@ public class Feed extends AppCompatActivity {
             } // onClick
         }); // setOnClickListener
     } // setMsgOrChatRoomBtn
+
+    void setGenreSelect() {
+        if (!user.equals(userName.getText().toString())) {
+            // 현재 로그인한 유저가 피드의 주인이 아닐 때
+
+        } else if (followBtn.getText().toString().equals("피드 편집")) {
+            // 현재 피드 편집 모드가 아닐 때
+
+        } else {
+            GenreSelectDialog dialog = new GenreSelectDialog();
+            dialog.setListener(new GenreSelectDialog.OnGenreSelectedListener() {
+                @Override
+                public void onGenresSelected(ArrayList<String> selectedGenres) {
+
+                } // onGenresSelected
+            }); // setListener
+            dialog.show(getSupportFragmentManager(), "GenreSelect");
+        } // else
+    } // setGenreSelect
 
 } // CLASS END

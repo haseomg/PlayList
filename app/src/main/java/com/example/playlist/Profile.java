@@ -62,6 +62,7 @@ public class Profile extends AppCompatActivity {
     String idToPost;
     String nickname;
     String fromNicknameChange;
+    String nowLoginUser;
 
     UpdateNickname updateNickname;
 
@@ -99,8 +100,7 @@ public class Profile extends AppCompatActivity {
             Log.i(TAG, "acct != null");
         } else {
             Log.i(TAG, "acct == null");
-        }
-
+        } // else
 
         shared = getSharedPreferences("nickname", MODE_PRIVATE);
         editor = shared.edit();
@@ -117,21 +117,21 @@ public class Profile extends AppCompatActivity {
         logOutBtn = findViewById(R.id.logOutBtn);
         feedBtn = findViewById(R.id.feedBtn);
 
+        Intent intent = getIntent();
+        nowLoginUser = intent.getStringExtra("now_login_user");
+
         if (!fromSharedNickName.equals("LOG IN") || fromSharedNickName != null) {
             profileLogo.setText(fromSharedNickName + "'s profile");
-
             Log.i(TAG, "로그인 상태");
-
             // DB에서도 닉네임 변경해줘야 해
             nickName.setText(fromSharedNickName);
-        } else {
 
+        } else {
             nickName.setText("로그인이 필요합니다.");
             nickNameChangeBtn.setVisibility(View.GONE);
             logOutBtn.setText("LOG IN");
             Log.i(TAG, "로그아웃 상태");
-
-        }
+        } // else
 
         if (fromSharedNickName.length() > 12) {
             profileLogo.setTextSize(20);
@@ -176,14 +176,13 @@ public class Profile extends AppCompatActivity {
                 } else {
 
                     if (nickNameChange.getText().toString().equals("")) {
-
                         nickName.setText(nickName.getText().toString());
                         nickName.setVisibility(View.VISIBLE);
                         nickNameChange.setVisibility(View.GONE);
                         nickNameChangeBtn.setText("닉네임 변경");
+
                     } else {
                         Log.i(TAG, "닉네임 우측 버튼이 'change'가 아닐 때");
-
                         editor.putString("nickname", nickNameChange.getText().toString());
                         editor.commit();
                         Toast.makeText(getApplicationContext(), "닉네임이 " + nickNameChange.getText().toString() + "(으)로 변경되었습니다."
@@ -300,12 +299,10 @@ public class Profile extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     Log.i(TAG, "로그아웃하시겠습니까? 아니오");
-                                }
+                                } // onClick
                             });
                     builder.show();
                 }
-
-
             }
         });
 
@@ -325,10 +322,12 @@ public class Profile extends AppCompatActivity {
                 Intent intent = new Intent(Profile.this, Feed.class);
                 String user = nickName.getText().toString();
                 Log.i(TAG, "onClick nickName check: " + nickName);
+
                 if (nickName.equals("")) {
                     Log.i(TAG, "nickName이 빈 값일 때");
                 }
                 intent.putExtra("user", user);
+
                 startActivity(intent);
 //                Toast.makeText(Profile.this, "개발 중입니다.", Toast.LENGTH_SHORT).show();
             } // onClick
