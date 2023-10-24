@@ -7,7 +7,7 @@
         android:color="#949498" />
 
     <!-- 배경색 채우기 -->
-    <solid android:color="#05949498" /> <!-- 원하는 불투명한 색상으로 변경 -->
+    <solid android:color="#05949498" />
 
     <size
         android:width="36dp"

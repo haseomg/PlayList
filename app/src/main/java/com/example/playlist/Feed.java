@@ -59,8 +59,6 @@ public class Feed extends AppCompatActivity {
 
         feedEditBtn = findViewById(R.id.feedEditBtn);
         feedEditCompleteBtn = findViewById(R.id.feedEditOkBtn);
-        followBtn = findViewById(R.id.followBtn);
-        followerBtn = findViewById(R.id.followerBtn);
 
         genreFirst = findViewById(R.id.genre_first);
         genreSecond = findViewById(R.id.genre_second);
@@ -224,22 +222,22 @@ public class Feed extends AppCompatActivity {
 
     void setFollow() {
         // TODO 팔로우/팔로우 취소 버튼
-        followBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                followBtn.setVisibility(View.INVISIBLE);
-                followerBtn.setVisibility(View.VISIBLE);
-            } // onClick
-        }); // setOnClickListener
+//        followBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                followBtn.setVisibility(View.INVISIBLE);
+//                followerBtn.setVisibility(View.VISIBLE);
+//            } // onClick
+//        }); // setOnClickListener
 
-        followerBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO - 팔로우를 취소하시겠습니까?
-                followerBtn.setVisibility(View.INVISIBLE);
-                followBtn.setVisibility(View.VISIBLE);
-            } // onClick
-        }); // setOnClickListener
+//        followerBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // TODO - 팔로우를 취소하시겠습니까?
+//                followerBtn.setVisibility(View.INVISIBLE);
+//                followBtn.setVisibility(View.VISIBLE);
+//            } // onClick
+//        }); // setOnClickListener
     } // setFollowBtn
 
     protected void onStart() {
