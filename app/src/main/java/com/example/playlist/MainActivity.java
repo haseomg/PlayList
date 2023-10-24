@@ -1104,6 +1104,7 @@ public class MainActivity extends AppCompatActivity {
                     String me = shared.getString("nickname", "");
                     String user_name = logIn.getText().toString();
                     intent.putExtra("username", user_name);
+                    intent.putExtra("before_class", "home");
                     chat_editor.putString("name", user_name);
                     chat_editor.commit();
                     // User로

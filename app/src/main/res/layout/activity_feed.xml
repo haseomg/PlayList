@@ -141,7 +141,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/profile_music_button"
         android:fontFamily="sans-serif-medium"
-        android:text="프로필 - 뮤직 ▶︎"
+        android:text="프로필 뮤직을 선택해 주세요.︎"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="13dp"

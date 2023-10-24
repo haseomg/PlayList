@@ -53,7 +53,7 @@ public class ChatSelect extends AppCompatActivity {
 
     String TAG = "[Chat Select CLASS]";
     Intent intent;
-    String uuidFromDB, getUsername, getRoomName, myName, yourName, uuidForChat, uuid, you, uuidResponse;
+    String uuidFromDB, getUsername, getRoomName, myName, yourName, uuidForChat, uuid, you, uuidResponse, beforeClass;
     private ArrayList<String> uuidValues;
     Button enterButton, chatHomeBtn;
     TextView name, list_name, list_msg, list_time;
@@ -148,7 +148,6 @@ public class ChatSelect extends AppCompatActivity {
                 .allowMainThreadQueries()
                 .build();
 
-
         Log.i(TAG, "initial()");
         intent = getIntent();
         getUsername = intent.getStringExtra("username");
@@ -172,9 +171,22 @@ public class ChatSelect extends AppCompatActivity {
         chatHomeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                if (beforeClass.equals("home")) {
+                    finish();
+
+                } else {
+                    finish();
+                } // else
             } // onClick
         });
+
+        beforeClass = intent.getStringExtra("before_class");
+        Log.i(TAG, "beforeClass check : " + beforeClass);
+        if (beforeClass.equals("home")) {
+
+        } else if (beforeClass.equals("feed")) {
+            chatHomeBtn.setText("피드로");
+        } // else if
 
         chatHomeImage = findViewById(R.id.chatHomeImage);
         chatHomeImage.setOnClickListener(new View.OnClickListener() {
