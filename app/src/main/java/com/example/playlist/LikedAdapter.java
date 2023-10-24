@@ -95,18 +95,23 @@ public class LikedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         String originalName = likedList.get(position).getSelected_song();
         Log.i(TAG, "likedSongCheck) song name : " + originalName);
 
-        if (position == playing_position) {
-            Log.i(TAG, "likedSongCheck) onBindViewHolder *if : " + playing_position + " / " + originalName + " / " + changeName + ".mp3");
-            holder.itemView.setBackgroundColor(Color.parseColor("#B57878E1"));
+        try {
+            if (position == playing_position) {
+                Log.i(TAG, "likedSongCheck) onBindViewHolder *if : " + playing_position + " / " + originalName + " / " + changeName + ".mp3");
+                holder.itemView.setBackgroundColor(Color.parseColor("#B57878E1"));
 
-        } else if (selected_position == position || likedList.get(position).getSelected_song().equals(changeName + ".mp3")) {
-            Log.i(TAG, "likedSongCheck) onBindViewHolder *else if : " + selected_position + " / " + originalName + " / " + changeName + ".mp3");
-            holder.itemView.setBackgroundColor(Color.parseColor("#A0B1FF"));
+            } else if (selected_position == position || likedList.get(position).getSelected_song().equals(changeName + ".mp3")) {
+                Log.i(TAG, "likedSongCheck) onBindViewHolder *else if : " + selected_position + " / " + originalName + " / " + changeName + ".mp3");
+                holder.itemView.setBackgroundColor(Color.parseColor("#A0B1FF"));
 
-        } else {
-            Log.i(TAG, "likedSongCheck) onBindViewHolder *else : " + selected_position + " / " + originalName + " / " + changeName + ".mp3");
-            holder.itemView.setBackgroundColor(Color.parseColor("#B57878E1"));  // 원래 색상으로 설정
-        } // else
+            } else {
+                Log.i(TAG, "likedSongCheck) onBindViewHolder *else : " + selected_position + " / " + originalName + " / " + changeName + ".mp3");
+                holder.itemView.setBackgroundColor(Color.parseColor("#B57878E1"));  // 원래 색상으로 설정
+            } // else
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } // catch
     } // onBindViewHolder
 
     @Override

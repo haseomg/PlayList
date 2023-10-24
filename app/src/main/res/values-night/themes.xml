@@ -23,7 +23,8 @@
         <!-- 제목 텍스트 색상 -->
         <item name="android:titleTextColor">#AAB9FF</item>
         <!-- 메시지 텍스트 색상 -->
-        <item name="android:textColorPrimary">#000000</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+
     </style>
 
     <style name="TransparentTheme" parent="Theme.AppCompat.Light.NoActionBar">

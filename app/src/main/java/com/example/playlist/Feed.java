@@ -18,8 +18,10 @@ import java.util.ArrayList;
 public class Feed extends AppCompatActivity {
 
     private static final String TAG = "FEED";
-    ImageView genreFirst, genreSecond, genreThird, profile, feedEditBtn, feedEditCompleteBtn, followBtn, followerBtn;
-    TextView feedLogo, profileMusic, feedProfile;
+    ImageView genreFirst, genreSecond, genreThird, profile;
+    int genre_pick, genre_profile_edit, genre_profile_default;
+    int genreDefaultCheck;
+    TextView feedLogo, profileMusic, feedProfile, followBtn, msgBtn, followCheck, userName;
     Button close, selectProfileMusicPositiveBtn, selectProfileMusicNegativeBtn,
     selectGenrePositiveBtn, selectGenreNegativeBtn;
     ArrayList<FeedCommentModel> feedCommentList = new ArrayList<>();
@@ -29,10 +31,12 @@ public class Feed extends AppCompatActivity {
     LinearLayoutManager feedCommentLayoutManager;
 
     private static final String BASE_URL = "http://54.180.155.66/";
-    private String song_name;
+    public String song_name, user;
     private final int GET_GALLERY_IMAGE = 200;
 
     static Context feedCtx;
+
+    int followNum, followingNum = 0;
 
     @Override
     public void onBackPressed() {
@@ -56,17 +60,36 @@ public class Feed extends AppCompatActivity {
         close = findViewById(R.id.feedCloseButton);
         profile = findViewById(R.id.feedProfileImage);
         feedProfile = findViewById(R.id.feedProfileMusic);
+        userName = findViewById(R.id.userNameFeed);
+        followCheck = findViewById(R.id.textView);
+        followBtn = findViewById(R.id.followBtn);
+        msgBtn = findViewById(R.id.msgBtn);
 
-        feedEditBtn = findViewById(R.id.feedEditBtn);
-        feedEditCompleteBtn = findViewById(R.id.feedEditOkBtn);
+        genre_pick = R.drawable.genre_pick;
+        genre_profile_edit = R.drawable.gray_profile_edit;
+        genreDefaultCheck = R.drawable.genre_default;
 
         genreFirst = findViewById(R.id.genre_first);
+        genreFirst.setImageResource(genreDefaultCheck);
         genreSecond = findViewById(R.id.genre_second);
+        genreSecond.setImageResource(genreDefaultCheck);
         genreThird = findViewById(R.id.genre_third);
+        genreThird.setImageResource(genreDefaultCheck);
+
         Intent intent = getIntent();
-        String user = intent.getStringExtra("user");
-        feedLogo.setText(user);
-        profileMusic.setText(user + " - hello ☁︎");
+        user = intent.getStringExtra("user");
+
+        // TODO 디비에 데이터를 넣고, 수정하고, 가져올 때 기준이 될 유저 이름 (user_name)
+        userName.setText(user);
+        // TODO 저장 버튼 클릭 시 (feed_table)에 데이터(profile_music) 추가
+        profileMusic.setText("프로필 뮤직을 선택해 주세요.");
+        // TODO 나의 피드일 경우 팔로잉 버튼은 [프로필 편집] / 메시지는 [채팅 목록]
+        // TODO 팔로잉 버튼 클릭 시
+        // TODO (1) 상대가 나를 팔로우할 시, 디비(follow_table)에 데이터 추가, 그리고 액티비티 생성 시
+        // TODO (1-1) 디비의 데이터가 몇개인지 (나를 팔로우한 사람을 세어서) 조회해서 숫자를 받아서 세팅
+        // TODO (2) 내가 상대를 팔로우할 시 디비(follow_table)에 데이터 추가, 그리고 액티비티 생성 시
+        // TODO (2-1) 디비의 데이터가 몇개인지 (내가 팔로우한 사람을 세어서) 조회해서 숫자를 받아서 세팅
+        followCheck.setText("팔로워 " + followNum +"명 • 팔로잉 " + followingNum + "명");
 
         feedCommentRecyclerVIew = findViewById(R.id.feedCommentRecyclerView);
         feedCommentLayoutManager = new LinearLayoutManager(this);
@@ -87,6 +110,7 @@ public class Feed extends AppCompatActivity {
         setProfileMusic();
         setFeedEdit();
         setFollow();
+        setUIForMe();
     } // initial END
 
     @Override
@@ -202,43 +226,50 @@ public class Feed extends AppCompatActivity {
     } // setProfileMusic
 
     void setFeedEdit() {
-        // TODO 피드 수정/완료 기능
-        feedEditBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                feedEditBtn.setVisibility(View.INVISIBLE);
-                feedEditCompleteBtn.setVisibility(View.VISIBLE);
-            } // onClick
-        }); // setOnClickListener
 
-        feedEditCompleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                feedEditCompleteBtn.setVisibility(View.INVISIBLE);
-                feedEditBtn.setVisibility(View.VISIBLE);
-            } // onClick
-        }); // setOnClickListener
     } // setFeedEditBtn
 
     void setFollow() {
-        // TODO 팔로우/팔로우 취소 버튼
-//        followBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                followBtn.setVisibility(View.INVISIBLE);
-//                followerBtn.setVisibility(View.VISIBLE);
-//            } // onClick
-//        }); // setOnClickListener
 
-//        followerBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // TODO - 팔로우를 취소하시겠습니까?
-//                followerBtn.setVisibility(View.INVISIBLE);
-//                followBtn.setVisibility(View.VISIBLE);
-//            } // onClick
-//        }); // setOnClickListener
     } // setFollowBtn
+
+    void setUIForMe() {
+        // TODO 나와 상대 피드 구별
+        String nowLoginUser = ((MainActivity) MainActivity.mainCtx).logIn.getText().toString();
+        Log.i(TAG, "setUIForMe now login user check : " + nowLoginUser + " / " + user);
+        if (nowLoginUser.equals(user)) {
+            followBtn.setText("프로필 편집");
+            followBtn.setTextSize(12);
+            msgBtn.setText("채팅 목록");
+            msgBtn.setTextSize(12);
+        } else {
+            followBtn.setText("팔로잉");
+            msgBtn.setText("메시지");
+        } // else
+    } // setUIForMe
+
+    void setFollowBtn() {
+        followBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (followBtn.getText().toString().equals("프로필 편집")) {
+                    followBtn.setText("프로필 저장");
+                    // TODO 프로필 이미지, 장르 세개 이미지 세팅 변
+                    // 프로필 저장으로 텍스트 변경 -> 저장하시겠습니까?
+                    // 확인 -> 저장
+                    // 취소 -> 원래대로
+
+                    // 만약 세팅된 장르가 없을 경우, 만약 세팅된 프로필 이미지가 없을 경우
+                    if (profile == R.id.feedProfileImage) {
+
+                    }
+
+                } else if (followBtn.getText().toString().equals("프로필 저장")) {
+
+                } // else
+            } // onClick
+        }); // setOnClickListener
+    } // setProfileEditMode
 
     protected void onStart() {
         super.onStart();
