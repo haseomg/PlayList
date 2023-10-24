@@ -19,46 +19,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
-        <ImageView
-            android:id="@+id/feedEditBtn"
-            android:layout_width="50sp"
-            android:layout_height="50sp"
-            android:src="@drawable/feed_edit_button"
-            android:textAlignment="center"
-            android:textSize="50dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.02"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.45999998" />
-
-        <ImageView
-            android:id="@+id/feedEditOkBtn"
-            android:layout_width="50sp"
-            android:layout_height="50sp"
-            android:src="@drawable/feed_complete_button"
-            android:textAlignment="center"
-            android:visibility="invisible"
-            android:textSize="50dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.03"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <TextView
             android:id="@+id/feedLogo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-black"
-            android:text="USER NAME"
+            android:text="Feed"
             android:textColor="#AAB9FF"
             android:textSize="31sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/feedCloseButton"
-            app:layout_constraintHorizontal_bias="0.4"
-            app:layout_constraintStart_toEndOf="@+id/feedEditBtn"
+            app:layout_constraintEnd_toEndOf="@+id/feedCloseButton"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
@@ -95,7 +66,6 @@
         android:layout_width="50sp"
         android:layout_height="50sp"
         android:src="@drawable/follower_button"
-        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.98"
@@ -105,27 +75,32 @@
 
     <ImageView
         android:id="@+id/feedProfileImage"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:src="@drawable/gray_profile"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.08"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/feedLayout"
-        app:layout_constraintVertical_bias="0.26" />
+        app:layout_constraintVertical_bias="0.13" />
 
-    <TextView
+    <Button
         android:id="@+id/feedProfileMusic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
-        android:text="haseomg - Hello"
+        android:background="#00FFFFFF"
+        android:text="haseomg - Hello ▶"
+        android:textAllCaps="false"
         android:textColor="#7878E1"
-        android:textSize="23dp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.58"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/feedProfileImage" />
+        app:layout_constraintTop_toBottomOf="@+id/feedLayout"
+        app:layout_constraintVertical_bias="0.35000002" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -141,26 +116,13 @@
             android:id="@+id/genre_first"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@drawable/electronic"
+            android:src="@drawable/hip_hop"
             android:tooltipText="elec"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/genre_second"
             app:layout_constraintHorizontal_bias="0.6"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/genre_first_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:text="ELEC"
-            android:textColor="@color/black"
-            android:textSize="17dp"
-            app:layout_constraintBottom_toBottomOf="@+id/genre_first"
-            app:layout_constraintEnd_toEndOf="@+id/genre_first"
-            app:layout_constraintStart_toStartOf="@+id/genre_first"
-            app:layout_constraintTop_toTopOf="@+id/genre_first" />
 
         <ImageView
             android:id="@+id/genre_second"
@@ -173,42 +135,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/genre_second_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:text="JAZZ"
-            android:textColor="@color/white"
-            android:textSize="17dp"
-            app:layout_constraintBottom_toBottomOf="@+id/genre_second"
-            app:layout_constraintEnd_toEndOf="@+id/genre_second"
-            app:layout_constraintStart_toStartOf="@+id/genre_second"
-            app:layout_constraintTop_toTopOf="@+id/genre_second" />
-
         <ImageView
             android:id="@+id/genre_third"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@drawable/folk"
+            android:src="@drawable/rhythmnblues"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.85"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/genre_third_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:text="FOLK"
-            android:textColor="#4F3612"
-            android:textSize="17dp"
-            app:layout_constraintBottom_toBottomOf="@+id/genre_third"
-            app:layout_constraintEnd_toEndOf="@+id/genre_third"
-            app:layout_constraintStart_toStartOf="@+id/genre_third"
-            app:layout_constraintTop_toTopOf="@+id/genre_third" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -240,11 +176,39 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/feedCommentRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="200dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.01999998" />
+
+        <ImageView
+            android:id="@+id/feedEditBtn"
+            android:layout_width="50sp"
+            android:layout_height="50sp"
+            android:src="@drawable/feed_edit_button"
+            android:textAlignment="center"
+            android:textSize="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/feedCommentRecyclerView" />
+
+        <ImageView
+            android:id="@+id/feedEditOkBtn"
+            android:layout_width="50sp"
+            android:layout_height="50sp"
+            android:src="@drawable/feed_complete_button"
+            android:textAlignment="center"
+            android:textSize="50dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/feedCommentRecyclerView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

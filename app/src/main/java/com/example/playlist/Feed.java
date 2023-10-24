@@ -1,5 +1,6 @@
 package com.example.playlist;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,10 +18,10 @@ import java.util.ArrayList;
 public class Feed extends AppCompatActivity {
 
     private static final String TAG = "FEED";
-    ImageView genreFirst, genreSecond, genreThird, profile;
-    TextView genreFirst_textView, genreSecond_textView, genreThird_textView;
+    ImageView genreFirst, genreSecond, genreThird, profile, feedEditBtn, feedEditCompleteBtn, followBtn, followerBtn;
     TextView feedLogo, profileMusic, feedProfile;
-    Button close;
+    Button close, selectProfileMusicPositiveBtn, selectProfileMusicNegativeBtn,
+    selectGenrePositiveBtn, selectGenreNegativeBtn;
     ArrayList<FeedCommentModel> feedCommentList = new ArrayList<>();
     androidx.recyclerview.widget.RecyclerView feedCommentRecyclerVIew;
     FeedCommentModel feedCommentModel;
@@ -30,6 +31,8 @@ public class Feed extends AppCompatActivity {
     private static final String BASE_URL = "http://54.180.155.66/";
     private String song_name;
     private final int GET_GALLERY_IMAGE = 200;
+
+    static Context feedCtx;
 
     @Override
     public void onBackPressed() {
@@ -46,6 +49,7 @@ public class Feed extends AppCompatActivity {
     } // onCreate
 
     private void initial() {
+        feedCtx = Feed.this;
 
         feedLogo = findViewById(R.id.feedLogo);
         profileMusic = findViewById(R.id.feedProfileMusic);
@@ -53,13 +57,14 @@ public class Feed extends AppCompatActivity {
         profile = findViewById(R.id.feedProfileImage);
         feedProfile = findViewById(R.id.feedProfileMusic);
 
+        feedEditBtn = findViewById(R.id.feedEditBtn);
+        feedEditCompleteBtn = findViewById(R.id.feedEditOkBtn);
+        followBtn = findViewById(R.id.followBtn);
+        followerBtn = findViewById(R.id.followerBtn);
+
         genreFirst = findViewById(R.id.genre_first);
         genreSecond = findViewById(R.id.genre_second);
         genreThird = findViewById(R.id.genre_third);
-        genreFirst_textView = findViewById(R.id.genre_first_textView);
-        genreSecond_textView = findViewById(R.id.genre_second_textView);
-        genreThird_textView = findViewById(R.id.genre_third_textView);
-
         Intent intent = getIntent();
         String user = intent.getStringExtra("user");
         feedLogo.setText(user);
@@ -82,13 +87,15 @@ public class Feed extends AppCompatActivity {
         setProfile();
         setGenreOnClick();
         setProfileMusic();
+        setFeedEdit();
+        setFollow();
     } // initial END
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
             return false;
-        }
+        } // if
         return true;
     } // onTouchEvent
 
@@ -173,12 +180,10 @@ public class Feed extends AppCompatActivity {
         } // if
 
         if (resultCode == RESULT_OK) {
-            ArrayList<String> selected_profileMusic = data.getStringArrayListExtra("selected_profileMusic");
-            for (String profile_music : selected_profileMusic) {
-                Log.i(TAG, "Selected profileMusic: " + profile_music);
-                profileMusic.setText(profile_music);
-            } // for
-        } // if
+            String selected_profile_music = data.getStringExtra("selected_profile_music");
+            Log.i(TAG,"profileMusic Selected: " + selected_profile_music);
+            profileMusic.setText(selected_profile_music);  // 화면에 표시되는 프로필 음악 업데이트.
+        } // if (resultCode == RESULT_OK)
     } // onActivityResult
 
     void setProfileMusic() {
@@ -197,5 +202,69 @@ public class Feed extends AppCompatActivity {
             } // onClick
         }); // setOnClickListener
     } // setProfileMusic
+
+    void setFeedEdit() {
+        // TODO 피드 수정/완료 기능
+        feedEditBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                feedEditBtn.setVisibility(View.INVISIBLE);
+                feedEditCompleteBtn.setVisibility(View.VISIBLE);
+            } // onClick
+        }); // setOnClickListener
+
+        feedEditCompleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                feedEditCompleteBtn.setVisibility(View.INVISIBLE);
+                feedEditBtn.setVisibility(View.VISIBLE);
+            } // onClick
+        }); // setOnClickListener
+    } // setFeedEditBtn
+
+    void setFollow() {
+        // TODO 팔로우/팔로우 취소 버튼
+        followBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                followBtn.setVisibility(View.INVISIBLE);
+                followerBtn.setVisibility(View.VISIBLE);
+            } // onClick
+        }); // setOnClickListener
+
+        followerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO - 팔로우를 취소하시겠습니까?
+                followerBtn.setVisibility(View.INVISIBLE);
+                followBtn.setVisibility(View.VISIBLE);
+            } // onClick
+        }); // setOnClickListener
+    } // setFollowBtn
+
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart()");
+    }
+
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume()");
+    }
+
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause()");
+    }
+
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop()");
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy()");
+    }
 
 } // CLASS END
