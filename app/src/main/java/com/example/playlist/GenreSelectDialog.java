@@ -15,7 +15,9 @@ import java.util.ArrayList;
 
 public class GenreSelectDialog extends DialogFragment {
     private ArrayList<String> selectedGenres = new ArrayList<>();
-    private String[] allGenres = {"Rock", "R&B", "Jazz", "Acoustic", "Hip-Hop", "Ballad"};
+    private String[] allGenres = {"Rock (red)", "R&B (purple)", "Jazz (blue)",
+            "Acoustic (green)", "Hip-Hop (black)", "Ballad (orange)"};
+    // Rock = rock, R&B = rhythmnblues, Jazz = jazz, Acoustic = acoustic, Hip-Hop = hip_hop, Ballad = ballad
 
     public interface OnGenreSelectedListener {
         void onGenresSelected(ArrayList<String> selectedGenres);
@@ -38,10 +40,11 @@ public class GenreSelectDialog extends DialogFragment {
                                 if (isChecked) {
                                     // If the user checked the item, add it to the selected items
                                     selectedGenres.add(allGenres[which]);
-                                } else if (selectedGenres.contains(allGenres[which])) {
-                                    // Else, if the item is already in the array, remove it
-                                    selectedGenres.remove(allGenres[which]);
-                                } // else if
+                                }
+//                                else if (selectedGenres.contains(allGenres[which])) {
+//                                    // Else, if the item is already in the array, remove it
+//                                    selectedGenres.remove(allGenres[which]);
+//                                } // else if
                             } // onClick
                         }) // OnMultiChoiceClickListener
                 .setPositiveButton("확인", new DialogInterface.OnClickListener() {
