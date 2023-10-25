@@ -57,7 +57,7 @@ public class ProfileMusicSelectDialog extends DialogFragment {
                 .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Log.i("ProfileMusic", "profileMusic onClick 확인 : " + selectedProfileMusic);
-                        ((Feed) Feed.feedCtx).feedProfile.setText(selectedProfileMusic + " ▶");
+                        ((Feed) Feed.feedCtx).profileMusic.setText(selectedProfileMusic + " ▶");
                         sendResult(Activity.RESULT_OK);
                     } // onClick
                 }) // setPositiveButton

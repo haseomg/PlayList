@@ -62,13 +62,13 @@
 <!--        app:layout_constraintVertical_bias="0.729" />-->
 
     <TextView
-        android:id="@+id/followBtn"
+        android:id="@+id/feedNameFloatingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/feed_button"
+        android:background="@drawable/follow_button"
         android:fontFamily="sans-serif-black"
-        android:text="팔로잉"
-        android:textColor="#CD66666C"
+        android:text="팔로우"
+        android:textColor="@color/white"
         android:textSize="19sp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
@@ -78,7 +78,7 @@
         app:layout_constraintVertical_bias="0.40" />
 
     <TextView
-        android:id="@+id/msgBtn"
+        android:id="@+id/feedMsgBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/feed_button"
@@ -89,7 +89,7 @@
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.55"
-        app:layout_constraintStart_toEndOf="@+id/followBtn"
+        app:layout_constraintStart_toEndOf="@+id/feedNameFloatingButton"
         app:layout_constraintTop_toBottomOf="@+id/feedProfileImage"
         app:layout_constraintVertical_bias="0.40" />
 
@@ -106,7 +106,7 @@
         app:layout_constraintVertical_bias="0.13" />
 
     <TextView
-        android:id="@+id/userNameFeed"
+        android:id="@+id/feedUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
@@ -121,7 +121,7 @@
         app:layout_constraintVertical_bias="0.110000014" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/feedFollowFollowingText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
@@ -132,7 +132,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintStart_toEndOf="@+id/feedProfileImage"
-        app:layout_constraintTop_toBottomOf="@+id/userNameFeed"
+        app:layout_constraintTop_toBottomOf="@+id/feedUserName"
         app:layout_constraintVertical_bias="0.02" />
 
     <TextView
@@ -149,7 +149,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.136"
         app:layout_constraintStart_toEndOf="@+id/feedProfileImage"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/feedFollowFollowingText"
         app:layout_constraintVertical_bias="0.090" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
