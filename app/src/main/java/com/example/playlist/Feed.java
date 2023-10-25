@@ -19,6 +19,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class Feed extends AppCompatActivity {
 
     static Context feedCtx;
@@ -39,6 +43,7 @@ public class Feed extends AppCompatActivity {
     FeedCommentAdapter feedCommentAdapter;
     LinearLayoutManager feedCommentLayoutManager;
 
+    private ServerApi serverApi;
     private static final String BASE_URL = "http://54.180.155.66/";
     private final int GET_GALLERY_IMAGE = 200;
 
@@ -53,6 +58,9 @@ public class Feed extends AppCompatActivity {
 
     private void initial() {
         feedCtx = Feed.this;
+
+        serverApi = ApiClient.getApiClient().create(ServerApi.class);
+
         Intent intent = getIntent();
         nowLoginUser = intent.getStringExtra("now_login_user");
         Log.i(TAG, "likedUser getIntent : " + nowLoginUser);
@@ -259,6 +267,9 @@ public class Feed extends AppCompatActivity {
                             nameFloatingButton.setText("팔로잉");
                             nameFloatingButton.setBackgroundResource(R.drawable.feed_button);
                             nameFloatingButton.setTextColor(Color.parseColor("#CD66666C"));
+
+                            // TODO 팔로우 데이터 insert
+                            insertFollow(nowLoginUser, feedUser);
                         } // onClick
                     }) // setPositiveButton
                     .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
@@ -481,5 +492,29 @@ public class Feed extends AppCompatActivity {
     public void onBackPressed() {
         //super.onBackPressed();
     }
+
+    private void insertFollow(String me, String you) {
+        Log.i(TAG, "insertFollow : " + me + " / " + you);
+        Call<Void> call = serverApi.insertFollow(me, you);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.i(TAG, "insertFollow onResponse");
+                if (response.isSuccessful()) {
+                    Log.i(TAG, "insertFollow Method onResponse() isSuccessful");
+                    Log.i(TAG, "insertFollow (response success)  and response.body check : " + response.body());
+
+                } else {
+                    Log.i(TAG, "insertFollow Method onResponse() !isSuccessful");
+                    Log.i(TAG, "insertFollow (response not successful)  and response.body check : " + response.body());
+                } // else
+            } // onResponse
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e(TAG, "insertFollow onFailure : " + t.getMessage());
+            } // onFailure
+        }); // call.enqueue
+    } // insertData END
 
 } // CLASS END

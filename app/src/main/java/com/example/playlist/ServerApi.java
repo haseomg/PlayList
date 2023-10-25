@@ -79,6 +79,13 @@ public interface ServerApi {
     );
 
     @FormUrlEncoded
+    @POST("follow_table_insert.php")
+    Call<Void> insertFollow(
+            @Field("me") String me,
+            @Field("you") String you
+    );
+
+    @FormUrlEncoded
     @POST("chat_data.php")
     Call<Void> insertData(
             @Field("uuid") String uuid,
@@ -115,7 +122,6 @@ public interface ServerApi {
     Call<List<UpdateLikedModel>> selectLikes(
             @Field("user_id") String user_id
     );
-
 
     @GET("top_views.php")
     Call<List<TopViewsModel>> getTopSongs();

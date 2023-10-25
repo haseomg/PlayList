@@ -105,6 +105,7 @@
         android:text="✧ 프리미엄 ✧"
         android:textColor="#AAB9ff"
         android:textSize="30sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/logOutBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

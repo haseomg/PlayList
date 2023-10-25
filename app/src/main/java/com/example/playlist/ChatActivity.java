@@ -485,6 +485,7 @@ public class ChatActivity extends AppCompatActivity {
 //                    Toast.makeText(ChatActivity.this, "Data inserted successfully", Toast.LENGTH_SHORT).show();
                     // response ok인데.... 서버 측에도 틀린 코드가 없는데 왜 테이블에 값이 안 들어갈까 ㅠㅠ 다른 서버랑 겹쳐서 였음... ㅂㄷㅂㄷ
                     Log.i(TAG, "Insert (response success)  and response.body check : " + response.body());
+
                 } else {
                     Log.i(TAG, "InsertData Method onResponse() !isSuccessful");
 //                    Toast.makeText(ChatActivity.this, "Failed to insert data", Toast.LENGTH_SHORT).show();

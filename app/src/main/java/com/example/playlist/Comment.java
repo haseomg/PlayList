@@ -140,4 +140,4 @@ public class Comment extends Activity {
         super.onDestroy();
         Log.i(TAG, "onDestroy()");
     }
-}
+} // CLASS
