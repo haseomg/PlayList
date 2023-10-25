@@ -28,7 +28,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class LikedList extends Activity {
 
     String TAG = "[LikedList Activity]";
-    String song_name;
+    String song_name, now_login_user;
     Button close;
     TextView title;
     LinearLayoutManager likedLayoutManager;
@@ -60,6 +60,8 @@ public class LikedList extends Activity {
 
         Intent intent = getIntent();
         song_name = intent.getStringExtra("selected_song");
+        now_login_user = intent.getStringExtra("now_login_user");
+        Log.i(TAG, "likedUser getIntent : " + now_login_user);
 
 //        if (song_name.contains("_")) {
 //            String replaceSongName = song_name.replace("_", " ");
@@ -99,6 +101,8 @@ public class LikedList extends Activity {
                 ;
                 Log.i(TAG, "likedAdapter onItemClick user : " + user);
                 intent.putExtra("user", user);
+                intent.putExtra("now_login_user", now_login_user);
+                Log.i(TAG, "likedUser onItemClick : " + now_login_user);
                 finish();
                 //                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 //                Log.i(TAG, "allsongs item click song_name check : " + song_name );

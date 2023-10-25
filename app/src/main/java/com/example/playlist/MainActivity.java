@@ -397,6 +397,8 @@ public class MainActivity extends AppCompatActivity {
                 Intent likedIntent = new Intent(MainActivity.this, LikedList.class);
                 Log.i(TAG, "now_song check: " + now_song);
                 likedIntent.putExtra("selected_song", now_song);
+                likedIntent.putExtra("now_login_user", logIn.getText().toString());
+                Log.i(TAG, "likedUser onClick : " + logIn.getText().toString());
                 startActivity(likedIntent);
             } // onClick
         }); // setOnCllickListener
