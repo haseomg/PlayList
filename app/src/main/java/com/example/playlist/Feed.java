@@ -35,8 +35,8 @@ public class Feed extends AppCompatActivity {
     Button close;
 
     int genre_pick, profile_edit, profileDefaultCheck, genreDefaultCheck;
-    int followNum, followingNum = 0;
     int genreFirstImageId, genreSecondImageId, genreThirdImageId;
+    public String followNum, followingNum = "0";
     public String song_name, user, forNoneEditModeCheck, nowLoginUser, feedUser;
 
     ArrayList<FeedCommentModel> feedCommentList = new ArrayList<>();
@@ -549,32 +549,53 @@ public class Feed extends AppCompatActivity {
 
     private void selectFollow(String me, String you) {
         // TODO - 내가 상대를 팔로우했을 때 버튼 이름, 백그라운드, 색상 세팅
-        Log.i(TAG, "selectFollow : " + me + " / " + you);
-        Call<ResponseBody> call = serverApi.selectFollow(me, you);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.i(TAG, "selectFollow onResponse");
-                if (response.isSuccessful()) {
-                    Log.i(TAG, "selectFollow Method onResponse() isSuccessful");
-                    Log.i(TAG, "selectFollow (response success)  and response.body check : " + response.body());
+        if (me != you || !me.equals(you)) {
 
-                    try {
-                        String result = response.body() != null ? response.body().string() : "";
-                        if ("1".equals(result)) {
-                            // 팔로우 정보가 이미 존재함
-                            Log.i(TAG, "selectFollow response.body if (1) check : " + result);
-                            nameFloatingButton.setText("팔로잉");
-                            nameFloatingButton.setBackgroundResource(R.drawable.feed_button);
-                            nameFloatingButton.setTextColor(Color.parseColor("#CD6CAC6C"));
+            Log.i(TAG, "selectFollow : " + me + " / " + you);
+            Call<ResponseBody> call = serverApi.selectFollow(me, you);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    Log.i(TAG, "selectFollow onResponse");
+                    if (response.isSuccessful()) {
+                        Log.i(TAG, "selectFollow Method onResponse() isSuccessful");
 
-                        } else if ("0".equals(result)) {
-                            // 팔로우 정보가 없음
-                            Log.i(TAG, "selectFollow response.body else check : " + result);
-                        } // else if
-                    } catch (NullPointerException | IOException e) {
-                        e.printStackTrace();
-                    } // catch
+                        try {
+                            Log.i(TAG, "selectFollow (response success)  and response.body check : " + response.body().string());
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } // catch
+
+                        try {
+                            String result = response.body() != null ? response.body().string() : "";
+                            String check = response.body().string();
+                            if ("1".contains(result)) {
+//                            if (check.contains("1")) {
+                                // 팔로우 정보가 이미 존재함
+                                Log.i(TAG, "selectFollow response.body if (1) check : " + result);
+//                                Log.i(TAG, "selectFollow response.body if (1) check : " + check);
+                                nameFloatingButton.setText("팔로잉");
+                                nameFloatingButton.setBackgroundResource(R.drawable.feed_button);
+                                nameFloatingButton.setTextColor(Color.parseColor("#CD6CAC6C"));
+
+//                                String[] cutForFollow = result.split("1 / ");
+//                                String follow = cutForFollow[0];
+//                                String[] cutForFollowing = follow.split(" / ");
+//                                String follower = cutForFollowing[1];
+//                                Log.i(TAG, "selectFollow onResponse follow : " + follow);
+//                                Log.i(TAG, "selectFollow onResponse follower : " + follower);
+
+                            } else if ("0".equals(result)) {
+//                            else if (check.equals("0")) {
+
+                                // 팔로우 정보가 없음
+                                Log.i(TAG, "selectFollow response.body else check : " + result);
+//                                Log.i(TAG, "selectFollow response.body else check : " + check);
+                            } // else if
+                        } catch (NullPointerException | IOException e) {
+                            e.printStackTrace();
+                        } // catch
 
 //                    if (response.body().equals("1") || response.body().equals(1)) {
 //                        Log.i(TAG, "selectFollow response.body if (1) check : " + response.body());
@@ -586,17 +607,21 @@ public class Feed extends AppCompatActivity {
 //                        Log.i(TAG, "selectFollow response.body else check : " + response.body());
 //                    } // else
 
-                } else {
-                    Log.i(TAG, "selectFollow Method onResponse() !isSuccessful");
-                    Log.i(TAG, "selectFollow (response not successful)  and response.body check : " + response.body());
-                } // else
-            } // onResponse
+                    } else {
+                        Log.i(TAG, "selectFollow Method onResponse() !isSuccessful");
+                        Log.i(TAG, "selectFollow (response not successful)  and response.body check : " + response.body());
+                    } // else
+                } // onResponse
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e(TAG, "selectFollow onFailure : " + t.getMessage());
-            } // onFailure
-        }); // call.enqueue
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Log.e(TAG, "selectFollow onFailure : " + t.getMessage());
+                } // onFailure
+            }); // call.enqueue
+
+        } else {
+
+        } // else
     } // selectFollow END
 
 } // CLASS END
