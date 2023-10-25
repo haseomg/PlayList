@@ -212,16 +212,16 @@ public class Feed extends AppCompatActivity {
             public void onClick(View v) {
                 // TODO - Null Exception
                 try {
-                    if (!nowLoginUser.equals(userName.getText().toString())) {
+                    if (!nowLoginUser.equals(feedUser) {
                         // 현재 로그인한 유저가 피드의 주인이 아닐 때
-                        Log.i(TAG, "profileImage onClick (if) : " + nowLoginUser + " / "  + userName.getText().toString());
+                        Log.i(TAG, "profileImage onClick (if) : " + nowLoginUser + " / " + userName.getText().toString());
 
                     } else if (followBtn.getText().toString().equals("피드 편집")) {
                         // 현재 피드 편집 모드가 아닐 때
-                        Log.i(TAG, "profileImage onClick (else if) : " + nowLoginUser + " / "  + userName.getText().toString());
+                        Log.i(TAG, "profileImage onClick (else if) : " + nowLoginUser + " / " + userName.getText().toString());
 
                     } else {
-                        Log.i(TAG, "profileImage onClick (else) : " + nowLoginUser + " / "  + userName.getText().toString());
+                        Log.i(TAG, "profileImage onClick (else) : " + nowLoginUser + " / " + userName.getText().toString());
                         Intent intent = new Intent(Intent.ACTION_PICK);
                         intent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                         startActivityForResult(intent, GET_GALLERY_IMAGE);
@@ -276,11 +276,11 @@ public class Feed extends AppCompatActivity {
                 try {
                     if (!nowLoginUser.equals(userName.getText().toString())) {
                         // 현재 로그인한 유저가 피드의 주인이 아닐 때
-                        Log.i(TAG, "profileMusic onClick (if) : " + nowLoginUser + " / "  + userName.getText().toString());
+                        Log.i(TAG, "profileMusic onClick (if) : " + nowLoginUser + " / " + userName.getText().toString());
 
                     } else if (followBtn.getText().toString().equals("피드 편집")) {
                         // 현재 피드 편집 모드가 아닐 때
-                        Log.i(TAG, "profileMusic onClick (else if) : " + nowLoginUser + " / "  + userName.getText().toString());
+                        Log.i(TAG, "profileMusic onClick (else if) : " + nowLoginUser + " / " + userName.getText().toString());
 
                     } else {
                         ProfileMusicSelectDialog dialog = new ProfileMusicSelectDialog();
@@ -306,6 +306,16 @@ public class Feed extends AppCompatActivity {
     } // setFeedEditBtn
 
     void setFollow() {
+        // TODO (1) 다이얼로그 생성
+        if (followBtn.getText().toString().equals("팔로우")) {
+            Log.i(TAG, "setFollow (if) follow : " + followBtn.getText().toString());
+            new AlertDialog.Builder(Feed.this, R.style.AlertDialogCustom)
+                    .setMessage()
+
+        } else if (followBtn.getText().toString().equals("팔로잉")) {
+            Log.i(TAG, "setFollow (else if) following : " + followBtn.getText().toString());
+
+        } // else if
 
     } // setFollowBtn
 
@@ -319,9 +329,10 @@ public class Feed extends AppCompatActivity {
             followBtn.setTextSize(13.5F);
             msgBtn.setText("채팅 목록");
             msgBtn.setTextSize(13.5F);
-
         } else {
-            followBtn.setText("팔로잉");
+            // TODO 내가 상대를 팔로우 중일 때 (테이블에 데이터가 존재하면) - 팔로잉으로 setting
+            // TODO 내가 상대를 팔로우 중이지 않을 때 (테이블에 데이터가 존재하지 않으면) - 팔로우로 setting
+            followBtn.setText("팔로우");
             msgBtn.setText("메시지");
         } // else
     } // setUIForMe
@@ -330,6 +341,9 @@ public class Feed extends AppCompatActivity {
         followBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                setFollow();
+
                 if (followBtn.getText().toString().equals("피드 편집")) {
                     followBtn.setText("피드 저장");
                     // TODO 프로필 이미지, 장르 세개 이미지 세팅 변화
@@ -355,15 +369,6 @@ public class Feed extends AppCompatActivity {
                         profile.setImageResource(R.drawable.gray_profile_edit);
                         profileDefaultCheck = R.drawable.gray_profile_edit;
                     }
-//                    if (genreDefaultCheck == R.id.genre_first) {
-//                        genreFirst.setImageResource(R.drawable.genre_pick);
-//                    }
-//                    if (genreDefaultCheck == R.id.genre_second) {
-//                        genreSecond.setImageResource(R.drawable.genre_pick);
-//                    }
-//                    if (genreDefaultCheck == R.id.genre_third) {
-//                        genreThird.setImageResource(R.drawable.genre_pick);
-//                    } // if
 
                 } else if (followBtn.getText().toString().equals("피드 저장")) {
                     // TODO 디비에 해당 부분 저장
@@ -416,9 +421,9 @@ public class Feed extends AppCompatActivity {
     }
 
     void saveFeed() {
-        // TODO 이 로직은 원래 기본이미지였을 떄
         followBtn.setText("피드 편집");
 
+        // TODO 이 로직은 프로필과 장르가 원래 기본이미지였을 떄
         if (genreFirstImageId == R.drawable.genre_pick && genreSecondImageId == R.drawable.genre_pick
                 && genreThirdImageId == R.drawable.genre_pick && profileDefaultCheck == R.drawable.gray_profile_edit) {
             genreFirst.setImageResource(R.drawable.genre_default);
@@ -478,14 +483,14 @@ public class Feed extends AppCompatActivity {
         try {
             if (!nowLoginUser.equals(userName.getText().toString())) {
                 // 현재 로그인한 유저가 피드의 주인이 아닐 때
-                Log.i(TAG, "genreSelect onClick (if) : " + nowLoginUser + " / "  + userName.getText().toString());
+                Log.i(TAG, "genreSelect onClick (if) : " + nowLoginUser + " / " + userName.getText().toString());
 
             } else if (followBtn.getText().toString().equals("피드 편집")) {
                 // 현재 피드 편집 모드가 아닐 때
-                Log.i(TAG, "genreSelect onClick (else if) : " + nowLoginUser + " / "  + userName.getText().toString());
+                Log.i(TAG, "genreSelect onClick (else if) : " + nowLoginUser + " / " + userName.getText().toString());
 
             } else {
-                Log.i(TAG, "genreSelect onClick (else) : " + nowLoginUser + " / "  + userName.getText().toString());
+                Log.i(TAG, "genreSelect onClick (else) : " + nowLoginUser + " / " + userName.getText().toString());
                 GenreSelectDialog dialog = new GenreSelectDialog();
                 dialog.setListener(new GenreSelectDialog.OnGenreSelectedListener() {
                     @Override
