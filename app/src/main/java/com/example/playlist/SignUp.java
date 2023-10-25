@@ -752,119 +752,110 @@ public class SignUp extends AppCompatActivity {
                 System.out.println("사용자 계정.toString : " + user1.toString());
                 Log.i("[KAKAO userEmail]", "" + user1.getEmail());
 
-                String userID = user1.getEmail();
-                String[] userEmailCut = userID.split("@");
-
+                try {
+                    String userID = user1.getEmail();
+                    String[] userEmailCut = userID.split("@");
 
 // kakao_api DB에 넘겨줘야 해!
-                final String id = userEmailCut[0];
-                final String nickname = userEmailCut[0];
-                Log.i(TAG, "String id : " + id);
-                Log.i(TAG, "String nickname : " + nickname);
+                    final String id = userEmailCut[0];
+                    final String nickname = userEmailCut[0];
+                    Log.i(TAG, "String id : " + id);
+                    Log.i(TAG, "String nickname : " + nickname);
 
+                    int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
+                    if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
+                        // get 방식 파라미터 추가
+                        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/kakaoLogin.php").newBuilder();
+                        urlBuilder.addQueryParameter("ver", "1.0"); // 예시
+                        String url = urlBuilder.build().toString();
+                        Log.i("[kakao]", "String url 확인 : " + url);
 
-                int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
-                if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
-                    // get 방식 파라미터 추가
-                    HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/kakaoLogin.php").newBuilder();
-                    urlBuilder.addQueryParameter("ver", "1.0"); // 예시
-                    String url = urlBuilder.build().toString();
-                    Log.i("[kakao]", "String url 확인 : " + url);
+                        // POST 파라미터 추가
+                        RequestBody formBody = new FormBody.Builder()
+                                .add("id", id.trim())
+                                .add("nickname", nickname.trim())
+                                .build();
 
+                        // 요청 만들기
+                        OkHttpClient client = new OkHttpClient();
+                        Request request = new Request.Builder()
+                                .url(url)
+                                .post(formBody)
+                                .build();
 
-                    // POST 파라미터 추가
-                    RequestBody formBody = new FormBody.Builder()
-                            .add("id", id.trim())
-                            .add("nickname", nickname.trim())
-                            .build();
+                        // 응답 콜백
+                        client.newCall(request).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                e.printStackTrace();
+                                Log.i("[kakao]", "" + e);
+                            }
 
+                            @Override
+                            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                                Log.i("[kakao]", "onResponse 메서드 작동");
 
-                    // 요청 만들기
-                    OkHttpClient client = new OkHttpClient();
-                    Request request = new Request.Builder()
-                            .url(url)
-                            .post(formBody)
-                            .build();
+                                // 서브 스레드 Ui 변경 할 경우 에러
+                                // 메인스레드 Ui 설정
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
 
+                                        try {
+                                            if (!response.isSuccessful()) {
+                                                // 응답 실패
+                                                Log.i("[kakao]", "응답 실패 : " + response);
+                                                Toast.makeText(getApplicationContext(), "네트워크 문제 발생"
+                                                        , Toast.LENGTH_SHORT).show();
+                                                builder.setTitle("NETWORK ERROR ⚠️");
+                                                builder.setMessage("네트워크 문제가 발생하였습니다. ");
+                                                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
 
-                    // 응답 콜백
-                    client.newCall(request).enqueue(new Callback() {
-                        @Override
-                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                            e.printStackTrace();
-                            Log.i("[kakao]", "" + e);
-                        }
+                                                    }
+                                                });
+                                                AlertDialog dialog = builder.create();
+                                                dialog.show();
 
-                        @Override
-                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                            Log.i("[kakao]", "onResponse 메서드 작동");
+                                            } else {
+                                                // 응답 성공
+                                                final String responseData = response.body().string();
+                                                Log.i("[kakao]", "응답 성공 (responseData) : " + responseData);
 
-                            // 서브 스레드 Ui 변경 할 경우 에러
-                            // 메인스레드 Ui 설정
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                    try {
-
-
-                                        if (!response.isSuccessful()) {
-                                            // 응답 실패
-                                            Log.i("[kakao]", "응답 실패 : " + response);
-                                            Toast.makeText(getApplicationContext(), "네트워크 문제 발생"
-                                                    , Toast.LENGTH_SHORT).show();
-                                            builder.setTitle("NETWORK ERROR ⚠️");
-                                            builder.setMessage("네트워크 문제가 발생하였습니다. ");
-                                            builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-
-                                                }
-                                            });
-                                            AlertDialog dialog = builder.create();
-                                            dialog.show();
-
-                                        } else {
-// 응답 성공
-                                            final String responseData = response.body().string();
-                                            Log.i("[kakao]", "응답 성공 (responseData) : " + responseData);
-
-                                            if (responseData.equals("1")) {
-                                                Log.i("[SignUp Activity]", "responseData.equals(\"1\") else : " + responseData);
+                                                if (responseData.equals("1")) {
+                                                    Log.i("[SignUp Activity]", "responseData.equals(\"1\") else : " + responseData);
 //                                                Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
 //                                                startActivityflag(MainActivity.class);
-                                            } else {
-                                                Log.i("[SignUp Activity]", "responseData.equals(\"0\") else : " + responseData);
+                                                } else {
+                                                    Log.i("[SignUp Activity]", "responseData.equals(\"0\") else : " + responseData);
 //                                                Toast.makeText(getApplicationContext(), "Sign Up Failed", Toast.LENGTH_SHORT).show();
+                                                } // else
                                             }
 
-
-                                        }
-
-
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        } // catch
                                     }
-                                }
-                            });
+                                });
+                            }
+                        });
+                    }
 
-
-                        }
-                    });
-                }
-
-                Log.i("[KAKAO userID]", "" + user1.getEmail());
-                // id를 DB에 넘겨줄 거야
-                Log.i("[KAKAO userID]", "" + id);
+                    Log.i("[KAKAO userID]", "" + user1.getEmail());
+                    // id를 DB에 넘겨줄 거야
+                    Log.i("[KAKAO userID]", "" + id);
 
 
 //                Intent intent = new Intent(SignUp.this, MainActivity.class);
 //                startActivityForResult(intent, 1000);
-                Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
-                startActivityflag(MainActivity.class);
+                    Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
+                    startActivityflag(MainActivity.class);
 
+                } catch (NullPointerException e)  {
+                    e.printStackTrace();
+                } // catch
             }
-
 
             return null;
         });

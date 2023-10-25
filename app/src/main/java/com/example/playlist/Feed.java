@@ -17,8 +17,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -116,13 +118,13 @@ public class Feed extends AppCompatActivity {
         feedCommentAdapter = new FeedCommentAdapter(this, feedCommentList);
         feedCommentRecyclerVIew.setAdapter(feedCommentAdapter);
 
+        selectFollow(nowLoginUser, feedUser); // 내가 상대를 팔로우했을 때 버튼 이름, 백그라운드, 색상 세팅
         setClose(); // 닫기 버튼 클릭 이벤트
         setUIForMe(); // 피드 호스트 구별 (나/상대) 후 버튼에 피드 편집/채팅 목록 or 팔로우/메시지로 세팅
         setProfileImage(); // 프로필 이미지 (수정 모드에서만 클릭 이벤트)
         setGenreOnClick(); // 선호 장르 세가지 (수정 모드에서만 클릭 이벤트)
         setProfileMusic(); // 프로필 뮤직 (수정 모드에서만 클릭 이벤트)
         setNameFloatingButton(); // 팔로우/팔로잉 로직 or 피드 편집/피드 저장
-        selectFollow(nowLoginUser, feedUser); // 내가 상대를 팔로우했을 때 버튼 이름, 백그라운드, 색상 세팅
     } // initial END
 
     @Override
@@ -267,7 +269,7 @@ public class Feed extends AppCompatActivity {
                             // TODO 팔로잉으로 텍스트 바꾸고 버튼 배경색과 텍스트 글씨 변집우
                             nameFloatingButton.setText("팔로잉");
                             nameFloatingButton.setBackgroundResource(R.drawable.feed_button);
-                            nameFloatingButton.setTextColor(Color.parseColor("#CD66666C"));
+                            nameFloatingButton.setTextColor(Color.parseColor("#CD6CAC6C"));
                             // TODO 팔로우 데이터 insert
                             insertFollow(nowLoginUser, feedUser);
                         } // onClick
@@ -316,7 +318,7 @@ public class Feed extends AppCompatActivity {
             nameFloatingButton.setText("피드 편집");
             nameFloatingButton.setTextSize(13.5F);
             nameFloatingButton.setBackgroundResource(R.drawable.feed_button);
-            nameFloatingButton.setTextColor(Color.parseColor("#CD66666C"));
+            nameFloatingButton.setTextColor(Color.parseColor("#CD666C66"));
 
             msgBtn.setText("채팅 목록");
             msgBtn.setTextSize(13.5F);
@@ -548,29 +550,29 @@ public class Feed extends AppCompatActivity {
     private void selectFollow(String me, String you) {
         // TODO - 내가 상대를 팔로우했을 때 버튼 이름, 백그라운드, 색상 세팅
         Log.i(TAG, "selectFollow : " + me + " / " + you);
-        Call<Void> call = serverApi.selectFollow(me, you);
-        call.enqueue(new Callback<Void>() {
+        Call<ResponseBody> call = serverApi.selectFollow(me, you);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Log.i(TAG, "selectFollow onResponse");
                 if (response.isSuccessful()) {
                     Log.i(TAG, "selectFollow Method onResponse() isSuccessful");
                     Log.i(TAG, "selectFollow (response success)  and response.body check : " + response.body());
 
                     try {
-                        String result = response.body() != null ? response.body().toString() : "";
+                        String result = response.body() != null ? response.body().string() : "";
                         if ("1".equals(result)) {
                             // 팔로우 정보가 이미 존재함
-                            Log.i(TAG, "selectFollow response.body if (1) check : " + response.body());
+                            Log.i(TAG, "selectFollow response.body if (1) check : " + result);
                             nameFloatingButton.setText("팔로잉");
                             nameFloatingButton.setBackgroundResource(R.drawable.feed_button);
-                            nameFloatingButton.setTextColor(Color.parseColor("#CD66666C"));
+                            nameFloatingButton.setTextColor(Color.parseColor("#CD6CAC6C"));
 
                         } else if ("0".equals(result)) {
                             // 팔로우 정보가 없음
-                            Log.i(TAG, "selectFollow response.body else check : " + response.body());
+                            Log.i(TAG, "selectFollow response.body else check : " + result);
                         } // else if
-                    } catch (NullPointerException e) {
+                    } catch (NullPointerException | IOException e) {
                         e.printStackTrace();
                     } // catch
 
@@ -591,7 +593,7 @@ public class Feed extends AppCompatActivity {
             } // onResponse
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.e(TAG, "selectFollow onFailure : " + t.getMessage());
             } // onFailure
         }); // call.enqueue

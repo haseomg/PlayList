@@ -1330,6 +1330,7 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("user.getName : " + user1.getEmail());
                 Log.i("[KAKAO userEmail]", "" + user1.getEmail());
 
+                try {
                 String userID = user1.getEmail();
                 String[] userEmailCut = userID.split("@");
 
@@ -1431,6 +1432,9 @@ public class MainActivity extends AppCompatActivity {
                 }
 
 
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                } // catch
             }
             return null;
 

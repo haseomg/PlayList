@@ -84,7 +84,7 @@
         android:background="@drawable/feed_button"
         android:fontFamily="sans-serif-black"
         android:text="메시지"
-        android:textColor="#CD66666C"
+        android:textColor="#CD666C66"
         android:textSize="19sp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"

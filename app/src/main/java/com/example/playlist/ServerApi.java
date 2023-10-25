@@ -150,7 +150,7 @@ public interface ServerApi {
 
     @FormUrlEncoded
     @POST("follow_table_select.php")
-    Call<Void> selectFollow(
+    Call<ResponseBody> selectFollow(
             @Field("me") String me,
             @Field("you") String you
     );
