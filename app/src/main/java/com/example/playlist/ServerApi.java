@@ -79,13 +79,6 @@ public interface ServerApi {
     );
 
     @FormUrlEncoded
-    @POST("follow_table_insert.php")
-    Call<Void> insertFollow(
-            @Field("me") String me,
-            @Field("you") String you
-    );
-
-    @FormUrlEncoded
     @POST("chat_data.php")
     Call<Void> insertData(
             @Field("uuid") String uuid,
@@ -153,6 +146,27 @@ public interface ServerApi {
     Call<Void> deletePlayedRecord(
             @Field("song_name") String song_name,
             @Field("user_name") String user_name
+    );
+
+    @FormUrlEncoded
+    @POST("follow_table_select.php")
+    Call<Void> selectFollow(
+            @Field("me") String me,
+            @Field("you") String you
+    );
+
+    @FormUrlEncoded
+    @POST("follow_table_delete.php")
+    Call<Void> deleteFollow(
+            @Field("me") String me,
+            @Field("you") String you
+    );
+
+    @FormUrlEncoded
+    @POST("follow_table_insert.php")
+    Call<Void> insertFollow(
+            @Field("me") String me,
+            @Field("you") String you
     );
 
 } // ServerApi Interface END

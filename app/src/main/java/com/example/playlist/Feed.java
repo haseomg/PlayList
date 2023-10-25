@@ -122,6 +122,7 @@ public class Feed extends AppCompatActivity {
         setGenreOnClick(); // 선호 장르 세가지 (수정 모드에서만 클릭 이벤트)
         setProfileMusic(); // 프로필 뮤직 (수정 모드에서만 클릭 이벤트)
         setNameFloatingButton(); // 팔로우/팔로잉 로직 or 피드 편집/피드 저장
+        selectFollow(nowLoginUser, feedUser); // 내가 상대를 팔로우했을 때 버튼 이름, 백그라운드, 색상 세팅
     } // initial END
 
     @Override
@@ -259,7 +260,7 @@ public class Feed extends AppCompatActivity {
         if (nameFloatingButton.getText().toString().equals("팔로우")) {
             Log.i(TAG, "setFollow (if) follow : " + nameFloatingButton.getText().toString());
             new AlertDialog.Builder(Feed.this, R.style.AlertDialogCustom)
-                    .setMessage(feedUser+"님을 팔로우하시겠습니까?")
+                    .setMessage(feedUser + "님을 팔로우하시겠습니까?")
                     .setPositiveButton("네", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -267,7 +268,6 @@ public class Feed extends AppCompatActivity {
                             nameFloatingButton.setText("팔로잉");
                             nameFloatingButton.setBackgroundResource(R.drawable.feed_button);
                             nameFloatingButton.setTextColor(Color.parseColor("#CD66666C"));
-
                             // TODO 팔로우 데이터 insert
                             insertFollow(nowLoginUser, feedUser);
                         } // onClick
@@ -291,6 +291,10 @@ public class Feed extends AppCompatActivity {
                             nameFloatingButton.setText("팔로우");
                             nameFloatingButton.setBackgroundResource(R.drawable.follow_button);
                             nameFloatingButton.setTextColor(Color.WHITE);
+
+                            // TODO 팔로우 데이터 delete
+                            deleteFollow(nowLoginUser, feedUser);
+
                         } // onClick
                     }) // setPositiveButton
                     .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
@@ -515,6 +519,82 @@ public class Feed extends AppCompatActivity {
                 Log.e(TAG, "insertFollow onFailure : " + t.getMessage());
             } // onFailure
         }); // call.enqueue
-    } // insertData END
+    } // insertFollow END
+
+    private void deleteFollow(String me, String you) {
+        Log.i(TAG, "deleteFollow : " + me + " / " + you);
+        Call<Void> call = serverApi.deleteFollow(me, you);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.i(TAG, "deleteFollow onResponse");
+                if (response.isSuccessful()) {
+                    Log.i(TAG, "deleteFollow Method onResponse() isSuccessful");
+                    Log.i(TAG, "deleteFollow (response success)  and response.body check : " + response.body());
+
+                } else {
+                    Log.i(TAG, "deleteFollow Method onResponse() !isSuccessful");
+                    Log.i(TAG, "deleteFollow (response not successful)  and response.body check : " + response.body());
+                } // else
+            } // onResponse
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e(TAG, "deleteFollow onFailure : " + t.getMessage());
+            } // onFailure
+        }); // call.enqueue
+    } // deleteFollow END
+
+    private void selectFollow(String me, String you) {
+        // TODO - 내가 상대를 팔로우했을 때 버튼 이름, 백그라운드, 색상 세팅
+        Log.i(TAG, "selectFollow : " + me + " / " + you);
+        Call<Void> call = serverApi.selectFollow(me, you);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.i(TAG, "selectFollow onResponse");
+                if (response.isSuccessful()) {
+                    Log.i(TAG, "selectFollow Method onResponse() isSuccessful");
+                    Log.i(TAG, "selectFollow (response success)  and response.body check : " + response.body());
+
+                    try {
+                        String result = response.body() != null ? response.body().toString() : "";
+                        if ("1".equals(result)) {
+                            // 팔로우 정보가 이미 존재함
+                            Log.i(TAG, "selectFollow response.body if (1) check : " + response.body());
+                            nameFloatingButton.setText("팔로잉");
+                            nameFloatingButton.setBackgroundResource(R.drawable.feed_button);
+                            nameFloatingButton.setTextColor(Color.parseColor("#CD66666C"));
+
+                        } else if ("0".equals(result)) {
+                            // 팔로우 정보가 없음
+                            Log.i(TAG, "selectFollow response.body else check : " + response.body());
+                        } // else if
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    } // catch
+
+//                    if (response.body().equals("1") || response.body().equals(1)) {
+//                        Log.i(TAG, "selectFollow response.body if (1) check : " + response.body());
+//                        nameFloatingButton.setText("팔로잉");
+//                        nameFloatingButton.setBackgroundResource(R.drawable.feed_button);
+//                        nameFloatingButton.setTextColor(Color.parseColor("#CD66666C"));
+//
+//                    } else {
+//                        Log.i(TAG, "selectFollow response.body else check : " + response.body());
+//                    } // else
+
+                } else {
+                    Log.i(TAG, "selectFollow Method onResponse() !isSuccessful");
+                    Log.i(TAG, "selectFollow (response not successful)  and response.body check : " + response.body());
+                } // else
+            } // onResponse
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e(TAG, "selectFollow onFailure : " + t.getMessage());
+            } // onFailure
+        }); // call.enqueue
+    } // selectFollow END
 
 } // CLASS END
