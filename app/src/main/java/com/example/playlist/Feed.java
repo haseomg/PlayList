@@ -570,6 +570,8 @@ public class Feed extends AppCompatActivity {
                         try {
                             String result = response.body() != null ? response.body().string() : "";
                             String check = response.body().string();
+                            // TODO [Issue] Server Down
+                            // TODO Check 1 - following button set issue
                             if ("1".contains(result)) {
 //                            if (check.contains("1")) {
                                 // 팔로우 정보가 이미 존재함
