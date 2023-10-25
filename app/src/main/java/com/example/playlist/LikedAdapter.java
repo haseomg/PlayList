@@ -222,6 +222,8 @@ public class LikedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             // 인탠트에 추가 데이터 넣기 (여기서는 선택한 곡의 이름)
             intent.putExtra("user", user);
+            intent.putExtra("now_login_user", ((LikedList) LikedList.likedCtx).now_login_user);
+            Log.i(TAG, "likedUser adapter getIntent : " + ((LikedList) LikedList.likedCtx).now_login_user);
 
             // 액티비터 시작
             context.startActivity(intent);

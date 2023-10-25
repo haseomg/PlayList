@@ -55,6 +55,7 @@ public class Feed extends AppCompatActivity {
         feedCtx = Feed.this;
         Intent intent = getIntent();
         nowLoginUser = intent.getStringExtra("now_login_user");
+        Log.i(TAG, "likedUser getIntent : " + nowLoginUser);
         user = intent.getStringExtra("user");
 
         feedLogo = findViewById(R.id.feedLogo);

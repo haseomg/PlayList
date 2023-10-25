@@ -1,6 +1,7 @@
 package com.example.playlist;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,6 +39,7 @@ public class LikedList extends Activity {
     RecyclerView likedRecyclerView;
 
     private static final String BASE_URL = "http://54.180.155.66/";
+    static Context likedCtx;
 
     @Override
     public void onBackPressed() {
@@ -54,6 +56,8 @@ public class LikedList extends Activity {
     } // onCreate END
 
     private void initial() {
+        likedCtx = LikedList.this;
+
         close = findViewById(R.id.likedListClose);
         setClose();
         title = findViewById(R.id.likedTitle);
@@ -168,6 +172,6 @@ public class LikedList extends Activity {
             return false;
         }
         return true;
-    }
+    } // onTouchEvent
 
 } // CLASS END
