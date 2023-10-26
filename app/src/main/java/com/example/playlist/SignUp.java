@@ -298,7 +298,7 @@ public class SignUp extends AppCompatActivity {
                         if (pw.getText().toString().equals(pwCheck.getText().toString())) {
 
                             // get 방식 파라미터 추가
-                            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/signUp.php").newBuilder();
+                            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.152.109/signUp.php").newBuilder();
                             urlBuilder.addQueryParameter("ver", "1.0"); // 예시
                             String url = urlBuilder.build().toString();
                             Log.i("[SignUp Activity]", "String url 확인 : " + url);
@@ -765,7 +765,7 @@ public class SignUp extends AppCompatActivity {
                     int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
                     if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
                         // get 방식 파라미터 추가
-                        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/kakaoLogin.php").newBuilder();
+                        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.152.109/kakaoLogin.php").newBuilder();
                         urlBuilder.addQueryParameter("ver", "1.0"); // 예시
                         String url = urlBuilder.build().toString();
                         Log.i("[kakao]", "String url 확인 : " + url);
@@ -893,7 +893,7 @@ public class SignUp extends AppCompatActivity {
 
     public void checkId() {
         Log.i(TAG, "idDuCheckButton OnClick()");
-        String url = "http://54.180.155.66/check_id.php";
+        String url = "http://54.180.152.109/check_id.php";
         String myId = id.getText().toString();
         new CheckIdTask() {
             @Override
@@ -951,7 +951,7 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 Log.i(TAG, "id - afterTextChanged Method");
-                String url = "http://54.180.155.66/check_id.php";
+                String url = "http://54.180.152.109/check_id.php";
                 String myId = id.getText().toString();
                 new CheckIdTask() {
                     @Override
@@ -981,7 +981,7 @@ public class SignUp extends AppCompatActivity {
     public void idDuplicateCheck() {
         Log.i(TAG, "idDuplicate Check Method()");
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.155.66/check_id.php").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.152.109/check_id.php").newBuilder();
         urlBuilder.addQueryParameter("ver", "1.0"); // 예시
         String url = urlBuilder.build().toString();
         Log.i("[SignUp Activity]", "String url 확인 : " + url);

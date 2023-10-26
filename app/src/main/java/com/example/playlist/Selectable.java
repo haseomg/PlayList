@@ -50,7 +50,7 @@ public class Selectable extends AppCompatActivity {
     String getUserName, countToStr, getSongName;
     public int playing_position = -1;
 
-    private static final String BASE_URL = "http://54.180.155.66/";
+    private static final String BASE_URL = "http://54.180.152.109/";
 
     String TAG = "[Selectable CLASS]";
 

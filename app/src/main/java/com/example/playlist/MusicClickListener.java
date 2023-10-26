@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MusicClickListener {
 
-    private static final String BASE_URL = "http://54.180.155.66/";
+    private static final String BASE_URL = "http://54.180.152.109/";
     String TAG = "[MusicClickListener]";
 
     public void onClick(String songId) {

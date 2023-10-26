@@ -36,7 +36,8 @@ public class Feed extends AppCompatActivity {
 
     int genre_pick, profile_edit, profileDefaultCheck, genreDefaultCheck;
     int genreFirstImageId, genreSecondImageId, genreThirdImageId;
-    public String followNum, followingNum = "0";
+    int followNum, followingNum = 0;
+    String followNumToStr, followingNumToStr = "0";
     public String song_name, user, forNoneEditModeCheck, nowLoginUser, feedUser;
 
     ArrayList<FeedCommentModel> feedCommentList = new ArrayList<>();
@@ -46,7 +47,7 @@ public class Feed extends AppCompatActivity {
     LinearLayoutManager feedCommentLayoutManager;
 
     private ServerApi serverApi;
-    private static final String BASE_URL = "http://54.180.155.66/";
+    private static final String BASE_URL = "http://54.180.152.109/";
     private final int GET_GALLERY_IMAGE = 200;
 
     @Override
@@ -568,15 +569,16 @@ public class Feed extends AppCompatActivity {
                         } // catch
 
                         try {
-                            String result = response.body() != null ? response.body().string() : "";
+//                            String result = response.body() != null ? response.body().string() : "";
                             String check = response.body().string();
-                            // TODO [Issue] Server Down
+                            // TODO [Issue] Server Down T T
                             // TODO Check 1 - following button set issue
-                            if ("1".contains(result)) {
-//                            if (check.contains("1")) {
+
+//                            if ("1".equals(result)) {
+                            if (check.contains("1")) {
                                 // 팔로우 정보가 이미 존재함
-                                Log.i(TAG, "selectFollow response.body if (1) check : " + result);
-//                                Log.i(TAG, "selectFollow response.body if (1) check : " + check);
+//                                Log.i(TAG, "selectFollow response.body if (1) check : " + result);
+                                Log.i(TAG, "selectFollow response.body if (1) check : " + check);
                                 nameFloatingButton.setText("팔로잉");
                                 nameFloatingButton.setBackgroundResource(R.drawable.feed_button);
                                 nameFloatingButton.setTextColor(Color.parseColor("#CD6CAC6C"));
@@ -588,12 +590,12 @@ public class Feed extends AppCompatActivity {
 //                                Log.i(TAG, "selectFollow onResponse follow : " + follow);
 //                                Log.i(TAG, "selectFollow onResponse follower : " + follower);
 
-                            } else if ("0".equals(result)) {
-//                            else if (check.equals("0")) {
+//                            } else if ("0".equals(result)) {
+                            } else if (check.equals("0")) {
 
                                 // 팔로우 정보가 없음
-                                Log.i(TAG, "selectFollow response.body else check : " + result);
-//                                Log.i(TAG, "selectFollow response.body else check : " + check);
+//                                Log.i(TAG, "selectFollow response.body else check : " + result);
+                                Log.i(TAG, "selectFollow response.body else check : " + check);
                             } // else if
                         } catch (NullPointerException | IOException e) {
                             e.printStackTrace();
