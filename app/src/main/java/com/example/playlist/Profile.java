@@ -399,7 +399,7 @@ public class Profile extends AppCompatActivity {
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://54.180.152.109/")
+                .baseUrl("http://13.124.239.85/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -475,7 +475,7 @@ public class Profile extends AppCompatActivity {
 
         Log.i("updateNickname Class", "selectUserTB Method");
 
-        HttpUrl.Builder builder = HttpUrl.parse("http://54.180.152.109/user_info.php").newBuilder();
+        HttpUrl.Builder builder = HttpUrl.parse("http://13.124.239.85/user_info.php").newBuilder();
         builder.addQueryParameter("ver", "1.0");
         String url = builder.build().toString();
         Log.i("updateNickname", "String url check : " + url);
@@ -522,7 +522,7 @@ public class Profile extends AppCompatActivity {
 
         Log.i("updateNickname Class", "updateUserTB Method");
 
-        HttpUrl.Builder builder = HttpUrl.parse("http://54.180.152.109/update_user.php").newBuilder();
+        HttpUrl.Builder builder = HttpUrl.parse("http://13.124.239.85/update_user.php").newBuilder();
         builder.addQueryParameter("ver", "1.0");
         String url = builder.build().toString();
         Log.i("updateNickname", "String url check : " + url);
@@ -566,7 +566,7 @@ public class Profile extends AppCompatActivity {
 
         OkHttpClient client = new OkHttpClient();
 
-        HttpUrl.Builder builder = HttpUrl.parse("http://54.180.152.109/user_info.php").newBuilder();
+        HttpUrl.Builder builder = HttpUrl.parse("http://13.124.239.85/user_info.php").newBuilder();
         builder.addQueryParameter("ver", "1.0");
         String url = builder.build().toString();
         Log.i("updateNickname", "String url check : " + url);

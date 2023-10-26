@@ -66,7 +66,7 @@ public class ChatSelect extends AppCompatActivity {
     RecyclerView chat_list_recyclerView;
 
     String ourUUID;
-    private static final String BASE_URL = "http://54.180.152.109/";
+    private static final String BASE_URL = "http://13.124.239.85/";
 
     @Override
     public void onBackPressed() {
@@ -361,7 +361,7 @@ public class ChatSelect extends AppCompatActivity {
     private void getUUIDFromTable(String me) {
         Log.i(TAG, "getUUIDFRomToTable Method");
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://54.180.152.109/")
+                .baseUrl("http://13.124.239.85/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -616,7 +616,7 @@ public class ChatSelect extends AppCompatActivity {
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://54.180.152.109/")
+                .baseUrl("http://13.124.239.85/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 

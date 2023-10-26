@@ -156,6 +156,12 @@ public interface ServerApi {
     );
 
     @FormUrlEncoded
+    @POST("feed_user_select_follow.php")
+    Call<ResponseBody> setFeedUserFollow(
+            @Field("me") String me
+    );
+
+    @FormUrlEncoded
     @POST("follow_table_delete.php")
     Call<Void> deleteFollow(
             @Field("me") String me,

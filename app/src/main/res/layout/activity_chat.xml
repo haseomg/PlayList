@@ -32,6 +32,18 @@
 <!--            android:textSize="28sp"/>-->
 
         <TextView
+            android:id="@+id/chatBackBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:fontFamily="sans-serif-black"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:text="뒤로"
+            android:textAlignment="center"
+            android:textColor="#AAB9FF"
+            android:textSize="23sp" />
+
+        <TextView
             android:id="@+id/chat_logo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -57,7 +69,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="5dp"
+        android:layout_height="2dp"
         android:background="#7878E1"
         app:layout_constraintBottom_toBottomOf="@+id/recyclerView"
         app:layout_constraintEnd_toEndOf="parent"

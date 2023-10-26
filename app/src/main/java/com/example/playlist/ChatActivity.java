@@ -185,7 +185,7 @@ public class ChatActivity extends AppCompatActivity {
     private void loadChatMessages(String uuid) {
         Log.i(TAG, "loadChatMessages Method");
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://54.180.152.109/")
+                .baseUrl("http://13.124.239.85/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

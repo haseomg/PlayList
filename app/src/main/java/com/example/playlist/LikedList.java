@@ -38,7 +38,7 @@ public class LikedList extends Activity {
     LikedAdapter likedAdapter;
     RecyclerView likedRecyclerView;
 
-    private static final String BASE_URL = "http://54.180.152.109/";
+    private static final String BASE_URL = "http://13.124.239.85/";
     static Context likedCtx;
 
     @Override

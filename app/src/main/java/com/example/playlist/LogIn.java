@@ -159,7 +159,7 @@ public class LogIn extends Activity {
                             pwEdit.getText().toString().trim().length() > 0) {
 
                         // get 방식 파라미터 추가
-                        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.152.109/logIn.php").newBuilder();
+                        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://13.124.239.85/logIn.php").newBuilder();
                         urlBuilder.addQueryParameter("v", "1.0"); // 예시
                         String url = urlBuilder.build().toString();
 
@@ -467,7 +467,7 @@ public class LogIn extends Activity {
                 int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
                 if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
                     // get 방식 파라미터 추가
-                    HttpUrl.Builder urlBuilder = HttpUrl.parse("http://54.180.152.109/kakaoLogin.php").newBuilder();
+                    HttpUrl.Builder urlBuilder = HttpUrl.parse("http://13.124.239.85/kakaoLogin.php").newBuilder();
                     urlBuilder.addQueryParameter("ver", "1.0"); // 예시
                     String url = urlBuilder.build().toString();
                     Log.i("[kakao]", "String url 확인 : " + url);
