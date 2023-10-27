@@ -110,7 +110,8 @@ public class Feed extends AppCompatActivity {
         // TODO (1-1) 디비의 데이터가 몇개인지 (나를 팔로우한 사람을 세어서) 조회해서 숫자를 받아서 세팅
         // TODO (2) 내가 상대를 팔로우할 시 디비(follow_table)에 데이터 추가, 그리고 액티비티 생성 시
         // TODO (2-1) 디비의 데이터가 몇개인지 (내가 팔로우한 사람을 세어서) 조회해서 숫자를 받아서 세팅
-        followCheck.setText("팔로워 " + followNum + "명 • 팔로잉 " + followingNum + "명");
+        selectFollow(nowLoginUser, feedUser); // 내가 상대를 팔로우했을 때 버튼 이름, 백그라운드, 색상 세팅
+//        followCheck.setText("팔로워 " + followNum + "명 • 팔로잉 " + followingNum + "명");
 
         feedCommentRecyclerVIew = findViewById(R.id.feedCommentRecyclerView);
         feedCommentLayoutManager = new LinearLayoutManager(this);
@@ -119,7 +120,8 @@ public class Feed extends AppCompatActivity {
         feedCommentAdapter = new FeedCommentAdapter(this, feedCommentList);
         feedCommentRecyclerVIew.setAdapter(feedCommentAdapter);
 
-        selectFollow(nowLoginUser, feedUser); // 내가 상대를 팔로우했을 때 버튼 이름, 백그라운드, 색상 세팅
+
+        setFeedUserFollow(feedUser); // 팔로우•팔로잉 세팅
         setClose(); // 닫기 버튼 클릭 이벤트
         setUIForMe(); // 피드 호스트 구별 (나/상대) 후 버튼에 피드 편집/채팅 목록 or 팔로우/메시지로 세팅
         setProfileImage(); // 프로필 이미지 (수정 모드에서만 클릭 이벤트)
@@ -273,6 +275,7 @@ public class Feed extends AppCompatActivity {
                             nameFloatingButton.setTextColor(Color.parseColor("#CD6CAC6C"));
                             // TODO 팔로우 데이터 insert
                             insertFollow(nowLoginUser, feedUser);
+                            setFeedUserFollow(feedUser);
                         } // onClick
                     }) // setPositiveButton
                     .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
@@ -667,6 +670,8 @@ public class Feed extends AppCompatActivity {
                             followNum = Integer.parseInt(follow);
                             String follower = cutForFollow[1]; // 내가 팔로우
                             followingNum = Integer.parseInt(follower);
+
+                            followCheck.setText("팔로워 " + followingNum + "명 • 팔로잉 " + followNum + "명");
 
                             Log.i(TAG, "setFeedUserFollow onResponse follow : " + follow);
                             Log.i(TAG, "setFeedUserFollow onResponse follower : " + follower);

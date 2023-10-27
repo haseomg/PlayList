@@ -100,6 +100,10 @@ public interface ServerApi {
     Call<List<CommentModel>> getComments(
             @Query("song_name") String song_name);
 
+    @GET("feed_get_comments.php")
+    Call<List<FeedCommentModel>> feedGetComments(
+            @Query("user") String user_name);
+
     // TODO
     @FormUrlEncoded
     @POST("get_played_songs.php")

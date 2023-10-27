@@ -7,25 +7,32 @@ import java.util.ArrayList;
 public class FeedCommentModel {
     ArrayList<FeedCommentModel> feedCommentList;
 
-    @SerializedName("song_name")
-    private String song_name;
+    @SerializedName("user")
+    private String user;
 
-    @SerializedName("song_time")
-    private String song_time;
+    @SerializedName("song")
+    private String song;
 
-    @SerializedName("comment")
-    private String comment;
+    @SerializedName("selected_time")
+    private String selected_time;
 
-    public String getSong_name() {
-        return song_name;
+    @SerializedName("msg")
+    private String msg;
+
+    public String getUser() {
+        return user;
+    } // getUser
+
+    public String getSong() {
+        return song;
     } // getSong_name
 
-    public String getSong_time() {
-        return song_time;
+    public String getSelected_time() {
+        return selected_time;
     } // getSong_time
 
-    public String getComment() {
-        return comment;
-    } // getComment
+    public String getMsg() {
+        return msg;
+    } // getMsg
 
 } // FeedCommentModel
