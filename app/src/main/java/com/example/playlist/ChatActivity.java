@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -58,10 +59,9 @@ public class ChatActivity extends AppCompatActivity {
     private SharedPreferences shared;
     private SharedPreferences.Editor editor;
 
-    private Button chatBack;
     private EditText chatMsg;
     private Button send;
-    private TextView logo;
+    TextView logo, chatBack;
 
     private boolean hasConn = false;
     private Socket chatSocket;
@@ -107,6 +107,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
         initial();
         setSend();
         loadChatMessages(uuidFromSelect);
@@ -150,7 +151,6 @@ public class ChatActivity extends AppCompatActivity {
         Log.i(TAG, "chatSocket IO.socket (url, options) check : " + chatSocket);
 //        connect();
 
-
         editor.commit();
 
         chatAdapter = new Adapter(this, chatList);
@@ -180,7 +180,18 @@ public class ChatActivity extends AppCompatActivity {
 
         connect();
         setChatSocket();
-    }
+        setChatBack();
+    } // initial
+
+    void setChatBack() {
+        chatBack = findViewById(R.id.chatBackBtn);
+        chatBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            } // onClick
+        }); // setOnClickListener
+    } // setChatBack
 
     private void loadChatMessages(String uuid) {
         Log.i(TAG, "loadChatMessages Method");
