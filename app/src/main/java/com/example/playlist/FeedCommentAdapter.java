@@ -36,7 +36,7 @@ public class FeedCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         Log.i(TAG, "onCreateViewHolder");
         View view;
         // TODO R.layout Change
-        view = LayoutInflater.from(context).inflate(R.layout.played_item, parent, false);
+        view = LayoutInflater.from(context).inflate(R.layout.feed_comment_item, parent, false);
         Log.i(TAG, "view check : " + view);
         return new FeedCommentHolder(view);
     } // onCreateViewHolder
@@ -51,8 +51,8 @@ public class FeedCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (holder instanceof FeedCommentHolder) {
             FeedCommentModel feedCommentModel = feedCommentList.get(position);
 
-            ((FeedCommentHolder) holder).song.setText(feedCommentModel.getSong());
-            ((FeedCommentHolder) holder).time.setText(feedCommentModel.getSelected_time());
+            ((FeedCommentHolder) holder).song.setText(feedCommentModel.getSong() + " ✦ ");
+            ((FeedCommentHolder) holder).time.setText(feedCommentModel.getSelected_time() + " ✦ ");
             ((FeedCommentHolder) holder).msg.setText(feedCommentModel.getMsg());
 
             Log.i(TAG, "fetchAndDisplayFeedComments onBindViewHolder : "

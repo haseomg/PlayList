@@ -47,7 +47,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         view = LayoutInflater.from(context).inflate(R.layout.comment_item, parent, false);
         Log.i(TAG, "view check : " + view);
         return new CommentHolder(view);
-    }
+    } // onCreateViewHolder로
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {

@@ -412,8 +412,25 @@ public class Feed extends AppCompatActivity {
                     chatRoomIntent.putExtra("before_class", "feed");
                     chatRoomIntent.putExtra("username", user);
                     startActivity(chatRoomIntent);
+
                 } else {
 
+                    if (nameFloatingButton.getText().toString().equals("팔로우")) {
+                        new AlertDialog.Builder(Feed.this, R.style.AlertDialogCustom)
+                                .setMessage(feedUser + "님을 팔로우 시 채팅이 가능합니다.")
+                                .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // "네" 버튼 클릭 시 수행할 작업을 여기에 작성하세요.
+                                        saveFeed();
+                                    } // onClick
+                                }) // setPositiveButton
+                                .show();
+
+                    } else {
+                        // TODO - Following Status
+                        // 소켓 서버 열어서 채팅 가능하게
+                    } // else
                 } // else
             } // onClick
         }); // setOnClickListener
@@ -747,6 +764,8 @@ public class Feed extends AppCompatActivity {
                             // TODO selected_time int로 변환
                             String msg = feedComment.getMsg();
                             Log.i(TAG, "fetchAndDisplayFeedComments message : " + msg);
+
+                            feedCommentList.add(feedComment);
 
                         } else {
                             Log.i(TAG, "fetchAndDisplayFeedComments contains null : " + feedComments);

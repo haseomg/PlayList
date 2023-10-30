@@ -65,7 +65,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private boolean hasConn = false;
     private Socket chatSocket;
-    private URI uri = URI.create("http://15.164.170.30:3000/");
+    private URI uri = URI.create("http://15.164.229.115:3000/");
     private IO.Options options;
 
     private ArrayList<ResponseModel> chatList = new ArrayList<>();
@@ -279,7 +279,7 @@ public class ChatActivity extends AppCompatActivity {
 
     void setChatSocket() {
         try {
-            chatSocket = IO.socket("http://15.164.170.30:3000/");
+            chatSocket = IO.socket("http://15.164.229.115:3000/");
             Log.i(TAG, "setChatSocket IO.socket check : " + chatSocket);
             chatSocket.connect();
 
