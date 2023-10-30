@@ -246,6 +246,7 @@ public class ChatSelect extends AppCompatActivity {
                     Log.i(TAG, "if (uuidForChat != null)");
                     Log.i(TAG, "uuid ForChat ; " + uuidForChat);
                     intent.putExtra("uuid", uuidForChat);
+
                 } else {
                     Log.i(TAG, "if (uuidForChat == null)");
                     Log.i(TAG, "uuid ForChat ; " + uuidForChat);

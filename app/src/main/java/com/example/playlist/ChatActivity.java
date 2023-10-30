@@ -346,9 +346,13 @@ public class ChatActivity extends AppCompatActivity {
             String third = getTodayCut[2];
 //        insertTime = todaysel;
             if (second.contains("0")) {
-                String[] monthCut = second.split("0");
-                String month = monthCut[1];
-                today = month + "." + third + "_" + getTimeToTable;
+                try {
+                    String[] monthCut = second.split("0");
+                    String month = monthCut[1];
+                    today = month + "." + third + "_" + getTimeToTable;
+                } catch (IndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                } // catch
 //            insertTime = month + "." + third;
             } else {
                 today = second + "." + third + "_" + getTimeToTable;
