@@ -91,5 +91,5 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void clearItems() {
         Log.i(TAG, "clearItems");
         commentList.clear();
-    }
+    } // clearItems
 }

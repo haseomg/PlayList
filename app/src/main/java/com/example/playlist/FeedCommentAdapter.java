@@ -5,13 +5,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class FeedCommentAdapter extends RecyclerView.Adapter<FeedCommentAdapter.ViewHolder> {
+public class FeedCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
     private ArrayList<FeedCommentModel> feedCommentList;
@@ -31,13 +32,13 @@ public class FeedCommentAdapter extends RecyclerView.Adapter<FeedCommentAdapter.
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Log.i(TAG, "onCreateViewHolder");
         View view;
         // TODO R.layout Change
         view = LayoutInflater.from(context).inflate(R.layout.played_item, parent, false);
         Log.i(TAG, "view check : " + view);
-        return new ViewHolder(view);
+        return new FeedCommentHolder(view);
     } // onCreateViewHolder
 
     public int getPosition() {
@@ -45,26 +46,40 @@ public class FeedCommentAdapter extends RecyclerView.Adapter<FeedCommentAdapter.
     } // getPosition
 
     @Override
-    public void onBindViewHolder(@NonNull FeedCommentAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Log.i(TAG, "onBindViewHolder Method");
-        FeedCommentModel feedCommentModel = feedCommentList.get(position);
-        Log.i(TAG, "onBindViewHolder feedCommentModel : " + feedCommentList);
-    } // onBindViewHolder
+        if (holder instanceof FeedCommentHolder) {
+            FeedCommentModel feedCommentModel = feedCommentList.get(position);
 
-    public FeedCommentAdapter(ArrayList<FeedCommentModel> feedCommentList) {
-        this.feedCommentList = feedCommentList;
-    } // FeedCommentAdapter Constructor
+            Log.i(TAG, "onBindViewHolder feedCommentModel : " + feedCommentList);
+            // TODO setText
+        } // if
+    } // onBindViewHolder
 
     @Override
     public int getItemCount() {
         return feedCommentList.size();
     } // getItemCount
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public ViewHolder(View view) {
-            super(view);
-            // TODO UI 세팅
-        } // ViewHolder Constructor
-    } // ViewHolder
+    public class FeedCommentHolder extends RecyclerView.ViewHolder {
+
+        public final TextView song;
+        public final TextView artist;
+        public final TextView time;
+        public final TextView msg;
+
+        public FeedCommentHolder(View itemView) {
+            super(itemView);
+            song = itemView.findViewById(R.id.feedCommentSong);
+            artist = itemView.findViewById(R.id.feedCommentArtist);
+            time = itemView.findViewById(R.id.feedCommentSelectedTime);
+            msg = itemView.findViewById(R.id.feedCommentMsg);
+        } // FeedCommentHolder Constructor
+
+    } // FeedCommentHolder
+
+    public FeedCommentAdapter(ArrayList<FeedCommentModel> feedCommentList) {
+        this.feedCommentList = feedCommentList;
+    } // FeedCommentAdapter Constructor
 
 } // Adapter
