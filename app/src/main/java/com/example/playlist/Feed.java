@@ -17,13 +17,19 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Feed extends AppCompatActivity {
 
@@ -100,6 +106,7 @@ public class Feed extends AppCompatActivity {
         // TODO 디비에 데이터를 넣고, 수정하고, 가져올 때 기준이 될 유저 이름 (user_name)
         userName.setText(user);
         feedUser = userName.getText().toString();
+        fetchAndDisplayFeedComments(feedUser);
 
         // TODO 저장 버튼 클릭 시 (feed_table)에 데이터(profile_music) 추가
         profileMusic.setText("프로필 뮤직을 선택해 주세요.");
@@ -119,7 +126,6 @@ public class Feed extends AppCompatActivity {
         feedCommentRecyclerVIew.setHasFixedSize(true);
         feedCommentAdapter = new FeedCommentAdapter(this, feedCommentList);
         feedCommentRecyclerVIew.setAdapter(feedCommentAdapter);
-
 
         setFeedUserFollow(feedUser); // 팔로우•팔로잉 세팅
         setClose(); // 닫기 버튼 클릭 이벤트
@@ -670,8 +676,8 @@ public class Feed extends AppCompatActivity {
                             followNum = Integer.parseInt(follow);
                             String follower = cutForFollow[1]; // 내가 팔로우
                             followingNum = Integer.parseInt(follower);
-
                             followCheck.setText("팔로워 " + followingNum + "명 • 팔로잉 " + followNum + "명");
+                            // TODO
 
                             Log.i(TAG, "setFeedUserFollow onResponse follow : " + follow);
                             Log.i(TAG, "setFeedUserFollow onResponse follower : " + follower);
@@ -693,4 +699,71 @@ public class Feed extends AppCompatActivity {
             } // onFailure
         }); // call.
     } // setFeedUserFollow
+
+    private void fetchAndDisplayFeedComments(String user) {
+        Log.i(TAG, "fetchAndDisplayFeedComments method");
+
+        Log.i(TAG, "fetchAndDisplayFeedComments now feed user name : " + feedUser);
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        ServerApi feedCommentService = retrofit.create(ServerApi.class);
+
+        // TODO. 곡 이름 기준으로 모든 행 정보옴 가져옴
+        retrofit2.Call<List<FeedCommentModel>> call = feedCommentService.getFeedComments(feedUser);
+        call.enqueue(new retrofit2.Callback<List<FeedCommentModel>>() {
+            @Override
+            public void onResponse(retrofit2.Call<List<FeedCommentModel>> call, retrofit2.Response<List<FeedCommentModel>> response) {
+
+                if (response.isSuccessful()) {
+                    String responseBody = new Gson().toJson(response.body());
+                    Log.i(TAG, "fetchAndDisplayFeedComments onResponse : " + response.code());
+                    Log.i(TAG, "fetchAndDisplayFeedComments Server ResponseBody: " + responseBody);
+                    Log.i(TAG, "fetchAndDisplayFeedComments Server Response: " + response);
+                    Log.i(TAG, "fetchAndDisplayFeedComments Server Response.message : " + response.message());
+                    Log.i(TAG, "fetchAndDisplayFeedComments response.isSuccessful");
+                    List<FeedCommentModel> feedComments = response.body();
+
+                    // TODO - for문 진입을 안 한 듯이 보임
+                    for (FeedCommentModel feedComment : feedComments) {
+                        Log.i(TAG, "fetchAndDisplayFeedComments onResponse get Comment");
+                        if (!feedComments.contains(null)) {
+                            Log.i(TAG, "fetchAndDisplayFeedComments contains !null : " + feedComments);
+//                        try {
+//                        if (getUserName != null || !getUserName.equals("")) {
+                            String song = feedComment.getSong();
+                            Log.i(TAG, "fetchAndDisplayFeedComments song_name : " + song);
+//                            String user = feedComment.getUser();
+//                            Log.i(TAG, "fetchAndDisplayComments user_name : " + user);
+                            String selected_time = feedComment.getSelected_time();
+                            Log.i(TAG, "fetchAndDisplayFeedComments selected_time : " + selected_time);
+                            // TODO selected_time int로 변환
+                            String msg = feedComment.getMsg();
+                            Log.i(TAG, "fetchAndDisplayFeedComments message : " + msg);
+
+                        } else {
+                            Log.i(TAG, "fetchAndDisplayFeedComments contains null : " + feedComments);
+                        } // else
+                    } // for END
+                    feedCommentAdapter.notifyDataSetChanged();
+//                    } // if (comments != null)
+                } else {
+//                    Toast.makeText(Feed.this, "check the comment response", Toast.LENGTH_SHORT).show();
+                } // else
+            } // onResponse
+
+            @Override
+            public void onFailure(retrofit2.Call<List<FeedCommentModel>> call, Throwable t) {
+                Log.i(TAG, "fetchAndDisplayFeedComments onFailure : " + t.getMessage());
+            } // onFailure
+        }); // call.enqueque
+    } // fetchAndDisplayFeedComments
+
 } // CLASS END

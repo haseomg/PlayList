@@ -101,7 +101,7 @@ public interface ServerApi {
             @Query("song_name") String song_name);
 
     @GET("feed_get_comments.php")
-    Call<List<FeedCommentModel>> feedGetComments(
+    Call<List<FeedCommentModel>> getFeedComments(
             @Query("user") String user_name);
 
     // TODO

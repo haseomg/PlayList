@@ -51,6 +51,14 @@ public class FeedCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (holder instanceof FeedCommentHolder) {
             FeedCommentModel feedCommentModel = feedCommentList.get(position);
 
+            ((FeedCommentHolder) holder).song.setText(feedCommentModel.getSong());
+            ((FeedCommentHolder) holder).time.setText(feedCommentModel.getSelected_time());
+            ((FeedCommentHolder) holder).msg.setText(feedCommentModel.getMsg());
+
+            Log.i(TAG, "fetchAndDisplayFeedComments onBindViewHolder : "
+            + feedCommentModel.getSong() + " / " + feedCommentModel.getSelected_time() + " / "
+            + feedCommentModel.getMsg());
+
             Log.i(TAG, "onBindViewHolder feedCommentModel : " + feedCommentList);
             // TODO setText
         } // if
@@ -64,14 +72,12 @@ public class FeedCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public class FeedCommentHolder extends RecyclerView.ViewHolder {
 
         public final TextView song;
-        public final TextView artist;
         public final TextView time;
         public final TextView msg;
 
         public FeedCommentHolder(View itemView) {
             super(itemView);
             song = itemView.findViewById(R.id.feedCommentSong);
-            artist = itemView.findViewById(R.id.feedCommentArtist);
             time = itemView.findViewById(R.id.feedCommentSelectedTime);
             msg = itemView.findViewById(R.id.feedCommentMsg);
         } // FeedCommentHolder Constructor
