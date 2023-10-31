@@ -416,7 +416,7 @@ public class Feed extends AppCompatActivity {
                     startActivity(chatRoomIntent);
 
                 } else {
-
+                    Log.i(TAG, "msg check : " + msgBtn.getText().toString());
                     if (nameFloatingButton.getText().toString().equals("팔로우")) {
                         new AlertDialog.Builder(Feed.this, R.style.AlertDialogCustom)
                                 .setMessage(feedUser + "님을 팔로우 시 채팅이 가능합니다.")
@@ -863,5 +863,14 @@ public class Feed extends AppCompatActivity {
             }); // observer END
         }); // runOnUiThread END
     } // getUUIDFromRoomDB
+
+    void feedFollowFollowingClickEvent() {
+        followCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO (1) 팔로워 팔로잉 나누자
+            } // onClick
+        }); // setOnClickListener
+    } // feedFollowFollowingClickEvent
 
 } // CLASS END

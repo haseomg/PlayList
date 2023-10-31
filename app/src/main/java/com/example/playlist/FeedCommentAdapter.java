@@ -51,13 +51,13 @@ public class FeedCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (holder instanceof FeedCommentHolder) {
             FeedCommentModel feedCommentModel = feedCommentList.get(position);
 
-            ((FeedCommentHolder) holder).song.setText(feedCommentModel.getSong() + " ✦ ");
+            ((FeedCommentHolder) holder).msg.setText(feedCommentModel.getMsg() + " ✦ ");
             ((FeedCommentHolder) holder).time.setText(feedCommentModel.getSelected_time() + " ✦ ");
-            ((FeedCommentHolder) holder).msg.setText(feedCommentModel.getMsg());
+            ((FeedCommentHolder) holder).song.setText(feedCommentModel.getSong());
 
             Log.i(TAG, "fetchAndDisplayFeedComments onBindViewHolder : "
-            + feedCommentModel.getSong() + " / " + feedCommentModel.getSelected_time() + " / "
-            + feedCommentModel.getMsg());
+                    + feedCommentModel.getSong() + " / " + feedCommentModel.getSelected_time() + " / "
+                    + feedCommentModel.getMsg());
 
             Log.i(TAG, "onBindViewHolder feedCommentModel : " + feedCommentList);
             // TODO setText
