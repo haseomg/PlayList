@@ -172,8 +172,13 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             SimpleDateFormat dateFormat = new SimpleDateFormat("M.dd", Locale.getDefault());
             String today = dateFormat.format(new Date());
             String messageDate = dateTimeSplit[0];
-            Log.i(TAG, "date check 0 : " + dateTimeSplit[0]);
-            Log.i(TAG, "date check 1 : " + dateTimeSplit[1]);
+            try {
+                Log.i(TAG, "date check 0 : " + dateTimeSplit[0]);
+                Log.i(TAG, "date check 1 : " + dateTimeSplit[1]);
+
+            } catch (ArrayIndexOutOfBoundsException e) {
+                e.printStackTrace();
+            } // catch
 
             if (today.equals(messageDate)) {
                 // 오늘 날짜일 경우에는 시간만 표시
@@ -234,9 +239,14 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         ResponseModel previousItem = position > 0 ? chatList.get(position - 1) : null;
 
         // 만약 이전 날짜와 다르다면 날짜를 표시하는 뷰 타입을 리턴합니다.
-        if (previousItem != null && !currentItem.getTimestamp().substring(0, 5).equalsIgnoreCase(previousItem.getTimestamp().substring(0, 5))) {
-            return 0;
-        }
+        try {
+            if (previousItem != null && !currentItem.getTimestamp().substring(0, 5).equalsIgnoreCase(previousItem.getTimestamp().substring(0, 5))) {
+                return 0;
+            }
+
+        } catch (StringIndexOutOfBoundsException e) {
+            e.printStackTrace();
+        } // catch
 
 
         Log.i(TAG, "shared name check : " + preferences.getString("name", ""));
