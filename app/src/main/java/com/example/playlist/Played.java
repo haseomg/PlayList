@@ -72,16 +72,18 @@ public class Played extends AppCompatActivity {
         playedContext = Played.this;
         Intent intent = getIntent();
         userName = intent.getStringExtra("userName");
-        Log.i(TAG, "setPlayed : " + userName);
+        Log.i(TAG, "setPlayed userName : " + userName);
         songName = intent.getStringExtra("playingSongName");
         Log.i(TAG, "changeColor songName : " + songName);
 
         for (int i = 0; i < playedList.size(); i++) {
+
             if (playedList.get(i).getSong_name().equals(songName)) {
                 playing_position = i;
                 Log.i(TAG, "changeColor) Played playing_position: " + playing_position);
                 break;
             } // if
+
             PlayedRecyclerView = findViewById(R.id.songListRecyclerView);
         } // for
         topBar = findViewById(R.id.songListTopBar);
@@ -156,12 +158,6 @@ public class Played extends AppCompatActivity {
 //                    loadingDialog.dismiss();
                     Log.i(TAG, "setPlayed response success");
                     String responseBody = new Gson().toJson(response.body());
-                    Log.i(TAG, "setPlayed responseBody : " + responseBody);
-//                    Log.i(TAG, "setPlayed onResponse : " + response.code());
-//                    Log.i(TAG, "setPlayed Server ResponseBody: " + responseBody);
-//                    Log.i(TAG, "setPlayed Server Response: " + response);
-//                    Log.i(TAG, "setPlayed Server Response.message : " + response.message());
-//                    Log.i(TAG, "setPlayed response.isSuccessful");
                     List<PlayedModel> played = response.body();
                     Log.i(TAG, "setPlayed response.body : " + played);
 

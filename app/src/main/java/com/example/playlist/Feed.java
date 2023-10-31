@@ -588,47 +588,8 @@ public class Feed extends AppCompatActivity {
                 Log.i(TAG, "selectFollow onResponse");
                 if (response.isSuccessful()) {
                     Log.i(TAG, "selectFollow Method onResponse() isSuccessful");
-
-//                        try {
-//                            Log.i(TAG, "selectFollow (response success)  and response.body check : " + response.body().string());
-//
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        } // catch
-
-//                        try {
-//                            String result = response.body() != null ? response.body().string() : "";
-////                            String check = response.body().string();
 //                            // TODO [Issue] Server Down T T
 //                            // TODO Check 1 - following button set issue
-//
-//                            if ("1".equals(result)) {
-////                            if (check.contains("1")) {
-//                                // 팔로우 정보가 이미 존재함
-//                                Log.i(TAG, "selectFollow response.body if (1) check : " + result);
-////                                Log.i(TAG, "selectFollow response.body if (1) check : " + check);
-//                                nameFloatingButton.setText("팔로잉");
-//                                nameFloatingButton.setBackgroundResource(R.drawable.feed_button);
-//                                nameFloatingButton.setTextColor(Color.parseColor("#CD6CAC6C"));
-//
-////                                String[] cutForFollow = result.split("1 / ");
-////                                String follow = cutForFollow[0];
-////                                String[] cutForFollowing = follow.split(" / ");
-////                                String follower = cutForFollowing[1];
-////                                Log.i(TAG, "selectFollow onResponse follow : " + follow);
-////                                Log.i(TAG, "selectFollow onResponse follower : " + follower);
-//
-//                            } else if ("0".equals(result)) {
-////                            } else if (check.equals("0")) {
-//
-//                                // 팔로우 정보가 없음
-//                                Log.i(TAG, "selectFollow response.body else check : " + result);
-////                                Log.i(TAG, "selectFollow response.body else check : " + check);
-//                            } // else if
-//                        } catch (NullPointerException | IOException e) {
-//                            e.printStackTrace();
-//                        } // catch
-
 
                     try {
                         String result = response.body() != null ? response.body().string() : "";
@@ -645,17 +606,7 @@ public class Feed extends AppCompatActivity {
                         } // else
                     } catch (NullPointerException | IOException e) {
                         e.printStackTrace();
-                    }
-//                    if (response.body().equals("1") || response.body().equals(1)) {
-//                        Log.i(TAG, "selectFollow response.body if (1) check : " + response.body());
-//                        nameFloatingButton.setText("팔로잉");
-//                        nameFloatingButton.setBackgroundResource(R.drawable.feed_button);
-//                        nameFloatingButton.setTextColor(Color.parseColor("#CD66666C"));
-//
-//                    } else {
-//                        Log.i(TAG, "selectFollow response.body else check : " + response.body());
-//                    } // else
-
+                    } // catch
                 } else {
                     Log.i(TAG, "selectFollow Method onResponse() !isSuccessful");
                     Log.i(TAG, "selectFollow (response not successful)  and response.body check : " + response.body());
@@ -667,10 +618,6 @@ public class Feed extends AppCompatActivity {
                 Log.e(TAG, "selectFollow onFailure : " + t.getMessage());
             } // onFailure
         }); // call.enqueue
-
-//        } else {
-
-//        } // else
     } // selectFollow END
 
     void setFeedUserFollow(String me) {

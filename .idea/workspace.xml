@@ -6,6 +6,7 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="setPlayed" />
     <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
     <option name="TOOL_WINDOW_REGEXP_FILTER" value="false" />
@@ -14,8 +15,16 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" name="Changes" comment="test commit">
+    <list default="true" id="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" name="Changes" comment="[check] When Emulator run Exception - Chatting Data) When today is different from the last time we chatted / When it's morning(am)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/Feed.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/Feed.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/Played.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/Played.java" afterDir="false" />
+    </list>
+    <list id="89646e18-bbcf-49f0-9114-e0eca38bfbb0" name="Other Changes" comment="nothing">
+      <change beforePath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/ic_launcher-playstore.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/ic_launcher-playstore.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +77,9 @@
         <option value="AnnotationType" />
         <option value="Kotlin Class" />
         <option value="Interface" />
+        <option value="valueResourceFile" />
         <option value="layoutResourceFile" />
+        <option value="resourceFile" />
         <option value="Class" />
       </list>
     </option>
@@ -103,10 +114,132 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="GithubProjectSettings">
+    <option name="branchProtectionPatterns">
+      <list>
+        <option value="origin" />
+      </list>
+    </option>
+  </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/build.gradle" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/app/build.gradle" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="LineStatusTrackerManager">
+    <file path="$PROJECT_DIR$/.idea/workspace.xml">
+      <ranges>
+        <range start1="8" end1="8" start2="8" end2="9" changelist="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" />
+        <range start1="16" end1="17" start2="17" end2="25" changelist="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" />
+        <range start1="18" end1="18" start2="26" end2="27" changelist="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" />
+        <range start1="70" end1="70" start2="79" end2="80" changelist="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" />
+        <range start1="71" end1="71" start2="81" end2="82" changelist="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" />
+        <range start1="105" end1="105" start2="116" end2="123" changelist="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" />
+        <range start1="109" end1="109" start2="127" end2="242" changelist="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" />
+        <range start1="126" end1="126" start2="259" end2="262" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="129" end1="130" start2="265" end2="266" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="146" end1="146" start2="282" end2="284" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="148" end1="150" start2="286" end2="286" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="306" end1="306" start2="442" end2="443" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="310" end1="324" start2="447" end2="447" changelist="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" />
+        <range start1="325" end1="329" start2="448" end2="452" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="330" end1="331" start2="453" end2="454" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="332" end1="336" start2="455" end2="459" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="337" end1="338" start2="460" end2="461" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="339" end1="343" start2="462" end2="466" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="344" end1="345" start2="467" end2="468" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="346" end1="350" start2="469" end2="473" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="351" end1="352" start2="474" end2="475" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="353" end1="357" start2="476" end2="480" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="358" end1="359" start2="481" end2="482" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="360" end1="364" start2="483" end2="487" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="365" end1="366" start2="488" end2="489" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="367" end1="371" start2="490" end2="494" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="372" end1="373" start2="495" end2="496" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="374" end1="378" start2="497" end2="501" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="379" end1="380" start2="502" end2="503" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="381" end1="385" start2="504" end2="508" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="386" end1="387" start2="509" end2="510" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="388" end1="392" start2="511" end2="515" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="393" end1="394" start2="516" end2="517" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="395" end1="399" start2="518" end2="522" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="400" end1="401" start2="523" end2="524" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="402" end1="406" start2="525" end2="529" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="407" end1="408" start2="530" end2="531" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="409" end1="413" start2="532" end2="536" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="414" end1="415" start2="537" end2="538" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="416" end1="420" start2="539" end2="543" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="421" end1="422" start2="544" end2="545" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="423" end1="427" start2="546" end2="550" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="428" end1="429" start2="551" end2="552" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="430" end1="434" start2="553" end2="557" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="435" end1="436" start2="558" end2="559" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="437" end1="441" start2="560" end2="564" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="442" end1="443" start2="565" end2="566" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="444" end1="448" start2="567" end2="571" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="449" end1="450" start2="572" end2="573" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="451" end1="455" start2="574" end2="578" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="456" end1="457" start2="579" end2="580" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="458" end1="462" start2="581" end2="585" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="463" end1="464" start2="586" end2="587" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="465" end1="469" start2="588" end2="592" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="470" end1="471" start2="593" end2="594" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="472" end1="476" start2="595" end2="599" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="477" end1="478" start2="600" end2="601" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="479" end1="483" start2="602" end2="606" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="484" end1="485" start2="607" end2="608" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="486" end1="490" start2="609" end2="613" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="491" end1="492" start2="614" end2="615" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="493" end1="497" start2="616" end2="620" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="498" end1="499" start2="621" end2="622" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="500" end1="504" start2="623" end2="627" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="505" end1="506" start2="628" end2="629" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="507" end1="511" start2="630" end2="634" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="512" end1="513" start2="635" end2="636" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="514" end1="518" start2="637" end2="641" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="519" end1="520" start2="642" end2="643" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="521" end1="525" start2="644" end2="648" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="526" end1="527" start2="649" end2="650" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="528" end1="532" start2="651" end2="655" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="533" end1="534" start2="656" end2="657" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="535" end1="539" start2="658" end2="662" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="540" end1="541" start2="663" end2="664" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="542" end1="546" start2="665" end2="669" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="547" end1="548" start2="670" end2="671" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="549" end1="553" start2="672" end2="676" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="554" end1="555" start2="677" end2="678" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="556" end1="560" start2="679" end2="683" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="561" end1="562" start2="684" end2="685" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="563" end1="567" start2="686" end2="690" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="568" end1="569" start2="691" end2="692" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="570" end1="574" start2="693" end2="697" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="575" end1="576" start2="698" end2="699" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="577" end1="581" start2="700" end2="704" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="582" end1="583" start2="705" end2="706" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="584" end1="588" start2="707" end2="711" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="589" end1="590" start2="712" end2="713" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="591" end1="595" start2="714" end2="718" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="596" end1="597" start2="719" end2="720" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="598" end1="602" start2="721" end2="725" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="603" end1="604" start2="726" end2="727" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="605" end1="609" start2="728" end2="732" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="610" end1="611" start2="733" end2="734" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="612" end1="616" start2="735" end2="739" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="617" end1="618" start2="740" end2="741" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="619" end1="623" start2="742" end2="746" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="624" end1="625" start2="747" end2="748" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="626" end1="630" start2="749" end2="753" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="631" end1="632" start2="754" end2="755" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="633" end1="637" start2="756" end2="760" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="638" end1="639" start2="761" end2="762" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="640" end1="644" start2="763" end2="767" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="645" end1="646" start2="768" end2="769" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="647" end1="651" start2="770" end2="774" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="652" end1="653" start2="775" end2="776" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
+        <range start1="654" end1="655" start2="777" end2="792" changelist="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" />
+        <range start1="686" end1="712" start2="823" end2="860" changelist="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" />
+      </ranges>
+    </file>
   </component>
   <component name="ProjectId" id="2Fg7D9r0bNPExbBwtMJBWFbTO8s" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -308,20 +441,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1664901750508</updated>
-    </task>
-    <task id="LOCAL-00097" summary="sign up">
-      <created>1681934034489</created>
-      <option name="number" value="00097" />
-      <option name="presentableId" value="LOCAL-00097" />
-      <option name="project" value="LOCAL" />
-      <updated>1681934034489</updated>
-    </task>
-    <task id="LOCAL-00098" summary="upload">
-      <created>1681934064894</created>
-      <option name="number" value="00098" />
-      <option name="presentableId" value="LOCAL-00098" />
-      <option name="project" value="LOCAL" />
-      <updated>1681934064894</updated>
     </task>
     <task id="LOCAL-00099" summary="UpdateNickname.java">
       <created>1681934097741</created>
@@ -652,7 +771,21 @@
       <option name="project" value="LOCAL" />
       <updated>1696862411624</updated>
     </task>
-    <option name="localTasksCounter" value="146" />
+    <task id="LOCAL-00275" summary="[change] Feed - Item Design">
+      <created>1698735412573</created>
+      <option name="number" value="00275" />
+      <option name="presentableId" value="LOCAL-00275" />
+      <option name="project" value="LOCAL" />
+      <updated>1698735412573</updated>
+    </task>
+    <task id="LOCAL-00276" summary="[check] When Emulator run Exception - Chatting Data) When today is different from the last time we chatted / When it's morning(am)">
+      <created>1698735556564</created>
+      <option name="number" value="00276" />
+      <option name="presentableId" value="LOCAL-00276" />
+      <option name="project" value="LOCAL" />
+      <updated>1698735556564</updated>
+    </task>
+    <option name="localTasksCounter" value="277" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -684,32 +817,43 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="채팅 문제 해결 중 - 방 이름 (DB &lt;-&gt; Room 활용 중) , 채팅 목록에서 채팅 방 왼쪽으로 스와이프해서 삭제 (+ DB에서도 삭제 - 서버 측 코드 확인 중)" />
-    <MESSAGE value="get uuid - from chat_messages table in server on Intro Activity" />
-    <MESSAGE value="get uuid - receive it when you want." />
-    <MESSAGE value="get uuid - ok" />
-    <MESSAGE value="get uuid - from server and insert room db and select from room db" />
-    <MESSAGE value="upload - upload audio file to server not yet, server can't get audio file from client (checking)" />
-    <MESSAGE value="main activity layout - comment view add (recycler view)" />
-    <MESSAGE value="comment activity - delete seek bar" />
-    <MESSAGE value="Add songName, selectedTime TextView - for selected checking" />
-    <MESSAGE value="Implement song view count increment on playback exceeding 30 seconds." />
-    <MESSAGE value="add like feature" />
-    <MESSAGE value="Add auto-change to next song when current song ends" />
-    <MESSAGE value="app to server music file upload" />
-    <MESSAGE value="collecting info on songs the user has listened to" />
-    <MESSAGE value="Collecting info about songs the user has listened to and requesting insertion into the server" />
-    <MESSAGE value="get played music info the user has listened to from the db" />
-    <MESSAGE value="Information about the played music the user has listened to is being retrieved from the DB." />
-    <MESSAGE value="[Issue] client can't solve json data related to playback info" />
-    <MESSAGE value="Set the JSON data received from the server in the played recycler view" />
-    <MESSAGE value="Get JSON data from the server Issue solve. (ItemModel, Adapter, Class checking)" />
-    <MESSAGE value="Played recycler view stacking in reverse order" />
-    <MESSAGE value="Chatting" />
-    <MESSAGE value="All Files Commit" />
-    <MESSAGE value="test commit (commit issue)" />
-    <MESSAGE value="test commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="test commit" />
+    <MESSAGE value="[doing] Feed Composition" />
+    <MESSAGE value="[add] Feed Button Image (Edit Mode)" />
+    <MESSAGE value="[doing] Feed - Host Divide" />
+    <MESSAGE value="[doing] ChatSelectRoom &lt;-&gt; Feed or Main Connect / Feed - 'Feed Edit Mode' add" />
+    <MESSAGE value="[add] Feed - If not edit mode (profile_image, genre, profile_music onClick impossibly)" />
+    <MESSAGE value="[Solve Issue] Feed - Get Image From Gallery, not setting issue / Other Host Feed - profileImage, profileMusic, genre click event cancel" />
+    <MESSAGE value="[doing] Feed - follow button click event (not follower)" />
+    <MESSAGE value="[design] Feed - Follow Button Add [doing] Follow, Following Dialog Add and Logic" />
+    <MESSAGE value="[doing] Feed - nowLoginUser and FeedHostUser Comparing" />
+    <MESSAGE value="[add] Other User Follow - Table Insert" />
+    <MESSAGE value="[doing] If I Follow Feed User - Button setName Following [add] Unfollow" />
+    <MESSAGE value="[add] If I Follow Feed User - Button setName Following / UnFollow" />
+    <MESSAGE value="[doing] Feed - setFollower, setFollowing try" />
+    <MESSAGE value="[Issue] Server (with VsCode) Issue" />
+    <MESSAGE value="[change] Server IP" />
+    <MESSAGE value="[check] Connection Server and data" />
+    <MESSAGE value="[add] chatting room back button" />
+    <MESSAGE value="[doing] Feed - getComments" />
+    <MESSAGE value="[doing] Feed - Comment Item Design" />
+    <MESSAGE value="[add] Feed Comment Adapter" />
+    <MESSAGE value="[add] SetFeedComment" />
+    <MESSAGE value="[add] SetFeedComment [doing] Chatting" />
+    <MESSAGE value="[doing] SetChatting [add] Feed - setComments" />
+    <MESSAGE value="[change] Feed - Item Design" />
+    <MESSAGE value="[check] When Emulator run Exception - Chatting Data) When today is different from the last time we chatted / When it's morning(am)" />
+    <option name="LAST_COMMIT_MESSAGE" value="[check] When Emulator run Exception - Chatting Data) When today is different from the last time we chatted / When it's morning(am)" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/playlist/CommentAdapter.java</url>
+          <line>62</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/PlayList$PlayList__signingReport_.ic" NAME="PlayList [signingReport] Coverage Results" MODIFIED="1668181066866" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
