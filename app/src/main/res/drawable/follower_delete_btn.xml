@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <stroke
+        android:width="2dp"
+        android:color="@color/white" />
+
+    <!-- 배경색 채우기 -->
+    <solid android:color="@color/white" />
+
+    <size
+        android:width="30dp"
+        android:height="20dp" />
+
+    <!-- 텍스트 주변에 여백 추가 -->
+    <padding
+        android:left="10dp"
+        android:top="5dp"
+        android:right="10dp"
+        android:bottom="5dp" />
+
+    <corners android:radius="5dp" />
+</shape>
