@@ -121,17 +121,32 @@
         app:layout_constraintVertical_bias="0.110000014" />
 
     <TextView
-        android:id="@+id/feedFollowFollowingText"
+        android:id="@+id/feedFollowText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
-        android:text="팔로워 0명 • 팔로잉 0명"
+        android:text="팔로워 0명"
         android:textColor="#7878E1"
         android:textSize="11dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.15"
+        app:layout_constraintHorizontal_bias="0.11"
         app:layout_constraintStart_toEndOf="@+id/feedProfileImage"
+        app:layout_constraintTop_toBottomOf="@+id/feedUserName"
+        app:layout_constraintVertical_bias="0.02" />
+
+    <TextView
+        android:id="@+id/feedFollowingText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:text=" • 팔로잉 0명"
+        android:textColor="#7878E1"
+        android:textSize="11dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/feedFollowText"
         app:layout_constraintTop_toBottomOf="@+id/feedUserName"
         app:layout_constraintVertical_bias="0.02" />
 
@@ -149,8 +164,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.136"
         app:layout_constraintStart_toEndOf="@+id/feedProfileImage"
-        app:layout_constraintTop_toBottomOf="@+id/feedFollowFollowingText"
-        app:layout_constraintVertical_bias="0.090" />
+        app:layout_constraintTop_toBottomOf="@+id/feedFollowText"
+        app:layout_constraintVertical_bias="0.1" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"

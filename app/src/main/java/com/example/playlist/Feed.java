@@ -38,7 +38,7 @@ public class Feed extends AppCompatActivity {
     private static final String TAG = "FEED";
 
     ImageView genreFirst, genreSecond, genreThird, profile;
-    TextView feedLogo, profileMusic, nameFloatingButton, msgBtn, followCheck, userName;
+    TextView feedLogo, profileMusic, nameFloatingButton, msgBtn, followText, followingText, userName;
     Button close;
 
     int genre_pick, profile_edit, profileDefaultCheck, genreDefaultCheck;
@@ -82,7 +82,8 @@ public class Feed extends AppCompatActivity {
         profile = findViewById(R.id.feedProfileImage);
         profileMusic = findViewById(R.id.feedProfileMusic);
         userName = findViewById(R.id.feedUserName);
-        followCheck = findViewById(R.id.feedFollowFollowingText);
+        followText = findViewById(R.id.feedFollowText);
+        followingText = findViewById(R.id.feedFollowingText);
         nameFloatingButton = findViewById(R.id.feedNameFloatingButton);
         msgBtn = findViewById(R.id.feedMsgBtn);
 
@@ -136,6 +137,7 @@ public class Feed extends AppCompatActivity {
         setGenreOnClick(); // 선호 장르 세가지 (수정 모드에서만 클릭 이벤트)
         setProfileMusic(); // 프로필 뮤직 (수정 모드에서만 클릭 이벤트)
         setNameFloatingButton(); // 팔로우/팔로잉 로직 or 피드 편집/피드 저장
+        feedFollowFollowingClickEvent(); // 팔로우/팔로잉 텍스트 클릭 시 프래그먼트
     } // initial END
 
     @Override
@@ -286,6 +288,7 @@ public class Feed extends AppCompatActivity {
                             setFeedUserFollow(feedUser);
                         } // onClick
                     }) // setPositiveButton
+
                     .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -308,7 +311,7 @@ public class Feed extends AppCompatActivity {
 
                             // TODO 팔로우 데이터 delete
                             deleteFollow(nowLoginUser, feedUser);
-
+                            setFeedUserFollow(feedUser);
                         } // onClick
                     }) // setPositiveButton
                     .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
@@ -603,6 +606,7 @@ public class Feed extends AppCompatActivity {
                             nameFloatingButton.setBackgroundResource(R.drawable.feed_button);
                             nameFloatingButton.setTextColor(Color.parseColor("#CD6CAC6C"));
 
+//                            setFeedUserFollow(feedUser);
                         } // else
                     } catch (NullPointerException | IOException e) {
                         e.printStackTrace();
@@ -642,11 +646,12 @@ public class Feed extends AppCompatActivity {
                             followNum = Integer.parseInt(follow);
                             String follower = cutForFollow[1]; // 내가 팔로우
                             followingNum = Integer.parseInt(follower);
-                            followCheck.setText("팔로워 " + followingNum + "명 • 팔로잉 " + followNum + "명");
+                            followText.setText("팔로워 " + follower + "명 ");
+                            followingText.setText("• 팔로잉 " + follow + "명");
                             // TODO
 
-                            Log.i(TAG, "setFeedUserFollow onResponse follow : " + follow);
-                            Log.i(TAG, "setFeedUserFollow onResponse follower : " + follower);
+                            Log.i(TAG, "followCheck onResponse follow : " + follow);
+                            Log.i(TAG, "followCheck onResponse follower : " + follower);
 
                         } // else
                     } catch (NullPointerException | IOException e) {
@@ -812,12 +817,28 @@ public class Feed extends AppCompatActivity {
     } // getUUIDFromRoomDB
 
     void feedFollowFollowingClickEvent() {
-        followCheck.setOnClickListener(new View.OnClickListener() {
+        followText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO (1) 팔로워 팔로잉 나누자
+                // TODO (1) 팔로워 클릭 시
+                Intent intent = new Intent(Feed.this, FollowFollowingFragment.class);
+                intent.putExtra("status", "follower");
+                intent.putExtra("user", nowLoginUser);
+                startActivity(intent);
             } // onClick
         }); // setOnClickListener
-    } // feedFollowFollowingClickEvent
+
+        followingText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO (2) 팔로잉 클릭 시
+                Intent intent = new Intent(Feed.this, FollowFollowingFragment.class);
+                intent.putExtra("status", "following");
+                intent.putExtra("user", nowLoginUser);
+                startActivity(intent);
+            } // onClick
+        }); // setOnClickListener
+
+    } // feedFollowClickEvent
 
 } // CLASS END
