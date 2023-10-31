@@ -1,4 +1,18 @@
 <resources>
     <string name="app_name">I.M.P (Indie Music Player)</string>
     <string name="kakao_native_key">e7657431c08b5889a35e98139daef99a</string>
+
+    <style name="FollowFollowingActiveTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#5D5D9F</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="FollowFollowingInActiveTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#aab9ff</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">center</item>
+    </style>
 </resources>

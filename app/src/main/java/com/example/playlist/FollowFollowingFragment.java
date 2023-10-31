@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class FollowFollowingFragment extends AppCompatActivity {
 
     String status, user;
+    TextView back, userLogo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,5 +76,15 @@ public class FollowFollowingFragment extends AppCompatActivity {
 
                                                                              } // onNavigationItemSelected
                                                                          }); // setOnNavigationItemSelectedListener
+
+        userLogo = findViewById(R.id.fragmentUser);
+        userLogo.setText(user);
+        back = findViewById(R.id.fragmentBack);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            } // onClick
+        }); // setOnClickListener
     } // fragmentInitial
 } // CLASS

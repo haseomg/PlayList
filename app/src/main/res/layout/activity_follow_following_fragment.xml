@@ -1,28 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FollowFollowingFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#aab9ff"
+    tools:context=".FollowFollowingFragment">
+
+    <TextView
+        android:id="@+id/fragmentBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:text="뒤로"
+        android:textColor="#5D5D9F"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/frame_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/fragmentUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:text="USER"
+        android:textColor="#5D5D9F"
+        android:textSize="27sp"
+        app:layout_constraintBottom_toTopOf="@+id/frame_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.41"
+        app:layout_constraintStart_toEndOf="@+id/fragmentBack"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="600dp"
         android:layout_weight="10"
         android:background="#aab9ff"
-        tools:layout_editor_absoluteX="203dp"
-        tools:layout_editor_absoluteY="281dp">
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
     </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="70dp"
+        android:layout_gravity="start"
         android:layout_weight="1"
-        android:background="#7878E1"
-        app:menu="@menu/follow_navigation_menu"/>
-
-</LinearLayout>
+        android:background="#F8F8FA"
+        app:itemTextAppearanceActive="@style/FollowFollowingActiveTextStyle"
+        app:itemTextAppearanceInactive="@style/FollowFollowingInActiveTextStyle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:menu="@menu/follow_navigation_menu" />
+</androidx.constraintlayout.widget.ConstraintLayout>
