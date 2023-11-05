@@ -3,8 +3,10 @@ package com.example.playlist;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -23,6 +25,8 @@ public class ProfileMusicSelectDialog extends DialogFragment {
             "All I need to hear ∙ The 1975", "Blu ∙ VAN", "Stay with u (feat. Jini) ∙ Flaboy",
             "To my loviee ∙ kimmy", "Wasteland ∙ 16", "My HaPiNeSs ∙ kimmy"};
 
+    SharedPreferences shared;
+    SharedPreferences.Editor editor;
 
     public interface OnProfileSelectedListener {
         void onProfileSelected(ArrayList<String> selectedProfileMusic);
@@ -37,6 +41,9 @@ public class ProfileMusicSelectDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        shared = getActivity().getSharedPreferences("selected_profile_music", Context.MODE_PRIVATE);
+        editor = shared.edit();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogCustom);
         builder.setTitle("프로필 뮤직을 선택해 주세요.")
                 .setSingleChoiceItems(allProfileMusics, -1,
@@ -58,6 +65,10 @@ public class ProfileMusicSelectDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         Log.i("ProfileMusic", "profileMusic onClick 확인 : " + selectedProfileMusic);
                         ((Feed) Feed.feedCtx).profileMusic.setText(selectedProfileMusic + " ▶");
+                        // TODO - 프로필 뮤직 쉐어드에 저장
+                        Log.i("ProfileMusicSelectDialog", "getSharedProfileMusic 3 : " +selectedProfileMusic);
+                        editor.putString("selected_profile_music", selectedProfileMusic);
+                        editor.commit();
                         sendResult(Activity.RESULT_OK);
                     } // onClick
                 }) // setPositiveButton

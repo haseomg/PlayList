@@ -58,13 +58,21 @@ public class FollowerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             // image setting
             ((FollowerHolder) holder).user_name.setText(followerModel.getUser_name());
-
-            Log.i(TAG, "onBindViewHolder : "
-                    + followerModel.getUser_name());
-
+            Log.i(TAG, "onBindViewHolder : " + followerModel.getUser_name());
             Log.i(TAG, "onBindViewHolder : " + followerList);
+
+            setDeleteButton(holder);
         } // if
     } // onBindViewHolder
+
+    private void setDeleteButton(RecyclerView.ViewHolder holder) {
+        ((FollowerHolder) holder).delete_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "FollowerRecyclerView deleteBtn onClick");
+            } // onClick
+        }); // setOnClickListener
+    } // setDeleteButton
 
     @Override
     public int getItemCount() {

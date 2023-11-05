@@ -78,7 +78,7 @@ public class Feed extends AppCompatActivity {
     private void initial() {
         feedCtx = Feed.this;
 
-        sharedPreferences = getSharedPreferences("profile_music", MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("selected_profile_music", MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
         serverApi = ApiClient.getApiClient().create(ServerApi.class);
@@ -227,10 +227,8 @@ public class Feed extends AppCompatActivity {
                     .load(selectedImageUri)
                     .apply(new RequestOptions()
                             .circleCrop()).into(profile);
-            // TODO - Glide
-//            profile.setImageURI(selectedImageUri);
-            getSharedProfileMusic = sharedPreferences.getString("selected_profile_music", "Pinni - Hello ▶ ");
-            Log.i(TAG, "getSharedProfileMusic : " + getSharedProfileMusic);
+            getSharedProfileMusic = sharedPreferences.getString("selected_profile_music", "프로필 뮤직을 선택해 주세요");
+            Log.i(TAG, "getSharedProfileMusic 1 : " + getSharedProfileMusic);
             profileMusic.setText(getSharedProfileMusic + " ▶");
             // 이미지는 잘 가져오는데 프로필 뮤직이 해제됨.
         } // if
@@ -249,11 +247,10 @@ public class Feed extends AppCompatActivity {
         } // if
 
         if (resultCode == RESULT_OK) {
-            String selected_profile_music = data.getStringExtra("selected_profile_music");
-            profileMusic.setText(selected_profile_music);  // 화면에 표시되는 프로필 음악 업데이트.
-            Log.i(TAG, "getSharedProfileMusic : " +selected_profile_music);
-            editor.putString("selected_profile_music", selected_profile_music);
-            editor.commit();
+            getSharedProfileMusic = sharedPreferences.getString("selected_profile_music", "프로필 뮤직을 선택해 주세요");
+//            String selected_profile_music = data.getStringExtra("selected_profile_music");
+            profileMusic.setText(getSharedProfileMusic);  // 화면에 표시되는 프로필 음악 업데이트.
+            Log.i(TAG, "getSharedProfileMusic 2 : " +getSharedProfileMusic);
         } // if (resultCode == RESULT_OK)
     } // onActivityResult
 
@@ -874,5 +871,9 @@ public class Feed extends AppCompatActivity {
             } // onClick
         }); // setOnClickListener
     } // feedFollowClickEvent
+
+    void setFeedUserData() {
+
+    } // setFeedUserData END
 
 } // CLASS END
