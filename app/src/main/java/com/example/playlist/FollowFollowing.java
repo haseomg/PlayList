@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -33,15 +32,17 @@ public class FollowFollowing extends AppCompatActivity {
     androidx.recyclerview.widget.RecyclerView followRecyclerView;
     // TODO - Follower (팔로워 세팅)
     ArrayList<FollowerModel> followerList = new ArrayList<>();
+    ArrayList<FollowingModel> followingList = new ArrayList<>();
+
+
     FollowerModel followerModel;
+    FollowingModel followingModel;
     FollowerAdapter followerAdapter;
+    FollowingAdapter followingAdapter;
     LinearLayoutManager followerLayoutManager;
+    LinearLayoutManager followingLayoutManager;
 
     // TODO - Following (팔로잉 세팅)
-    ArrayList<FollowingModel> followingList = new ArrayList<>();
-    FollowingModel followingModel;
-    FollowingAdapter followingAdapter;
-    LinearLayoutManager followingLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,10 +79,10 @@ public class FollowFollowing extends AppCompatActivity {
 
         if (bringEnterClickStatus.equals("follower")) {
             Log.i(TAG, "bringGetFeed follower");
-            bringGetFollowerData(bringUserName, bringEnterClickStatus);
+            bringGetFollowerData(bringUserName);
         } else {
             Log.i(TAG, "bringGetFeed following");
-            bringGetFollowingData(bringUserName, bringEnterClickStatus);
+            bringGetFollowingData(bringUserName);
         } // else
     } // initial
 
@@ -95,8 +96,7 @@ public class FollowFollowing extends AppCompatActivity {
                 following_btn.setTextSize(18);
 
                 bringEnterClickStatus = "follower";
-                setFollowInitial();
-                bringGetFollowerData(bringUserName, bringEnterClickStatus);
+                bringGetFollowerData(bringUserName);
             } // onClick
         }); // setOnClickListener END
     } // setFollowerBtn
@@ -111,8 +111,7 @@ public class FollowFollowing extends AppCompatActivity {
                 follower_btn.setTextSize(18);
 
                 bringEnterClickStatus = "following";
-                setFollowInitial();
-                bringGetFollowingData(bringUserName, bringEnterClickStatus);
+                bringGetFollowingData(bringUserName);
             } // onClick
         }); // setOnClickListener END
     } // setFollowingBtn
@@ -131,7 +130,8 @@ public class FollowFollowing extends AppCompatActivity {
         } // else
     } // setFollowBtnUI
 
-    void bringGetFollowerData(String user, String status) {
+    void bringGetFollowerData(String user) {
+        setFollowInitial();
         Log.i(TAG, "bringGetFeed Follower user check : " + user);
         Gson gson = new GsonBuilder()
                 .setLenient()
@@ -143,10 +143,13 @@ public class FollowFollowing extends AppCompatActivity {
                 .build();
 
         ServerApi followerService = retrofit.create(ServerApi.class);
-        Call<List<FollowerModel>> call = followerService.getFollowerList(user, status);
+        Call<List<FollowerModel>> call = followerService.getFollowerList(user);
         call.enqueue(new Callback<List<FollowerModel>>() {
             @Override
             public void onResponse(Call<List<FollowerModel>> call, Response<List<FollowerModel>> response) {
+                followerAdapter = new FollowerAdapter(FollowFollowing.this, followerList);
+                followRecyclerView.setAdapter(followerAdapter);
+
                 if (response.isSuccessful()) {
                     String responseBody = new Gson().toJson(response.body());
                     Log.i(TAG, "bringGetFeed Follower Data onResponse response.code : " + response.code());
@@ -174,20 +177,7 @@ public class FollowFollowing extends AppCompatActivity {
                             Log.i(TAG, "bringGetFeed Follower Data onResponse null : " + followerModel);
                         } // else
                     } // for END
-                    try {
-                        followingAdapter.notifyDataSetChanged();
-
-                    } catch (NullPointerException e) {
-                        e.printStackTrace();
-                    } // catch
-
-                    try {
-                        followerAdapter.notifyDataSetChanged();
-
-                    } catch (NullPointerException e) {
-                        e.printStackTrace();
-                    } // catch
-
+                    followerAdapter.notifyDataSetChanged();
                 } else {
 
                 } // else
@@ -200,7 +190,8 @@ public class FollowFollowing extends AppCompatActivity {
         }); //enqueue
     } // bringGetFollowData
 
-    void bringGetFollowingData(String user, String status) {
+    void bringGetFollowingData(String user) {
+        setFollowInitial();
         Log.i(TAG, "bringGetFeed Following Data user check : " + user);
         Gson gson = new GsonBuilder()
                 .setLenient()
@@ -212,10 +203,11 @@ public class FollowFollowing extends AppCompatActivity {
                 .build();
 
         ServerApi followerService = retrofit.create(ServerApi.class);
-        Call<List<FollowingModel>> call = followerService.getFollowingList(user, status);
+        Call<List<FollowingModel>> call = followerService.getFollowingList(user);
         call.enqueue(new Callback<List<FollowingModel>>() {
             @Override
             public void onResponse(Call<List<FollowingModel>> call, Response<List<FollowingModel>> response) {
+
                 if (response.isSuccessful()) {
                     String responseBody = new Gson().toJson(response.body());
                     Log.i(TAG, "bringGetFeed Following onResponse response.code : " + response.code());
@@ -225,7 +217,7 @@ public class FollowFollowing extends AppCompatActivity {
                     followingList.clear();
 
                     for (FollowingModel followerModel : following) {
-                        Log.i(TAG, "bringGetFeed Following onResponse getFollower");
+                        Log.i(TAG, "bringGetFeed Following onResponse getFollowing");
 
                         if (!following.contains(null)) {
                             Log.i(TAG, "bringGetFeed Following onResponse !null : " + followerModel);
@@ -233,26 +225,15 @@ public class FollowFollowing extends AppCompatActivity {
                             String you = followerModel.getUser_name();
                             Log.i(TAG, "bringGetFeed Following onResponse user check: " + you);
 
-                            followingList.add(followingModel);
-
+                            followingList.add(followerModel);
                         } else {
                             Log.i(TAG, "bringGetFeed Following onResponse null : " + followerModel);
                         } // else
                     } // for END
-                    try {
-                        followerAdapter.notifyDataSetChanged();
 
-                    } catch (NullPointerException e) {
-                        e.printStackTrace();
-                    }
-
-                    try {
-                        followingAdapter.notifyDataSetChanged();
-
-                    } catch (NullPointerException e) {
-                        e.printStackTrace();
-                    } // catch
-
+                    followingAdapter = new FollowingAdapter(FollowFollowing.this, followingList);
+                    followRecyclerView.setAdapter(followingAdapter);
+                    followingAdapter.notifyDataSetChanged();
                 } else {
 
                 } // else
@@ -265,42 +246,100 @@ public class FollowFollowing extends AppCompatActivity {
         }); //enqueue
     } // bringGetFollowData
 
-    void setFollowInitial() {
-        followRecyclerView = findViewById(R.id.follow_recyclerVIew);
-        RecyclerView.LayoutManager layoutManager;
-        RecyclerView.Adapter adapter;
 
-        if (bringEnterClickStatus.equals("follower")) {
-            layoutManager = new LinearLayoutManager(this);
-            adapter = new FollowerAdapter(this, followerList);
-        } else {
-            layoutManager = new LinearLayoutManager(this);
-            adapter = new FollowingAdapter(this, followingList);
-        } // else
-
-        followRecyclerView.setLayoutManager(layoutManager);
-        followRecyclerView.setHasFixedSize(true);
-        followRecyclerView.setAdapter(adapter);
-    } // setFollowInitial
-
+//    void bringGetFollowingData(String user) {
+//        setFollowInitial();
+//        Log.i(TAG, "bringGetFeed Following Data user check : " + user);
+//        Gson gson = new GsonBuilder()
+//                .setLenient()
+//                .create();
+//
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(BASE_URL)
+//                .addConverterFactory(GsonConverterFactory.create(gson))
+//                .build();
+//
+//        ServerApi followerService = retrofit.create(ServerApi.class);
+//        Call<List<FollowingModel>> call = followerService.getFollowingList(user);
+//        call.enqueue(new Callback<List<FollowingModel>>() {
+//            @Override
+//            public void onResponse(Call<List<FollowingModel>> call, Response<List<FollowingModel>> response) {
+//                followingAdapter = new FollowingAdapter(FollowFollowing.this, followingList);
+//                followRecyclerView.setAdapter(followingAdapter);
+//
+//                if (response.isSuccessful()) {
+//                    String responseBody = new Gson().toJson(response.body());
+//                    Log.i(TAG, "bringGetFeed Following onResponse response.code : " + response.code());
+//                    Log.i(TAG, "bringGetFeed Following onResponse responseBody : " + responseBody);
+//                    List<FollowingModel> following = response.body();
+//                    followerList.clear();
+//                    followingList.clear();
+//
+//
+//                    for (FollowingModel followerModel : following) {
+//                        Log.i(TAG, "bringGetFeed Following onResponse getFollowing");
+//
+//                        if (!following.contains(null)) {
+//                            Log.i(TAG, "bringGetFeed Following onResponse !null : " + followerModel);
+//
+//                            String you = followerModel.getUser_name();
+//                            Log.i(TAG, "bringGetFeed Following onResponse user check: " + you);
+//
+//                            followingList.add(followingModel);
+//
+//                        } else {
+//                            Log.i(TAG, "bringGetFeed Following onResponse null : " + followerModel);
+//                        } // else
+//                    } // for END
+//                    followingAdapter.notifyDataSetChanged();
+//                } else {
+//
+//                } // else
+//            } // onResponse
+//
+//            @Override
+//            public void onFailure(Call<List<FollowingModel>> call, Throwable t) {
+//                Log.e(TAG, "bringGetFeed Following onFailure : " + t.getMessage());
+//            } // onFailure
+//        }); //enqueue
+//    } // bringGetFollowData
 
 //    void setFollowInitial() {
-//        if (bringEnterClickStatus.equals("follower")) {
-//            followRecyclerView = findViewById(R.id.follow_recyclerVIew);
-//            followerLayoutManager = new LinearLayoutManager(this);
-//            followRecyclerView.setLayoutManager(followerLayoutManager);
-//            followRecyclerView.setHasFixedSize(true);
-//            followerAdapter = new FollowerAdapter(this, followerList);
-//            followRecyclerView.setAdapter(followerAdapter);
+//        followRecyclerView = findViewById(R.id.follow_recyclerVIew);
+//        RecyclerView.LayoutManager layoutManager;
+//        RecyclerView.Adapter adapter;
 //
+//        if (bringEnterClickStatus.equals("follower")) {
+//            layoutManager = new LinearLayoutManager(this);
+//            adapter = new FollowerAdapter(this, followerList);
 //        } else {
-//            followRecyclerView = findViewById(R.id.follow_recyclerVIew);
-//            followingLayoutManager = new LinearLayoutManager(this);
-//            followRecyclerView.setLayoutManager(followingLayoutManager);
-//            followRecyclerView.setHasFixedSize(true);
-//            followingAdapter = new FollowingAdapter(this, followingList);
-//            followRecyclerView.setAdapter(followingAdapter);
+//            layoutManager = new LinearLayoutManager(this);
+//            adapter = new FollowingAdapter(this, followingList);
 //        } // else
+//
+//        followRecyclerView.setLayoutManager(layoutManager);
+//        followRecyclerView.setHasFixedSize(true);
+//        followRecyclerView.setAdapter(adapter);
 //    } // setFollowInitial
+
+
+    void setFollowInitial() {
+        if (bringEnterClickStatus.equals("follower")) {
+            followRecyclerView = findViewById(R.id.follow_recyclerVIew);
+            followerLayoutManager = new LinearLayoutManager(this);
+            followRecyclerView.setLayoutManager(followerLayoutManager);
+            followRecyclerView.setHasFixedSize(true);
+            followerAdapter = new FollowerAdapter(this, followerList);
+            followRecyclerView.setAdapter(followerAdapter);
+
+        } else {
+            followRecyclerView = findViewById(R.id.follow_recyclerVIew);
+            followingLayoutManager = new LinearLayoutManager(this);
+            followRecyclerView.setLayoutManager(followingLayoutManager);
+            followRecyclerView.setHasFixedSize(true);
+            followingAdapter = new FollowingAdapter(this, followingList);
+            followRecyclerView.setAdapter(followingAdapter);
+        } // else
+    } // setFollowInitial
 
 } // FollowFollowing

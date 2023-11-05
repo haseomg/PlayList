@@ -106,13 +106,11 @@ public interface ServerApi {
 
     @GET("get_follower.php")
     Call<List<FollowerModel>> getFollowerList(
-            @Query("user") String user_name,
-            @Query("status") String status);
+            @Query("user") String user_name);
 
     @GET("get_following.php")
     Call<List<FollowingModel>> getFollowingList(
-            @Query("user") String user_name,
-            @Query("status") String status);
+            @Query("user") String user_name);
 
     // TODO
     @FormUrlEncoded

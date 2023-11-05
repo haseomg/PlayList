@@ -10,7 +10,7 @@ public class FollowerModel {
     @SerializedName("follower_profile_image")
     private String profile_image;
 
-    @SerializedName("user_name")
+    @SerializedName("me")
     private String user_name;
 
     public String getProfile_image() {

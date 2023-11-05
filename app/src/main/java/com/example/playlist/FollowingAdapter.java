@@ -59,13 +59,12 @@ public class FollowingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             // TODO image setting
             try {
                 ((FollowingHolder) holder).user.setText(followingModel.getUser_name());
-                Log.i(TAG, "onBindViewHolder : "
+                Log.i(TAG, "bringGetFeed onBindViewHolder : "
                         + followingModel.getUser_name());
 
             } catch (NullPointerException e) {
                 e.printStackTrace();
-            }
-
+            } // catch
 
             Log.i(TAG, "onBindViewHolder : " + followingList);
         } // if
