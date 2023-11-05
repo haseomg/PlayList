@@ -85,4 +85,8 @@ public class FollowerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         } // FollowerHolder Constructor
     } // FollowerHolder CLASS END
 
+    public void clearItems() {
+        followerList.clear();
+    }
+
 } // Adapter END

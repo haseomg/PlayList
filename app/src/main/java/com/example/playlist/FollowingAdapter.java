@@ -57,10 +57,15 @@ public class FollowingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             FollowingModel followingModel = followingList.get(position);
 
             // TODO image setting
-            ((FollowingHolder) holder).user.setText(followingModel.getUser_name());
+            try {
+                ((FollowingHolder) holder).user.setText(followingModel.getUser_name());
+                Log.i(TAG, "onBindViewHolder : "
+                        + followingModel.getUser_name());
 
-            Log.i(TAG, "onBindViewHolder : "
-                    + followingModel.getUser_name());
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+
 
             Log.i(TAG, "onBindViewHolder : " + followingList);
         } // if
@@ -84,5 +89,9 @@ public class FollowingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             follow_btn = itemView.findViewById(R.id.followingBtn);
         } // Constructor
     } // FollowingHolder
+
+    public void clearItems() {
+        followingList.clear();
+    }
 
 } // Adapter

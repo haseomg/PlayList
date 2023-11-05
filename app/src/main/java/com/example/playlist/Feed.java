@@ -3,6 +3,7 @@ package com.example.playlist;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.room.Room;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -58,6 +61,11 @@ public class Feed extends AppCompatActivity {
     private static final String BASE_URL = "http://13.124.239.85/";
     private final int GET_GALLERY_IMAGE = 200;
 
+    String selected_profileMusic;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+    String getSharedProfileMusic;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +77,9 @@ public class Feed extends AppCompatActivity {
 
     private void initial() {
         feedCtx = Feed.this;
+
+        sharedPreferences = getSharedPreferences("profile_music", MODE_PRIVATE);
+        editor = sharedPreferences.edit();
 
         serverApi = ApiClient.getApiClient().create(ServerApi.class);
 
@@ -212,7 +223,15 @@ public class Feed extends AppCompatActivity {
         if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
             // TODO - DB에 넣어줄 이미지의 정보 (경로, 파일 형식)
             Uri selectedImageUri = data.getData();
-            profile.setImageURI(selectedImageUri);
+            Glide.with(Feed.this)
+                    .load(selectedImageUri)
+                    .apply(new RequestOptions()
+                            .circleCrop()).into(profile);
+            // TODO - Glide
+//            profile.setImageURI(selectedImageUri);
+            getSharedProfileMusic = sharedPreferences.getString("selected_profile_music", "Pinni - Hello ▶ ");
+            Log.i(TAG, "getSharedProfileMusic : " + getSharedProfileMusic);
+            profileMusic.setText(getSharedProfileMusic + " ▶");
             // 이미지는 잘 가져오는데 프로필 뮤직이 해제됨.
         } // if
 
@@ -231,8 +250,10 @@ public class Feed extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
             String selected_profile_music = data.getStringExtra("selected_profile_music");
-            Log.i(TAG, "profileMusic Selected: " + selected_profile_music);
             profileMusic.setText(selected_profile_music);  // 화면에 표시되는 프로필 음악 업데이트.
+            Log.i(TAG, "getSharedProfileMusic : " +selected_profile_music);
+            editor.putString("selected_profile_music", selected_profile_music);
+            editor.commit();
         } // if (resultCode == RESULT_OK)
     } // onActivityResult
 
@@ -346,6 +367,8 @@ public class Feed extends AppCompatActivity {
             nameFloatingButton.setBackgroundResource(R.drawable.follow_button);
             nameFloatingButton.setTextColor(Color.WHITE);
             msgBtn.setText("메시지");
+
+            setMsgOrChatRoomBtn(); // 메시지 버튼 클릭 시
         } // else
     } // setUIForMe
 
@@ -412,6 +435,7 @@ public class Feed extends AppCompatActivity {
         msgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i(TAG, "can chat check msgBtn onClick()");
                 if (msgBtn.getText().toString().equals("채팅 목록")) {
                     Intent chatRoomIntent = new Intent(Feed.this, ChatSelect.class);
                     chatRoomIntent.putExtra("before_class", "feed");
@@ -419,21 +443,28 @@ public class Feed extends AppCompatActivity {
                     startActivity(chatRoomIntent);
 
                 } else {
-                    Log.i(TAG, "msg check : " + msgBtn.getText().toString());
+                    // TODO - 메시지 버튼의 이름이 채팅 목록이 아닐 때
+                    Log.i(TAG, "msgBtn check : " + msgBtn.getText().toString());
+
                     if (nameFloatingButton.getText().toString().equals("팔로우")) {
+                        Log.i(TAG, "msgBtn chat check (if) : " + nameFloatingButton.getText().toString());
+                        ;
                         new AlertDialog.Builder(Feed.this, R.style.AlertDialogCustom)
                                 .setMessage(feedUser + "님을 팔로우 시 채팅이 가능합니다.")
                                 .setPositiveButton("네", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         // "네" 버튼 클릭 시 수행할 작업을 여기에 작성하세요.
-                                        saveFeed();
+
                                     } // onClick
                                 }) // setPositiveButton
                                 .show();
 
                     } else {
+                        Log.i(TAG, "msgBtn chat check (else) : " + nameFloatingButton.getText().toString());
+                        ;
                         // TODO - Following Status
+
                         // 소켓 서버 열어서 채팅 가능하게
                     } // else
                 } // else
@@ -469,11 +500,15 @@ public class Feed extends AppCompatActivity {
     } // setGenreSelect
 
     void setFeedEditMode() {
+        String infoStatus = "default";
         if (nameFloatingButton.getText().toString().equals("피드 편집")) {
             nameFloatingButton.setText("피드 저장");
             // TODO 프로필 이미지, 장르 세개 이미지 세팅 변화
             // TODO 피드 수정 상태 !
 
+            if (infoStatus.equals("default")) {
+
+            } else
             if (genreFirstImageId == R.drawable.genre_default) {
                 genreFirst.setImageResource(R.drawable.genre_pick);
                 genreFirstImageId = R.drawable.genre_pick;  // update the image ID
@@ -820,10 +855,10 @@ public class Feed extends AppCompatActivity {
         followText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO (1) 팔로워 클릭 시
-                Intent intent = new Intent(Feed.this, FollowFollowingFragment.class);
+                // TODO (1) 팔로워 클릭 시 데이터 전달
+                Intent intent = new Intent(Feed.this, FollowFollowing.class);
+                intent.putExtra("user", feedUser);
                 intent.putExtra("status", "follower");
-                intent.putExtra("user", nowLoginUser);
                 startActivity(intent);
             } // onClick
         }); // setOnClickListener
@@ -831,14 +866,13 @@ public class Feed extends AppCompatActivity {
         followingText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO (2) 팔로잉 클릭 시
-                Intent intent = new Intent(Feed.this, FollowFollowingFragment.class);
+                // TODO (2) 팔로잉 클릭 시 데이터 전달
+                Intent intent = new Intent(Feed.this, FollowFollowing.class);
+                intent.putExtra("user", feedUser);
                 intent.putExtra("status", "following");
-                intent.putExtra("user", nowLoginUser);
                 startActivity(intent);
             } // onClick
         }); // setOnClickListener
-
     } // feedFollowClickEvent
 
 } // CLASS END

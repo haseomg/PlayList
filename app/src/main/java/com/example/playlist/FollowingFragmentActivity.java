@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class FollowingFragmentActivity extends Fragment {
 
     String TAG = "FollowingFragmentActivity";
+    String user, status;
 
     public RecyclerView followingRecyclerView;
     public RecyclerView.Adapter followingAdapter;
@@ -29,6 +30,13 @@ public class FollowingFragmentActivity extends Fragment {
         followingRecyclerView = (RecyclerView) view.findViewById(R.id.followRecyclerView);
         followingRecyclerView.setHasFixedSize(true);
 
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            user = bundle.getString("user");
+            Log.i(TAG, "fetchAndDisplayFollowerList onCreateView : " + user);
+            status = bundle.getString("status");
+            Log.i(TAG, "fetchAndDisplayFollowerList onCreateView : " + status);
+        } // if
         return view;
     } // onCreateView
 

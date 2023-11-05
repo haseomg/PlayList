@@ -104,6 +104,16 @@ public interface ServerApi {
     Call<List<FeedCommentModel>> getFeedComments(
             @Query("user") String user_name);
 
+    @GET("get_follower.php")
+    Call<List<FollowerModel>> getFollowerList(
+            @Query("user") String user_name,
+            @Query("status") String status);
+
+    @GET("get_following.php")
+    Call<List<FollowingModel>> getFollowingList(
+            @Query("user") String user_name,
+            @Query("status") String status);
+
     // TODO
     @FormUrlEncoded
     @POST("get_played_songs.php")

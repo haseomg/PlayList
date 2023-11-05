@@ -15,6 +15,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class FollowFollowingFragment extends AppCompatActivity {
 
+    String TAG = "FollowFollowingFragment";
     String status, user;
     TextView back, userLogo;
 
@@ -41,12 +42,18 @@ public class FollowFollowingFragment extends AppCompatActivity {
         // 제일 처음 띄워줄 뷰를 세팅, commit까지 해줘야 함
         // TODO (1) 팔로우 버튼 클릭해서 접속 시 팔로우
         // TODO (2) 팔로잉 버튼 클릭해서 접속 시 팔로잉
-        if (status.equals("follower")) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, followFragment).commitAllowingStateLoss();
+//        if (status.equals("follower")) {
+        Log.i(TAG, "fragmentInitial before click status check (if) : " + status);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frame_layout, followFragment)
+                .commitAllowingStateLoss();
 
-        } else {
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, followingFragment).commitAllowingStateLoss();
-        } // else
+//        } else {
+//            Log.i(TAG, "fragmentInitial before click status check (else) : " + status);
+//            getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.frame_layout, followingFragment)
+//                    .commitAllowingStateLoss();
+//        } // else
 
         // 바텀 네비게이션 객체 선언
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);

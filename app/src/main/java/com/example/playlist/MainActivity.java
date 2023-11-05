@@ -21,6 +21,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -205,7 +206,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static Context mainCtx;
     androidx.constraintlayout.widget.ConstraintLayout mainLayout;
-    androidx.constraintlayout.widget.ConstraintLayout mainPlayLayout;
+    FrameLayout mainPlayLayout;
+    ImageView default_album;
     ImageView mainFull;
 
     static final String BASE_URL = "http://13.124.239.85/";
@@ -233,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
         mainCtx = this;
         mainLayout = findViewById(R.id.mainLayout);
         mainPlayLayout = findViewById(R.id.mainPlayLayout);
+        default_album = findViewById(R.id.default_album);
         mainFull = findViewById(R.id.mainFull_ImageView);
         gif = new Gif_Play();
         serverApi = ApiClient.getApiClient().create(ServerApi.class);
@@ -854,6 +857,7 @@ public class MainActivity extends AppCompatActivity {
                                                             toPlayTime.setTextColor(Color.WHITE);
                                                             // TODO background
                                                             mainPlayLayout.setBackgroundColor(Color.parseColor("#00ff0000"));
+                                                            default_album.setImageResource(0);
                                                             play.setTextColor(Color.WHITE);
                                                             play.setAlpha(0.7f);
                                                             leftPlayBtn.setAlpha(0.7f);
@@ -1973,6 +1977,7 @@ public class MainActivity extends AppCompatActivity {
                                                 toPlayTime.setTextColor(Color.WHITE);
                                                 // TODO background
                                                 mainPlayLayout.setBackgroundColor(Color.parseColor("#00ff0000"));
+                                                default_album.setImageResource(0);
                                                 play.setTextColor(Color.WHITE);
                                                 play.setAlpha(0.7f);
                                                 leftPlayBtn.setAlpha(0.7f);
@@ -2738,6 +2743,7 @@ public class MainActivity extends AppCompatActivity {
                                                 toPlayTime.setTextColor(Color.WHITE);
                                                 // TODO background
                                                 mainPlayLayout.setBackgroundColor(Color.parseColor("#00ff0000"));
+                                                default_album.setImageResource(0);
                                                 play.setTextColor(Color.WHITE);
                                                 play.setAlpha(0.7f);
                                                 leftPlayBtn.setAlpha(0.7f);
@@ -3776,6 +3782,7 @@ public class MainActivity extends AppCompatActivity {
                                                 toPlayTime.setTextColor(Color.WHITE);
                                                 // TODO background
                                                 mainPlayLayout.setBackgroundColor(Color.parseColor("#00ff0000"));
+                                                default_album.setImageResource(0);
                                                 play.setTextColor(Color.WHITE);
                                                 play.setAlpha(0.7f);
                                                 leftPlayBtn.setAlpha(0.7f);
@@ -4116,6 +4123,7 @@ public class MainActivity extends AppCompatActivity {
                                                 toPlayTime.setTextColor(Color.WHITE);
                                                 // TODO background
                                                 mainPlayLayout.setBackgroundColor(Color.parseColor("#00ff0000"));
+                                                default_album.setImageResource(0);
                                                 play.setTextColor(Color.WHITE);
                                                 play.setAlpha(0.7f);
                                                 leftPlayBtn.setAlpha(0.7f);
