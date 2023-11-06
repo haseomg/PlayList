@@ -223,6 +223,7 @@ public class Feed extends AppCompatActivity {
         if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
             // TODO - DB에 넣어줄 이미지의 정보 (경로, 파일 형식)
             Uri selectedImageUri = data.getData();
+            Log.i(TAG, "selectedImageUri : " + selectedImageUri);
             Glide.with(Feed.this)
                     .load(selectedImageUri)
                     .apply(new RequestOptions()
@@ -250,7 +251,7 @@ public class Feed extends AppCompatActivity {
             getSharedProfileMusic = sharedPreferences.getString("selected_profile_music", "프로필 뮤직을 선택해 주세요");
 //            String selected_profile_music = data.getStringExtra("selected_profile_music");
             profileMusic.setText(getSharedProfileMusic);  // 화면에 표시되는 프로필 음악 업데이트.
-            Log.i(TAG, "getSharedProfileMusic 2 : " +getSharedProfileMusic);
+            Log.i(TAG, "getSharedProfileMusic 2 : " + getSharedProfileMusic);
         } // if (resultCode == RESULT_OK)
     } // onActivityResult
 
@@ -278,7 +279,6 @@ public class Feed extends AppCompatActivity {
                             } // onProfileSelected
                         }); // setListener
                         dialog.show(getSupportFragmentManager(), "ProfileMusicSelect");
-
                     } // else
 
                 } catch (NullPointerException e) {
@@ -425,6 +425,11 @@ public class Feed extends AppCompatActivity {
         } // if
 
         // TODO 원래 기본이미지가 아니였을 때 - 원래 값 세팅 = DB not insert
+        // TODO - check (1) 프로필 이미지 (2) 프로필 뮤직 (3) 선호 장르 세가지 = null 허용
+        //  DB에서 값 가져올 때 null 이면 기본 이미지 세팅
+        //  not null이면 해당 위치에 세팅
+
+
         // TODO 수정했을 때 - 달라진 값 세팅 = DB insert 또는 update
     } // seveFeed END
 
@@ -498,6 +503,7 @@ public class Feed extends AppCompatActivity {
 
     void setFeedEditMode() {
         String infoStatus = "default";
+
         if (nameFloatingButton.getText().toString().equals("피드 편집")) {
             nameFloatingButton.setText("피드 저장");
             // TODO 프로필 이미지, 장르 세개 이미지 세팅 변화
@@ -505,37 +511,41 @@ public class Feed extends AppCompatActivity {
 
             if (infoStatus.equals("default")) {
 
-            } else
+            }
+
             if (genreFirstImageId == R.drawable.genre_default) {
+                Log.i(TAG, "setFeedEditMode 1번째 genre default image");
                 genreFirst.setImageResource(R.drawable.genre_pick);
                 genreFirstImageId = R.drawable.genre_pick;  // update the image ID
             }
 
             if (genreSecondImageId == R.drawable.genre_default) {
+                Log.i(TAG, "setFeedEditMode 2번째 genre default image");
                 genreSecond.setImageResource(R.drawable.genre_pick);
                 genreSecondImageId = R.drawable.genre_pick;
             }
 
             if (genreThirdImageId == R.drawable.genre_default) {
+                Log.i(TAG, "setFeedEditMode 3번째 genre default image");
                 genreThird.setImageResource(R.drawable.genre_pick);
                 genreThirdImageId = R.drawable.genre_pick;
             }
 
             // 만약 세팅된 장르가 없을 경우, 만약 세팅된 프로필 이미지가 없을 경우
             if (profileDefaultCheck == R.drawable.gray_profile) {
+                Log.i(TAG, "setFeedEditMode 4번째 profile default image");
                 profile.setImageResource(R.drawable.gray_profile_edit);
                 profileDefaultCheck = R.drawable.gray_profile_edit;
-            }
+            } // if
 
         } else if (nameFloatingButton.getText().toString().equals("피드 저장")) {
-            // TODO 디비에 해당 부분 저장
 
             new AlertDialog.Builder(Feed.this, R.style.AlertDialogCustom)
                     .setMessage("피드를 저장하시겠습니까?")
                     .setPositiveButton("네", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            // "네" 버튼 클릭 시 수행할 작업을 여기에 작성하세요.
+                            // TODO 디비에 해당 부분 저장
                             saveFeed();
                         } // onClick
                     }) // setPositiveButton

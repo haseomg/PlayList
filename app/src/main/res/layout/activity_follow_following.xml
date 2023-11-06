@@ -58,11 +58,33 @@
         android:layout_gravity="start"
         android:layout_weight="1"
         android:background="#9AA7E4"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/follow_recyclerVIew"
         app:layout_constraintVertical_bias="0.0" />
+
+    <View
+        android:id="@+id/follower_btn_view"
+        android:layout_width="205dp"
+        android:layout_height="2.5dp"
+        android:background="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="@+id/follow_recyclerVIew"
+        app:layout_constraintEnd_toStartOf="@+id/following_btn_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/follow_recyclerVIew" />
+
+    <View
+        android:id="@+id/following_btn_view"
+        android:layout_width="205dp"
+        android:layout_height="2.5dp"
+        android:background="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="@+id/follow_recyclerVIew"
+        app:layout_constraintEnd_toEndOf="@+id/followFollowingBottomView"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/follow_recyclerVIew" />
 
     <TextView
         android:id="@+id/follower_btn"
@@ -70,7 +92,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
         android:text="팔로워"
-        android:textColor="#5D5D9F"
+        android:textColor="#FFFFFF"
         android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/followFollowingBottomView"
@@ -85,6 +107,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
         android:text="팔로잉"
+        android:textColor="#5D5D9F"
         android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/followFollowingBottomView"

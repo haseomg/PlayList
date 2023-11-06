@@ -27,6 +27,7 @@ public class FollowFollowing extends AppCompatActivity {
     String TAG = "FollowFollowing";
     String bringUserName, bringEnterClickStatus;
     TextView user_logo, back, follower_btn, following_btn;
+    View followerView, followingView;
 
     private static final String BASE_URL = "http://13.124.239.85/";
     androidx.recyclerview.widget.RecyclerView followRecyclerView;
@@ -90,10 +91,16 @@ public class FollowFollowing extends AppCompatActivity {
         follower_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                follower_btn.setTextColor(Color.parseColor("#5D5D9F"));
-                following_btn.setTextColor(Color.WHITE);
-                follower_btn.setTextSize(20);
+                follower_btn.setTextColor(Color.WHITE);
+                following_btn.setTextColor(Color.parseColor("#5D5D9F"));
+                follower_btn.setTextSize(21);
                 following_btn.setTextSize(18);
+
+//                followerView.setVisibility(View.VISIBLE);
+//                followingView.setVisibility(View.INVISIBLE);
+
+                followerView.setBackgroundColor(Color.WHITE);
+                followingView.setBackgroundColor(Color.parseColor("#9AA7E4"));
 
                 bringEnterClickStatus = "follower";
                 bringGetFollowerData(bringUserName);
@@ -105,10 +112,16 @@ public class FollowFollowing extends AppCompatActivity {
         following_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                following_btn.setTextColor(Color.parseColor("#5D5D9F"));
-                follower_btn.setTextColor(Color.WHITE);
-                following_btn.setTextSize(20);
+                following_btn.setTextColor(Color.WHITE);
+                follower_btn.setTextColor(Color.parseColor("#5D5D9F"));
+                following_btn.setTextSize(21);
                 follower_btn.setTextSize(18);
+
+//                followingView.setVisibility(View.VISIBLE);
+//                followerView.setVisibility(View.INVISIBLE);
+
+                followingView.setBackgroundColor(Color.WHITE);
+                followerView.setBackgroundColor(Color.parseColor("#9AA7E4"));
 
                 bringEnterClickStatus = "following";
                 bringGetFollowingData(bringUserName);
@@ -117,16 +130,26 @@ public class FollowFollowing extends AppCompatActivity {
     } // setFollowingBtn
 
     void setFollowBtnUI() {
+        followerView = findViewById(R.id.follower_btn_view);
+        followingView = findViewById(R.id.following_btn_view);
         if (bringEnterClickStatus.equals("follower")) {
-            follower_btn.setTextColor(Color.parseColor("#5D5D9F"));
-            following_btn.setTextColor(Color.WHITE);
-            follower_btn.setTextSize(20);
-            following_btn.setTextSize(18);
-        } else {
-            following_btn.setTextColor(Color.parseColor("#5D5D9F"));
             follower_btn.setTextColor(Color.WHITE);
-            following_btn.setTextSize(20);
+            following_btn.setTextColor(Color.parseColor("#5D5D9F"));
+            follower_btn.setTextSize(21);
+            following_btn.setTextSize(18);
+//            followerView.setVisibility(View.VISIBLE);
+//            followingView.setVisibility(View.INVISIBLE);
+            followerView.setBackgroundColor(Color.WHITE);
+            followingView.setBackgroundColor(Color.parseColor("#9AA7E4"));
+        } else {
+            following_btn.setTextColor(Color.WHITE);
+            follower_btn.setTextColor(Color.parseColor("#5D5D9F"));
+            following_btn.setTextSize(21);
             follower_btn.setTextSize(18);
+//            followerView.setVisibility(View.INVISIBLE);
+//            followingView.setVisibility(View.VISIBLE);
+            followerView.setBackgroundColor(Color.parseColor("#9AA7E4"));
+            followingView.setBackgroundColor(Color.WHITE);
         } // else
     } // setFollowBtnUI
 

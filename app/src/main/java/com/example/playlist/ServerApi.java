@@ -187,4 +187,15 @@ public interface ServerApi {
             @Field("you") String you
     );
 
+    @FormUrlEncoded
+    @POST("feed_data_insert.php")
+    Call<Void> insertFeedUserData(
+            @Field("image") String image,
+            @Field("user") String user,
+            @Field("profile_music") String profile_music,
+            @Field("genre_first") String genre_first,
+            @Field("genre_second") String genre_second,
+            @Field("genre_third") String genre_third
+    ); // feed_data_insert
+
 } // ServerApi Interface END
