@@ -18,12 +18,21 @@ public class FollowerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context context;
     private ArrayList<FollowerModel> followerList;
     private OnItemClickListener listener;
+    private OnFeedMovingEventListener onFeedMovingEventListener;
     private int position;
     String TAG = "FollowAdapter";
 
     public FollowerAdapter(ArrayList<FollowerModel> followerList) {
         this.followerList = followerList;
     } // Constructor
+
+    public interface OnFeedMovingEventListener {
+        void onFeedItemClick(FollowerModel followerModel);
+    } // OnFeedMovingEventListener
+
+    public void setOnFeedMovingEventListener(OnFeedMovingEventListener onFeedMovingEventListener) {
+        this.onFeedMovingEventListener = onFeedMovingEventListener;
+    }
 
     public interface OnItemClickListener {
         void onItemDeleteButtonClick(FollowerModel followerModel);
@@ -59,6 +68,34 @@ public class FollowerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Log.i(TAG, "onBindViewHolder Method");
         if (holder instanceof FollowerHolder) {
             FollowerModel followerModel = followerList.get(position);
+
+            ((FollowerHolder) holder).profile_image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i(TAG, "followerClickEvent (adapter) profile_image onClick");
+                    if (onFeedMovingEventListener != null) {
+                        Log.i(TAG, "followerClickEvent (adapter) profile_image *onFeedMovingEventListener !null (if)");
+                        onFeedMovingEventListener.onFeedItemClick(followerModel);
+                    } else {
+                        Log.i(TAG, "followerClickEvent (adapter) profile_image *onFeedMovingEventListener null (else)");
+
+                    } // else
+                } // onClick
+            }); //setOnClickListener
+
+            ((FollowerHolder) holder).user_name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i(TAG, "followerClickEvent (adapter) user_name onClick");
+                    if (onFeedMovingEventListener != null) {
+                        Log.i(TAG, "followerClickEvent (adapter) user_name *onFeedMovingEventListener !null (if)");
+                        onFeedMovingEventListener.onFeedItemClick(followerModel);
+                    } else {
+                        Log.i(TAG, "followerClickEvent (adapter) user_name *onFeedMovingEventListener null (else)");
+
+                    } // else
+                } // onClick
+            }); //setOnClickListener
 
             // image setting
             ((FollowerHolder) holder).user_name.setText(followerModel.getUser_name());

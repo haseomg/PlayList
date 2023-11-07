@@ -131,7 +131,7 @@ public class Feed extends AppCompatActivity {
         // TODO (2) 내가 상대를 팔로우할 시 디비(follow_table)에 데이터 추가, 그리고 액티비티 생성 시
         // TODO (2-1) 디비의 데이터가 몇개인지 (내가 팔로우한 사람을 세어서) 조회해서 숫자를 받아서 세팅
         selectFollow(nowLoginUser, feedUser); // 내가 상대를 팔로우했을 때 버튼 이름, 백그라운드, 색상 세팅
-//        followCheck.setText("팔로워 " + followNum + "명 • 팔로잉 " + followingNum + "명");
+        setFeedUserFollow(feedUser); // 팔로우•팔로잉 세팅
 
         feedCommentRecyclerVIew = findViewById(R.id.feedCommentRecyclerView);
         feedCommentLayoutManager = new LinearLayoutManager(this);
@@ -140,7 +140,6 @@ public class Feed extends AppCompatActivity {
         feedCommentAdapter = new FeedCommentAdapter(this, feedCommentList);
         feedCommentRecyclerVIew.setAdapter(feedCommentAdapter);
 
-        setFeedUserFollow(feedUser); // 팔로우•팔로잉 세팅
         setClose(); // 닫기 버튼 클릭 이벤트
         setUIForMe(); // 피드 호스트 구별 (나/상대) 후 버튼에 피드 편집/채팅 목록 or 팔로우/메시지로 세팅
         setProfileImage(); // 프로필 이미지 (수정 모드에서만 클릭 이벤트)
@@ -385,7 +384,7 @@ public class Feed extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Log.i(TAG, "feedLifecycle onStart()");
-        setFeedUserFollow(nowLoginUser);
+        setFeedUserFollow(feedUser);
     }
 
     protected void onResume() {
@@ -791,6 +790,7 @@ public class Feed extends AppCompatActivity {
                 // TODO (1) 팔로워 클릭 시 데이터 전달
                 Intent intent = new Intent(Feed.this, FollowFollowing.class);
                 intent.putExtra("user", feedUser);
+                intent.putExtra("now_login_user", nowLoginUser);
                 intent.putExtra("status", "follower");
                 startActivity(intent);
             } // onClick
@@ -822,7 +822,6 @@ public class Feed extends AppCompatActivity {
 
 //        Call<Void> call = serverApi.insertFeedData()
     } // setFeedUserData END
-
 
 
 } // CLASS END

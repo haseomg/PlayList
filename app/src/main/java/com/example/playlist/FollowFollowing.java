@@ -27,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class FollowFollowing extends AppCompatActivity {
 
     String TAG = "FollowFollowingActivity";
-    String bringUserName, bringEnterClickStatus;
+    String bringUserName, bringEnterClickStatus, bringNowLoginUser;
     TextView user_logo, back, follower_btn, following_btn;
     View followerView, followingView;
 
@@ -60,8 +60,10 @@ public class FollowFollowing extends AppCompatActivity {
         Intent intent = getIntent();
         bringUserName = intent.getStringExtra("user");
         bringEnterClickStatus = intent.getStringExtra("status");
+        bringNowLoginUser = intent.getStringExtra("now_login_user");
         Log.i(TAG, "bringGetFeed user check : " + bringUserName);
         Log.i(TAG, "bringGetFeed status check : " + bringEnterClickStatus);
+        Log.i(TAG, "bringGetFeed now_login_user check : " + bringNowLoginUser);
 
         user_logo = findViewById(R.id.followUserLogo);
         user_logo.setText(bringUserName);
@@ -179,6 +181,7 @@ public class FollowFollowing extends AppCompatActivity {
                 followRecyclerView.setAdapter(followerAdapter);
 
                 setFollowerDeleteButton(); // 팔로워 리스트의 팔로워 아이템 중 삭제 버튼 클릭 이벤트
+                setMovingFeedClickEvent(); // 피드 액티비티로 이동
 
                 if (response.isSuccessful()) {
                     String responseBody = new Gson().toJson(response.body());
@@ -262,7 +265,10 @@ public class FollowFollowing extends AppCompatActivity {
                     } // for END
 
                     followingAdapter = new FollowingAdapter(FollowFollowing.this, followingList);
-                    setFollowingButton(); // 팔로잉 버튼 클릭 시
+                    setFollowingDeleteButton();
+                    setFollowingReAddButton();
+                    setMovingFeedClickEventFromFollowingList();
+
                     followRecyclerView.setAdapter(followingAdapter);
                     followingAdapter.notifyDataSetChanged();
                 } else {
@@ -373,29 +379,75 @@ public class FollowFollowing extends AppCompatActivity {
         } // else
     } // setFollowInitial
 
-    private void deleteFollow(String me, String you) {
-        Log.i(TAG, "followerSetDeleteBtn : " + me + " / " + you);
-        Call<Void> call = serverApi.deleteFollow(me, you);
+    private void insertFollow(String me, String you) {
+        Log.i(TAG, "followingSetButton insertFollow : " + me + " / " + you);
+        Call<Void> call = serverApi.insertFollow(me, you);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                Log.i(TAG, "followerSetDeleteBtn onResponse");
+                Log.i(TAG, "followingSetButton insertFollow onResponse");
                 if (response.isSuccessful()) {
-                    Log.i(TAG, "followerSetDeleteBtn Method onResponse() isSuccessful");
-                    Log.i(TAG, "followerSetDeleteBtn (response success)  and response.body check : " + response.body());
+                    Log.i(TAG, "followingSetButton insertFollow Method onResponse() isSuccessful");
+                    Log.i(TAG, "followingSetButton insertFollow (response success)  and response.body check : " + response.body());
 
                 } else {
-                    Log.i(TAG, "followerSetDeleteBtn Method onResponse() !isSuccessful");
-                    Log.i(TAG, "followerSetDeleteBtn (response not successful)  and response.body check : " + response.body());
+                    Log.i(TAG, "followingSetButton insertFollow Method onResponse() !isSuccessful");
+                    Log.i(TAG, "followingSetButton insertFollow (response not successful)  and response.body check : " + response.body());
                 } // else
             } // onResponse
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.e(TAG, "followerSetDeleteBtn onFailure : " + t.getMessage());
+                Log.e(TAG, "followingSetButton insertFollow onFailure : " + t.getMessage());
+            } // onFailure
+        }); // call.enqueue
+    } // insertFollow
+
+    private void deleteFollow(String me, String you) {
+        Log.i(TAG, "followingSetButton followerSetDeleteBtn : " + me + " / " + you);
+        Call<Void> call = serverApi.deleteFollow(me, you);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.i(TAG, "followingSetButton followerSetDeleteBtn onResponse");
+                if (response.isSuccessful()) {
+                    Log.i(TAG, "followingSetButton followerSetDeleteBtn Method onResponse() isSuccessful");
+                    Log.i(TAG, "followingSetButton followerSetDeleteBtn (response success)  and response.body check : " + response.body());
+
+                } else {
+                    Log.i(TAG, "followingSetButton followerSetDeleteBtn Method onResponse() !isSuccessful");
+                    Log.i(TAG, "followingSetButton followerSetDeleteBtn (response not successful)  and response.body check : " + response.body());
+                } // else
+            } // onResponse
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e(TAG, "followingSetButton followerSetDeleteBtn onFailure : " + t.getMessage());
             } // onFailure
         }); // call.enqueue
     } // deleteFollow END
+
+    private void setFollowingDeleteButton() {
+        followingAdapter.setOnItemFollowDeleteClickListener(new FollowingAdapter.OnItemFollowDeleteButtonClickListener() {
+            @Override
+            public void onItemFollowDeleteButtonClick(FollowingModel followingModel) {
+                // TODO - 서버와의 통신
+                Log.i(TAG, "followingSetButton (activity) delete");
+                deleteFollow(bringUserName, followingModel.getUser_name());
+            } // onItemFollowDeleteButtonOnClick
+        }); // setOnItemFollowDeleteClickListener
+    } // setFollowingDeleteButton
+
+    private void setFollowingReAddButton() {
+        followingAdapter.setOnItemFollowReAddClickListener(new FollowingAdapter.OnItemFollowReAddButtonClickListener() {
+            @Override
+            public void onItemFollowReAddButtonClick(FollowingModel followingModel) {
+                // TODO - 서버와의 통신
+                Log.i(TAG, "followingSetButton (activity) reAdd");
+                insertFollow(bringUserName, followingModel.getUser_name());
+            } // onItemFollowReAddButtonClick
+        }); // setOnItemFollowReAddClickListener
+    } // setFollowingReAddButton
 
     private void setFollowerDeleteButton() {
         followerAdapter.setOnItemClickListener(new FollowerAdapter.OnItemClickListener() {
@@ -426,44 +478,31 @@ public class FollowFollowing extends AppCompatActivity {
         }); // setOnItemClickListener
     } // setFollowerDeleteButton
 
-    void setFollowingButton() {
-        followingAdapter.setOnItemClickListener(new FollowingAdapter.OnItemClickListener() {
+    private void setMovingFeedClickEvent() {
+        followerAdapter.setOnFeedMovingEventListener(new FollowerAdapter.OnFeedMovingEventListener() {
             @Override
-            public void onItemFollowButtonClick(FollowingModel followingModel) {
-                Log.i(TAG, "followingSetButton (activity) onClick : " + followingModel.getUser_name());
-                new AlertDialog.Builder(FollowFollowing.this, R.style.AlertDialogCustom)
-                        .setMessage(followingModel.getUser_name() + "님의 팔로잉을 취소하시겠습니까?")
-                        .setPositiveButton("네", new DialogInterface.OnClickListener() {
+            public void onFeedItemClick(FollowerModel followerModel) {
+                Log.i(TAG, "followerClickEvent (activity) onClick : " + followerModel.getUser_name());
+                Intent intent = new Intent(FollowFollowing.this, Feed.class);
+                intent.putExtra("user", followerModel.getUser_name());
+                intent.putExtra("now_login_user", bringNowLoginUser);
+                startActivity(intent);
+            } // onFeedItemClick
+        }); //setOnFeedMovingEventListener
+    } // setMovingFeedClickEvent
 
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //  TODO (1) 팔로잉 취소
-                                String followingBtnStatus = following_btn.getText().toString();
-                                if (followingBtnStatus.equals("팔로잉")) {
-                                    Log.i(TAG, "followingSetButton (activity) onClick button status *if : " + followingBtnStatus);
-//                                    following_btn.setText("팔로우");
-//                                    following_btn.setBackgroundResource(R.drawable.follow_button);
-//                                    following_btn.setTextColor(Color.WHITE);
-
-                                } else {
-                                    Log.i(TAG, "followingSetButton (activity) onClick button status *else : " + followingBtnStatus);
-//                                    following_btn.setText("팔로잉");
-//                                    following_btn.setBackgroundResource(R.drawable.feed_button);
-//                                    following_btn.setTextColor(Color.parseColor("#CD6CAC6C"));
-                                } // else
-                            } // onClick
-                        }) // setPositiveButton
-
-                        .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            } // setNegativeButton
-                        }) // setNegativeButton
-                        .show();
-            } // onItemFollowButtonClick
-        }); // setOnItemClickListener
-    } // setFollowingButton
+    private void setMovingFeedClickEventFromFollowingList() {
+        followingAdapter.setOnItemMovingEventClickListener(new FollowingAdapter.OnItemMovingEventClickListener() {
+            @Override
+            public void onFollowingListItemClick(FollowingModel followingModel) {
+                Log.i(TAG, "followingClickEvent (activity) onClick : " + followingModel.getUser_name());
+                Intent intent = new Intent(FollowFollowing.this, Feed.class);
+                intent.putExtra("user", followingModel.getUser_name());
+                intent.putExtra("now_login_user", bringNowLoginUser);
+                startActivity(intent);
+            } // onFollowingListItemClick
+        }); // setOnItemMovingEventClickListener
+    } // setMovingFeedClickEventFromFollowingList
 
     @Override
     protected void onStart() {

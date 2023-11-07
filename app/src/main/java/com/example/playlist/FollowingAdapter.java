@@ -1,6 +1,7 @@
 package com.example.playlist;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -19,6 +21,9 @@ public class FollowingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private Context context;
     private ArrayList<FollowingModel> followingList;
     private OnItemClickListener listener;
+    private OnItemFollowDeleteButtonClickListener deleteListener;
+    private OnItemFollowReAddButtonClickListener reAddListener;
+    private OnItemMovingEventClickListener movingListener;
     private int position;
     String TAG = "FollowingAdapter";
 
@@ -32,13 +37,30 @@ public class FollowingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.followingList = followingList;
     } // Constructor
 
-    public interface OnItemClickListener {
-        void onItemFollowButtonClick(FollowingModel followingModel);
+    public interface OnItemMovingEventClickListener {
+        void onFollowingListItemClick(FollowingModel followingModel);
+    } // OnItemMovingEventClickListener
+
+    public void setOnItemMovingEventClickListener(OnItemMovingEventClickListener listener) {
+        this.movingListener = listener;
+    } // setOnItemMovingEventClickListener
+
+    public interface OnItemFollowDeleteButtonClickListener {
+        void onItemFollowDeleteButtonClick(FollowingModel followingModel);
     } // OnItemClickListener
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.listener = onItemClickListener;
-    } // setOnItemClickListener
+    public void setOnItemFollowDeleteClickListener(OnItemFollowDeleteButtonClickListener listener) {
+        this.deleteListener = listener;
+    } // void
+
+    public interface OnItemFollowReAddButtonClickListener {
+        void onItemFollowReAddButtonClick(FollowingModel followingModel);
+    } // OnItemClickListener
+
+    public void setOnItemFollowReAddClickListener(OnItemFollowReAddButtonClickListener listener) {
+        this.reAddListener = listener;
+    } // void
+
 
     @NonNull
     @Override
@@ -61,6 +83,36 @@ public class FollowingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (holder instanceof FollowingHolder) {
             FollowingModel followingModel = followingList.get(position);
 
+            ((FollowingHolder) holder).profile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i(TAG, "followingClickEvent (adapter) profile onClick: ");
+                    if (movingListener != null) {
+                        Log.i(TAG, "followingClickEvent (adapter) profile *listener !null (if)");
+                        movingListener.onFollowingListItemClick(followingModel);
+                    } else {
+                        Log.i(TAG, "followingClickEvent (adapter) profile *listener null (else)");
+
+                    } // else
+                } // onClick
+            }); // setOnClickListener
+
+            ((FollowingHolder) holder).user.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i(TAG, "followingClickEvent (adapter) user onClick: ");
+                    if (movingListener != null) {
+                        Log.i(TAG, "followingClickEvent (adapter) user *listener !null (if)");
+                        movingListener.onFollowingListItemClick(followingModel);
+                    } else {
+                        Log.i(TAG, "followingClickEvent (adapter) user *listener null (else)");
+
+                    } // else
+
+                } // onClick
+            }); // setOnClickListener
+
+
             // TODO image setting
             try {
                 ((FollowingHolder) holder).user.setText(followingModel.getUser_name());
@@ -73,22 +125,67 @@ public class FollowingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             Log.i(TAG, "onBindViewHolder : " + followingList);
 
+            // TODO - 팔로우 버튼 클릭 이벤트
             ((FollowingHolder) holder).follow_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     String btnText = ((FollowingHolder) holder).follow_btn.getText().toString();
                     if ("팔로잉".equals(btnText)) {
-                        ((FollowingHolder) holder).follow_btn.setText("팔로우");
-                        ((FollowingHolder) holder).follow_btn.setBackgroundResource(R.drawable.follow_button);
-                        ((FollowingHolder) holder).follow_btn.setTextColor(Color.WHITE);
+                        Log.i(TAG, "followingSetButton (adapter) *btnTextStatus (if) : " + btnText);
 
+                        new AlertDialog.Builder(context)
+                                .setMessage("팔로우를 취소하시겠습니까?")
+                                .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // 확인 버튼 클릭시 처리 로직
+                                        ((FollowingHolder) holder).follow_btn.setText("팔로우");
+                                        ((FollowingHolder) holder).follow_btn.setBackgroundResource(R.drawable.follower_readd_btn);
+                                        ((FollowingHolder) holder).follow_btn.setTextColor(Color.WHITE);
+
+                                        if (deleteListener != null) {
+                                            Log.i(TAG, "followingSetButton (adapter) *deleteListener !null (if)");
+                                            deleteListener.onItemFollowDeleteButtonClick(followingModel);
+                                        } else {
+                                            Log.i(TAG, "followingSetButton (adapter) *deleteListener null (else)");
+                                        } // else
+                                    } // onClick
+                                }) // setPositiveButton
+                                .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // 취소 버튼 클릭시 처리 로직
+                                        dialog.dismiss();
+                                    } // onClick
+                                }) // setNegativeButton
+                                .show();
 
                     } else if ("팔로우".equals(btnText)) {
-                        ((FollowingHolder) holder).follow_btn.setText("팔로잉");
-                        ((FollowingHolder) holder).follow_btn.setBackgroundResource(R.drawable.feed_button);
-                        ((FollowingHolder) holder).follow_btn.setTextColor(Color.parseColor("#CD6CAC6C"));
+                        Log.i(TAG, "followingSetButton (adapter) *btnTextStatus (else if) : " + btnText);
 
+                        new AlertDialog.Builder(context)
+                                .setMessage(followingModel.getUser_name() + "님을 팔로우하시겠습니까?")
+                                .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // 확인 버튼 클릭시 처리 로직
+                                        ((FollowingHolder) holder).follow_btn.setText("팔로잉");
+                                        ((FollowingHolder) holder).follow_btn.setBackgroundResource(R.drawable.follower_delete_btn);
+                                        ((FollowingHolder) holder).follow_btn.setTextColor(Color.parseColor("#5D5D9F"));
+
+                                        if (reAddListener != null) {
+                                            Log.i(TAG, "followingSetButton (adapter) *reAddListener !null (if)");
+                                            reAddListener.onItemFollowReAddButtonClick(followingModel);
+                                        } else {
+                                            Log.i(TAG, "followingSetButton (adapter) *reAddListener null (else)");
+                                        } // else
+                                    } // onClick
+                                }) // setPositiveButton
+                                .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // 취소 버튼 클릭시 처리 로직
+                                        dialog.dismiss();
+                                    } // onClick
+                                }) // setNegativeButton
+                                .show();
                     } // else
 
 //                    if (listener != null) {
