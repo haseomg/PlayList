@@ -37,7 +37,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Feed extends AppCompatActivity {
 
     static Context feedCtx;
-    private static final String TAG = "FEED";
+    private static final String TAG = "FeedActivity";
 
     ImageView genreFirst, genreSecond, genreThird, profile;
     TextView feedLogo, profileMusic, nameFloatingButton, msgBtn, followText, followingText, userName;
@@ -67,6 +67,7 @@ public class Feed extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG, "feedLifecycle onCreate");
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_feed);
 
@@ -383,27 +384,28 @@ public class Feed extends AppCompatActivity {
 
     protected void onStart() {
         super.onStart();
-        Log.i(TAG, "onStart()");
+        Log.i(TAG, "feedLifecycle onStart()");
+        setFeedUserFollow(nowLoginUser);
     }
 
     protected void onResume() {
         super.onResume();
-        Log.i(TAG, "onResume()");
+        Log.i(TAG, "feedLifecycle onResume()");
     }
 
     protected void onPause() {
         super.onPause();
-        Log.i(TAG, "onPause()");
+        Log.i(TAG, "feedLifecycle onPause()");
     }
 
     protected void onStop() {
         super.onStop();
-        Log.i(TAG, "onStop()");
+        Log.i(TAG, "feedLifecycle onStop()");
     }
 
     protected void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "onDestroy()");
+        Log.i(TAG, "feedLifecycle onDestroy()");
     }
 
     void saveFeed() {
@@ -820,5 +822,7 @@ public class Feed extends AppCompatActivity {
 
 //        Call<Void> call = serverApi.insertFeedData()
     } // setFeedUserData END
+
+
 
 } // CLASS END
