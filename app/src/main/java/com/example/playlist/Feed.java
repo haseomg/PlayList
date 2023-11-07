@@ -17,7 +17,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.room.Room;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -47,7 +46,6 @@ public class Feed extends AppCompatActivity {
     int genre_pick, profile_edit, profileDefaultCheck, genreDefaultCheck;
     int genreFirstImageId, genreSecondImageId, genreThirdImageId;
     int followNum, followingNum = 0;
-    String followNumToStr, followingNumToStr = "0";
     public String uuidForChat, song_name, user, forNoneEditModeCheck, nowLoginUser, feedUser;
     private ArrayList<String> uuidValues;
 
@@ -64,7 +62,7 @@ public class Feed extends AppCompatActivity {
     String selected_profileMusic;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
-    String getSharedProfileMusic;
+    String getSharedProfileMusic, getSharedGenreFirst, getSharedGenreSecond, getSharedGenreThird, getSelectedProfileImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,7 +221,10 @@ public class Feed extends AppCompatActivity {
         if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
             // TODO - DB에 넣어줄 이미지의 정보 (경로, 파일 형식)
             Uri selectedImageUri = data.getData();
-            Log.i(TAG, "selectedImageUri : " + selectedImageUri);
+            getSelectedProfileImage = selectedImageUri.toString();
+            Log.i(TAG, "selectedImageUri (selectedImageUri check) : " + selectedImageUri);
+            Log.i(TAG, "selectedImageUri (getSelectedProfileImage) : " + getSelectedProfileImage);
+
             Glide.with(Feed.this)
                     .load(selectedImageUri)
                     .apply(new RequestOptions()
@@ -781,83 +782,6 @@ public class Feed extends AppCompatActivity {
         }); // call.enqueque
     } // fetchAndDisplayFeedComments
 
-    void setChatting() {
-        getUUIDFromRoomDB(nowLoginUser);
-        String foundValue = null;
-
-        for (String uuidValue : uuidValues) {
-            Log.i(TAG, "UUID setChatting");
-            if (uuidValue.contains(nowLoginUser) && uuidValue.contains(feedUser)) {
-                Log.i(TAG, "UUID setChatting");
-                foundValue = uuidValue;
-                Log.i(TAG, "UUID setChatting foundValue : " + foundValue);
-                break;
-            } // if
-        } // for
-
-        if (foundValue != null) {
-            Log.i(TAG, "UUID setChatting foundValue : " + foundValue);
-        } else {
-            Log.i(TAG, "UUID No value found with me and you");
-        } // else
-
-        uuidForChat = foundValue;
-        Log.i(TAG, "UUID setChatting uuidForChat (key) check : " + uuidForChat);
-        Intent chatIntent = new Intent(Feed.this, ChatActivity.class);
-
-        if (uuidForChat != null) {
-            Log.i(TAG, "UUID if (uuidForChat != null)");
-            Log.i(TAG, "UUID uuid ForChat ; " + uuidForChat);
-            chatIntent.putExtra("uuid", uuidForChat);
-
-        } else {
-            Log.i(TAG, "UUID if (uuidForChat == null)");
-            Log.i(TAG, "UUID ForChat ; " + uuidForChat);
-            String uuidCheck = "none_uuid";
-            chatIntent.putExtra("uuid", uuidCheck);
-        } // else END
-
-        Log.i(TAG, "UUID yourname Check : " + feedUser);
-        Log.i(TAG, "UUID username Check : " + nowLoginUser);
-
-        chatIntent.putExtra("yourname", feedUser);
-        chatIntent.putExtra("username", nowLoginUser);
-
-//        editor.putString("room", getRoomName);
-//        editor.putString("name", getUsername);
-//        editor.putString("the_other", you);
-//        editor.commit();
-
-        startActivity(chatIntent);
-    } // setChatting
-
-
-    private void getUUIDFromRoomDB(String me) {
-        Log.i(TAG, "uuid - getUUIDFromRoomDB Method");
-        UUIDDatabase db = Room.databaseBuilder(getApplicationContext(), UUIDDatabase.class, "uuid")
-                .addMigrations(MainActivity.MIGRATION_1_2)
-                .build();
-        UuidDao uuidDao = db.uuidDao();
-
-        runOnUiThread(() -> {
-            db.uuidDao().getAll().observe(Feed.this, uuids -> {
-                if (uuids.isEmpty()) {
-//                    Toast.makeText(ChatSelect.this, "데이터베이스가 비어 있습니다.", Toast.LENGTH_SHORT).show();
-                } else {
-
-                    uuidValues = new ArrayList<>(); // 리스트 초기화
-
-                    StringBuilder sb = new StringBuilder();
-                    for (Uuid uuid : uuids) {
-                        uuidValues.add(uuid.uuid); // 값 추가
-                        sb.append("UUID : ").append(uuid.uuid).append("\n");
-                    } // for END
-                    Log.i(TAG, "UUID : " + sb.toString());
-                } // else END
-            }); // observer END
-        }); // runOnUiThread END
-    } // getUUIDFromRoomDB
-
     void feedFollowFollowingClickEvent() {
         followText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -883,7 +807,18 @@ public class Feed extends AppCompatActivity {
     } // feedFollowClickEvent
 
     void setFeedUserData() {
+        // TODO Check (1) DB Insert Data - nowLoginUser (== me), getSelectedProfileImage, getSharedProfileMusic
+        //  getSharedGenreFirst, getSharedGenreSecond, getSharedGenreThird
 
+        Log.i(TAG, "setFeedUserData");
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ServerApi serverApi = retrofit.create(ServerApi.class);
+
+//        Call<Void> call = serverApi.insertFeedData()
     } // setFeedUserData END
 
 } // CLASS END

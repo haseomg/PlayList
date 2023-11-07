@@ -189,7 +189,7 @@ public interface ServerApi {
 
     @FormUrlEncoded
     @POST("feed_data_insert.php")
-    Call<Void> insertFeedUserData(
+    Call<Void> insertFeedData(
             @Field("image") String image,
             @Field("user") String user,
             @Field("profile_music") String profile_music,
