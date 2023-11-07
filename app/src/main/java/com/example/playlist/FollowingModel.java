@@ -13,9 +13,6 @@ public class FollowingModel {
     @SerializedName("you")
     private String user_name;
 
-//    @SerializedName("follow_status")
-//    private boolean isFollowing;
-
     public String getProfile_image() {
         return profile_image;
     } // getProfile_image
@@ -24,5 +21,4 @@ public class FollowingModel {
         return user_name;
     } // getUser_name
 
-//    public Boolean getIsFollowing() { return isFollowing; } // getIsFollowing
 } // FollowingModel

@@ -1,6 +1,7 @@
 package com.example.playlist;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private Context context;
     private ArrayList<FollowingModel> followingList;
-    private OnItemClickListener onItemClickListener;
+    private OnItemClickListener listener;
     private int position;
     String TAG = "FollowingAdapter";
 
@@ -31,8 +32,12 @@ public class FollowingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.followingList = followingList;
     } // Constructor
 
+    public interface OnItemClickListener {
+        void onItemFollowButtonClick(FollowingModel followingModel);
+    } // OnItemClickListener
+
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
+        this.listener = onItemClickListener;
     } // setOnItemClickListener
 
     @NonNull
@@ -67,6 +72,34 @@ public class FollowingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             } // catch
 
             Log.i(TAG, "onBindViewHolder : " + followingList);
+
+            ((FollowingHolder) holder).follow_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    String btnText = ((FollowingHolder) holder).follow_btn.getText().toString();
+                    if ("팔로잉".equals(btnText)) {
+                        ((FollowingHolder) holder).follow_btn.setText("팔로우");
+                        ((FollowingHolder) holder).follow_btn.setBackgroundResource(R.drawable.follow_button);
+                        ((FollowingHolder) holder).follow_btn.setTextColor(Color.WHITE);
+
+
+                    } else if ("팔로우".equals(btnText)) {
+                        ((FollowingHolder) holder).follow_btn.setText("팔로잉");
+                        ((FollowingHolder) holder).follow_btn.setBackgroundResource(R.drawable.feed_button);
+                        ((FollowingHolder) holder).follow_btn.setTextColor(Color.parseColor("#CD6CAC6C"));
+
+                    } // else
+
+//                    if (listener != null) {
+//                        Log.i(TAG, "followingSetButton (adapter) onClick *if");
+//                        listener.onItemFollowButtonClick(followingModel);
+//
+//                    } else {
+//                        Log.i(TAG, "followingSetButton (adapter) onClick *else");
+//                    } // else
+                } // onClick
+            }); // setOnClickListener
         } // if
     } // onBindViewHolder
 
