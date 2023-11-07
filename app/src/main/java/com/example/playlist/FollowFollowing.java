@@ -29,6 +29,7 @@ public class FollowFollowing extends AppCompatActivity {
     TextView user_logo, back, follower_btn, following_btn;
     View followerView, followingView;
 
+    private ServerApi serverApi;
     private static final String BASE_URL = "http://13.124.239.85/";
     androidx.recyclerview.widget.RecyclerView followRecyclerView;
     // TODO - Follower (팔로워 세팅)
@@ -67,6 +68,8 @@ public class FollowFollowing extends AppCompatActivity {
         following_btn = findViewById(R.id.following_btn);
         setFollowBtnUI();
 
+        serverApi = ApiClient.getApiClient().create(ServerApi.class);
+
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,6 +80,8 @@ public class FollowFollowing extends AppCompatActivity {
 //        setFollowInitial();
         setFollowerBtn();
         setFollowingBtn();
+
+        setFollowerDeleteButton(); // 팔로워 리스트의 팔로워 아이템 중 삭제 버튼 클릭 이벤트
 
         if (bringEnterClickStatus.equals("follower")) {
             Log.i(TAG, "bringGetFeed follower");
@@ -364,5 +369,38 @@ public class FollowFollowing extends AppCompatActivity {
             followRecyclerView.setAdapter(followingAdapter);
         } // else
     } // setFollowInitial
+
+    private void deleteFollow(String me, String you) {
+        Log.i(TAG, "deleteFollow : " + me + " / " + you);
+        Call<Void> call = serverApi.deleteFollow(me, you);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.i(TAG, "deleteFollow onResponse");
+                if (response.isSuccessful()) {
+                    Log.i(TAG, "deleteFollow Method onResponse() isSuccessful");
+                    Log.i(TAG, "deleteFollow (response success)  and response.body check : " + response.body());
+
+                } else {
+                    Log.i(TAG, "deleteFollow Method onResponse() !isSuccessful");
+                    Log.i(TAG, "deleteFollow (response not successful)  and response.body check : " + response.body());
+                } // else
+            } // onResponse
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e(TAG, "deleteFollow onFailure : " + t.getMessage());
+            } // onFailure
+        }); // call.enqueue
+    } // deleteFollow END
+
+    private void setFollowerDeleteButton() {
+        followerAdapter.setOnItemClickListener(new FollowerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemDeleteButtonClick(FollowerModel followerModel) {
+                Log.i(TAG, "followerSetDeleteBtn (activity) : " + followerModel.getUser_name());
+            } // onItemDeleteButtonClick
+        }); // setOnItemClickListener
+    } // setFollowerDeleteButton
 
 } // FollowFollowing

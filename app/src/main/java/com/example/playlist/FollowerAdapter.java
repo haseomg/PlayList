@@ -17,7 +17,7 @@ public class FollowerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private Context context;
     private ArrayList<FollowerModel> followerList;
-    private OnItemClickListener onItemClickListener;
+    private OnItemClickListener listener;
     private int position;
     String TAG = "FollowAdapter";
 
@@ -25,8 +25,12 @@ public class FollowerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.followerList = followerList;
     } // Constructor
 
+    public interface OnItemClickListener {
+        void onItemDeleteButtonClick(FollowerModel followerModel);
+    }
+
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
+        this.listener = onItemClickListener;
     } // setOnItemClickListener
 
     FollowerAdapter(Context context, ArrayList<FollowerModel> followerList) {
@@ -61,18 +65,19 @@ public class FollowerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             Log.i(TAG, "onBindViewHolder : " + followerModel.getUser_name());
             Log.i(TAG, "onBindViewHolder : " + followerList);
 
-            setDeleteButton(holder);
+            ((FollowerHolder) holder).delete_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        Log.i(TAG, "followerSetDeleteBtn (adapter) onClick *if");
+                        listener.onItemDeleteButtonClick(followerModel);
+                    } else {
+                        Log.i(TAG, "followerSetDeleteBtn (adapter) onClick *else");
+                    } // else
+                } // onClick
+            }); // setOnClickListener
         } // if
     } // onBindViewHolder
-
-    private void setDeleteButton(RecyclerView.ViewHolder holder) {
-        ((FollowerHolder) holder).delete_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "FollowerRecyclerView deleteBtn onClick");
-            } // onClick
-        }); // setOnClickListener
-    } // setDeleteButton
 
     @Override
     public int getItemCount() {
