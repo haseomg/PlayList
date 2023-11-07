@@ -134,7 +134,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     if ("팔로잉".equals(btnText)) {
                         Log.i(TAG, "followingSetButton (adapter) *btnTextStatus (if) : " + btnText);
 
-                        new AlertDialog.Builder(context)
+                        new AlertDialog.Builder(context, R.style.AlertDialogCustom)
                                 .setMessage("팔로우를 취소하시겠습니까?")
                                 .setPositiveButton("네", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {

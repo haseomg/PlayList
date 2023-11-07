@@ -808,6 +808,15 @@ public class Feed extends AppCompatActivity {
         }); // setOnClickListener
     } // feedFollowClickEvent
 
+    void saveUserProfileImageInFeed() {
+        // TODO (1) - ServerApi 디자인
+        // TODO (2) - 아이템 모델 생성
+        // TODO (3) - 여기에다 비즈니스 로직 추가
+        // TODO (4) - php 파일 생성
+        // TODO (5) - 사진 업로드 확인
+
+    } // saveUserProfileImageInFeed
+
     void setFeedUserData() {
         // TODO Check (1) DB Insert Data - nowLoginUser (== me), getSelectedProfileImage, getSharedProfileMusic
         //  getSharedGenreFirst, getSharedGenreSecond, getSharedGenreThird
@@ -819,6 +828,9 @@ public class Feed extends AppCompatActivity {
                 .build();
 
         ServerApi serverApi = retrofit.create(ServerApi.class);
+
+        // TODO Check (2) 'feed_user_data' 테이블에 유저의 피드 데이터 저장
+        //  저장할 정보들 - image, user, profile_music, genre_first, second, third
 
 //        Call<Void> call = serverApi.insertFeedData()
     } // setFeedUserData END
