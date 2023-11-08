@@ -66,8 +66,8 @@ public class ProfileMusicSelectDialog extends DialogFragment {
                         Log.i("ProfileMusic", "profileMusic onClick 확인 : " + selectedProfileMusic);
                         ((Feed) Feed.feedCtx).profileMusic.setText(selectedProfileMusic + " ▶");
                         // TODO - 프로필 뮤직 쉐어드에 저장
-                        Log.i("ProfileMusicSelectDialog", "getSharedProfileMusic 3 : " +selectedProfileMusic);
-                        editor.putString("selected_profile_music", selectedProfileMusic);
+                        Log.i("ProfileMusicSelectDialog", "getSharedProfileMusic 3 : " + selectedProfileMusic);
+                        editor.putString(((Feed) Feed.feedCtx).feedUser, selectedProfileMusic);
                         editor.commit();
                         sendResult(Activity.RESULT_OK);
                     } // onClick

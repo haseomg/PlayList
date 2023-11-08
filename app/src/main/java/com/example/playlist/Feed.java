@@ -1,12 +1,16 @@
 package com.example.playlist;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,8 +18,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
@@ -42,6 +49,7 @@ public class Feed extends AppCompatActivity {
 
     static Context feedCtx;
     private static final String TAG = "FeedActivity";
+    private static final int PERMISSION_REQUEST_CODE = 1;
 
     ImageView genreFirst, genreSecond, genreThird, profile;
     TextView feedLogo, profileMusic, nameFloatingButton, msgBtn, followText, followingText, userName;
@@ -194,6 +202,8 @@ public class Feed extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO - Null Exception
+                // 외부 저장소 권한 요청
+                requestStoragePermission();
                 try {
                     if (!nowLoginUser.equals(feedUser)) {
                         // 현재 로그인한 유저가 피드의 주인이 아닐 때
@@ -235,10 +245,20 @@ public class Feed extends AppCompatActivity {
                     .load(selectedImageUri)
                     .apply(new RequestOptions()
                             .circleCrop()).into(profile);
-            getSharedProfileMusic = sharedPreferences.getString("selected_profile_music", "프로필 뮤직을 선택해 주세요");
+            getSharedProfileMusic = sharedPreferences.getString(feedUser, "프로필 뮤직을 선택해 주세요.");
             Log.i(TAG, "getSharedProfileMusic 1 : " + getSharedProfileMusic);
-            profileMusic.setText(getSharedProfileMusic + " ▶");
-            // 이미지는 잘 가져오는데 프로필 뮤직이 해제됨.
+            if (profileMusic.getText().toString().equals("프로필 뮤직을 선택해 주세요.")) {
+                editor.putString(feedUser, "프로필 뮤직을 선택해 주세요.");
+                editor.commit();
+
+                Log.i(TAG, "saveUserProfileImageInFeed onActivityResult *else : " + getSharedProfileMusic);
+                profileMusic.setText("프로필 뮤직을 선택해 주세요.");
+
+            } else {
+                Log.i(TAG, "saveUserProfileImageInFeed onActivityResult *if : " + getSharedProfileMusic);
+                profileMusic.setText(getSharedProfileMusic + " ▶");
+
+            } // else
         } // if
 
         if (resultCode == RESULT_OK) {
@@ -255,10 +275,15 @@ public class Feed extends AppCompatActivity {
         } // if
 
         if (resultCode == RESULT_OK) {
-            getSharedProfileMusic = sharedPreferences.getString("selected_profile_music", "프로필 뮤직을 선택해 주세요");
+            getSharedProfileMusic = sharedPreferences.getString(feedUser, "프로필 뮤직을 선택해 주세요.");
 //            String selected_profile_music = data.getStringExtra("selected_profile_music");
-            profileMusic.setText(getSharedProfileMusic);  // 화면에 표시되는 프로필 음악 업데이트.
-            Log.i(TAG, "getSharedProfileMusic 2 : " + getSharedProfileMusic);
+            if (getSharedProfileMusic.equals("프로필 뮤직을 선택해 주세요.")) {
+                profileMusic.setText(getSharedProfileMusic);
+            } else {
+                profileMusic.setText(getSharedProfileMusic + " ▶");  // 화면에 표시되는 프로필 음악 업데이트.
+                Log.i(TAG, "getSharedProfileMusic 2 : " + getSharedProfileMusic);
+
+            } // else
         } // if (resultCode == RESULT_OK)
     } // onActivityResult
 
@@ -301,6 +326,7 @@ public class Feed extends AppCompatActivity {
             Log.i(TAG, "setFollow (if) follow : " + nameFloatingButton.getText().toString());
             new AlertDialog.Builder(Feed.this, R.style.AlertDialogCustom)
                     .setMessage(feedUser + "님을 팔로우하시겠습니까?")
+                    .setCancelable(false)
                     .setPositiveButton("네", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -326,6 +352,7 @@ public class Feed extends AppCompatActivity {
             Log.i(TAG, "setFollow (else if) following : " + nameFloatingButton.getText().toString());
             new AlertDialog.Builder(Feed.this, R.style.AlertDialogCustom)
                     .setMessage("팔로우를 취소하시겠습니까?")
+                    .setCancelable(false)
                     .setPositiveButton("네", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -428,8 +455,14 @@ public class Feed extends AppCompatActivity {
             genreThird.setImageResource(R.drawable.genre_default);
             genreThirdImageId = R.drawable.genre_default;
 
-            profile.setImageResource(R.drawable.gray_profile);
-            profileDefaultCheck = R.drawable.gray_profile;
+            if (profile.getDrawable() == null || profileDefaultCheck == R.drawable.gray_profile) {
+                // 기본 이미지가 세팅되어 있을 경우에 대한 처리
+                profile.setImageResource(R.drawable.gray_profile);
+                profileDefaultCheck = R.drawable.gray_profile;
+
+            } else {
+                // 기본 이미지가 세팅되어 있지 않을 경우에 대한 처리
+            } // else
         } // if
 
         // TODO 원래 기본이미지가 아니였을 때 - 원래 값 세팅 = DB not insert
@@ -461,6 +494,7 @@ public class Feed extends AppCompatActivity {
                         ;
                         new AlertDialog.Builder(Feed.this, R.style.AlertDialogCustom)
                                 .setMessage(feedUser + "님을 팔로우 시 채팅이 가능합니다.")
+                                .setCancelable(false)
                                 .setPositiveButton("네", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -514,6 +548,14 @@ public class Feed extends AppCompatActivity {
 
         if (nameFloatingButton.getText().toString().equals("피드 편집")) {
             nameFloatingButton.setText("피드 저장");
+            if (profileMusic.getText().toString().equals("프로필 뮤직을 선택해 주세요.")) {
+                Log.i(TAG, "saveUserProfileImageInFeed setFeedEditMode *if: " + profileMusic.getText().toString());
+                editor.putString(feedUser, "프로필 뮤직을 선택해 주세요.");
+                editor.commit();
+            } else {
+                Log.i(TAG, "saveUserProfileImageInFeed setFeedEditMode *else : " + profileMusic.getText().toString());
+
+            } // else
             // TODO 프로필 이미지, 장르 세개 이미지 세팅 변화
             // TODO 피드 수정 상태 !
 
@@ -550,12 +592,25 @@ public class Feed extends AppCompatActivity {
 
             new AlertDialog.Builder(Feed.this, R.style.AlertDialogCustom)
                     .setMessage("피드를 저장하시겠습니까?")
+                    .setCancelable(false)
                     .setPositiveButton("네", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             saveFeed();
                             // TODO 디비에 이미지 저장
-                            saveUserProfileImageInFeed();
+                            try {
+                                Log.i(TAG, "saveUserProfileImageInFeed execute (try)");
+                                if (selectedProfileImageUri != null) {
+                                    saveUserProfileImageInFeed();
+                                    Log.i(TAG, "saveUserProfileImageInFeed uri != null");
+
+                                } else {
+                                    Log.i(TAG, "saveUserProfileImageInFeed uri == null");
+                                } // else
+
+                            } catch (NullPointerException e) {
+                                Log.e(TAG, "saveUserProfileImageInFeed execute (catch Null) : " + e);
+                            } // catch
                             // TODO 디비에 유저의 피드 정보들 저장
                         } // onClick
                     }) // setPositiveButton
@@ -563,6 +618,7 @@ public class Feed extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             saveFeed();
+                            dialog.dismiss();
                         } // onClick
                     }) // setNegativeButton
                     .show();
@@ -816,16 +872,40 @@ public class Feed extends AppCompatActivity {
         }); // setOnClickListener
     } // feedFollowClickEvent
 
+    // content:// 형식의 URI를 실제 파일 경로로 변환하는 메소드
+    private String getRealPathFromUri(Uri uri) {
+        String filePath = null;
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        if (cursor != null) {
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            if (cursor.moveToFirst()) {
+                filePath = cursor.getString(columnIndex);
+            } // if
+            cursor.close();
+        } // if
+        return filePath;
+    } // getRealPathFromUri
+
+
     void saveUserProfileImageInFeed() {
+
         Log.i(TAG, "saveUserProfileImageInFeed method");
+
         // TODO (3) - 여기에다 비즈니스 로직 추가
         // TODO (4) - php 파일 생성
         // TODO (5) - 사진 업로드 확인
 
-        File file = new File(String.valueOf(selectedProfileImageUri));
-        Log.i(TAG, "saveUserProfileImageInFeed selectedProfileImageUri : " + selectedProfileImageUri);
+        String newFileName = nowLoginUser + "_profile_image";
+        String filePath = getRealPathFromUri(selectedProfileImageUri);
+        File file = new File(String.valueOf(filePath));
+        Log.i(TAG, "saveUserProfileImageInFeed f(ile exists check) : " + file.exists());
+        Log.i(TAG, "saveUserProfileImageInFeed (file can read check) : " + file.canRead());
+        Log.i(TAG, "saveUserProfileImageInFeed (file can write check) : " + file.canWrite());
+        Log.i(TAG, "saveUserProfileImageInFeed selectedProfileImageUri : " + filePath);
+
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", newFileName, requestFile);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -835,7 +915,7 @@ public class Feed extends AppCompatActivity {
         ServerApi uploadProfileImageService = retrofit.create(ServerApi.class);
 
         Call<ResponseBody> call = uploadProfileImageService.uploadProfileImage
-                (body, RequestBody.create(MediaType.parse("text/plain"), feedUser + "+_profile_image"));
+                (body, RequestBody.create(MediaType.parse("text/plain"), feedUser + "_profile_image"));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -880,6 +960,44 @@ public class Feed extends AppCompatActivity {
 
 //        Call<Void> call = serverApi.insertFeedData()
     } // setFeedUserData END
+
+    // 권한을 요청하는 메소드
+    private void requestStoragePermission() {
+        Log.i(TAG, "saveUserProfileImageInFeed requestStoragePermission");
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+            Log.i(TAG, "saveUserProfileImageInFeed requestStoragePermission *if (not yet)");
+            ActivityCompat.requestPermissions(this,
+                    new String[]{
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    },
+                    PERMISSION_REQUEST_CODE);
+        } else {
+            Log.i(TAG, "saveUserProfileImageInFeed requestStoragePermission *else (already)");
+            // 이미 권한이 허용된 경우에 대한 처리 수행
+        } // else
+    } // void END
+
+    // 권한 요청 결과 처리를 위한 메소드
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.i(TAG, "saveUserProfileImageInFeed onRequestPermissionsResult : " + requestCode + " / " + permissions);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            Log.i(TAG, "saveUserProfileImageInFeed onRequestPermissionResult *if : " + requestCode);
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.i(TAG, "saveUserProfileImageInFeed onRequestPermissionResult *if permission granted: " + requestCode);
+                // 권한이 허용된 경우에 대한 처리를 수행할 수 있습니다.
+            } else {
+                Log.i(TAG, "saveUserProfileImageInFeed onRequestPermissionResult *if permission denied: " + requestCode);
+                // 권한이 거부된 경우에 대한 처리를 수행할 수 있습니다.
+            } // else
+        } // if
+    } // method END
 
 
 } // CLASS END
