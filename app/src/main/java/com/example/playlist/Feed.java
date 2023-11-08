@@ -23,10 +23,14 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,6 +47,7 @@ public class Feed extends AppCompatActivity {
     TextView feedLogo, profileMusic, nameFloatingButton, msgBtn, followText, followingText, userName;
     Button close;
 
+    Uri selectedProfileImageUri;
     int genre_pick, profile_edit, profileDefaultCheck, genreDefaultCheck;
     int genreFirstImageId, genreSecondImageId, genreThirdImageId;
     int followNum, followingNum = 0;
@@ -221,6 +226,7 @@ public class Feed extends AppCompatActivity {
         if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
             // TODO - DB에 넣어줄 이미지의 정보 (경로, 파일 형식)
             Uri selectedImageUri = data.getData();
+            selectedProfileImageUri = selectedImageUri;
             getSelectedProfileImage = selectedImageUri.toString();
             Log.i(TAG, "selectedImageUri (selectedImageUri check) : " + selectedImageUri);
             Log.i(TAG, "selectedImageUri (getSelectedProfileImage) : " + getSelectedProfileImage);
@@ -547,8 +553,10 @@ public class Feed extends AppCompatActivity {
                     .setPositiveButton("네", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            // TODO 디비에 해당 부분 저장
                             saveFeed();
+                            // TODO 디비에 이미지 저장
+                            saveUserProfileImageInFeed();
+                            // TODO 디비에 유저의 피드 정보들 저장
                         } // onClick
                     }) // setPositiveButton
                     .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
@@ -809,11 +817,49 @@ public class Feed extends AppCompatActivity {
     } // feedFollowClickEvent
 
     void saveUserProfileImageInFeed() {
-        // TODO (1) - ServerApi 디자인
-        // TODO (2) - 아이템 모델 생성
+        Log.i(TAG, "saveUserProfileImageInFeed method");
         // TODO (3) - 여기에다 비즈니스 로직 추가
         // TODO (4) - php 파일 생성
         // TODO (5) - 사진 업로드 확인
+
+        File file = new File(String.valueOf(selectedProfileImageUri));
+        Log.i(TAG, "saveUserProfileImageInFeed selectedProfileImageUri : " + selectedProfileImageUri);
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ServerApi uploadProfileImageService = retrofit.create(ServerApi.class);
+
+        Call<ResponseBody> call = uploadProfileImageService.uploadProfileImage
+                (body, RequestBody.create(MediaType.parse("text/plain"), feedUser + "+_profile_image"));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                if (response.isSuccessful()) {
+                    Log.i(TAG, "saveUserProfileImageInFeed onResponse *파일 업로드 성공");
+
+                    try {
+                        String responseBody = response.body().string();
+                        Log.i(TAG, "saveUserProfileImageInFeed *서버 응답: " + responseBody);
+                    } catch (IOException e) {
+                        Log.e(TAG, "saveUserProfileImageInFeed onResponse *ERROR: " + e);
+                    } // catch
+
+                } else {
+                    Log.i(TAG, "saveUserProfileImageInFeed onResponse *파일 업로드 실패");
+                } // else
+            } // onResponse
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(TAG, "saveUserProfileImageInFeed onFailure : " + t.getMessage());
+            } // onFailure
+        }); // enqueue
 
     } // saveUserProfileImageInFeed
 

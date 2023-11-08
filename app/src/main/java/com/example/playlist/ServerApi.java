@@ -26,6 +26,14 @@ public interface ServerApi {
             // TODO 데이터랑 파일 같이 보내고 어떤 게 누락되는지 확인
             @Part("text") RequestBody textRequestBody);
 
+    @Multipart // 요청이 멀티파트 형식 = 여러 파트로 구성된 메시지를 전송할 때 사용되는 표준
+    @POST("/upload_profile_image.php")
+        // 엔드포인트에 요청을 보낸다
+        // 호출 시 이미지 파일을 서버에 업로드하는 역할을 수행, 업로드 완료 시 응답 본문 반환
+    Call<ResponseBody> uploadProfileImage(
+            @Part MultipartBody.Part file,
+            @Part("name") RequestBody requestBody);
+
 //    @FormUrlEncoded
 //    @POST("get_comments.php")
 //    Call<CommentModel> getComments(
