@@ -174,9 +174,6 @@ public class Feed extends AppCompatActivity {
         genreFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO (1) dialog? activity? select
-                // TODO (2) genre type arrangement
-                // TODO (3) genre pick -> setGenre, genre pick check
                 setGenreSelect();
 
             } // onClick
@@ -202,8 +199,6 @@ public class Feed extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO - Null Exception
-                // 외부 저장소 권한 요청
-                requestStoragePermission();
                 try {
                     if (!nowLoginUser.equals(feedUser)) {
                         // 현재 로그인한 유저가 피드의 주인이 아닐 때
@@ -214,6 +209,9 @@ public class Feed extends AppCompatActivity {
                         Log.i(TAG, "profileImage onClick (else if) : " + nowLoginUser + " / " + feedUser);
 
                     } else {
+                        // 외부 저장소 권한 요청
+                        requestStoragePermission();
+
                         Log.i(TAG, "profileImage onClick (else) : " + nowLoginUser + " / " + feedUser);
                         Intent intent = new Intent(Intent.ACTION_PICK);
                         intent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
@@ -455,13 +453,15 @@ public class Feed extends AppCompatActivity {
             genreThird.setImageResource(R.drawable.genre_default);
             genreThirdImageId = R.drawable.genre_default;
 
-            if (profile.getDrawable() == null || profileDefaultCheck == R.drawable.gray_profile) {
+            if (profile.getDrawable() == null || profileDefaultCheck == R.drawable.gray_profile || profileDefaultCheck == R.drawable.gray_profile_edit) {
                 // 기본 이미지가 세팅되어 있을 경우에 대한 처리
                 profile.setImageResource(R.drawable.gray_profile);
                 profileDefaultCheck = R.drawable.gray_profile;
 
             } else {
                 // 기본 이미지가 세팅되어 있지 않을 경우에 대한 처리
+                profile.setImageResource(Integer.parseInt(String.valueOf(selectedProfileImageUri)));
+                profileDefaultCheck = R.drawable.gray_profile;
             } // else
         } // if
 
@@ -532,7 +532,9 @@ public class Feed extends AppCompatActivity {
                 dialog.setListener(new GenreSelectDialog.OnGenreSelectedListener() {
                     @Override
                     public void onGenresSelected(ArrayList<String> selectedGenres) {
-
+                        for (int i = 0; i < selectedGenres.size(); i ++) {
+                            Log.i(TAG, "onGenresSelected : " + i + " / " + selectedGenres.get(i));
+                        } // for END
                     } // onGenresSelected
                 }); // setListener
                 dialog.show(getSupportFragmentManager(), "GenreSelect");
@@ -810,7 +812,6 @@ public class Feed extends AppCompatActivity {
                     Log.i(TAG, "fetchAndDisplayFeedComments response.isSuccessful");
                     List<FeedCommentModel> feedComments = response.body();
 
-                    // TODO - for문 진입을 안 한 듯이 보임
                     for (FeedCommentModel feedComment : feedComments) {
                         Log.i(TAG, "fetchAndDisplayFeedComments onResponse get Comment");
                         if (!feedComments.contains(null)) {
@@ -896,8 +897,13 @@ public class Feed extends AppCompatActivity {
         // TODO (4) - php 파일 생성
         // TODO (5) - 사진 업로드 확인
 
-        String newFileName = nowLoginUser + "_profile_image";
         String filePath = getRealPathFromUri(selectedProfileImageUri);
+        Log.i(TAG, "saveUserProfileImageInFeed filePath check : " + filePath);
+        String[] addFileType = filePath.split("\\.");
+        String fileType = addFileType[1];
+        Log.i(TAG, "saveUserProfileImageInFeed fileType check : " + fileType);
+        String newFileName = nowLoginUser + "_profile_image." + fileType;
+        Log.i(TAG, "saveUserProfileImageInFeed newFileName : " + newFileName);
         File file = new File(String.valueOf(filePath));
         Log.i(TAG, "saveUserProfileImageInFeed f(ile exists check) : " + file.exists());
         Log.i(TAG, "saveUserProfileImageInFeed (file can read check) : " + file.canRead());

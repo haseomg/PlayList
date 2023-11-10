@@ -3,8 +3,10 @@ package com.example.playlist;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -17,7 +19,11 @@ public class GenreSelectDialog extends DialogFragment {
     private ArrayList<String> selectedGenres = new ArrayList<>();
     private String[] allGenres = {"Rock (red)", "R&B (purple)", "Jazz (blue)",
             "Acoustic (green)", "Hip-Hop (black)", "Ballad (orange)"};
+    public final String TAG = "GenreSelectDialog";
     // Rock = rock, R&B = rhythmnblues, Jazz = jazz, Acoustic = acoustic, Hip-Hop = hip_hop, Ballad = ballad
+
+    SharedPreferences shared;
+    SharedPreferences.Editor editor;
 
     public interface OnGenreSelectedListener {
         void onGenresSelected(ArrayList<String> selectedGenres);
@@ -32,21 +38,30 @@ public class GenreSelectDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        shared = getActivity().getSharedPreferences("selected_profile_genre", Context.MODE_PRIVATE);
+        editor = shared.edit();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogCustom);
         builder.setTitle("선호하는 장르를 3개 선택해 주세요.")
+
                 .setMultiChoiceItems(allGenres, null,
                         new DialogInterface.OnMultiChoiceClickListener() {
                             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                                 if (isChecked) {
+                                    Log.i(TAG, "SelectedGenre *checked: " + isChecked);
                                     // If the user checked the item, add it to the selected items
                                     selectedGenres.add(allGenres[which]);
-                                }
+                                } else {
+                                    Log.i(TAG, "SelectedGenre *checked: " + isChecked);
+
+                                } // else
 //                                else if (selectedGenres.contains(allGenres[which])) {
 //                                    // Else, if the item is already in the array, remove it
 //                                    selectedGenres.remove(allGenres[which]);
 //                                } // else if
                             } // onClick
                         }) // OnMultiChoiceClickListener
+
                 .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         sendResult(Activity.RESULT_OK);
@@ -55,7 +70,7 @@ public class GenreSelectDialog extends DialogFragment {
 
                 .setNegativeButton("취소", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-
+                        dialog.dismiss();
                     } // onClick
                 }); // setNegativeButton
         return builder.create();
@@ -68,7 +83,7 @@ public class GenreSelectDialog extends DialogFragment {
         intent.putStringArrayListExtra("selected_genres", selectedGenres);
         for (int i = 0; i < selectedGenres.size(); i ++) {
             Log.i("pick dialog", "genre sendResult : " + selectedGenres.get(i));
-        }
+        } // for
         getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, intent);
     } // sendResult
 } // CLASS
