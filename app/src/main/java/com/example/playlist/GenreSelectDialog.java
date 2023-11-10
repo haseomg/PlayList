@@ -21,11 +21,14 @@ public class GenreSelectDialog extends DialogFragment {
     private String[] allGenres = {"Rock (red)", "R&B (purple)", "Jazz (blue)",
             "Acoustic (green)", "Hip-Hop (black)", "Ballad (orange)"};
     public final String TAG = "GenreSelectDialog";
-    String clickedItem;
+    String clickedItem, clickedPosition;
     // Rock = rock, R&B = rhythmnblues, Jazz = jazz, Acoustic = acoustic, Hip-Hop = hip_hop, Ballad = ballad
 
     SharedPreferences shared;
     SharedPreferences.Editor editor;
+
+    SharedPreferences clickedPositionShared;
+    SharedPreferences.Editor clickedPositionEditor;
 
     public interface OnGenreSelectedListener {
         void onGenresSelected(ArrayList<String> selectedGenres);
@@ -44,31 +47,53 @@ public class GenreSelectDialog extends DialogFragment {
         shared = getActivity().getSharedPreferences("selected_profile_genre", Context.MODE_PRIVATE);
         editor = shared.edit();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogCustom);
-        builder.setTitle("선호하는 장르를 선택해 주세요. (최대 3개)")
-                .setMultiChoiceItems(allGenres, checkedItems,
-                        new DialogInterface.OnMultiChoiceClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                                checkedItems[which] = isChecked;
-                                if (isChecked) {
-                                    Log.i(TAG, "SelectedGenre *checked: " + isChecked);
-                                    // If the user checked the item, add it to the selected items
-                                    selectedGenres.add(allGenres[which]);
-                                    clickedItem = allGenres[which];
-//                                    Toast.makeText(getContext(), allGenres[which] + " Checked", Toast.LENGTH_SHORT).show();
-                                    Log.i(TAG, "SelectedGenre clickedItem : " + clickedItem);
-                                } else {
-                                    Log.i(TAG, "SelectedGenre *checked: " + isChecked);
-//                                    Toast.makeText(getContext(), allGenres[which] + " UnChecked", Toast.LENGTH_SHORT).show();
+        clickedPositionShared = getActivity().getSharedPreferences("selected_genre_position", Context.MODE_PRIVATE);
+        clickedPositionEditor = clickedPositionShared.edit();
+        clickedPosition = clickedPositionShared.getString("selected_genre_position", "0");
+        Log.i(TAG, "SelectedGenre position check : " + clickedPosition);
 
-                                }  // else
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogCustom);
+        builder.setTitle("선호하는 장르를 선택해 주세요.")
+                .setSingleChoiceItems(allGenres, -1,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                clickedItem = allGenres[i];
+                                Log.i(TAG, "SelectedGenre onClick : " + clickedItem);
+//                                checkedItems[which] = isChecked;
+//                                if (isChecked) {
+//                                    Log.i(TAG, "SelectedGenre *checked: " + isChecked);
+//                                    // If the user checked the item, add it to the selected items
+//                                    selectedGenres.add(allGenres[which]);
+//                                    clickedItem = allGenres[which];
+////                                    Toast.makeText(getContext(), allGenres[which] + " Checked", Toast.LENGTH_SHORT).show();
+//                                    Log.i(TAG, "SelectedGenre clickedItem : " + clickedItem);
+//                                } else {
+//                                    Log.i(TAG, "SelectedGenre *checked: " + isChecked);
+////                                    Toast.makeText(getContext(), allGenres[which] + " UnChecked", Toast.LENGTH_SHORT).show();
+//                                }  // else
                             } // onClick
-                        }) // OnMultiChoiceClickListener
+                        }) // DialogInterface.OnClickListener()
 
                 .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        clickedPositionEditor.putString(clickedPosition, clickedItem);
+                        clickedPositionEditor.commit();
+
+                        if (clickedPosition.equals("1")) {
+                            Log.i(TAG, "SelectedGenre *positive before 1 onClick : " + clickedPositionShared.getString(clickedPosition, "0"));
+                        } else if (clickedPosition.equals("2")) {
+                            Log.i(TAG, "SelectedGenre *positive before 2 onClick : " + clickedPositionShared.getString(clickedPosition, "0"));
+                        } else if (clickedPosition.equals("3")) {
+                            Log.i(TAG, "SelectedGenre *positive before 3 onClick : " + clickedPositionShared.getString(clickedPosition, "0"));
+                        } else {
+                            Log.i(TAG, "SelectedGenre *positive before else onClick : " + clickedPositionShared.getString(clickedPosition, "0"));
+
+                        } // else
                         sendResult(Activity.RESULT_OK);
+
+                        // TODO - 확인 버튼 클릭 시, 장르 이미지 세팅
+
                     } // onClick
                 }) // setPositiveButton
 
