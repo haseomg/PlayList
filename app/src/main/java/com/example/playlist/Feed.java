@@ -72,9 +72,11 @@ public class Feed extends AppCompatActivity {
     private static final String BASE_URL = "http://13.124.239.85/";
     private final int GET_GALLERY_IMAGE = 200;
 
-    String selected_profileMusic;
+    String selected_profileMusic, fileName, getLikeGenreFirst, getLikeGenreSecond, getLikeGenreThird;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+    SharedPreferences clickedGenreShared;
+    SharedPreferences.Editor clickedGenreEditor;
     String getSharedProfileMusic, getSharedGenreFirst, getSharedGenreSecond, getSharedGenreThird, getSelectedProfileImage;
 
     @Override
@@ -92,6 +94,9 @@ public class Feed extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("selected_profile_music", MODE_PRIVATE);
         editor = sharedPreferences.edit();
+
+        clickedGenreShared = getSharedPreferences("selected_genre_position", MODE_PRIVATE);
+        clickedGenreEditor = clickedGenreShared.edit();
 
         serverApi = ApiClient.getApiClient().create(ServerApi.class);
 
@@ -170,27 +175,67 @@ public class Feed extends AppCompatActivity {
         return true;
     } // onTouchEvent
 
+    void matchGenreImage(String number, ImageView imageView) {
+        String clickedItem = clickedGenreShared.getString(number, "0");
+        Log.i(TAG, "clickedItem : " + clickedItem);
+        String[] cutColor = clickedItem.split(" \\(");
+        // 소문자로 변환
+        String genreName = cutColor[0].toLowerCase();
+        Log.i(TAG, "clickedItem *genreName 1 : " + genreName);
+        // '-' 를 '_' 로 재배치
+        if (genreName.contains("-")) {
+            genreName.replace("-", "_");
+            Log.i(TAG, "clickedItem *genreName 2 : " + genreName);
+        } // if
+        if (genreName.equals("r&b")) {
+            genreName = "rhythmnblues";
+            Log.i(TAG, "clickedItem *genreName 3 : " + genreName);
+        } // if
+
+        Log.i(TAG, "clickedItem *genreName 4 : " + genreName);
+        String settingName = "R.drawable." + genreName;
+        Log.i(TAG, "clickedItem *settingName (string) : " + settingName);
+        getImageId(feedCtx, settingName);
+        int id = feedCtx.getResources().getIdentifier("drawable/" + genreName, null, feedCtx.getPackageName());
+        Log.i(TAG, "clickedItem image id check : " + id);
+        imageView.setImageResource(id);
+//        imageView.setImageResource(R.drawable.jazz);
+    } // matchGenreImage
+
+    public static int getImageId(Context context, String imageName) {
+        return context.getResources().getIdentifier("drawable/" + imageName, null, context.getPackageName());
+    }
+
     void setGenreOnClick() {
         // TODO - 몇번째 사진 클릭했는지 체킹 필요
         genreFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clickedGenreEditor.putString("selected_genre_position", "1");
+                clickedGenreEditor.commit();
                 setGenreSelect();
-
+                // 다이얼로그 확인 버튼 누르면
+//                matchGenreImage("1", genreFirst);
             } // onClick
         }); // genreFirst.setOnClickListener
 
         genreSecond.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clickedGenreEditor.putString("selected_genre_position", "2");
+                clickedGenreEditor.commit();
                 setGenreSelect();
+//                matchGenreImage("2", genreSecond);
             } // onClick
         }); //genreSecond.setOnClickListener
 
         genreThird.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clickedGenreEditor.putString("selected_genre_position", "3");
+                clickedGenreEditor.commit();
                 setGenreSelect();
+//                matchGenreImage("3", genreThird);
             } // onClick
         }); //genreSecond.setOnClickListener
     } // setGenre
@@ -600,7 +645,11 @@ public class Feed extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             saveFeed();
-//                            insertFeedUserData(nowLoginUser, );
+                            getLikeGenreFirst = clickedGenreShared.getString("1", "0");
+                            getLikeGenreSecond = clickedGenreShared.getString("2", "0");
+                            getLikeGenreThird = clickedGenreShared.getString("3", "0");
+                            getSharedProfileMusic = sharedPreferences.getString(feedUser, "프로필 뮤직을 선택해 주세요.");
+
                             // TODO 디비에 이미지 저장
                             try {
                                 Log.i(TAG, "saveUserProfileImageInFeed execute (try)");
@@ -608,6 +657,9 @@ public class Feed extends AppCompatActivity {
                                     saveUserProfileImageInFeed();
                                     Log.i(TAG, "saveUserProfileImageInFeed uri != null");
 
+                                    insertFeedUserData(nowLoginUser, getSharedProfileMusic,
+                                            "profile_image/" + fileName, getLikeGenreFirst,
+                                            getLikeGenreSecond, getLikeGenreThird);
                                 } else {
                                     Log.i(TAG, "saveUserProfileImageInFeed uri == null");
                                 } // else
@@ -905,6 +957,9 @@ public class Feed extends AppCompatActivity {
         String fileType = addFileType[1];
         Log.i(TAG, "saveUserProfileImageInFeed fileType check : " + fileType);
         String newFileName = nowLoginUser + "_profile_image." + fileType;
+        fileName = newFileName;
+        Log.i(TAG, "insertFeedUserData saveUserProfileImageInFeed newFileName : " + newFileName);
+        Log.i(TAG, "insertFeedUserData saveUserProfileImageInFeed fileName : " + fileName);
         Log.i(TAG, "saveUserProfileImageInFeed newFileName : " + newFileName);
         File file = new File(String.valueOf(filePath));
         Log.i(TAG, "saveUserProfileImageInFeed f(ile exists check) : " + file.exists());
@@ -1009,12 +1064,12 @@ public class Feed extends AppCompatActivity {
 
     // TODO - '피드 저장' 버튼 클릭 후 '네' 클릭 시 유저의 피드 데이터 저장
     void insertFeedUserData(String userName, String profileMusic, String profileImage, String likeGenreFirst, String likeGenreSecond, String likeGenreThird) {
-        Log.i(TAG, "insertFeedUserData userName : "  + userName);
-        Log.i(TAG, "insertFeedUserData profileMusic : "  + profileMusic);
-        Log.i(TAG, "insertFeedUserData profileImage : "  + profileImage);
-        Log.i(TAG, "insertFeedUserData likeGenreFirst : "  + likeGenreFirst);
-        Log.i(TAG, "insertFeedUserData likeGenreSecond : "  + likeGenreSecond);
-        Log.i(TAG, "insertFeedUserData likeGenreThird : "  + likeGenreThird);
+        Log.i(TAG, "insertFeedUserData userName : " + userName);
+        Log.i(TAG, "insertFeedUserData profileMusic : " + profileMusic);
+        Log.i(TAG, "insertFeedUserData profileImage : " + profileImage);
+        Log.i(TAG, "insertFeedUserData likeGenreFirst : " + likeGenreFirst);
+        Log.i(TAG, "insertFeedUserData likeGenreSecond : " + likeGenreSecond);
+        Log.i(TAG, "insertFeedUserData likeGenreThird : " + likeGenreThird);
 
         Call<Void> call = serverApi.insertFeedData(userName, profileMusic, profileImage, likeGenreFirst, likeGenreSecond, likeGenreThird);
         call.enqueue(new Callback<Void>() {
