@@ -171,6 +171,7 @@ public class Feed extends AppCompatActivity {
     } // onTouchEvent
 
     void setGenreOnClick() {
+        // TODO - 몇번째 사진 클릭했는지 체킹 필요
         genreFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -532,8 +533,8 @@ public class Feed extends AppCompatActivity {
                 dialog.setListener(new GenreSelectDialog.OnGenreSelectedListener() {
                     @Override
                     public void onGenresSelected(ArrayList<String> selectedGenres) {
-                        for (int i = 0; i < selectedGenres.size(); i ++) {
-                            Log.i(TAG, "onGenresSelected : " + i + " / " + selectedGenres.get(i));
+                        for (int i = 0; i < selectedGenres.size(); i++) {
+                            Log.i(TAG, "onGenresSelected: " + i + " / " + selectedGenres.get(i));
                         } // for END
                     } // onGenresSelected
                 }); // setListener
@@ -599,6 +600,7 @@ public class Feed extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             saveFeed();
+//                            insertFeedUserData(nowLoginUser, );
                             // TODO 디비에 이미지 저장
                             try {
                                 Log.i(TAG, "saveUserProfileImageInFeed execute (try)");
@@ -1005,5 +1007,35 @@ public class Feed extends AppCompatActivity {
         } // if
     } // method END
 
+    // TODO - '피드 저장' 버튼 클릭 후 '네' 클릭 시 유저의 피드 데이터 저장
+    void insertFeedUserData(String userName, String profileMusic, String profileImage, String likeGenreFirst, String likeGenreSecond, String likeGenreThird) {
+        Log.i(TAG, "insertFeedUserData userName : "  + userName);
+        Log.i(TAG, "insertFeedUserData profileMusic : "  + profileMusic);
+        Log.i(TAG, "insertFeedUserData profileImage : "  + profileImage);
+        Log.i(TAG, "insertFeedUserData likeGenreFirst : "  + likeGenreFirst);
+        Log.i(TAG, "insertFeedUserData likeGenreSecond : "  + likeGenreSecond);
+        Log.i(TAG, "insertFeedUserData likeGenreThird : "  + likeGenreThird);
+
+        Call<Void> call = serverApi.insertFeedData(userName, profileMusic, profileImage, likeGenreFirst, likeGenreSecond, likeGenreThird);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.i(TAG, "insertFeedUserData onResponse");
+
+                if (response.isSuccessful()) {
+                    Log.i(TAG, "insertFeedUserData onResponse() *SUCCESS : " + response.body());
+
+                } else {
+                    Log.i(TAG, "insertFeedUserData onResponse() *FAILURE : " + response.body());
+
+                } // else
+            } // onResponse
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e(TAG, "insertFeedUserData onFailure : " + t.getMessage());
+            } // onFailure
+        }); // enqueue
+    } // insertFeedUserData
 
 } // CLASS END
