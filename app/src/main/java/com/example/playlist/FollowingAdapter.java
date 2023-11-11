@@ -14,6 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
 import java.util.ArrayList;
 
 public class FollowingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -24,6 +27,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private OnItemFollowDeleteButtonClickListener deleteListener;
     private OnItemFollowReAddButtonClickListener reAddListener;
     private OnItemMovingEventClickListener movingListener;
+    private static final String BASE_URL = "http://13.124.239.85/";
     private int position;
     String TAG = "FollowingAdapter";
 
@@ -82,6 +86,18 @@ public class FollowingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         Log.i(TAG, "onBindViewHolder Method");
         if (holder instanceof FollowingHolder) {
             FollowingModel followingModel = followingList.get(position);
+
+            try {
+                String imagePath = BASE_URL + "/profile_image/" + followingModel.getUser_name() + "_profile_image.JPG";
+                Log.i(TAG, "setFollowerListProfileImage onBindViewHolder (imagePath) *if : " + imagePath);
+                Glide.with(context)
+                        .load(imagePath)
+                        .apply(new RequestOptions().circleCrop())
+                        .error(R.drawable.gray_profile)
+                        .into(((FollowingHolder) holder).profile);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            } // catch
 
             ((FollowingHolder) holder).profile.setOnClickListener(new View.OnClickListener() {
                 @Override

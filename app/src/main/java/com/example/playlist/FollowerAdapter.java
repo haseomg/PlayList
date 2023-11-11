@@ -73,16 +73,15 @@ public class FollowerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (holder instanceof FollowerHolder) {
             FollowerModel followerModel = followerList.get(position);
 
-//            String imagePath = followerModel.getProfile_image();
             try {
                 String imagePath = BASE_URL + "/profile_image/" + followerModel.getUser_name() + "_profile_image.JPG";
                 Log.i(TAG, "setFollowerListProfileImage onBindViewHolder (imagePath) *if : " + imagePath);
                 Glide.with(context)
                         .load(imagePath)
-                        .apply(new RequestOptions()
-                                .circleCrop()).into(((FollowerHolder) holder).profile_image);
+                        .apply(new RequestOptions().circleCrop())
+                        .error(R.drawable.gray_profile)
+                        .into(((FollowerHolder) holder).profile_image);
             } catch (NullPointerException e) {
-                ((FollowerHolder) holder).profile_image.setImageResource(R.drawable.gray_profile);
                 e.printStackTrace();
             } // catch
 
