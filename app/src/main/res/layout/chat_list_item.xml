@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:padding="15dp">
 
     <ImageView
         android:id="@+id/profile_image"
@@ -21,19 +21,19 @@
 
     <TextView
         android:id="@+id/list_userName"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/profile_image"
         android:fontFamily="sans-serif-condensed-medium"
         android:text="Username"
         android:textColor="@android:color/black"
-        android:textSize="18sp"
+        android:textSize="22dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.185"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.15"
+        app:layout_constraintStart_toEndOf="@+id/profile_image"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.050000012" />
+        app:layout_constraintVertical_bias="0.04000002" />
 
     <TextView
         android:id="@+id/list_lastMsg"
@@ -44,13 +44,13 @@
         android:fontFamily="sans-serif-condensed-medium"
         android:text="Last message here..."
         android:textColor="#7878E1"
-        android:textSize="14sp"
+        android:textSize="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.105"
+        app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintStart_toEndOf="@+id/profile_image"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.90999997" />
+        app:layout_constraintTop_toBottomOf="@+id/list_userName"
+        app:layout_constraintVertical_bias="0.95" />
 
     <TextView
         android:id="@+id/list_msgTime"
@@ -60,13 +60,13 @@
         android:fontFamily="sans-serif-condensed-medium"
         android:text="Time"
         android:textColor="#7878E1"
-        android:textSize="12sp"
+        android:textSize="13dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.98"
+        app:layout_constraintHorizontal_bias="0.99"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.050000012" />
+        app:layout_constraintVertical_bias="0.52" />
 
     <ImageView
         android:id="@+id/red_circle"

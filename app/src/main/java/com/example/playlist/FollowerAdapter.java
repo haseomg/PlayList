@@ -11,10 +11,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
 import java.util.ArrayList;
 
 public class FollowerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final String BASE_URL = "http://13.124.239.85/";
     private Context context;
     private ArrayList<FollowerModel> followerList;
     private OnItemClickListener listener;
@@ -68,6 +72,19 @@ public class FollowerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Log.i(TAG, "onBindViewHolder Method");
         if (holder instanceof FollowerHolder) {
             FollowerModel followerModel = followerList.get(position);
+
+//            String imagePath = followerModel.getProfile_image();
+            try {
+                String imagePath = BASE_URL + "/profile_image/" + followerModel.getUser_name() + "_profile_image.JPG";
+                Log.i(TAG, "setFollowerListProfileImage onBindViewHolder (imagePath) *if : " + imagePath);
+                Glide.with(context)
+                        .load(imagePath)
+                        .apply(new RequestOptions()
+                                .circleCrop()).into(((FollowerHolder) holder).profile_image);
+            } catch (NullPointerException e) {
+                ((FollowerHolder) holder).profile_image.setImageResource(R.drawable.gray_profile);
+                e.printStackTrace();
+            } // catch
 
             ((FollowerHolder) holder).profile_image.setOnClickListener(new View.OnClickListener() {
                 @Override
