@@ -191,7 +191,54 @@ public class Feed extends AppCompatActivity {
         //  프로필 음악 값이 없을 경우 '프로필 뮤직을 선택해 주세요.'
         //  프로필 이미지 경로 값이 없을 경우 기본 이미지 세팅
         //  선호 장르 값이 없을 경우 기본 이미지 세팅
+        Log.i(TAG, "setSelectUserFeedData");
 
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        ServerApi feedDataFetchApi = retrofit.create(ServerApi.class);
+
+        // TODO - 피드 주인 기준 데이터 뿌려줘야 해
+        Call<List<FeedUserDataModel>> call = feedDataFetchApi.getFeedUserData(feedUser);
+        call.enqueue(new Callback<List<FeedUserDataModel>>() {
+            @Override
+            public void onResponse(Call<List<FeedUserDataModel>> call, Response<List<FeedUserDataModel>> response) {
+                Log.i(TAG, "setSelectUserFeedData onResponse");
+
+                if (response.isSuccessful()) {
+                    String responseBody = new Gson().toJson(response.body());
+                    Log.i(TAG, "setSelectUserFeedData onResponse responseBody : " + responseBody);
+                    List<FeedUserDataModel> feedUserDataModels = response.body();
+                    Log.i(TAG, "setSelectUserFeedData onResponse response.body : " + feedUserDataModels);
+
+                    for (FeedUserDataModel feedUserData : feedUserDataModels) {
+                        String user_name = feedUserData.getUser_name();
+                        Log.i(TAG, "setSelectUserFeedData user_name : " + user_name);
+                        String profile_music = feedUserData.getProfile_music();
+                        Log.i(TAG, "setSelectUserFeedData profile_music : " + getPro);
+                        String profile_image = feedUserData.getProfile_image();
+                        Log.i(TAG, "setSelectUserFeedData profile_image : ");
+                        String like_genre_first = feedUserData.getLike_genre_first();
+                        Log.i(TAG, "setSelectUserFeedData like_genre_first : ");
+                        String like_genre_second = feedUserData.getLike_genre_second();
+                        Log.i(TAG, "setSelectUserFeedData like_genre_second : ");
+                        String like_genre_third = feedUserData.getLike_genre_third();
+                        Log.i(TAG, "setSelectUserFeedData like_genre_third : ");
+                    }
+                }
+            } // onResponse
+
+            @Override
+            public void onFailure(Call<List<FeedUserDataModel>> call, Throwable t) {
+
+            } // onFailure
+        }); // call.enqueue
     } // setSelectUserFeedData
 
     void setSelectProfileImageFromServer() {

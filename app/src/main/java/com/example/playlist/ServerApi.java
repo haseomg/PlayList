@@ -131,7 +131,8 @@ public interface ServerApi {
     Call<List<AllSongsModel>> getAllSongs();
 
     @GET("get_feed_user_data.php")
-    Call<List<AllSongsModel>> getFeedUserData();
+    Call<List<FeedUserDataModel>> getFeedUserData(
+            @Query("user_name") String user_name);
 
     @FormUrlEncoded
     @POST("select_likes.php")
