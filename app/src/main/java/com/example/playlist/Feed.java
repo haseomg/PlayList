@@ -165,8 +165,39 @@ public class Feed extends AppCompatActivity {
         setProfileMusic(); // 프로필 뮤직 (수정 모드에서만 클릭 이벤트)
         setNameFloatingButton(); // 팔로우/팔로잉 로직 or 피드 편집/피드 저장
         feedFollowFollowingClickEvent(); // 팔로우/팔로잉 텍스트 클릭 시 프래그먼트
+//        setMatchGenreImage(); // 피드 액티비티 접근 시 장르 이미지들 세팅
     } // initial END
 
+    void setMatchGenreImage() {
+        // TODO - 첫번째 장르 이미지 세팅 이슈 해결 필요
+        for (int i = 0; i < 3; i ++) {
+            if (i == 0) {
+                matchGenreImage("1", genreFirst);
+            }
+            if (i == 1) {
+                matchGenreImage("2", genreSecond);
+            }
+            if (i == 2) {
+                matchGenreImage("3", genreThird);
+
+            } else {
+
+            } // else
+        } // for
+    } // setMatchGenreImage
+
+    void setSelectUserFeedData() {
+        // TODO - 유저 이름 기준으로 '프로필 음악', '프로필 이미지 경로', '선호 장르 3가지'
+        //  프로필 음악 값이 없을 경우 '프로필 뮤직을 선택해 주세요.'
+        //  프로필 이미지 경로 값이 없을 경우 기본 이미지 세팅
+        //  선호 장르 값이 없을 경우 기본 이미지 세팅
+
+    } // setSelectUserFeedData
+
+    void setSelectProfileImageFromServer() {
+        // TODO - 서버에서 이미지 다운로드하고 값이 있을 경우 세팅/없을 경우 기본 이미지
+
+    } // setSelectProfileImageFromServer
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {

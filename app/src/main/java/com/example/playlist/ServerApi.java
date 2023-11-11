@@ -130,6 +130,9 @@ public interface ServerApi {
     @GET("get_songs.php")
     Call<List<AllSongsModel>> getAllSongs();
 
+    @GET("get_feed_user_data.php")
+    Call<List<AllSongsModel>> getFeedUserData();
+
     @FormUrlEncoded
     @POST("select_likes.php")
     Call<List<UpdateLikedModel>> selectLikes(
