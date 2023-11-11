@@ -282,8 +282,8 @@ public class Selectable extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<AllSongsModel>> call, Throwable t) {
-                Log.i(TAG, "setAllSongs onFailure");
 
+                Log.i(TAG, "setAllSongs onFailure");
             } // onFailure
         }); // call.enqueue
 

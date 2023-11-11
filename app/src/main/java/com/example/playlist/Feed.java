@@ -59,7 +59,8 @@ public class Feed extends AppCompatActivity {
     int genre_pick, profile_edit, profileDefaultCheck, genreDefaultCheck;
     int genreFirstImageId, genreSecondImageId, genreThirdImageId;
     int followNum, followingNum = 0;
-    public String uuidForChat, song_name, user, forNoneEditModeCheck, nowLoginUser, feedUser;
+    public String uuidForChat, song_name, user, forNoneEditModeCheck, nowLoginUser, feedUser
+            , conversionGenreFirst, conversionGenreSecond, conversionGenreThird;
     private ArrayList<String> uuidValues;
 
     ArrayList<FeedCommentModel> feedCommentList = new ArrayList<>();
@@ -166,6 +167,7 @@ public class Feed extends AppCompatActivity {
         setNameFloatingButton(); // 팔로우/팔로잉 로직 or 피드 편집/피드 저장
         feedFollowFollowingClickEvent(); // 팔로우/팔로잉 텍스트 클릭 시 프래그먼트
 //        setMatchGenreImage(); // 피드 액티비티 접근 시 장르 이미지들 세팅
+        setSelectUserFeedData(); // 피드 액티비티 접근 시 피드 로그인 유저의 피드 세팅
     } // initial END
 
     void setMatchGenreImage() {
@@ -209,7 +211,7 @@ public class Feed extends AppCompatActivity {
         call.enqueue(new Callback<List<FeedUserDataModel>>() {
             @Override
             public void onResponse(Call<List<FeedUserDataModel>> call, Response<List<FeedUserDataModel>> response) {
-                Log.i(TAG, "setSelectUserFeedData onResponse");
+                Log.i(TAG, "setSelectUserFeedData onResponse : " + feedUser );
 
                 if (response.isSuccessful()) {
                     String responseBody = new Gson().toJson(response.body());
@@ -220,18 +222,55 @@ public class Feed extends AppCompatActivity {
                     for (FeedUserDataModel feedUserData : feedUserDataModels) {
                         String user_name = feedUserData.getUser_name();
                         Log.i(TAG, "setSelectUserFeedData user_name : " + user_name);
+
                         String profile_music = feedUserData.getProfile_music();
-                        Log.i(TAG, "setSelectUserFeedData profile_music : " + getPro);
+                        if (profile_music.contains("∙")) {
+                            Log.i(TAG, "setSelectUserFeedData profile_music (if) : " + profile_music);
+                            profileMusic.setText(profile_music + " ▶");
+                        } else {
+                            Log.i(TAG, "setSelectUserFeedData profile_music (else) : " + profile_music);
+
+                        } // (else) profile music default
+
                         String profile_image = feedUserData.getProfile_image();
-                        Log.i(TAG, "setSelectUserFeedData profile_image : ");
+                        if (profile_image.contains(nowLoginUser)) {
+                            Log.i(TAG, "setSelectUserFeedData profile_image (if) : " + profile_image);
+
+                        } else {
+                            Log.i(TAG, "setSelectUserFeedData profile_image (else) : " + profile_image);
+
+                        } // (else) profile image default
+
                         String like_genre_first = feedUserData.getLike_genre_first();
-                        Log.i(TAG, "setSelectUserFeedData like_genre_first : ");
+                        if (like_genre_first.length() > 2) {
+                            Log.i(TAG, "setSelectUserFeedData like_genre_second (if) : " + like_genre_first);
+
+                        } else {
+                            Log.i(TAG, "setSelectUserFeedData like_genre_second (else): " + like_genre_first);
+
+                        } // (else) genre first default
+
                         String like_genre_second = feedUserData.getLike_genre_second();
-                        Log.i(TAG, "setSelectUserFeedData like_genre_second : ");
+                        if (like_genre_second.length() > 2) {
+                            Log.i(TAG, "setSelectUserFeedData like_genre_second (if) : " + like_genre_second);
+
+                        } else {
+                            Log.i(TAG, "setSelectUserFeedData like_genre_second (else) : " + like_genre_second);
+
+                        } // (else) genre second default
+
+
                         String like_genre_third = feedUserData.getLike_genre_third();
-                        Log.i(TAG, "setSelectUserFeedData like_genre_third : ");
-                    }
-                }
+                        if (like_genre_third.length() > 2) {
+                            Log.i(TAG, "setSelectUserFeedData like_genre_third (if) : " + like_genre_third);
+
+                        } else {
+                            Log.i(TAG, "setSelectUserFeedData like_genre_third (else) : " + like_genre_third);
+
+                        } // (else) genre third default
+
+                    } // for
+                }  // con
             } // onResponse
 
             @Override
@@ -735,9 +774,12 @@ public class Feed extends AppCompatActivity {
                                     saveUserProfileImageInFeed();
                                     Log.i(TAG, "saveUserProfileImageInFeed uri != null");
 
+                                    conversionGenreName();
+
+                                    Log.i(TAG, "conversionGenreName : " + conversionGenreFirst + " / "  + conversionGenreSecond + " / " + conversionGenreThird);
                                     insertFeedUserData(nowLoginUser, getSharedProfileMusic,
-                                            "profile_image/" + fileName, getLikeGenreFirst,
-                                            getLikeGenreSecond, getLikeGenreThird);
+                                            "profile_image/" + fileName, conversionGenreFirst,
+                                            conversionGenreSecond, conversionGenreThird);
                                 } else {
                                     Log.i(TAG, "saveUserProfileImageInFeed uri == null");
                                 } // else
@@ -1170,5 +1212,33 @@ public class Feed extends AppCompatActivity {
             } // onFailure
         }); // enqueue
     } // insertFeedUserData
+
+    void clickedGenreChangeName(String clickedItem, String conversionName) {
+        String[] cutColor = clickedItem.split(" \\(");
+// 소문자로 변환
+        String genreName = cutColor[0].toLowerCase();
+        Log.i(TAG, "conversionGenreName clickedItem *genreName 1 : " + genreName);
+// '-' 를 '_' 로 재배치
+        if (genreName.contains("-")) {
+            genreName.replace("-", "_");
+            Log.i(TAG, "conversionGenreName clickedItem *genreName 2 : " + genreName);
+        } // if
+        if (genreName.equals("r&b")) {
+            genreName = "rhythmnblues";
+            Log.i(TAG, "conversionGenreName clickedItem *genreName 3 : " + genreName);
+        } // if
+
+        Log.i(TAG, "conversionGenreName clickedItem *genreName 4 : " + genreName);
+
+        conversionName = genreName;
+        Log.i(TAG, "conversionGenreName clickedItem *conversionName : " + conversionName);
+    } // clickedGenreChangeName
+
+    void conversionGenreName() {
+        Log.i(TAG, "conversionGenreName");
+        clickedGenreChangeName(getLikeGenreFirst, conversionGenreFirst);
+        clickedGenreChangeName(getLikeGenreSecond, conversionGenreSecond);
+        clickedGenreChangeName(getLikeGenreThird, conversionGenreThird);
+    } // conversionGenreName
 
 } // CLASS END
