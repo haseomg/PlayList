@@ -124,9 +124,8 @@ public class Played extends AppCompatActivity {
 
     } // setPlayedList
 
-    // TODO 월요일에 끝낸다!
     void setPlayedSongs(String userName) {
-        Log.i(TAG, "setPlayed");
+        Log.i(TAG, "setPlayedSongs user name : " + userName);
 
         Gson gson = new GsonBuilder()
                 .setLenient()
