@@ -59,8 +59,7 @@ public class Feed extends AppCompatActivity {
     int genre_pick, profile_edit, profileDefaultCheck, genreDefaultCheck;
     int genreFirstImageId, genreSecondImageId, genreThirdImageId;
     int followNum, followingNum = 0;
-    public String uuidForChat, song_name, user, forNoneEditModeCheck, nowLoginUser, feedUser
-            , conversionGenreFirst, conversionGenreSecond, conversionGenreThird;
+    public String uuidForChat, song_name, user, forNoneEditModeCheck, nowLoginUser, feedUser, conversionGenreFirst, conversionGenreSecond, conversionGenreThird;
     private ArrayList<String> uuidValues;
 
     ArrayList<FeedCommentModel> feedCommentList = new ArrayList<>();
@@ -78,6 +77,9 @@ public class Feed extends AppCompatActivity {
     SharedPreferences.Editor editor;
     SharedPreferences clickedGenreShared;
     SharedPreferences.Editor clickedGenreEditor;
+    SharedPreferences nicknameShared;
+    SharedPreferences.Editor nicknameEditor;
+    String getSharedNickName;
     String getSharedProfileMusic, getSharedGenreFirst, getSharedGenreSecond, getSharedGenreThird, getSelectedProfileImage;
 
     @Override
@@ -99,10 +101,23 @@ public class Feed extends AppCompatActivity {
         clickedGenreShared = getSharedPreferences("selected_genre_position", MODE_PRIVATE);
         clickedGenreEditor = clickedGenreShared.edit();
 
+        nicknameShared = getSharedPreferences("nickname", MODE_PRIVATE);
+        nicknameEditor = nicknameShared.edit();
+        getSharedNickName = nicknameShared.getString("nickname", "default");
+
         serverApi = ApiClient.getApiClient().create(ServerApi.class);
 
         Intent intent = getIntent();
         nowLoginUser = intent.getStringExtra("now_login_user");
+        try {
+            if (nowLoginUser == null) {
+                nowLoginUser = getSharedNickName;
+                Log.i(TAG, "nameFloatingButton set nowLoginUser : " + nowLoginUser);
+                Log.i(TAG, "nameFloatingButton set getSharedNickName : " + getSharedNickName);
+            } // if null
+        } catch (NullPointerException e) {
+            Log.e(TAG, "nameFloatingButton ERROR check : " + e);
+        } // catch
         Log.i(TAG, "likedUser getIntent : " + nowLoginUser);
         user = intent.getStringExtra("user");
 
@@ -212,7 +227,7 @@ public class Feed extends AppCompatActivity {
         call.enqueue(new Callback<List<FeedUserDataModel>>() {
             @Override
             public void onResponse(Call<List<FeedUserDataModel>> call, Response<List<FeedUserDataModel>> response) {
-                Log.i(TAG, "setSelectUserFeedData onResponse : " + feedUser );
+                Log.i(TAG, "setSelectUserFeedData onResponse : " + feedUser);
 
                 if (response.isSuccessful()) {
                     String responseBody = new Gson().toJson(response.body());
@@ -305,6 +320,7 @@ public class Feed extends AppCompatActivity {
         // TODO - 서버에서 이미지 다운로드하고 값이 있을 경우 세팅/없을 경우 기본 이미지
 
     } // setSelectProfileImageFromServer
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
@@ -560,6 +576,7 @@ public class Feed extends AppCompatActivity {
 
     void setUIForMe() {
         // TODO 나와 상대 피드 구별
+        Log.i(TAG, "nameFloatingButton check : " + feedUser + " / " + nowLoginUser);
 
 //        String nowLoginUser = ((MainActivity) MainActivity.mainCtx).logIn.getText().toString();
 //        Log.i(TAG, "setUIForMe now login user check : " + nowLoginUser + " / " + user);
@@ -623,6 +640,7 @@ public class Feed extends AppCompatActivity {
     }
 
     void saveFeed() {
+        Log.i(TAG, "nameFloatingButton check : " + feedUser + " / " + nowLoginUser);
         nameFloatingButton.setText("피드 편집");
 
         // TODO 이 로직은 프로필과 장르가 원래 기본이미지였을 떄
@@ -882,6 +900,7 @@ public class Feed extends AppCompatActivity {
     } // deleteFollow END
 
     private void selectFollow(String me, String you) {
+        Log.i(TAG, "nameFloatingButton check : " + feedUser + " / " + nowLoginUser);
         // TODO - 내가 상대를 팔로우했을 때 버튼 이름, 백그라운드, 색상 세팅
 //        if (me != you || !me.equals(you)) {
 
@@ -1257,9 +1276,10 @@ public class Feed extends AppCompatActivity {
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        
+
         ServerApi serverApi = retrofit.create(ServerApi.class);
-        
+
+        Log.i(TAG, "downloadAndSetProfileImage feedUser check : " + feedUser);
         Call<ImageResponse> call = serverApi.getImagePath(feedUser);
         call.enqueue(new Callback<ImageResponse>() {
             @Override
@@ -1267,14 +1287,18 @@ public class Feed extends AppCompatActivity {
                 Log.i(TAG, "downloadAndSetProfileImage onResponse");
                 if (response.isSuccessful() && response.body() != null) {
                     String imagePath = response.body().profile_image;
+                    String error = response.body().error;
                     Log.i(TAG, "downloadAndSetProfileImage onResponse imagePath : " + imagePath);
 
-                    if (imagePath != null) {
+                    if (error != null) {
+                        profile.setImageResource(R.drawable.gray_profile);
+
+                    } else {
+                        Log.i(TAG, "downloadAndSetProfileImage download url check : " + BASE_URL + imagePath);
                         Glide.with(feedCtx)
                                 .load(BASE_URL + imagePath)
-                                .into(profile);
-                    } else {
-                        profile.setImageResource(R.drawable.gray_profile);
+                                .apply(new RequestOptions()
+                                        .circleCrop()).into(profile);
                     } // else
 
                 } else {

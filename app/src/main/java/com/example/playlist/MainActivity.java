@@ -1335,105 +1335,105 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("[KAKAO userEmail]", "" + user1.getEmail());
 
                 try {
-                String userID = user1.getEmail();
-                String[] userEmailCut = userID.split("@");
+                    String userID = user1.getEmail();
+                    String[] userEmailCut = userID.split("@");
 
-                // TODO. KAKAO id mysql -> 회원번호를 id 개념으로 *중복 제거 필 ㅎ
-                String userNum = String.valueOf(user.getId());
-                Log.i("[KAKAO user.getID *userNum]", "" + userNum);
-                // TODO. KAKAO nickname -> id를 닉네임 개념으로 mysql에 추가
-                String id = userEmailCut[0];
-                Log.i("[KAKAO user.getEmail]", "" + user1.getEmail());
-                Log.i("[KAKAO userID]", "" + id);
+                    // TODO. KAKAO id mysql -> 회원번호를 id 개념으로 *중복 제거 필 ㅎ
+                    String userNum = String.valueOf(user.getId());
+                    Log.i("[KAKAO user.getID *userNum]", "" + userNum);
+                    // TODO. KAKAO nickname -> id를 닉네임 개념으로 mysql에 추가
+                    String id = userEmailCut[0];
+                    Log.i("[KAKAO user.getEmail]", "" + user1.getEmail());
+                    Log.i("[KAKAO userID]", "" + id);
 
-                int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
-                if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
+                    int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
+                    if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
 
-                    // GET 방식 파라미터
-                    HttpUrl.Builder builder = HttpUrl.parse("http://13.124.239.85/login_kakao.php").newBuilder();
-                    builder.addQueryParameter("ver", "1.0");
-                    String url = builder.build().toString();
-                    Log.i(TAG, "String url Check : " + url);
+                        // GET 방식 파라미터
+                        HttpUrl.Builder builder = HttpUrl.parse("http://13.124.239.85/login_kakao.php").newBuilder();
+                        builder.addQueryParameter("ver", "1.0");
+                        String url = builder.build().toString();
+                        Log.i(TAG, "String url Check : " + url);
 
-                    // POST 방식 파라미터
-                    RequestBody body = new FormBody.Builder()
-                            .add("id", userNum.trim())
-                            .add("nickname", id.trim())
-                            .build();
+                        // POST 방식 파라미터
+                        RequestBody body = new FormBody.Builder()
+                                .add("id", userNum.trim())
+                                .add("nickname", id.trim())
+                                .build();
 
-                    // 요청 만들기
-                    OkHttpClient client = new OkHttpClient();
-                    Request request = new Request.Builder()
-                            .url(url)
-                            .post(body)
-                            .build();
+                        // 요청 만들기
+                        OkHttpClient client = new OkHttpClient();
+                        Request request = new Request.Builder()
+                                .url(url)
+                                .post(body)
+                                .build();
 
-                    // 응답 CALL BACK
-                    client.newCall(request).enqueue(new Callback() {
-                        @Override
-                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                            e.printStackTrace();
-                            Log.i(TAG, "CALLBACK ERROR CHECK : ", e);
-                        } //  onFailure
+                        // 응답 CALL BACK
+                        client.newCall(request).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                e.printStackTrace();
+                                Log.i(TAG, "CALLBACK ERROR CHECK : ", e);
+                            } //  onFailure
 
-                        @Override
-                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                            Log.i(TAG, "CALLBACK onResponse METHOD Start");
+                            @Override
+                            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                                Log.i(TAG, "CALLBACK onResponse METHOD Start");
 
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
 
-                                        if (!response.isSuccessful()) {
-                                            Log.i(TAG, "응답 실패 : " + response);
-                                            Toast.makeText(getApplicationContext(), "네트워크 문제 발생", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Log.i(TAG, "응답 성공 : " + response);
-                                            final String responseData = response.body().string();
-                                            Log.i(TAG, "응답 성공 responseData Check : " + responseData);
+                                            if (!response.isSuccessful()) {
+                                                Log.i(TAG, "응답 실패 : " + response);
+                                                Toast.makeText(getApplicationContext(), "네트워크 문제 발생", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Log.i(TAG, "응답 성공 : " + response);
+                                                final String responseData = response.body().string();
+                                                Log.i(TAG, "응답 성공 responseData Check : " + responseData);
 
-                                            if (responseData.equals("1")) {
-                                                Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
-                                            } // if
-                                        } // else
+                                                if (responseData.equals("1")) {
+                                                    Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
+                                                } // if
+                                            } // else
 
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    } // catch
-                                } // run
-                            }); // runOnUiThread
-                        } // onResponse
-                    });
-                }
-
-
-                if (!id.equals(fromSharedNickName) && !fromSharedNickName.equals("LOG IN")) {
-                    logIn.setText(fromSharedNickName);
-                    Log.i("logIn.setText Check8 : ", fromSharedNickName);
-                    editor.putString("nickname", fromSharedNickName);
-                    editor.commit();
-                } else if (fromSharedNickName.equals(null) || fromSharedNickName.equals("LOG IN")) {
-                    editor.putString("nickname", id);
-                    editor.commit();
-                } else if (!id.equals(fromSharedNickName) && fromSharedNickName.equals("LOG IN")) {
-                    logIn.setText(id);
-                    Log.i("logIn.setText Check9 : ", id);
-                    editor.putString("nickname", fromSharedNickName);
-                    editor.commit();
-                }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        } // catch
+                                    } // run
+                                }); // runOnUiThread
+                            } // onResponse
+                        });
+                    }
 
 
-                if (!fromSharedNickName.equals(null) || !fromSharedNickName.equals("LOG IN")) {
-                    editor.putString("nickname", fromSharedNickName);
-                    editor.commit();
-                }
-                if (!id.equals(fromSharedNickName) && fromSharedNickName.equals("LOG IN")) {
-                    logIn.setText(id);
-                    Log.i("logIn.setText Check10 : ", id);
-                    editor.putString("nickname", id);
-                    editor.commit();
-                }
+                    if (!id.equals(fromSharedNickName) && !fromSharedNickName.equals("LOG IN")) {
+                        logIn.setText(fromSharedNickName);
+                        Log.i("logIn.setText Check8 : ", fromSharedNickName);
+                        editor.putString("nickname", fromSharedNickName);
+                        editor.commit();
+                    } else if (fromSharedNickName.equals(null) || fromSharedNickName.equals("LOG IN")) {
+                        editor.putString("nickname", id);
+                        editor.commit();
+                    } else if (!id.equals(fromSharedNickName) && fromSharedNickName.equals("LOG IN")) {
+                        logIn.setText(id);
+                        Log.i("logIn.setText Check9 : ", id);
+                        editor.putString("nickname", fromSharedNickName);
+                        editor.commit();
+                    }
+
+
+                    if (!fromSharedNickName.equals(null) || !fromSharedNickName.equals("LOG IN")) {
+                        editor.putString("nickname", fromSharedNickName);
+                        editor.commit();
+                    }
+                    if (!id.equals(fromSharedNickName) && fromSharedNickName.equals("LOG IN")) {
+                        logIn.setText(id);
+                        Log.i("logIn.setText Check10 : ", id);
+                        editor.putString("nickname", id);
+                        editor.commit();
+                    }
 
 
                 } catch (NullPointerException e) {
