@@ -130,6 +130,13 @@ public interface ServerApi {
     @GET("get_songs.php")
     Call<List<AllSongsModel>> getAllSongs();
 
+    @FormUrlEncoded
+    @POST("profile_image_sampling.php")
+    Call<ImageResponse> getImagePath(
+            @Field("user_name") String user_name
+    );
+
+
     @GET("get_feed_user_data.php")
     Call<List<FeedUserDataModel>> getFeedUserData(
             @Query("user_name") String user_name);

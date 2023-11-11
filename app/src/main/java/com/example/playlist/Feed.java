@@ -122,13 +122,13 @@ public class Feed extends AppCompatActivity {
         genreSecondImageId = R.drawable.genre_default; // 두번째 장르가 기본이미지 인지
         genreThirdImageId = R.drawable.genre_default; // 세번째 장르가 기본이미지 인지
 
-        // TODO 만약 장르 이미지에 세팅된 이미지가 없을 경우 (첫 접속, 미설정 상태)
+//        // TODO 만약 장르 이미지에 세팅된 이미지가 없을 경우 (첫 접속, 미설정 상태)
         genreFirst = findViewById(R.id.genre_first); // 첫번째 장르 이미지뷰 참조
-        genreFirst.setImageResource(genreDefaultCheck); // 첫번째 장르 이미지뷰에 장르 기본 이미지 세팅
+//        genreFirst.setImageResource(genreDefaultCheck); // 첫번째 장르 이미지뷰에 장르 기본 이미지 세팅
         genreSecond = findViewById(R.id.genre_second); // 두번째 장르 이미지뷰 참조
-        genreSecond.setImageResource(genreDefaultCheck); // 두번째 장르 이미지뷰에 장르 기본 이미지 세팅
+//        genreSecond.setImageResource(genreDefaultCheck); // 두번째 장르 이미지뷰에 장르 기본 이미지 세팅
         genreThird = findViewById(R.id.genre_third); // 세번째 장르 이미지뷰 참조
-        genreThird.setImageResource(genreDefaultCheck); // 세번째 장르 이미지뷰에 장르 기본 이미지 세팅
+//        genreThird.setImageResource(genreDefaultCheck); // 세번째 장르 이미지뷰에 장르 기본 이미지 세팅
 
         // TODO 만약 프로필 이미지에 세팅된 이미지가 없을 경우
         profile_edit = R.drawable.gray_profile_edit; // 프로필 수정 모드 이미지
@@ -167,26 +167,27 @@ public class Feed extends AppCompatActivity {
         setNameFloatingButton(); // 팔로우/팔로잉 로직 or 피드 편집/피드 저장
         feedFollowFollowingClickEvent(); // 팔로우/팔로잉 텍스트 클릭 시 프래그먼트
 //        setMatchGenreImage(); // 피드 액티비티 접근 시 장르 이미지들 세팅
+        downloadAndSetProfileImage(); // 프로필 이미지 다운로드
         setSelectUserFeedData(); // 피드 액티비티 접근 시 피드 로그인 유저의 피드 세팅
     } // initial END
 
-    void setMatchGenreImage() {
-        // TODO - 첫번째 장르 이미지 세팅 이슈 해결 필요
-        for (int i = 0; i < 3; i ++) {
-            if (i == 0) {
-                matchGenreImage("1", genreFirst);
-            }
-            if (i == 1) {
-                matchGenreImage("2", genreSecond);
-            }
-            if (i == 2) {
-                matchGenreImage("3", genreThird);
-
-            } else {
-
-            } // else
-        } // for
-    } // setMatchGenreImage
+//    void setMatchGenreImage() {
+//        // TODO - 첫번째 장르 이미지 세팅 이슈 해결 필요
+//        for (int i = 0; i < 3; i ++) {
+//            if (i == 0) {
+//                matchGenreImage("1", genreFirst);
+//            }
+//            if (i == 1) {
+//                matchGenreImage("2", genreSecond);
+//            }
+//            if (i == 2) {
+//                matchGenreImage("3", genreThird);
+//
+//            } else {
+//
+//            } // else
+//        } // for
+//    } // setMatchGenreImage
 
     void setSelectUserFeedData() {
         // TODO - 유저 이름 기준으로 '프로필 음악', '프로필 이미지 경로', '선호 장르 3가지'
@@ -233,40 +234,60 @@ public class Feed extends AppCompatActivity {
                         } // (else) profile music default
 
                         String profile_image = feedUserData.getProfile_image();
-                        if (profile_image.contains(nowLoginUser)) {
-                            Log.i(TAG, "setSelectUserFeedData profile_image (if) : " + profile_image);
+                        try {
+                            if (profile_image.contains(nowLoginUser)) {
+                                Log.i(TAG, "setSelectUserFeedData profile_image (if) : " + profile_image);
 
-                        } else {
-                            Log.i(TAG, "setSelectUserFeedData profile_image (else) : " + profile_image);
+                            } else {
+                                Log.i(TAG, "setSelectUserFeedData profile_image (else) : " + profile_image);
 
-                        } // (else) profile image default
+                            } // (else) profile image default
+
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                        } // catch
 
                         String like_genre_first = feedUserData.getLike_genre_first();
                         if (like_genre_first.length() > 2) {
-                            Log.i(TAG, "setSelectUserFeedData like_genre_second (if) : " + like_genre_first);
+                            Log.i(TAG, "setSelectUserFeedData like_genre_first (if) : " + like_genre_first);
+                            clickedGenreChangeName(like_genre_first);
+                            conversionGenreFirst = clickedGenreChangeName(like_genre_first);
+
+                            Log.i(TAG, "setSelectUserFeedData conversionGenreFirst (if) : " + conversionGenreFirst);
+                            matchGenreImage("1", genreFirst, conversionGenreFirst);
 
                         } else {
-                            Log.i(TAG, "setSelectUserFeedData like_genre_second (else): " + like_genre_first);
-
+                            Log.i(TAG, "setSelectUserFeedData like_genre_first (else): " + like_genre_first);
+                            genreFirst.setImageResource(genreDefaultCheck); // 첫번째 장르 이미지뷰에 장르 기본 이미지 세팅
                         } // (else) genre first default
 
                         String like_genre_second = feedUserData.getLike_genre_second();
                         if (like_genre_second.length() > 2) {
                             Log.i(TAG, "setSelectUserFeedData like_genre_second (if) : " + like_genre_second);
+                            clickedGenreChangeName(like_genre_second);
+                            conversionGenreSecond = clickedGenreChangeName(like_genre_second);
+
+                            Log.i(TAG, "setSelectUserFeedData conversionGenreSecond (if) : " + conversionGenreSecond);
+                            matchGenreImage("2", genreSecond, conversionGenreSecond);
 
                         } else {
                             Log.i(TAG, "setSelectUserFeedData like_genre_second (else) : " + like_genre_second);
-
+                            genreSecond.setImageResource(genreDefaultCheck); // 두번째 장르 이미지뷰에 장르 기본 이미지 세팅
                         } // (else) genre second default
 
 
                         String like_genre_third = feedUserData.getLike_genre_third();
                         if (like_genre_third.length() > 2) {
                             Log.i(TAG, "setSelectUserFeedData like_genre_third (if) : " + like_genre_third);
+                            clickedGenreChangeName(like_genre_third);
+                            conversionGenreThird = clickedGenreChangeName(like_genre_third);
+
+                            Log.i(TAG, "setSelectUserFeedData conversionGenreThird (if) : " + conversionGenreThird);
+                            matchGenreImage("3", genreThird, conversionGenreThird);
 
                         } else {
                             Log.i(TAG, "setSelectUserFeedData like_genre_third (else) : " + like_genre_third);
-
+                            genreThird.setImageResource(genreDefaultCheck); // 세번째 장르 이미지뷰에 장르 기본 이미지 세팅
                         } // (else) genre third default
 
                     } // for
@@ -292,8 +313,8 @@ public class Feed extends AppCompatActivity {
         return true;
     } // onTouchEvent
 
-    void matchGenreImage(String number, ImageView imageView) {
-        String clickedItem = clickedGenreShared.getString(number, "0");
+    void matchGenreImage(String number, ImageView imageView, String clickedItem) {
+//        String clickedItem = clickedGenreShared.getString(number, "0");
         Log.i(TAG, "clickedItem : " + clickedItem);
         String[] cutColor = clickedItem.split(" \\(");
         // 소문자로 변환
@@ -774,12 +795,9 @@ public class Feed extends AppCompatActivity {
                                     saveUserProfileImageInFeed();
                                     Log.i(TAG, "saveUserProfileImageInFeed uri != null");
 
-                                    conversionGenreName();
-
-                                    Log.i(TAG, "conversionGenreName : " + conversionGenreFirst + " / "  + conversionGenreSecond + " / " + conversionGenreThird);
                                     insertFeedUserData(nowLoginUser, getSharedProfileMusic,
-                                            "profile_image/" + fileName, conversionGenreFirst,
-                                            conversionGenreSecond, conversionGenreThird);
+                                            "profile_image/" + fileName, getLikeGenreFirst,
+                                            getLikeGenreSecond, getLikeGenreThird);
                                 } else {
                                     Log.i(TAG, "saveUserProfileImageInFeed uri == null");
                                 } // else
@@ -1213,14 +1231,14 @@ public class Feed extends AppCompatActivity {
         }); // enqueue
     } // insertFeedUserData
 
-    void clickedGenreChangeName(String clickedItem, String conversionName) {
+    public String clickedGenreChangeName(String clickedItem) {
         String[] cutColor = clickedItem.split(" \\(");
 // 소문자로 변환
         String genreName = cutColor[0].toLowerCase();
         Log.i(TAG, "conversionGenreName clickedItem *genreName 1 : " + genreName);
 // '-' 를 '_' 로 재배치
         if (genreName.contains("-")) {
-            genreName.replace("-", "_");
+            genreName = genreName.replace("-", "_");
             Log.i(TAG, "conversionGenreName clickedItem *genreName 2 : " + genreName);
         } // if
         if (genreName.equals("r&b")) {
@@ -1230,15 +1248,46 @@ public class Feed extends AppCompatActivity {
 
         Log.i(TAG, "conversionGenreName clickedItem *genreName 4 : " + genreName);
 
-        conversionName = genreName;
-        Log.i(TAG, "conversionGenreName clickedItem *conversionName : " + conversionName);
+        return genreName;
     } // clickedGenreChangeName
 
-    void conversionGenreName() {
-        Log.i(TAG, "conversionGenreName");
-        clickedGenreChangeName(getLikeGenreFirst, conversionGenreFirst);
-        clickedGenreChangeName(getLikeGenreSecond, conversionGenreSecond);
-        clickedGenreChangeName(getLikeGenreThird, conversionGenreThird);
-    } // conversionGenreName
+    void downloadAndSetProfileImage() {
+        Log.i(TAG, "downloadAndSetProfileImage");
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        
+        ServerApi serverApi = retrofit.create(ServerApi.class);
+        
+        Call<ImageResponse> call = serverApi.getImagePath(feedUser);
+        call.enqueue(new Callback<ImageResponse>() {
+            @Override
+            public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
+                Log.i(TAG, "downloadAndSetProfileImage onResponse");
+                if (response.isSuccessful() && response.body() != null) {
+                    String imagePath = response.body().profile_image;
+                    Log.i(TAG, "downloadAndSetProfileImage onResponse imagePath : " + imagePath);
+
+                    if (imagePath != null) {
+                        Glide.with(feedCtx)
+                                .load(BASE_URL + imagePath)
+                                .into(profile);
+                    } else {
+                        profile.setImageResource(R.drawable.gray_profile);
+                    } // else
+
+                } else {
+                    Log.i(TAG, "downloadAndSetProfileImage onResponse : " + response.body());
+
+                } // else
+            } // onResponse
+
+            @Override
+            public void onFailure(Call<ImageResponse> call, Throwable t) {
+                Log.e(TAG, "downloadAndSetProfileImage onFailure : " + t.getMessage());
+            } // onFailure
+        }); // call.enqueue
+    } // downloadAndSetProfileImage
 
 } // CLASS END
