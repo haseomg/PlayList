@@ -1080,6 +1080,10 @@ public class MainActivity extends AppCompatActivity {
 //        } catch (NullPointerException e) {
 //            e.printStackTrace();
 //        } // catch
+//        registerReceiver(setStopMediaPlayerWhenLogout, new IntentFilter("LOGOUT_ACTION"));
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("LOGOUT_ACTION");
+        registerReceiver(setStopMediaPlayerWhenLogout, filter);
     } // onCreate END
 
     void incrementSongCount() {
@@ -1236,6 +1240,7 @@ public class MainActivity extends AppCompatActivity {
         //
 //        }
         unregisterReceiver(playMusicReceiver);
+        unregisterReceiver(setStopMediaPlayerWhenLogout);
     }
 
     // 카카오 로그아웃
@@ -3910,6 +3915,21 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         //super.onBackPressed();
     }
+
+    private final BroadcastReceiver setStopMediaPlayerWhenLogout = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // 로그아웃 버튼 클릭 시
+            if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                mediaPlayer.stop();
+                mediaPlayer.release();
+                mediaPlayer = null;
+                handler.removeCallbacksAndMessages(null);
+                nowPlayingPreference.removeKey(getApplicationContext(), "now_playing");
+                unregisterReceiver(playMusicReceiver);
+            }
+        } // onReceive
+    }; // setStopMediaPlayerWhenLogout
 
     private final BroadcastReceiver playMusicReceiver = new BroadcastReceiver() {
         @Override

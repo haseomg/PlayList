@@ -78,9 +78,7 @@ public class LogIn extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_log_in);
-
         Log.i(TAG, "onCreate()");
-
 
         ctx = this;
 
@@ -91,7 +89,6 @@ public class LogIn extends Activity {
                 goKakao();
             }
         });
-
 
         kakao = findViewById(R.id.kakaoBtnMent);
         kakao.setOnClickListener(new View.OnClickListener() {

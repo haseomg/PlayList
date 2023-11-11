@@ -252,12 +252,10 @@ public class Profile extends AppCompatActivity {
                         nickName.setVisibility(View.VISIBLE);
                         nickNameChange.setVisibility(View.GONE);
                         nickNameChangeBtn.setText("닉네임 변경");
-
-
                     }
                 }
             }
-        });
+        }); // nickNameChangeBtn.setOnClickListener
 
         logOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -265,16 +263,12 @@ public class Profile extends AppCompatActivity {
                 Log.i(TAG, "logOutBtn onClick()");
 
                 if (logOutBtn.getText().toString().equals("LOG IN")) {
-
                     Intent intent = new Intent(Profile.this, LogIn.class);
                     startActivity(intent);
 
                 } else {
-
                     AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
-
                     builder.setTitle("로그아웃 하시겠습니까?");
-
                     // app.dialog 여서 버튼이 앞에부터 순서대로 쌓이는데, 아무래도 커스텀 해야 할 것 같다.
                     builder.setPositiveButton("YES",
                             new DialogInterface.OnClickListener() {
@@ -285,14 +279,20 @@ public class Profile extends AppCompatActivity {
                                     // 로그아웃 버튼 클릭 시
                                     signOut();
                                     kakaoLogout();
+                                    // TODO (1) MainActivity에서 실행 중인 MediaPlayer를 꺼줘야 함
+                                    Intent intent = new Intent("LOGOUT_ACTION");
+                                    sendBroadcast(intent);
 
                                     ((MainActivity) MainActivity.mainCtx).logIn.setText("LOG IN");
                                     editor.clear();
                                     editor.commit();
 
+                                    Intent logOutIntent = new Intent(Profile.this, MainActivity.class);
+                                    startActivity(logOutIntent);
+                                    finish();
                                     Toast.makeText(getApplicationContext(), "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                                } // onClick
+                            }); // setPositiveButton
 
                     builder.setNegativeButton("NO",
                             new DialogInterface.OnClickListener() {
@@ -300,11 +300,12 @@ public class Profile extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     Log.i(TAG, "로그아웃하시겠습니까? 아니오");
                                 } // onClick
-                            });
+                            }); // setNegativeButton
                     builder.show();
-                }
-            }
-        });
+
+                } // else
+            } // onClick
+        }); // logOutBtn.setOnClickListener
 
 
         profileBackBtn = findViewById(R.id.profileBackButton);
@@ -313,7 +314,7 @@ public class Profile extends AppCompatActivity {
             public void onClick(View v) {
                 finish();
             }
-        });
+        }); // profileBackBtn.setOnClickListener
 
         feedBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -325,7 +326,7 @@ public class Profile extends AppCompatActivity {
 
                 if (nickName.equals("")) {
                     Log.i(TAG, "nickName이 빈 값일 때");
-                }
+                } // if
                 intent.putExtra("user", user);
                 intent.putExtra("now_login_user", nowLoginUser);
                 startActivity(intent);
