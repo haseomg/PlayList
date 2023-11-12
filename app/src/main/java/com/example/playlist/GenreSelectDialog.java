@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -29,6 +30,10 @@ public class GenreSelectDialog extends DialogFragment {
 
     SharedPreferences clickedPositionShared;
     SharedPreferences.Editor clickedPositionEditor;
+
+    private ImageView genreFirstImageView;
+    private ImageView genreSecondImageView;
+    private ImageView genreThirdImageView;
 
     public interface OnGenreSelectedListener {
         void onGenresSelected(ArrayList<String> selectedGenres);
