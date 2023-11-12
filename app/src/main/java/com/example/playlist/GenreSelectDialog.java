@@ -126,8 +126,11 @@ public class GenreSelectDialog extends DialogFragment {
     } // Dialog.onCreate
 
     private void matchGenreImage(String genreName, ImageView imageView) {
+        Log.i(TAG, "matchGenreImage (dialog) : " + genreName + " / " + imageView.getDrawable());
         String imageName = genreName.toLowerCase().replace(" ", "_");
+        Log.i(TAG, "matchGenreImage (dialog) imageName : " + imageName);
         int resId = getResources().getIdentifier(imageName, "drawable", requireContext().getPackageName());
+        Log.i(TAG, "matchGenreImage (dialog) resId : " + resId);
         imageView.setImageResource(resId);
     } // matchGenreImage
 
