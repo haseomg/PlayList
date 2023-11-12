@@ -350,7 +350,7 @@ public class Feed extends AppCompatActivity {
         String settingName = "R.drawable." + genreName;
         Log.i(TAG, "clickedItem *settingName (string) : " + settingName);
         getImageId(feedCtx, settingName);
-        int id = feedCtx.getResources().getIdentifier("drawable/" + genreName, null, feedCtx.getPackageName());
+        int id = feedCtx.getResources().getIdentifier("drawable/" + genreName, "drawable", feedCtx.getPackageName());
         Log.i(TAG, "clickedItem image id check : " + id);
         imageView.setImageResource(id);
 //        imageView.setImageResource(R.drawable.jazz);
@@ -739,6 +739,9 @@ public class Feed extends AppCompatActivity {
                         } // for END
                     } // onGenresSelected
                 }); // setListener
+                dialog.setGenreFirstImageView(genreFirst);
+                dialog.setGenreSecondImageView(genreSecond);
+                dialog.setGenreThirdImageView(genreThird);
                 dialog.show(getSupportFragmentManager(), "GenreSelect");
             } // else
 

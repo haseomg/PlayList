@@ -98,10 +98,13 @@ public class GenreSelectDialog extends DialogFragment {
                         clickedPositionEditor.commit();
 
                         if (clickedPosition.equals("1")) {
+                            matchGenreImage(clickedItem, genreFirstImageView);
                             Log.i(TAG, "SelectedGenre *positive before 1 onClick : " + clickedPositionShared.getString(clickedPosition, "0"));
                         } else if (clickedPosition.equals("2")) {
+                            matchGenreImage(clickedItem, genreSecondImageView);
                             Log.i(TAG, "SelectedGenre *positive before 2 onClick : " + clickedPositionShared.getString(clickedPosition, "0"));
                         } else if (clickedPosition.equals("3")) {
+                            matchGenreImage(clickedItem, genreThirdImageView);
                             Log.i(TAG, "SelectedGenre *positive before 3 onClick : " + clickedPositionShared.getString(clickedPosition, "0"));
                         } else {
                             Log.i(TAG, "SelectedGenre *positive before else onClick : " + clickedPositionShared.getString(clickedPosition, "0"));
@@ -121,6 +124,12 @@ public class GenreSelectDialog extends DialogFragment {
                 }); // setNegativeButton
         return builder.create();
     } // Dialog.onCreate
+
+    private void matchGenreImage(String genreName, ImageView imageView) {
+        String imageName = genreName.toLowerCase().replace(" ", "_");
+        int resId = getResources().getIdentifier(imageName, "drawable", requireContext().getPackageName());
+        imageView.setImageResource(resId);
+    } // matchGenreImage
 
     private void sendResult(int resultCode) {
         Log.i(TAG, "sendResult (resultCode) : " + resultCode);
