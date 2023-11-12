@@ -41,6 +41,18 @@ public class GenreSelectDialog extends DialogFragment {
 
     private OnGenreSelectedListener listener;
 
+    public void setGenreFirstImageView(ImageView imageView) {
+        this.genreFirstImageView = imageView;
+    } // setGenreFirstImageView
+
+    public void setGenreSecondImageView(ImageView imageView) {
+        this.genreSecondImageView = imageView;
+    } // setGenreSecondImageView
+
+    public void setGenreThirdImageView(ImageView imageView) {
+        this.genreThirdImageView = imageView;
+    } // setGenreThirdImageView
+
     public void setListener(OnGenreSelectedListener listener) {
         this.listener = listener;
     } // setListener
