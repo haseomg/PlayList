@@ -149,6 +149,7 @@ public class Feed extends AppCompatActivity {
         profile_edit = R.drawable.gray_profile_edit; // 프로필 수정 모드 이미지
         profileDefaultCheck = R.drawable.gray_profile; // 프로필 기본 이미지
         profile.setImageResource(profileDefaultCheck); // 프로필 이미지뷰에 프로필 기본 이미지 세팅
+        Log.i(TAG, "setProfileImage (initial) : " + profileDefaultCheck);
 
         // TODO 디비에 데이터를 넣고, 수정하고, 가져올 때 기준이 될 유저 이름 (user_name)
         userName.setText(user);
@@ -179,11 +180,11 @@ public class Feed extends AppCompatActivity {
         setProfileImage(); // 프로필 이미지 (수정 모드에서만 클릭 이벤트)
         setGenreOnClick(); // 선호 장르 세가지 (수정 모드에서만 클릭 이벤트)
         setProfileMusic(); // 프로필 뮤직 (수정 모드에서만 클릭 이벤트)
-        setNameFloatingButton(); // 팔로우/팔로잉 로직 or 피드 편집/피드 저장
         feedFollowFollowingClickEvent(); // 팔로우/팔로잉 텍스트 클릭 시 프래그먼트
 //        setMatchGenreImage(); // 피드 액티비티 접근 시 장르 이미지들 세팅
         downloadAndSetProfileImage(); // 프로필 이미지 다운로드
         setSelectUserFeedData(); // 피드 액티비티 접근 시 피드 로그인 유저의 피드 세팅
+        setNameFloatingButton(); // 팔로우/팔로잉 로직 or 피드 편집/피드 저장
     } // initial END
 
 //    void setMatchGenreImage() {
@@ -270,6 +271,7 @@ public class Feed extends AppCompatActivity {
 
                             Log.i(TAG, "setSelectUserFeedData conversionGenreFirst (if) : " + conversionGenreFirst);
                             matchGenreImage("1", genreFirst, conversionGenreFirst);
+                            genreFirstImageId = 1;
 
                         } else {
                             Log.i(TAG, "setSelectUserFeedData like_genre_first (else): " + like_genre_first);
@@ -284,6 +286,7 @@ public class Feed extends AppCompatActivity {
 
                             Log.i(TAG, "setSelectUserFeedData conversionGenreSecond (if) : " + conversionGenreSecond);
                             matchGenreImage("2", genreSecond, conversionGenreSecond);
+                            genreSecondImageId = 2;
 
                         } else {
                             Log.i(TAG, "setSelectUserFeedData like_genre_second (else) : " + like_genre_second);
@@ -299,6 +302,7 @@ public class Feed extends AppCompatActivity {
 
                             Log.i(TAG, "setSelectUserFeedData conversionGenreThird (if) : " + conversionGenreThird);
                             matchGenreImage("3", genreThird, conversionGenreThird);
+                            genreThirdImageId = 3;
 
                         } else {
                             Log.i(TAG, "setSelectUserFeedData like_genre_third (else) : " + like_genre_third);
@@ -671,12 +675,16 @@ public class Feed extends AppCompatActivity {
             if (profile.getDrawable() == null || profileDefaultCheck == R.drawable.gray_profile || profileDefaultCheck == R.drawable.gray_profile_edit) {
                 // 기본 이미지가 세팅되어 있을 경우에 대한 처리
                 profile.setImageResource(R.drawable.gray_profile);
+                Log.i(TAG, "setProfileImage (saveFeed) *default (1) : " + profileDefaultCheck);
                 profileDefaultCheck = R.drawable.gray_profile;
+                Log.i(TAG, "setProfileImage (saveFeed) *default (2) : " + profileDefaultCheck);
 
             } else {
                 // 기본 이미지가 세팅되어 있지 않을 경우에 대한 처리
                 profile.setImageResource(Integer.parseInt(String.valueOf(selectedProfileImageUri)));
+                Log.i(TAG, "setProfileImage (saveFeed) *not default (1) : " + profileDefaultCheck);
                 profileDefaultCheck = R.drawable.gray_profile;
+                Log.i(TAG, "setProfileImage (saveFeed) *not default (2) : " + profileDefaultCheck);
             } // else
         } // if
 
@@ -764,7 +772,6 @@ public class Feed extends AppCompatActivity {
     } // setGenreSelect
 
     void setFeedEditMode() {
-        String infoStatus = "default";
 
         if (nameFloatingButton.getText().toString().equals("피드 편집")) {
             nameFloatingButton.setText("피드 저장");
@@ -778,13 +785,6 @@ public class Feed extends AppCompatActivity {
                 Log.i(TAG, "saveUserProfileImageInFeed setFeedEditMode *else : " + profileMusic.getText().toString());
 
             } // else
-            // TODO 프로필 이미지, 장르 세개 이미지 세팅 변화
-            // TODO 피드 수정 상태 !
-
-            if (infoStatus.equals("default")) {
-
-            }
-
             if (genreFirstImageId == R.drawable.genre_default) {
                 Log.i(TAG, "setFeedEditMode 1번째 genre default image");
                 genreFirst.setImageResource(R.drawable.genre_pick);
@@ -807,7 +807,9 @@ public class Feed extends AppCompatActivity {
             if (profileDefaultCheck == R.drawable.gray_profile) {
                 Log.i(TAG, "setFeedEditMode 4번째 profile default image");
                 profile.setImageResource(R.drawable.gray_profile_edit);
+                Log.i(TAG, "setProfileImage (FeedEditMode) (1) : " + profileDefaultCheck);
                 profileDefaultCheck = R.drawable.gray_profile_edit;
+                Log.i(TAG, "setProfileImage (FeedEditMode) (2) : " + profileDefaultCheck);
             } // if
 
             downloadAndSetProfileImage(); // 프로필 이미지 다운로드
@@ -827,6 +829,8 @@ public class Feed extends AppCompatActivity {
                             getLikeGenreThird = clickedGenreShared.getString("3", "0");
                             getSharedProfileMusic = sharedPreferences.getString(feedUser, "프로필 뮤직을 선택해 주세요.");
 
+                            Log.i(TAG, "getSharedFeedData : " + getLikeGenreFirst + " / " + getLikeGenreSecond
+                             + " / " + getLikeGenreThird + " / " + getSharedProfileMusic);
                             // TODO 디비에 이미지 저장
                             try {
                                 Log.i(TAG, "saveUserProfileImageInFeed execute (try)");
@@ -1316,14 +1320,25 @@ public class Feed extends AppCompatActivity {
                     Log.i(TAG, "downloadAndSetProfileImage onResponse imagePath : " + imagePath);
 
                     if (error != null) {
-                        profile.setImageResource(R.drawable.gray_profile);
+                        if (profileDefaultCheck == 2131165331) {
+                            profile.setImageResource(R.drawable.gray_profile);
+                            Log.i(TAG, "setProfileImage (download) *if : " + profileDefaultCheck);
+
+                        } else {
+                            profile.setImageResource(R.drawable.gray_profile_edit);
+                            Log.i(TAG, "setProfileImage (download) *else : " + profileDefaultCheck);
+
+                        } // else
 
                     } else {
                         Log.i(TAG, "downloadAndSetProfileImage download url check : " + BASE_URL + imagePath);
+                        Log.i(TAG, "setProfileImage (download) *else (1) : " + profileDefaultCheck);
                         Glide.with(feedCtx)
                                 .load(BASE_URL + imagePath)
                                 .apply(new RequestOptions()
                                         .circleCrop()).into(profile);
+                        profileDefaultCheck = 4;
+                        Log.i(TAG, "setProfileImage (download) *else (2) : " + profileDefaultCheck);
                     } // else
 
                 } else {
