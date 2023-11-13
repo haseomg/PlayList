@@ -114,7 +114,7 @@ public class SignUp extends AppCompatActivity {
                     kakaoLogin();
                 } else {
                     kakaoAccountLogin();
-                }
+                } // else
             }
         });
 
@@ -1053,11 +1053,10 @@ public class SignUp extends AppCompatActivity {
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
-                        }
+                        } // catch
                     }
                 });
             }
         });
-
     }
 }

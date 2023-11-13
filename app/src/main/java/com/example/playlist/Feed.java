@@ -407,7 +407,20 @@ public class Feed extends AppCompatActivity {
                     } else if (nameFloatingButton.getText().toString().equals("피드 편집")) {
                         // 현재 피드 편집 모드가 아닐 때
                         Log.i(TAG, "profileImage onClick (else if) : " + nowLoginUser + " / " + feedUser);
-
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(Feed.this);
+//                        LayoutInflater inflater = LayoutInflater.from(Feed.this);
+//                        View dialogView = inflater.inflate(R.layout.dialog_image_zoom, null);
+//                        ImageView imageView = dialogView.findViewById(R.id.zoomedImageView);
+//
+//                        Glide.with(feedCtx)
+//                                .load(BASE_URL + "profile_image/" + feedUser + "_profile_image.JPG")
+//                                .apply(new RequestOptions()
+//                                        .circleCrop()).into(imageView);
+////                        imageView.setImageResource(R.drawable.profile_image_zoomed);
+//
+//                        builder.setView(dialogView);
+//                        AlertDialog dialog = builder.create();
+//                        dialog.show();
                     } else {
                         // 외부 저장소 권한 요청
                         requestStoragePermission();
@@ -639,7 +652,7 @@ public class Feed extends AppCompatActivity {
         Log.i(TAG, "feedLifecycle onDestroy()");
     }
 
-    void saveFeed() {
+    void  saveFeed() {
         Log.i(TAG, "nameFloatingButton check : " + feedUser + " / " + nowLoginUser);
         nameFloatingButton.setText("피드 편집");
 
@@ -755,10 +768,12 @@ public class Feed extends AppCompatActivity {
 
         if (nameFloatingButton.getText().toString().equals("피드 편집")) {
             nameFloatingButton.setText("피드 저장");
+
             if (profileMusic.getText().toString().equals("프로필 뮤직을 선택해 주세요.")) {
                 Log.i(TAG, "saveUserProfileImageInFeed setFeedEditMode *if: " + profileMusic.getText().toString());
                 editor.putString(feedUser, "프로필 뮤직을 선택해 주세요.");
                 editor.commit();
+
             } else {
                 Log.i(TAG, "saveUserProfileImageInFeed setFeedEditMode *else : " + profileMusic.getText().toString());
 
@@ -795,6 +810,9 @@ public class Feed extends AppCompatActivity {
                 profileDefaultCheck = R.drawable.gray_profile_edit;
             } // if
 
+            downloadAndSetProfileImage(); // 프로필 이미지 다운로드
+            setSelectUserFeedData(); // 피드 액티비티 접근 시 피드 로그인 유저의 피드 세팅
+
         } else if (nameFloatingButton.getText().toString().equals("피드 저장")) {
 
             new AlertDialog.Builder(Feed.this, R.style.AlertDialogCustom)
@@ -826,7 +844,11 @@ public class Feed extends AppCompatActivity {
                             } catch (NullPointerException e) {
                                 Log.e(TAG, "saveUserProfileImageInFeed execute (catch Null) : " + e);
                             } // catch
-                            // TODO 디비에 유저의 피드 정보들 저장
+
+
+                            // TODO 디비에서 유저의 피드 정보들 저장 데이터 가져와서 UI 세팅
+                            downloadAndSetProfileImage(); // 프로필 이미지 다운로드
+                            setSelectUserFeedData(); // 피드 액티비티 접근 시 피드 로그인 유저의 피드 세팅
                         } // onClick
                     }) // setPositiveButton
                     .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
