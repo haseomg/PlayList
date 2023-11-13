@@ -136,7 +136,6 @@ public interface ServerApi {
             @Field("user_name") String user_name
     );
 
-
     @GET("get_feed_user_data.php")
     Call<List<FeedUserDataModel>> getFeedUserData(
             @Query("user_name") String user_name);

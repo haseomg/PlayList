@@ -149,7 +149,7 @@ public class Feed extends AppCompatActivity {
         // TODO 만약 프로필 이미지에 세팅된 이미지가 없을 경우
         profile_edit = R.drawable.gray_profile_edit; // 프로필 수정 모드 이미지
         profileDefaultCheck = R.drawable.gray_profile; // 프로필 기본 이미지
-        profile.setImageResource(profileDefaultCheck); // 프로필 이미지뷰에 프로필 기본 이미지 세팅
+//        profile.setImageResource(profileDefaultCheck); // 프로필 이미지뷰에 프로필 기본 이미지 세팅
         Log.i(TAG, "setProfileImage (initial) : " + profileDefaultCheck);
 
         // TODO 디비에 데이터를 넣고, 수정하고, 가져올 때 기준이 될 유저 이름 (user_name)
@@ -662,7 +662,7 @@ public class Feed extends AppCompatActivity {
         Log.i(TAG, "feedLifecycle onDestroy()");
     }
 
-    void  saveFeed() {
+    void saveFeed() {
         Log.i(TAG, "nameFloatingButton check : " + feedUser + " / " + nowLoginUser);
         nameFloatingButton.setText("피드 편집");
 
@@ -818,9 +818,6 @@ public class Feed extends AppCompatActivity {
                 Log.i(TAG, "setProfileImage (FeedEditMode) (2) : " + profileDefaultCheck);
             } // if
 
-            downloadAndSetProfileImage(); // 프로필 이미지 다운로드
-            setSelectUserFeedData(); // 피드 액티비티 접근 시 피드 로그인 유저의 피드 세팅
-
         } else if (nameFloatingButton.getText().toString().equals("피드 저장")) {
 
             new AlertDialog.Builder(Feed.this, R.style.AlertDialogCustom)
@@ -836,7 +833,7 @@ public class Feed extends AppCompatActivity {
                             getSharedProfileMusic = sharedPreferences.getString(feedUser, "프로필 뮤직을 선택해 주세요.");
 
                             Log.i(TAG, "getSharedFeedData : " + getLikeGenreFirst + " / " + getLikeGenreSecond
-                             + " / " + getLikeGenreThird + " / " + getSharedProfileMusic);
+                                    + " / " + getLikeGenreThird + " / " + getSharedProfileMusic);
                             // TODO 디비에 이미지 저장
                             try {
                                 Log.i(TAG, "saveUserProfileImageInFeed execute (try)");
@@ -844,13 +841,33 @@ public class Feed extends AppCompatActivity {
                                     saveUserProfileImageInFeed();
                                     Log.i(TAG, "saveUserProfileImageInFeed uri != null");
 
-                                    Log.i(TAG, "getSharedFeedData (try) : " + getLikeGenreFirst + " / " + getLikeGenreSecond
+                                    Log.i(TAG, "getSharedFeedData (try *if) : " + getLikeGenreFirst + " / " + getLikeGenreSecond
                                             + " / " + getLikeGenreThird + " / " + getSharedProfileMusic);
                                     insertFeedUserData(nowLoginUser, getSharedProfileMusic,
                                             "profile_image/" + fileName, getLikeGenreFirst,
                                             getLikeGenreSecond, getLikeGenreThird);
+
                                 } else {
-                                    Log.i(TAG, "saveUserProfileImageInFeed uri == null");
+                                    try {
+                                        Log.i(TAG, "saveUserProfileImageInFeed uri == null");
+                                        Log.i(TAG, "getSharedFeedData (try *else) : " + getLikeGenreFirst + " / " + getLikeGenreSecond
+                                                + " / " + getLikeGenreThird + " / " + getSharedProfileMusic);
+                                        insertFeedUserData(nowLoginUser, getSharedProfileMusic,
+                                                "profile_image/" + fileName, getLikeGenreFirst,
+                                                getLikeGenreSecond, getLikeGenreThird);
+
+                                    } catch (NullPointerException e) {
+                                        Log.e(TAG, "getSharedFeedData selectedImageUri == null : " + e);
+                                        Log.i(TAG, "getSharedFeedData (try *else) : " + getLikeGenreFirst + " / " + getLikeGenreSecond
+                                                + " / " + getLikeGenreThird + " / " + getSharedProfileMusic);
+                                        insertFeedUserData(nowLoginUser, getSharedProfileMusic,
+                                                "profile_image/" + fileName, getLikeGenreFirst,
+                                                getLikeGenreSecond, getLikeGenreThird);
+                                    } // catch
+
+                                    downloadAndSetProfileImage(); // 프로필 이미지 다운로드
+                                    setSelectUserFeedData(); // 피드 액티비티 접근 시 피드 로그인 유저의 피드 세팅
+
                                 } // else
 
                             } catch (NullPointerException e) {
@@ -1341,14 +1358,29 @@ public class Feed extends AppCompatActivity {
                         } // else
 
                     } else {
+                        Log.i(TAG, "setProfileImage onResponse imagePath : " + imagePath);
+                        String profileImagePath = "profile_image/" + feedUser + "_profile_image.JPG";
+
                         Log.i(TAG, "downloadAndSetProfileImage download url check : " + BASE_URL + imagePath);
                         Log.i(TAG, "setProfileImage (download) *else (1) : " + profileDefaultCheck);
-                        Glide.with(feedCtx)
-                                .load(BASE_URL + imagePath)
+                        Log.i(TAG, "setProfileImage (download) *url check : " +  BASE_URL + profileImagePath);
+
+                        Glide.with(getApplicationContext())
+//                                .load(BASE_URL + imagePath)
+                                .load(BASE_URL + profileImagePath)
                                 .apply(new RequestOptions()
-                                        .circleCrop()).into(profile);
-                        profileDefaultCheck = 4;
-                        Log.i(TAG, "setProfileImage (download) *else (2) : " + profileDefaultCheck);
+                                        .circleCrop()
+                                .error(R.drawable.gray_profile))
+                                .into(profile);
+                        if (profileImagePath.contains(feedUser)) {
+                            Log.i(TAG, " setProfileImage profileImagePath.contains(feedUser) : " + profileImagePath + " / " + feedUser);
+                            profileDefaultCheck = 4;
+
+                        } else {
+                            Log.i(TAG, " setProfileImage profileImagePath.contains(feedUser) : " + profileImagePath + " / " + feedUser);
+
+                        } // else
+                        Log.i(TAG, "setProfileImage (download) *else (2) : " +  profileDefaultCheck);
                     } // else
 
                 } else {
