@@ -183,7 +183,8 @@ public class Feed extends AppCompatActivity {
         setProfileMusic(); // 프로필 뮤직 (수정 모드에서만 클릭 이벤트)
         feedFollowFollowingClickEvent(); // 팔로우/팔로잉 텍스트 클릭 시 프래그먼트
 //        setMatchGenreImage(); // 피드 액티비티 접근 시 장르 이미지들 세팅
-        downloadAndSetProfileImage(); // 프로필 이미지 다운로드
+//        downloadAndSetProfileImage(); // 프로필 이미지 다운로드
+        setProfileImageView();
         setSelectUserFeedData(); // 피드 액티비티 접근 시 피드 로그인 유저의 피드 세팅
         setNameFloatingButton(); // 팔로우/팔로잉 로직 or 피드 편집/피드 저장
     } // initial END
@@ -780,6 +781,7 @@ public class Feed extends AppCompatActivity {
     void setFeedEditMode() {
 
         if (nameFloatingButton.getText().toString().equals("피드 편집")) {
+            setProfileImageEditView();
             nameFloatingButton.setText("피드 저장");
 
             if (profileMusic.getText().toString().equals("프로필 뮤직을 선택해 주세요.")) {
@@ -865,9 +867,11 @@ public class Feed extends AppCompatActivity {
                                                 getLikeGenreSecond, getLikeGenreThird);
                                     } // catch
 
-                                    downloadAndSetProfileImage(); // 프로필 이미지 다운로드
+//                                    downloadAndSetProfileImage(); // 프로필 이미지 다운로드
                                     setSelectUserFeedData(); // 피드 액티비티 접근 시 피드 로그인 유저의 피드 세팅
-
+                                    saveFeed();
+                                    saveUserProfileImageInFeed();
+                                    setProfileImageView();
                                 } // else
 
                             } catch (NullPointerException e) {
@@ -878,10 +882,11 @@ public class Feed extends AppCompatActivity {
 
 
                             // TODO 디비에서 유저의 피드 정보들 저장 데이터 가져와서 UI 세팅
-                            downloadAndSetProfileImage(); // 프로필 이미지 다운로드
-                            setSelectUserFeedData(); // 피드 액티비티 접근 시 피드 로그인 유저의 피드 세팅
+//                            downloadAndSetProfileImage(); // 프로필 이미지 다운로드
+//                            setSelectUserFeedData(); // 피드 액티비티 접근 시 피드 로그인 유저의 피드 세팅
                         } // onClick
                     }) // setPositiveButton
+
                     .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -1326,6 +1331,46 @@ public class Feed extends AppCompatActivity {
         return genreName;
     } // clickedGenreChangeName
 
+    void setProfileImageEditView() {
+        String profileImagePath = "profile_image/" + feedUser + "_profile_image.JPG";
+//                            profile.setImageResource(R.drawable.gray_profile);
+        Glide.with(getApplicationContext())
+//                                .load(BASE_URL + imagePath)
+                .load(BASE_URL + profileImagePath)
+                .apply(new RequestOptions()
+                        .circleCrop()
+                        .error(R.drawable.gray_profile_edit))
+                .into(profile);
+        if (profileImagePath.contains(feedUser)) {
+            Log.i(TAG, " setProfileImage profileImagePath.contains(feedUser) : " + BASE_URL + profileImagePath);
+            profileDefaultCheck = 4;
+
+        } else {
+            Log.i(TAG, " setProfileImage profileImagePath.contains(feedUser) : " + BASE_URL + profileImagePath);
+
+        } // else
+    } // setProfileImageEditView
+
+    void setProfileImageView() {
+        String profileImagePath = "profile_image/" + feedUser + "_profile_image.JPG";
+//                            profile.setImageResource(R.drawable.gray_profile);
+        Glide.with(getApplicationContext())
+//                                .load(BASE_URL + imagePath)
+                .load(BASE_URL + profileImagePath)
+                .apply(new RequestOptions()
+                        .circleCrop()
+                        .error(R.drawable.gray_profile))
+                .into(profile);
+        if (profileImagePath.contains(feedUser)) {
+            Log.i(TAG, " setProfileImage profileImagePath.contains(feedUser) : " + BASE_URL + profileImagePath);
+            profileDefaultCheck = 4;
+
+        } else {
+            Log.i(TAG, " setProfileImage profileImagePath.contains(feedUser) : " + BASE_URL + profileImagePath);
+
+        } // else
+    } // setProfileImageView
+
     void downloadAndSetProfileImage() {
         Log.i(TAG, "downloadAndSetProfileImage");
         Retrofit retrofit = new Retrofit.Builder()
@@ -1352,7 +1397,23 @@ public class Feed extends AppCompatActivity {
                             Log.i(TAG, "setProfileImage (download) *if : " + profileDefaultCheck);
 
                         } else {
-                            profile.setImageResource(R.drawable.gray_profile_edit);
+                            String profileImagePath = "profile_image/" + feedUser + "_profile_image.JPG";
+//                            profile.setImageResource(R.drawable.gray_profile);
+                            Glide.with(getApplicationContext())
+//                                .load(BASE_URL + imagePath)
+                                    .load(BASE_URL + profileImagePath)
+                                    .apply(new RequestOptions()
+                                            .circleCrop()
+                                            .error(R.drawable.gray_profile))
+                                    .into(profile);
+                            if (profileImagePath.contains(feedUser)) {
+                                Log.i(TAG, " setProfileImage profileImagePath.contains(feedUser) : " + BASE_URL + profileImagePath);
+                                profileDefaultCheck = 4;
+
+                            } else {
+                                Log.i(TAG, " setProfileImage profileImagePath.contains(feedUser) : " + BASE_URL + profileImagePath);
+
+                            } // else
                             Log.i(TAG, "setProfileImage (download) *else : " + profileDefaultCheck);
 
                         } // else
@@ -1363,24 +1424,24 @@ public class Feed extends AppCompatActivity {
 
                         Log.i(TAG, "downloadAndSetProfileImage download url check : " + BASE_URL + imagePath);
                         Log.i(TAG, "setProfileImage (download) *else (1) : " + profileDefaultCheck);
-                        Log.i(TAG, "setProfileImage (download) *url check : " +  BASE_URL + profileImagePath);
+                        Log.i(TAG, "setProfileImage (download) *url check : " + BASE_URL + profileImagePath);
 
                         Glide.with(getApplicationContext())
 //                                .load(BASE_URL + imagePath)
                                 .load(BASE_URL + profileImagePath)
                                 .apply(new RequestOptions()
                                         .circleCrop()
-                                .error(R.drawable.gray_profile))
+                                        .error(R.drawable.gray_profile))
                                 .into(profile);
                         if (profileImagePath.contains(feedUser)) {
-                            Log.i(TAG, " setProfileImage profileImagePath.contains(feedUser) : " + profileImagePath + " / " + feedUser);
+                            Log.i(TAG, " setProfileImage profileImagePath.contains(feedUser) : " + BASE_URL + profileImagePath);
                             profileDefaultCheck = 4;
 
                         } else {
-                            Log.i(TAG, " setProfileImage profileImagePath.contains(feedUser) : " + profileImagePath + " / " + feedUser);
+                            Log.i(TAG, " setProfileImage profileImagePath.contains(feedUser) : " + BASE_URL + profileImagePath);
 
                         } // else
-                        Log.i(TAG, "setProfileImage (download) *else (2) : " +  profileDefaultCheck);
+                        Log.i(TAG, "setProfileImage (download) *else (2) : " + profileDefaultCheck);
                     } // else
 
                 } else {
