@@ -22,7 +22,7 @@ public class GenreSelectDialog extends DialogFragment {
     private String[] allGenres = {"Rock (red)", "R&B (purple)", "Jazz (blue)",
             "Acoustic (green)", "Hip-Hop (black)", "Ballad (orange)"};
     public final String TAG = "GenreSelectDialog";
-    String clickedItem, clickedPosition;
+    String clickedItem, clickedPosition, conversionGenreFirst, conversionGenreSecond, conversionGenreThird;
     // Rock = rock, R&B = rhythmnblues, Jazz = jazz, Acoustic = acoustic, Hip-Hop = hip_hop, Ballad = ballad
 
     SharedPreferences shared;
@@ -98,14 +98,30 @@ public class GenreSelectDialog extends DialogFragment {
                         clickedPositionEditor.commit();
 
                         if (clickedPosition.equals("1")) {
-                            matchGenreImage(clickedItem, genreFirstImageView);
+                            // 고른 장르 이름 convert
+                            conversionGenreFirst = clickedGenreChangeName(clickedItem);
+                            matchGenreImage("1", genreFirstImageView, conversionGenreFirst);
                             Log.i(TAG, "SelectedGenre *positive before 1 onClick : " + clickedPositionShared.getString(clickedPosition, "0"));
+                            clickedPositionEditor.putString("selected_genre_position", "1");
+                            clickedPositionEditor.putString(clickedPosition, clickedItem);
+                            clickedPositionEditor.commit();
+
                         } else if (clickedPosition.equals("2")) {
-                            matchGenreImage(clickedItem, genreSecondImageView);
+                            conversionGenreSecond = clickedGenreChangeName(clickedItem);
+                            matchGenreImage("2", genreSecondImageView, conversionGenreSecond);
                             Log.i(TAG, "SelectedGenre *positive before 2 onClick : " + clickedPositionShared.getString(clickedPosition, "0"));
+                            clickedPositionEditor.putString("selected_genre_position", "2");
+                            clickedPositionEditor.putString(clickedPosition, clickedItem);
+                            clickedPositionEditor.commit();
+
                         } else if (clickedPosition.equals("3")) {
-                            matchGenreImage(clickedItem, genreThirdImageView);
+                            conversionGenreThird = clickedGenreChangeName(clickedItem);
+                            matchGenreImage("3", genreThirdImageView, conversionGenreThird);
                             Log.i(TAG, "SelectedGenre *positive before 3 onClick : " + clickedPositionShared.getString(clickedPosition, "0"));
+                            clickedPositionEditor.putString("selected_genre_position", "3");
+                            clickedPositionEditor.putString(clickedPosition, clickedItem);
+                            clickedPositionEditor.commit();
+
                         } else {
                             Log.i(TAG, "SelectedGenre *positive before else onClick : " + clickedPositionShared.getString(clickedPosition, "0"));
 
@@ -125,14 +141,65 @@ public class GenreSelectDialog extends DialogFragment {
         return builder.create();
     } // Dialog.onCreate
 
-    private void matchGenreImage(String genreName, ImageView imageView) {
-        Log.i(TAG, "matchGenreImage (dialog) : " + genreName + " / " + imageView.getDrawable());
-        String imageName = genreName.toLowerCase().replace(" ", "_");
-        Log.i(TAG, "matchGenreImage (dialog) imageName : " + imageName);
-        int resId = getResources().getIdentifier(imageName, "drawable", requireContext().getPackageName());
-        Log.i(TAG, "matchGenreImage (dialog) resId : " + resId);
-        imageView.setImageResource(resId);
+    public String clickedGenreChangeName(String clickedItem) {
+        String[] cutColor = clickedItem.split(" \\(");
+// 소문자로 변환
+        String genreName = cutColor[0].toLowerCase();
+        Log.i(TAG, "conversionGenreName clickedItem *genreName 1 : " + genreName);
+// '-' 를 '_' 로 재배치
+        if (genreName.contains("-")) {
+            genreName = genreName.replace("-", "_");
+            Log.i(TAG, "conversionGenreName clickedItem *genreName 2 : " + genreName);
+        } // if
+        if (genreName.equals("r&b")) {
+            genreName = "rhythmnblues";
+            Log.i(TAG, "conversionGenreName clickedItem *genreName 3 : " + genreName);
+        } // if
+
+        Log.i(TAG, "conversionGenreName clickedItem *genreName 4 : " + genreName);
+
+        return genreName;
+    } // clickedGenreChangeName
+
+    void matchGenreImage(String number, ImageView imageView, String clickedItem) {
+//        String clickedItem = clickedGenreShared.getString(number, "0");
+        Log.i(TAG, "clickedItem : " + clickedItem);
+        String[] cutColor = clickedItem.split(" \\(");
+        // 소문자로 변환
+        String genreName = cutColor[0].toLowerCase();
+        Log.i(TAG, "clickedItem *genreName 1 : " + genreName);
+        // '-' 를 '_' 로 재배치
+        if (genreName.contains("-")) {
+            genreName.replace("-", "_");
+            Log.i(TAG, "clickedItem *genreName 2 : " + genreName);
+        } // if
+        if (genreName.equals("r&b")) {
+            genreName = "rhythmnblues";
+            Log.i(TAG, "clickedItem *genreName 3 : " + genreName);
+        } // if
+
+        Log.i(TAG, "clickedItem *genreName 4 : " + genreName);
+        String settingName = "R.drawable." + genreName;
+        Log.i(TAG, "clickedItem *settingName (string) : " + settingName);
+        getImageId(Feed.feedCtx, settingName);
+        int id = Feed.feedCtx.getResources().getIdentifier("drawable/" + genreName, "drawable", Feed.feedCtx.getPackageName());
+        Log.i(TAG, "clickedItem image id check : " + id);
+        imageView.setImageResource(id);
+//        imageView.setImageResource(R.drawable.jazz);
     } // matchGenreImage
+
+    public static int getImageId(Context context, String imageName) {
+        return context.getResources().getIdentifier("drawable/" + imageName, null, context.getPackageName());
+    }
+
+//    private void matchGenreImage(String genreName, ImageView imageView) {
+//        Log.i(TAG, "matchGenreImage (dialog) : " + genreName + " / " + imageView.getDrawable());
+//        String imageName = genreName.toLowerCase().replace(" ", "_");
+//        Log.i(TAG, "matchGenreImage (dialog) imageName : " + imageName);
+//        int resId = getResources().getIdentifier(imageName, "drawable", requireContext().getPackageName());
+//        Log.i(TAG, "matchGenreImage (dialog) resId : " + resId);
+//        imageView.setImageResource(resId);
+//    } // matchGenreImage
 
     private void sendResult(int resultCode) {
         Log.i(TAG, "sendResult (resultCode) : " + resultCode);

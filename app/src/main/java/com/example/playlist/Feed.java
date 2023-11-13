@@ -72,13 +72,14 @@ public class Feed extends AppCompatActivity {
     private static final String BASE_URL = "http://13.124.239.85/";
     private final int GET_GALLERY_IMAGE = 200;
 
-    String selected_profileMusic, fileName, getLikeGenreFirst, getLikeGenreSecond, getLikeGenreThird;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     SharedPreferences clickedGenreShared;
     SharedPreferences.Editor clickedGenreEditor;
     SharedPreferences nicknameShared;
     SharedPreferences.Editor nicknameEditor;
+
+    String selected_profileMusic, fileName, getLikeGenreFirst, getLikeGenreSecond, getLikeGenreThird;
     String getSharedNickName;
     String getSharedProfileMusic, getSharedGenreFirst, getSharedGenreSecond, getSharedGenreThird, getSelectedProfileImage;
 
@@ -244,6 +245,9 @@ public class Feed extends AppCompatActivity {
                         if (profile_music.contains("∙")) {
                             Log.i(TAG, "setSelectUserFeedData profile_music (if) : " + profile_music);
                             profileMusic.setText(profile_music + " ▶");
+                            editor.putString(feedUser, profile_music);
+                            editor.commit();
+
                         } else {
                             Log.i(TAG, "setSelectUserFeedData profile_music (else) : " + profile_music);
 
@@ -268,6 +272,8 @@ public class Feed extends AppCompatActivity {
                             Log.i(TAG, "setSelectUserFeedData like_genre_first (if) : " + like_genre_first);
                             clickedGenreChangeName(like_genre_first);
                             conversionGenreFirst = clickedGenreChangeName(like_genre_first);
+                            clickedGenreEditor.putString("1", like_genre_first);
+                            clickedGenreEditor.commit();
 
                             Log.i(TAG, "setSelectUserFeedData conversionGenreFirst (if) : " + conversionGenreFirst);
                             matchGenreImage("1", genreFirst, conversionGenreFirst);
@@ -283,6 +289,8 @@ public class Feed extends AppCompatActivity {
                             Log.i(TAG, "setSelectUserFeedData like_genre_second (if) : " + like_genre_second);
                             clickedGenreChangeName(like_genre_second);
                             conversionGenreSecond = clickedGenreChangeName(like_genre_second);
+                            clickedGenreEditor.putString("2", like_genre_second);
+                            clickedGenreEditor.commit();
 
                             Log.i(TAG, "setSelectUserFeedData conversionGenreSecond (if) : " + conversionGenreSecond);
                             matchGenreImage("2", genreSecond, conversionGenreSecond);
@@ -299,6 +307,8 @@ public class Feed extends AppCompatActivity {
                             Log.i(TAG, "setSelectUserFeedData like_genre_third (if) : " + like_genre_third);
                             clickedGenreChangeName(like_genre_third);
                             conversionGenreThird = clickedGenreChangeName(like_genre_third);
+                            clickedGenreEditor.putString("3", like_genre_third);
+                            clickedGenreEditor.commit();
 
                             Log.i(TAG, "setSelectUserFeedData conversionGenreThird (if) : " + conversionGenreThird);
                             matchGenreImage("3", genreThird, conversionGenreThird);
@@ -372,8 +382,6 @@ public class Feed extends AppCompatActivity {
                 clickedGenreEditor.putString("selected_genre_position", "1");
                 clickedGenreEditor.commit();
                 setGenreSelect();
-                // 다이얼로그 확인 버튼 누르면
-//                matchGenreImage("1", genreFirst);
             } // onClick
         }); // genreFirst.setOnClickListener
 
@@ -383,7 +391,6 @@ public class Feed extends AppCompatActivity {
                 clickedGenreEditor.putString("selected_genre_position", "2");
                 clickedGenreEditor.commit();
                 setGenreSelect();
-//                matchGenreImage("2", genreSecond);
             } // onClick
         }); //genreSecond.setOnClickListener
 
@@ -393,7 +400,6 @@ public class Feed extends AppCompatActivity {
                 clickedGenreEditor.putString("selected_genre_position", "3");
                 clickedGenreEditor.commit();
                 setGenreSelect();
-//                matchGenreImage("3", genreThird);
             } // onClick
         }); //genreSecond.setOnClickListener
     } // setGenre
@@ -783,13 +789,13 @@ public class Feed extends AppCompatActivity {
 
             } else {
                 Log.i(TAG, "saveUserProfileImageInFeed setFeedEditMode *else : " + profileMusic.getText().toString());
-
             } // else
+
             if (genreFirstImageId == R.drawable.genre_default) {
                 Log.i(TAG, "setFeedEditMode 1번째 genre default image");
                 genreFirst.setImageResource(R.drawable.genre_pick);
                 genreFirstImageId = R.drawable.genre_pick;  // update the image ID
-            }
+            } // if
 
             if (genreSecondImageId == R.drawable.genre_default) {
                 Log.i(TAG, "setFeedEditMode 2번째 genre default image");
@@ -838,6 +844,8 @@ public class Feed extends AppCompatActivity {
                                     saveUserProfileImageInFeed();
                                     Log.i(TAG, "saveUserProfileImageInFeed uri != null");
 
+                                    Log.i(TAG, "getSharedFeedData (try) : " + getLikeGenreFirst + " / " + getLikeGenreSecond
+                                            + " / " + getLikeGenreThird + " / " + getSharedProfileMusic);
                                     insertFeedUserData(nowLoginUser, getSharedProfileMusic,
                                             "profile_image/" + fileName, getLikeGenreFirst,
                                             getLikeGenreSecond, getLikeGenreThird);
@@ -847,6 +855,8 @@ public class Feed extends AppCompatActivity {
 
                             } catch (NullPointerException e) {
                                 Log.e(TAG, "saveUserProfileImageInFeed execute (catch Null) : " + e);
+                                Log.i(TAG, "getSharedFeedData (catch) : " + getLikeGenreFirst + " / " + getLikeGenreSecond
+                                        + " / " + getLikeGenreThird + " / " + getSharedProfileMusic);
                             } // catch
 
 
