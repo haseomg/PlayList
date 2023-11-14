@@ -309,8 +309,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(String token) {
                 Log.i(TAG, "fcm onSuccess : " + token);
-            }
-        });
+            } // onSuccess
+        }); // FirebaseMessaging
 
         fromSignUpNickName = intent.getStringExtra("nickName");
 
@@ -484,7 +484,6 @@ public class MainActivity extends AppCompatActivity {
         heart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onHeartClicked(v);
 
                 if (logIn.getText().toString().equals("LOG IN")) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -504,6 +503,7 @@ public class MainActivity extends AppCompatActivity {
 
                 } else {
                     Log.i(TAG, "heart 버튼 클릭");
+                    onHeartClicked(v);
                 } // bigger else END
             } // onClick END
         });
@@ -3192,40 +3192,43 @@ public class MainActivity extends AppCompatActivity {
     } // setNowPlayingShared
 
     void onHeartClicked(View view) {
-
         if (mainLogo.getText().equals("날씨 : 선선함")) {
             Log.i(TAG, "updateLikes onHeartClicked if)");
 
         } else {
-            Log.i(TAG, "updateLikes onHeartClicked else)");
             String user_id = logIn.getText().toString();
-            Log.i(TAG, "updateLikes user : " + user_id);
             String song_name = mainLogo.getText().toString();
-            Log.i(TAG, "updateLikes song : " + song_name);
-
-            if (isHeartFilled) {
-                // TODO - delete liked
-                updateLikes(user_id, song_name);
-                Log.i(TAG, "updateLikes onHeartClicked if) isHeartFilled : " + isHeartFilled);
-                heart.setImageResource(R.drawable.purple_empty_heart);
-
-            } else {
-                Log.i(TAG, "updateLikes onHeartClicked else) !isHeartFilled : " + isHeartFilled);
-
-//                if (mainLogo.getText().equals(getSongName)) {
-                // TODO - add liked
-                updateLikes(user_id, song_name);
-                heart.setImageResource(R.drawable.purple_full_heart);
-
-//                } else {
-//                    Log.i(TAG, "updateLikes onHexartClicked else) getSongName : " + getSongName);
+            updateLikes(user_id, song_name);
+        } // else
+//        if (mainLogo.getText().equals("날씨 : 선선함")) {
+//            Log.i(TAG, "updateLikes onHeartClicked if)");
 //
-//                } // else
-            } // else
-
-            isHeartFilled = !isHeartFilled;
-            Log.i(TAG, "onHeartClicked isHeartFilled check : " + isHeartFilled);
-        }
+//        } else {
+//            // 노래 재생 중일 때
+//            Log.i(TAG, "updateLikes onHeartClicked else)");
+//            String user_id = logIn.getText().toString();
+//            Log.i(TAG, "updateLikes user : " + user_id);
+//            String song_name = mainLogo.getText().toString();
+//            Log.i(TAG, "updateLikes song : " + song_name);
+//
+//            if (isHeartFilled) {
+//                // TODO - delete liked
+//                updateLikes(user_id, song_name);
+//                Log.i(TAG, "updateLikes onHeartClicked if) isHeartFilled : " + isHeartFilled);
+//                heart.setImageResource(R.drawable.purple_empty_heart);
+//
+//            } else {
+//                Log.i(TAG, "updateLikes onHeartClicked else) !isHeartFilled : " + isHeartFilled);
+//
+////                if (mainLogo.getText().equals(getSongName)) {
+//                // TODO - add liked
+//                updateLikes(user_id, song_name);
+//                heart.setImageResource(R.drawable.purple_full_heart);
+//
+//            } // else
+//
+//            Log.i(TAG, "onHeartClicked isHeartFilled check : " + isHeartFilled);
+//        }
     } // onHeartClicked
 
     void updateLikes(String user_id, String song_name) {
@@ -3254,15 +3257,24 @@ public class MainActivity extends AppCompatActivity {
                     List<UpdateLikedModel> updateLikedModels = response.body();
                     Log.i(TAG, "updateLikes response.body : " + updateLikedModels);
 
+                    if (isHeartFilled) {
+                        isHeartFilled = false;
+                        heart.setImageResource(R.drawable.purple_empty_heart);
+
+                    } else {
+                        isHeartFilled = true;
+                        heart.setImageResource(R.drawable.purple_full_heart);
+                    } // else
+
                 } else {
-                    Log.i(TAG, "updateLikes response failed : " + response.body());
+                    Log.e(TAG, "updateLikes response failed : " + response.body());
 
                 }
             } // onResponse
 
             @Override
             public void onFailure(retrofit2.Call<List<UpdateLikedModel>> call, Throwable t) {
-                Log.i(TAG, "updateLikes onFailure : " + t.getMessage());
+                Log.e(TAG, "updateLikes onFailure : " + t.getMessage());
             } // onFailure
         });
     } // updateLikes
