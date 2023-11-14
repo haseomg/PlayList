@@ -26,6 +26,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -466,6 +467,8 @@ public class Feed extends AppCompatActivity {
             Glide.with(Feed.this)
                     .load(selectedImageUri)
                     .apply(new RequestOptions()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
                             .circleCrop()).into(profile);
             getSharedProfileMusic = sharedPreferences.getString(feedUser, "프로필 뮤직을 선택해 주세요.");
             Log.i(TAG, "getSharedProfileMusic 1 : " + getSharedProfileMusic);
@@ -1332,6 +1335,7 @@ public class Feed extends AppCompatActivity {
     } // clickedGenreChangeName
 
     void setProfileImageEditView() {
+        Log.i(TAG, "setProfileImage (edit view)");
         String profileImagePath = "profile_image/" + feedUser + "_profile_image.JPG";
 //                            profile.setImageResource(R.drawable.gray_profile);
         Glide.with(getApplicationContext())
@@ -1339,19 +1343,23 @@ public class Feed extends AppCompatActivity {
                 .load(BASE_URL + profileImagePath)
                 .apply(new RequestOptions()
                         .circleCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
                         .error(R.drawable.gray_profile_edit))
                 .into(profile);
+
         if (profileImagePath.contains(feedUser)) {
-            Log.i(TAG, " setProfileImage profileImagePath.contains(feedUser) : " + BASE_URL + profileImagePath);
+            Log.i(TAG, " setProfileImage profileImagePath.contains(feedUser) if : " + BASE_URL + profileImagePath);
             profileDefaultCheck = 4;
 
         } else {
-            Log.i(TAG, " setProfileImage profileImagePath.contains(feedUser) : " + BASE_URL + profileImagePath);
+            Log.i(TAG, " setProfileImage profileImagePath.contains(feedUser) else : " + BASE_URL + profileImagePath);
 
         } // else
     } // setProfileImageEditView
 
     void setProfileImageView() {
+        Log.i(TAG, "setProfileImage (set view)");
         String profileImagePath = "profile_image/" + feedUser + "_profile_image.JPG";
 //                            profile.setImageResource(R.drawable.gray_profile);
         Glide.with(getApplicationContext())
@@ -1359,14 +1367,16 @@ public class Feed extends AppCompatActivity {
                 .load(BASE_URL + profileImagePath)
                 .apply(new RequestOptions()
                         .circleCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
                         .error(R.drawable.gray_profile))
                 .into(profile);
         if (profileImagePath.contains(feedUser)) {
-            Log.i(TAG, " setProfileImage profileImagePath.contains(feedUser) : " + BASE_URL + profileImagePath);
+            Log.i(TAG, " setProfileImage profileImagePath.contains(feedUser) if : " + BASE_URL + profileImagePath);
             profileDefaultCheck = 4;
 
         } else {
-            Log.i(TAG, " setProfileImage profileImagePath.contains(feedUser) : " + BASE_URL + profileImagePath);
+            Log.i(TAG, " setProfileImage profileImagePath.contains(feedUser) else : " + BASE_URL + profileImagePath);
 
         } // else
     } // setProfileImageView
@@ -1404,6 +1414,8 @@ public class Feed extends AppCompatActivity {
                                     .load(BASE_URL + profileImagePath)
                                     .apply(new RequestOptions()
                                             .circleCrop()
+                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                            .skipMemoryCache(true)
                                             .error(R.drawable.gray_profile))
                                     .into(profile);
                             if (profileImagePath.contains(feedUser)) {
@@ -1431,6 +1443,8 @@ public class Feed extends AppCompatActivity {
                                 .load(BASE_URL + profileImagePath)
                                 .apply(new RequestOptions()
                                         .circleCrop()
+                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                        .skipMemoryCache(true)
                                         .error(R.drawable.gray_profile))
                                 .into(profile);
                         if (profileImagePath.contains(feedUser)) {
