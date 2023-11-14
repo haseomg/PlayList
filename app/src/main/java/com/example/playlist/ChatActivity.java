@@ -734,12 +734,12 @@ public class ChatActivity extends AppCompatActivity {
                     if (!task.isSuccessful()) {
                         Log.w(TAG, "Get  token failed", task.getException());
                         return;
-                    }
+                    } // if
                     String token = task.getResult();
+                    Toast.makeText(ChatActivity.this, token, Toast.LENGTH_SHORT).show();
                     // 여기서 서버나 사용하려는 곳에 토큰 저장..
-                });
-
-    }
+                }); // addOnCompleteListener
+    } // setFCM
 
 
 } // Main CLASS END

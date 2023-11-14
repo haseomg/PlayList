@@ -67,7 +67,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         Notification notification = builder.build();
         notificationManager.notify(1, notification);
-    }
+    } // onMessageReceived
 
     // 받아오는 코드가 없어 - stella
 
