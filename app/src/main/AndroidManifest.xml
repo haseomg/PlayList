@@ -66,6 +66,7 @@
             android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".MainActivity"
+            android:largeHeap="true"
             android:exported="false" />
         <activity
             android:name=".Intro"

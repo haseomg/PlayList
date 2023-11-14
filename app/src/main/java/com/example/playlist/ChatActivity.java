@@ -452,7 +452,7 @@ public class ChatActivity extends AppCompatActivity {
             } // catch END
         } else { // if END
 
-        }
+        } // else
 
     }); // onNewMessage END
 
