@@ -174,8 +174,9 @@ public class SignUp extends AppCompatActivity {
         idDuCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i(TAG, "idDuplicate button onClick");
                 idDuplicateCheck();
-            }
+            } // onClick
         });
 
 
@@ -197,49 +198,53 @@ public class SignUp extends AppCompatActivity {
                     // 포커스 상태일 때
                     Log.i(TAG, "pwCheck hasFocus");
 //                    Toast.makeText(signCtx, "hasFocus", Toast.LENGTH_SHORT).show();
+
                     if (pwCheck.getText().toString().length() >= 4) {
-                        Log.i(TAG, "has focus check (if)");
+                        Log.i(TAG, "pwCheck has focus check (if) " + pwCheck.getText().toString());
                         pwFocusCheck();
+
                     } else {
-                        Log.i(TAG, "has focus check (else)");
+                        Log.i(TAG, "pwCheck has focus check (else) " + pwCheck.getText().toString());
                         pwDiff.setVisibility(View.INVISIBLE);
                         pwSame.setVisibility(View.INVISIBLE);
-                    }
+                    } // else
 
                 } else {
                     // 포커스 상태가 아닐 때
-                    Log.i(TAG, "pwCheck not hasFocus");
+                    Log.i(TAG, "pwCheck not hasFocus " + pwCheck.hasFocus());
 //                    Toast.makeText(signCtx, "has not Focus", Toast.LENGTH_SHORT).show();
+
                     if (pwCheck.getText().toString().length() >= 4) {
-                        Log.i(TAG, "has not focus check (if)");
+                        Log.i(TAG, "pwCheck has not focus check (if) " + pwCheck.hasFocus());
                         pwFocusCheck();
+
                     } else {
-                        Log.i(TAG, "has not focus check (else)");
+                        Log.i(TAG, "has not focus check (else) " + pwCheck.hasFocus());
                         pwDiff.setVisibility(View.INVISIBLE);
                         pwSame.setVisibility(View.INVISIBLE);
-                    }
-
-                }
+                    } // else
+                } // else
             }
         });
 
         pwCheck.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+                Log.i(TAG, "pwCheck beforeTextChanged");
+            } // beforeTextChanged
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
+                Log.i(TAG, "pwCheck onTextChanged");
+            } // onTextChanged
 
             @Override
             public void afterTextChanged(Editable s) {
                 if (pwCheck.getText().toString().length() > 0) {
-                    Log.i(TAG, "has focus check (if)");
+                    Log.i(TAG, "pwCheck has focus check (if)");
                     pwFocusCheck();
-                } else if (pwCheck.getText().toString().length() == 0){
+
+                } else if (pwCheck.getText().toString().length() == 0) {
                     Log.i(TAG, "has focus check (else)");
                     pwDiff.setVisibility(View.INVISIBLE);
                     pwSame.setVisibility(View.INVISIBLE);
@@ -284,7 +289,7 @@ public class SignUp extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("[TAG]", "현재 페이지 회원가입 내용 기입 후 제출 버튼 클릭");
+                Log.i(TAG, "submitCheck 현재 페이지 회원가입 내용 기입 후 제출 버튼 클릭 ");
 
                 int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
                 if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
@@ -292,7 +297,6 @@ public class SignUp extends AppCompatActivity {
                     // EditText값 예외처리
                     if (id.getText().toString().trim().length() >= 4 &&
                             pw.getText().toString().trim().length() == 4 &&
-                            pwCheck.getText().toString().trim().length() == 4 &&
                             nickName.getText().toString().trim().length() >= 2) {
 
                         if (pw.getText().toString().equals(pwCheck.getText().toString())) {
@@ -301,13 +305,12 @@ public class SignUp extends AppCompatActivity {
                             HttpUrl.Builder urlBuilder = HttpUrl.parse("http://13.124.239.85/signUp.php").newBuilder();
                             urlBuilder.addQueryParameter("ver", "1.0"); // 예시
                             String url = urlBuilder.build().toString();
-                            Log.i("[SignUp Activity]", "String url 확인 : " + url);
+                            Log.i("[SignUp Activity]", "submitCheck String url 확인 : " + url);
 
                             // POST 파라미터 추가
                             RequestBody formBody = new FormBody.Builder()
                                     .add("id", id.getText().toString().trim())
                                     .add("pw", pw.getText().toString().trim())
-                                    .add("pwCheck", pwCheck.getText().toString().trim())
                                     .add("nickname", nickName.getText().toString().trim())
                                     .build();
 
@@ -325,14 +328,14 @@ public class SignUp extends AppCompatActivity {
                                 @Override
                                 public void onFailure(Call call, IOException e) {
                                     e.printStackTrace();
-                                    Log.i("[SignUp Activity]", "" + e);
-                                }
+                                    Log.i(TAG, "submitCheck ERROR" + e);
+                                } // onFailure
 
                                 @Override
                                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
 
                                     // TODO copy
-                                    Log.i("[SignUp Activity]", "onResponse 메서드 작동");
+                                    Log.i(TAG, "submitCheck onResponse 메서드 작동");
 
                                     // 서브 스레드 Ui 변경 할 경우 에러
                                     // 메인스레드 Ui 설정
@@ -345,7 +348,7 @@ public class SignUp extends AppCompatActivity {
 
                                                 if (!response.isSuccessful()) {
                                                     // 응답 실패
-                                                    Log.i("[SignUp Activity]", "응답 실패 : " + response);
+                                                    Log.i("[SignUp Activity]", "submitCheck 응답 실패 : " + response);
 //                                                    Toast.makeText(getApplicationContext(), "네트워크 문제 발생", Toast.LENGTH_SHORT).show();
 //                                                    builder.setTitle("⚠️ NETWORK ERROR ⚠️");
 //                                                    builder.setMessage("데이터 활성화와 와이파이를 확인해 주세요. ");
@@ -361,26 +364,25 @@ public class SignUp extends AppCompatActivity {
 
                                                 } else {
                                                     // 응답 성공
-                                                    Log.i("[SignUp Activity]", "응답 성공 : " + response);
+                                                    Log.i("[SignUp Activity]", "submitCheck 응답 성공 : " + response);
                                                     final String responseData = response.body().string();
-                                                    Log.i("[SignUp Activity]", "응답 성공 responseData : " + responseData);
+                                                    Log.i("[SignUp Activity]", "submitCheck 응답 성공 responseData : " + responseData);
 
                                                     if (responseData.equals("1")) {
 
                                                         if (pw.getText().toString().equals(pwCheck.getText().toString())) {
                                                             if (id.getText().toString().length() >= 4 &&
                                                                     pw.getText().toString().length() == 4 &&
-                                                                    pwCheck.getText().toString().length() == 4 &&
                                                                     nickName.getText().toString().length() >= 2) {
 
                                                                 idShared = id.getText().toString();
                                                                 pwShared = pw.getText().toString();
                                                                 pwCheckShared = pwCheck.getText().toString();
                                                                 nickNameShared = nickName.getText().toString();
-                                                                Log.i("Insert Shared ID Check : ", idShared);
-                                                                Log.i("Insert Shared PW Check : ", pwShared);
-                                                                Log.i("Insert Shared PWCHECK Check : ", pwCheckShared);
-                                                                Log.i("Insert Shared NICKNAME Check : ", nickNameShared);
+                                                                Log.i("submitCheck Insert Shared ID Check : ", idShared);
+                                                                Log.i("submitCheck Insert Shared PW Check : ", pwShared);
+                                                                Log.i("submitCheck Insert Shared PWCHECK Check : ", pwCheckShared);
+                                                                Log.i("submitCheck Insert Shared NICKNAME Check : ", nickNameShared);
 
 //                                                                editor.putString("id", idShared);
 //                                                                editor.putString("pw", pwShared);
@@ -389,9 +391,9 @@ public class SignUp extends AppCompatActivity {
                                                                 editor.apply();
                                                                 editor.commit();
 
-
                                                                 Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
                                                                 startActivityflag(MainActivity.class);
+
                                                             } else {
                                                                 builder.setTitle("CHECK YOUR INFO✔️");
                                                                 builder.setMessage("정보를 형식에 맞춰 입력해 주세요.");
@@ -406,7 +408,7 @@ public class SignUp extends AppCompatActivity {
                                                             } // else END
 
                                                         } else {
-                                                            Log.i("[SignUp Activity]", "패스워드가 다를 때 : " + responseData);
+                                                            Log.i("[SignUp Activity]", "submitCheck 패스워드가 다를 때 : " + responseData);
 
 
                                                             builder.setTitle("PASSWORD CHECK✔️");
@@ -415,30 +417,15 @@ public class SignUp extends AppCompatActivity {
                                                                 @Override
                                                                 public void onClick(DialogInterface dialog, int which) {
 
-                                                                }
+                                                                } // onClick
                                                             });
                                                             AlertDialog dialog = builder.create();
                                                             dialog.show();
                                                         }
 
                                                     } else {
-
-                                                        Log.i("[SignUp Activity]", "responseData가 1이 아닐 때 : " + responseData);
-
-
-//                                                        Toast.makeText(getApplicationContext(), "Sign Up Failed", Toast.LENGTH_SHORT).show();
-//                                                        builder.setTitle("PLEASE CHECK THE ID❕");
-//                                                        builder.setMessage("아이디가 중복되었습니다.");
-//                                                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                                                            @Override
-//                                                            public void onClick(DialogInterface dialog, int which) {
-//
-//                                                            }
-//                                                        });
-//                                                        AlertDialog dialog = builder.create();
-//                                                        dialog.show();
-                                                    }
-
+                                                        Log.i("[SignUp Activity]", "submitCheck responseData가 1이 아닐 때 : " + responseData);
+                                                    } // else
                                                 } // 응답성공 else END
 
                                             } catch (Exception e) {
@@ -461,11 +448,11 @@ public class SignUp extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
 
-                                }
+                                } // onClick
                             });
                             AlertDialog dialog = builder.create();
                             dialog.show();
-                        }
+                        } // else
 
                     } //if 문 종료 (회원가입 전에 글자 개수 체크)
                     else {
@@ -488,17 +475,13 @@ public class SignUp extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
-                        }
+                        } // onClick
                     });
                     AlertDialog dialog = builder.create();
                     dialog.show();
                 } //else END
-
-
             }
-        });
-
-
+        }); // submit.setOnClickListener
     }
 
     // 구글 로그인
@@ -574,6 +557,7 @@ public class SignUp extends AppCompatActivity {
 
     public void pwFocusCheck() {
         // 만약 pwCheckEdit에서 손을 뗐는데 pw랑 정보가 다르면
+        Log.i(TAG, "pwCheck pwFocusCheck");
 
         String pwString = pw.getText().toString();
         String pwCheckString = pwCheck.getText().toString();
@@ -583,29 +567,20 @@ public class SignUp extends AppCompatActivity {
         if (pwLength != 0 || pwCheckLength != 0) {
             if (pwLength == 4) {
 
-                Log.i(TAG, "visible check if 1");
+                Log.i(TAG, "pwCheck visible check if 1 " + pwLength + " / " + pwCheckLength);
                 if (pwString.equals(pwCheckString)) {
-                    Log.i(TAG, "visible check if 2");
+                    Log.i(TAG, "pwCheck visible check if 2 " + pwString + " / " + pwCheckString);
                     pwDiff.setVisibility(View.INVISIBLE);
                     pwSame.setVisibility(View.VISIBLE);
                 } else {
-                    Log.i(TAG, "visible check else 2");
+                    Log.i(TAG, "pwCheck pwCheckVisible check else 2 " + pwString + " / " + pwCheckString);
                     pwDiff.setVisibility(View.VISIBLE);
                     pwSame.setVisibility(View.INVISIBLE);
-                }
+                } // else
             }
         } else {
-            Log.i(TAG, "visible check else 11");
-//            if (pwString.equals(pwCheckString)) {
-//                Log.i(TAG, "visible check if 22");
-//                pwDiff.setVisibility(View.INVISIBLE);
-//                pwSame.setVisibility(View.VISIBLE);
-//            } else {
-//                Log.i(TAG, "visible check else 33");
-//                pwDiff.setVisibility(View.VISIBLE);
-//                pwSame.setVisibility(View.INVISIBLE);
-//            }
-        }
+            Log.i(TAG, "pwCheck visible check else 1 " + pwLength + " / " + pwCheckLength);
+        } // else
     }
 
 
@@ -628,8 +603,10 @@ public class SignUp extends AppCompatActivity {
     void kakaoLogin() {
         String TAG = "kakaoLogin()";
         UserApiClient.getInstance().loginWithKakaoAccount(SignUp.this, (oAuthToken, error) -> {
+
             if (error != null) {
                 Log.e(TAG, "로그인 실패", error);
+
             } else if (oAuthToken != null) {
                 Log.i(TAG, "로그인 성공(토큰) : " + oAuthToken.getAccessToken());
                 getUserInfo();
@@ -650,7 +627,6 @@ public class SignUp extends AppCompatActivity {
 //            }
 //            return null;
 //        });
-
     }
 
     public void kakaoAccountLogin() {
@@ -852,7 +828,7 @@ public class SignUp extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
                     startActivityflag(MainActivity.class);
 
-                } catch (NullPointerException e)  {
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 } // catch
             }
@@ -984,7 +960,7 @@ public class SignUp extends AppCompatActivity {
         HttpUrl.Builder urlBuilder = HttpUrl.parse("http://13.124.239.85/check_id.php").newBuilder();
         urlBuilder.addQueryParameter("ver", "1.0"); // 예시
         String url = urlBuilder.build().toString();
-        Log.i("[SignUp Activity]", "String url 확인 : " + url);
+        Log.i("[SignUp Activity]", "idDuplicate String url 확인 : " + url);
 
         String idStr = id.getText().toString();
 
@@ -1002,41 +978,47 @@ public class SignUp extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Log.i(TAG, "onFailure");
-            }
+                Log.i(TAG, "idDuplicate onFailure");
+            } // onFailure
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 //TODO copy
-                Log.i(TAG, "onResponse");
+                Log.i(TAG, "idDuplicate onResponse");
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
+
                             if (!response.isSuccessful()) {
-                                Log.i(TAG, "!response.isSuccessful : " + response);
+                                Log.i(TAG, "idDuplicate !response.isSuccessful : " + response);
+
                             } else {
-                                Log.i(TAG, "response.isSuccessful");
+                                Log.i(TAG, "idDuplicate response.isSuccessful");
                                 final String responseBodyStr = response.body().string().trim();
-                                if (idStr.length() > 4) {
+
+                                if (idStr.length() >= 4) {
+
                                     if (responseBodyStr.equals("duplicate")) {
-                                        Log.i(TAG, "idDuCheck onClick 아이디가 중복됐을 때");
+                                        Log.i(TAG, "idDuplicate onClick 아이디가 중복됐을 때");
                                         AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
                                         builder.setTitle("아이디가 중복되었습니다.");
                                         builder.setPositiveButton("YES",
                                                 new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
-                                                        Log.i(TAG, "아이디가 중복되었습니다. - YES Click");
-                                                    }
+                                                        Log.i(TAG, "idDuplicate 아이디가 중복되었습니다. - YES Click");
+                                                    } // onClick
                                                 });
                                         builder.show();
                                     } else if (responseBodyStr.equals("ok")) {
-                                        Log.i(TAG, "id idDuCheck 아이디가 중복되지 않았을 때  statis check : " + responseBodyStr);
+                                        Log.i(TAG, "idDuplicate 아이디가 중복되지 않았을 때  statis check : " + responseBodyStr);
                                         idDuCheck.setText("✔️");
+
                                     } else {
-                                        Log.i(TAG, "status가 ok도 duplicated도 아닐 때 status Check : " + responseBodyStr);
-                                    }
+                                        Log.i(TAG, "idDuplicate status가 ok도 duplicated도 아닐 때 status Check : " + responseBodyStr);
+                                    } // else
+
                                 } else if (id.getText().toString().length() == 0 || id.getText().toString().equals("")) {
                                     // 다이얼로그 값을 입력해주세요
                                     AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
@@ -1045,18 +1027,20 @@ public class SignUp extends AppCompatActivity {
                                             new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
-                                                    Log.i(TAG, "아이디가 비어있습니다. - YES Click");
-                                                }
+                                                    Log.i(TAG, "idDuplicate 아이디가 비어있습니다. - YES Click");
+                                                } // onClick
                                             });
                                     builder.show();
-                                }
-                            }
+                                } // else if
+                            } // else
+
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            Log.e(TAG, "idDuplicate run Exception : " + e);
                         } // catch
-                    }
-                });
-            }
-        });
-    }
-}
+                    } // run
+                }); // runOnUiThread
+            } // onResponse
+        }); // client.newCall
+    } // idDuplicateCheck
+
+} // CLASS
