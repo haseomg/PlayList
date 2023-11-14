@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="230dp"
+    android:layout_height="180dp"
     android:background="@drawable/rounded_corners"
     android:orientation="vertical">
 
@@ -29,17 +29,17 @@
         app:layout_constraintTop_toTopOf="@id/dialog_bottom_tob_bar"
         app:layout_constraintVertical_bias="0.0" />
 
-    <ImageView
-        android:id="@+id/dialog_bottom_profile_image"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:src="@drawable/gray_profile"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0234"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dialog_bottom_tob_bar"
-        app:layout_constraintVertical_bias="0.07999998" />
+<!--    <ImageView-->
+<!--        android:id="@+id/dialog_bottom_profile_image"-->
+<!--        android:layout_width="35dp"-->
+<!--        android:layout_height="35dp"-->
+<!--        android:src="@drawable/gray_profile"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.0234"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/dialog_bottom_tob_bar"-->
+<!--        app:layout_constraintVertical_bias="0.07999998" />-->
 
     <ImageView
         android:id="@+id/dialog_bottom_gallery_icon"
@@ -50,41 +50,45 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0178"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/dialog_bottom_gallery_text" />
+        app:layout_constraintTop_toTopOf="@+id/dialog_bottom_gallery_text"
+        app:layout_constraintVertical_bias="0.82" />
 
     <Button
         android:id="@+id/dialog_bottom_gallery_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#00ff0000"
-        android:fontFamily="sans-serif-black"
+        android:fontFamily="sans-serif-condensed-medium"
         android:text="라이브러리에서 선택"
+        android:textSize="13.5dp"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/dialog_bottom_trash_button"
+        app:layout_constraintBottom_toTopOf="@+id/dialog_bottom_trash_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dialog_bottom_profile_image" />
+        app:layout_constraintTop_toBottomOf="@+id/dialog_bottom_tob_bar" />
 
     <ImageView
-        android:id="@+id/dialog_bottom_trash_image"
+        android:id="@+id/dialog_bottom_trash_icon"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:src="@drawable/trash_icon"
-        app:layout_constraintBottom_toBottomOf="@+id/dialog_bottom_trash_button"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_bottom_trash_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.01"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dialog_bottom_gallery_text" />
+        app:layout_constraintTop_toBottomOf="@+id/dialog_bottom_gallery_text"
+        app:layout_constraintVertical_bias="0.9" />
 
     <Button
-        android:id="@+id/dialog_bottom_trash_button"
+        android:id="@+id/dialog_bottom_trash_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#00ff0000"
-        android:fontFamily="sans-serif-black"
+        android:fontFamily="sans-serif-condensed-medium"
         android:text="현재 사진 삭제"
-        android:textColor="#EF5959"
+        android:textSize="13dp"
+        android:textColor="#F60000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

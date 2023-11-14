@@ -179,10 +179,9 @@
 
         <ImageView
             android:id="@+id/genre_first"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
+            android:layout_width="95dp"
+            android:layout_height="95dp"
             android:src="@drawable/genre_default"
-            android:tooltipText="elec"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/genre_second"
             app:layout_constraintHorizontal_bias="0.5"
@@ -192,8 +191,8 @@
 
         <ImageView
             android:id="@+id/genre_second"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
+            android:layout_width="95dp"
+            android:layout_height="95dp"
             android:src="@drawable/genre_default"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -203,8 +202,8 @@
 
         <ImageView
             android:id="@+id/genre_third"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
+            android:layout_width="95dp"
+            android:layout_height="95dp"
             android:src="@drawable/genre_default"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -62,6 +63,11 @@ public class Feed extends AppCompatActivity {
     int followNum, followingNum = 0;
     public String uuidForChat, song_name, user, forNoneEditModeCheck, nowLoginUser, feedUser, conversionGenreFirst, conversionGenreSecond, conversionGenreThird;
     private ArrayList<String> uuidValues;
+
+    BottomSheetDialog bottomSheetDialog;
+    ImageView tobBarIcon, profileImageView;
+    View topBarView;
+    Button galleryBtn, trashBtn;
 
     ArrayList<FeedCommentModel> feedCommentList = new ArrayList<>();
     androidx.recyclerview.widget.RecyclerView feedCommentRecyclerVIew;
@@ -406,11 +412,23 @@ public class Feed extends AppCompatActivity {
         }); //genreSecond.setOnClickListener
     } // setGenre
 
+    void setBottomDialog() {
+        bottomSheetDialog = new BottomSheetDialog(this);
+        bottomSheetDialog.setContentView(R.layout.dialog_bottom_sheet);
+
+        tobBarIcon = bottomSheetDialog.findViewById(R.id.dialog_bottom_tob_bar_icon);
+        topBarView = bottomSheetDialog.findViewById(R.id.dialog_bottom_tob_bar);
+//        profileImageView = bottomSheetDialog.findViewById(R.id.dialog_bottom_profile_image);
+        galleryBtn = bottomSheetDialog.findViewById(R.id.dialog_bottom_gallery_text);
+        trashBtn = bottomSheetDialog.findViewById(R.id.dialog_bottom_trash_text);
+
+    } // setBottomDialog
+
     void setProfileImage() {
+        setBottomDialog();
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO - Null Exception
                 try {
                     if (!nowLoginUser.equals(feedUser)) {
                         // 현재 로그인한 유저가 피드의 주인이 아닐 때
@@ -419,21 +437,8 @@ public class Feed extends AppCompatActivity {
                     } else if (nameFloatingButton.getText().toString().equals("피드 편집")) {
                         // 현재 피드 편집 모드가 아닐 때
                         Log.i(TAG, "profileImage onClick (else if) : " + nowLoginUser + " / " + feedUser);
-//                        AlertDialog.Builder builder = new AlertDialog.Builder(Feed.this);
-//                        LayoutInflater inflater = LayoutInflater.from(Feed.this);
-//                        View dialogView = inflater.inflate(R.layout.dialog_image_zoom, null);
-//                        ImageView imageView = dialogView.findViewById(R.id.zoomedImageView);
-//
-//                        Glide.with(feedCtx)
-//                                .load(BASE_URL + "profile_image/" + feedUser + "_profile_image.JPG")
-//                                .apply(new RequestOptions()
-//                                        .circleCrop()).into(imageView);
-////                        imageView.setImageResource(R.drawable.profile_image_zoomed);
-//
-//                        builder.setView(dialogView);
-//                        AlertDialog dialog = builder.create();
-//                        dialog.show();
                     } else {
+                        bottomSheetDialog.show();
                         // 외부 저장소 권한 요청
                         requestStoragePermission();
 
@@ -669,6 +674,8 @@ public class Feed extends AppCompatActivity {
     void saveFeed() {
         Log.i(TAG, "nameFloatingButton check : " + feedUser + " / " + nowLoginUser);
         nameFloatingButton.setText("피드 편집");
+        nameFloatingButton.setBackgroundResource(R.drawable.feed_button);
+        nameFloatingButton.setTextColor(Color.parseColor("#CD666C66"));
 
         // TODO 이 로직은 프로필과 장르가 원래 기본이미지였을 떄
         if (genreFirstImageId == R.drawable.genre_pick && genreSecondImageId == R.drawable.genre_pick
@@ -786,6 +793,8 @@ public class Feed extends AppCompatActivity {
         if (nameFloatingButton.getText().toString().equals("피드 편집")) {
             setProfileImageEditView();
             nameFloatingButton.setText("피드 저장");
+            nameFloatingButton.setBackgroundResource(R.drawable.follow_button);
+            nameFloatingButton.setTextColor(Color.WHITE);
 
             if (profileMusic.getText().toString().equals("프로필 뮤직을 선택해 주세요.")) {
                 Log.i(TAG, "saveUserProfileImageInFeed setFeedEditMode *if: " + profileMusic.getText().toString());
@@ -1470,5 +1479,13 @@ public class Feed extends AppCompatActivity {
             } // onFailure
         }); // call.enqueue
     } // downloadAndSetProfileImage
+
+    private void showBottomSheetDialog() {
+        Log.i(TAG, "showBottomSheetDialog");
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.dialog_bottom_sheet, null);
+        bottomSheetDialog.setContentView(view);
+        bottomSheetDialog.show();
+    } // showBottomSheetDialog
 
 } // CLASS END
