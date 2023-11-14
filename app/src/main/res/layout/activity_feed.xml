@@ -50,16 +50,16 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!--    <ImageView-->
-<!--        android:id="@+id/followerBtn"-->
-<!--        android:layout_width="50sp"-->
-<!--        android:layout_height="50sp"-->
-<!--        android:src="@drawable/follower_button"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.692"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/feedLayout"-->
-<!--        app:layout_constraintVertical_bias="0.729" />-->
+    <!--        android:id="@+id/followerBtn"-->
+    <!--        android:layout_width="50sp"-->
+    <!--        android:layout_height="50sp"-->
+    <!--        android:src="@drawable/follower_button"-->
+    <!--        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.692"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/feedLayout"-->
+    <!--        app:layout_constraintVertical_bias="0.729" />-->
 
     <TextView
         android:id="@+id/feedNameFloatingButton"
@@ -103,7 +103,7 @@
         app:layout_constraintHorizontal_bias="0.08"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/feedLayout"
-        app:layout_constraintVertical_bias="0.13" />
+        app:layout_constraintVertical_bias="0.15" />
 
     <TextView
         android:id="@+id/feedUserName"
@@ -118,7 +118,7 @@
         app:layout_constraintHorizontal_bias="0.12"
         app:layout_constraintStart_toEndOf="@+id/feedProfileImage"
         app:layout_constraintTop_toBottomOf="@+id/feedLayout"
-        app:layout_constraintVertical_bias="0.110000014" />
+        app:layout_constraintVertical_bias="0.125" />
 
     <TextView
         android:id="@+id/feedFollowText"
@@ -179,8 +179,8 @@
 
         <ImageView
             android:id="@+id/genre_first"
-            android:layout_width="95dp"
-            android:layout_height="95dp"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:src="@drawable/genre_default"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/genre_second"
@@ -191,8 +191,8 @@
 
         <ImageView
             android:id="@+id/genre_second"
-            android:layout_width="95dp"
-            android:layout_height="95dp"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:src="@drawable/genre_default"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -202,8 +202,8 @@
 
         <ImageView
             android:id="@+id/genre_third"
-            android:layout_width="95dp"
-            android:layout_height="95dp"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:src="@drawable/genre_default"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -236,7 +236,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/commentLogo"
+        app:layout_constraintTop_toTopOf="@+id/feedLayout"
         app:layout_constraintVertical_bias="1.0">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -249,32 +249,32 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.01999998" />
 
-<!--        <ImageView-->
-<!--            android:id="@+id/feedEditBtn"-->
-<!--            android:layout_width="50sp"-->
-<!--            android:layout_height="50sp"-->
-<!--            android:src="@drawable/feed_edit_button"-->
-<!--            android:textAlignment="center"-->
-<!--            android:textSize="50dp"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintHorizontal_bias="1.0"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/feedCommentRecyclerView" />-->
+        <!--        <ImageView-->
+        <!--            android:id="@+id/feedEditBtn"-->
+        <!--            android:layout_width="50sp"-->
+        <!--            android:layout_height="50sp"-->
+        <!--            android:src="@drawable/feed_edit_button"-->
+        <!--            android:textAlignment="center"-->
+        <!--            android:textSize="50dp"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="1.0"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/feedCommentRecyclerView" />-->
 
-<!--        <ImageView-->
-<!--            android:id="@+id/feedEditOkBtn"-->
-<!--            android:layout_width="38sp"-->
-<!--            android:layout_height="38sp"-->
-<!--            android:src="@drawable/feed_complete_button"-->
-<!--            android:textAlignment="center"-->
-<!--            android:visibility="invisible"-->
-<!--            android:textSize="50dp"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintHorizontal_bias="0.98"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/feedCommentRecyclerView" />-->
+        <!--        <ImageView-->
+        <!--            android:id="@+id/feedEditOkBtn"-->
+        <!--            android:layout_width="38sp"-->
+        <!--            android:layout_height="38sp"-->
+        <!--            android:src="@drawable/feed_complete_button"-->
+        <!--            android:textAlignment="center"-->
+        <!--            android:visibility="invisible"-->
+        <!--            android:textSize="50dp"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.98"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/feedCommentRecyclerView" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
