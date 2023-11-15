@@ -93,12 +93,9 @@ public class SignUp extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
         Log.i(TAG, "signUp onCreate()");
 
-
         // final static context
         signCtx = this;
-
         builder = new AlertDialog.Builder(this);
-
 
 //        카카오 키 해시 받음 (아래에 getKeyHash() 메서드 존재)
 //        Log.d("KeyHash", getKeyHash());
@@ -115,8 +112,8 @@ public class SignUp extends AppCompatActivity {
                 } else {
                     kakaoAccountLogin();
                 } // else
-            }
-        });
+            } // kakaoBtn.onClick
+        }); // kakaoBtn.setOnClickListener
 
         // 카카오 로그인
         kakaoBtnMent = findViewById(R.id.kakaoBtnMent);
@@ -129,10 +126,9 @@ public class SignUp extends AppCompatActivity {
                     kakaoLogin();
                 } else {
                     kakaoAccountLogin();
-                }
-            }
-        });
-
+                } // else
+            } // onClick
+        }); // kakaoBtnMent.setOnClickListener
 
         googleBtn = findViewById(R.id.googleBtn);
         gso = new GoogleSignInOptions
@@ -145,10 +141,9 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i("[TAG]", "구글 로그인 이미지뷰 선택");
-
                 signIn();
-            }
-        });
+            } // onClick
+        }); // googleBtn.setOnClickListener
 
         // 구글 로그인
         googleBtnMent = findViewById(R.id.googleBtnMent);
@@ -156,10 +151,9 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i("[TAG]", "구글 로그인 텍스트뷰 선택");
-
                 signIn();
-            }
-        });
+            } // onClick
+        }); // googleBtnMent.setOnClickListener
 
         // 쉐어드
         shared = getSharedPreferences("nickname", Activity.MODE_PRIVATE);
@@ -177,8 +171,7 @@ public class SignUp extends AppCompatActivity {
                 Log.i(TAG, "idDuplicate button onClick");
                 idDuplicateCheck();
             } // onClick
-        });
-
+        }); // idDuCheck.setOnClickListener
 
         pw = findViewById(R.id.signUpPwEditText);
         pwCheck = findViewById(R.id.signUpPwCheckEditText);
@@ -224,8 +217,8 @@ public class SignUp extends AppCompatActivity {
                         pwSame.setVisibility(View.INVISIBLE);
                     } // else
                 } // else
-            }
-        });
+            } // onFocusChange
+        }); // pwCheck.setOnFocusChangeListener
 
         pwCheck.addTextChangedListener(new TextWatcher() {
             @Override
@@ -248,7 +241,7 @@ public class SignUp extends AppCompatActivity {
                     Log.i(TAG, "has focus check (else)");
                     pwDiff.setVisibility(View.INVISIBLE);
                     pwSame.setVisibility(View.INVISIBLE);
-                }
+                } // else if
 
 //            } else {
 //                // 포커스 상태가 아닐 때
@@ -262,8 +255,8 @@ public class SignUp extends AppCompatActivity {
 //                    pwDiff.setVisibility(View.INVISIBLE);
 //                    pwSame.setVisibility(View.INVISIBLE);
 //                }
-            }
-        });
+            } // afterTextChanged
+        }); // pwCheck.addTextChangedListener
 
         submit = findViewById(R.id.signUpSubmitButton);
         goHome = findViewById(R.id.goHomeButton);
@@ -278,211 +271,14 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i("[TAG]", "goHome 버튼 클릭");
-
                 Intent intent = new Intent(SignUp.this, MainActivity.class);
-
                 startActivity(intent);
-            }
-        });
+            } // onClick
+        }); // goHome.setOnClickListener
 
-        // NOW PAGE 제출 버튼
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "submitCheck 현재 페이지 회원가입 내용 기입 후 제출 버튼 클릭 ");
+        setSubmit();
 
-                int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
-                if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
-
-                    // EditText값 예외처리
-                    if (id.getText().toString().trim().length() >= 4 &&
-                            pw.getText().toString().trim().length() == 4 &&
-                            nickName.getText().toString().trim().length() >= 2) {
-
-                        if (pw.getText().toString().equals(pwCheck.getText().toString())) {
-
-                            // get 방식 파라미터 추가
-                            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://13.124.239.85/signUp.php").newBuilder();
-                            urlBuilder.addQueryParameter("ver", "1.0"); // 예시
-                            String url = urlBuilder.build().toString();
-                            Log.i("[SignUp Activity]", "submitCheck String url 확인 : " + url);
-
-                            // POST 파라미터 추가
-                            RequestBody formBody = new FormBody.Builder()
-                                    .add("id", id.getText().toString().trim())
-                                    .add("pw", pw.getText().toString().trim())
-                                    .add("nickname", nickName.getText().toString().trim())
-                                    .build();
-
-                            // 요청 만들기
-                            OkHttpClient client = new OkHttpClient();
-                            Request request = new Request.Builder()
-                                    .url(url)
-                                    .post(formBody)
-                                    .build();
-
-                            // 응답 콜백
-                            client.newCall(request).enqueue(new Callback() {
-
-
-                                @Override
-                                public void onFailure(Call call, IOException e) {
-                                    e.printStackTrace();
-                                    Log.i(TAG, "submitCheck ERROR" + e);
-                                } // onFailure
-
-                                @Override
-                                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-
-                                    // TODO copy
-                                    Log.i(TAG, "submitCheck onResponse 메서드 작동");
-
-                                    // 서브 스레드 Ui 변경 할 경우 에러
-                                    // 메인스레드 Ui 설정
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            try {
-                                                // 프로그래스바 안보이게 처리
-//                                            findViewById(R.id.cpb).setVisibility(View.GONE);
-
-                                                if (!response.isSuccessful()) {
-                                                    // 응답 실패
-                                                    Log.i("[SignUp Activity]", "submitCheck 응답 실패 : " + response);
-//                                                    Toast.makeText(getApplicationContext(), "네트워크 문제 발생", Toast.LENGTH_SHORT).show();
-//                                                    builder.setTitle("⚠️ NETWORK ERROR ⚠️");
-//                                                    builder.setMessage("데이터 활성화와 와이파이를 확인해 주세요. ");
-//                                                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-//                                                        @Override
-//                                                        public void onClick(DialogInterface dialog, int which) {
-//
-//                                                        }
-//                                                    });
-//                                                    AlertDialog dialog = builder.create();
-//                                                    dialog.show();
-
-
-                                                } else {
-                                                    // 응답 성공
-                                                    Log.i("[SignUp Activity]", "submitCheck 응답 성공 : " + response);
-                                                    final String responseData = response.body().string();
-                                                    Log.i("[SignUp Activity]", "submitCheck 응답 성공 responseData : " + responseData);
-
-                                                    if (responseData.equals("1")) {
-
-                                                        if (pw.getText().toString().equals(pwCheck.getText().toString())) {
-                                                            if (id.getText().toString().length() >= 4 &&
-                                                                    pw.getText().toString().length() == 4 &&
-                                                                    nickName.getText().toString().length() >= 2) {
-
-                                                                idShared = id.getText().toString();
-                                                                pwShared = pw.getText().toString();
-                                                                pwCheckShared = pwCheck.getText().toString();
-                                                                nickNameShared = nickName.getText().toString();
-                                                                Log.i("submitCheck Insert Shared ID Check : ", idShared);
-                                                                Log.i("submitCheck Insert Shared PW Check : ", pwShared);
-                                                                Log.i("submitCheck Insert Shared PWCHECK Check : ", pwCheckShared);
-                                                                Log.i("submitCheck Insert Shared NICKNAME Check : ", nickNameShared);
-
-//                                                                editor.putString("id", idShared);
-//                                                                editor.putString("pw", pwShared);
-//                                                                editor.putString("pwCheck", pwCheckShared);
-                                                                editor.putString("nickname", nickNameShared);
-                                                                editor.apply();
-                                                                editor.commit();
-
-                                                                Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
-                                                                startActivityflag(MainActivity.class);
-
-                                                            } else {
-                                                                builder.setTitle("CHECK YOUR INFO✔️");
-                                                                builder.setMessage("정보를 형식에 맞춰 입력해 주세요.");
-                                                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                                    @Override
-                                                                    public void onClick(DialogInterface dialog, int which) {
-
-                                                                    } // onClick END
-                                                                });
-                                                                AlertDialog dialog = builder.create();
-                                                                dialog.show();
-                                                            } // else END
-
-                                                        } else {
-                                                            Log.i("[SignUp Activity]", "submitCheck 패스워드가 다를 때 : " + responseData);
-
-
-                                                            builder.setTitle("PASSWORD CHECK✔️");
-                                                            builder.setMessage("패스워드가 다릅니다. ");
-                                                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                                @Override
-                                                                public void onClick(DialogInterface dialog, int which) {
-
-                                                                } // onClick
-                                                            });
-                                                            AlertDialog dialog = builder.create();
-                                                            dialog.show();
-                                                        }
-
-                                                    } else {
-                                                        Log.i("[SignUp Activity]", "submitCheck responseData가 1이 아닐 때 : " + responseData);
-                                                    } // else
-                                                } // 응답성공 else END
-
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            } // catch END
-                                        } // run method END
-                                    }); // runOnUiThread END
-                                }
-                            });
-
-                        } else {
-//                            Toast.makeText(getApplicationContext(), "Check your information", Toast.LENGTH_SHORT).show();
-
-//                            // 비밀번호가 다릅니디.
-//                            pwDiff.setVisibility(View.VISIBLE);
-
-                            builder.setTitle("CHECK THE PASSWORD ✔️");
-                            builder.setMessage("비밀번호가 다릅니다.");
-                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                } // onClick
-                            });
-                            AlertDialog dialog = builder.create();
-                            dialog.show();
-                        } // else
-
-                    } //if 문 종료 (회원가입 전에 글자 개수 체크)
-                    else {
-                        builder.setTitle("CHECK YOUR INFO ✔️");
-                        builder.setMessage("입력하신 정보를 확인해 주세요.");
-                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        });
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
-                    }
-                } else {
-//                    Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
-                    builder.setTitle("CHECK THE INTERNET ✔️");
-                    builder.setMessage("인터넷 연결을 확인해 주세요.");
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        } // onClick
-                    });
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                } //else END
-            }
-        }); // submit.setOnClickListener
-    }
+    } // onCreate
 
     // 구글 로그인
     void signIn() {
@@ -733,9 +529,9 @@ public class SignUp extends AppCompatActivity {
                     String[] userEmailCut = userID.split("@");
 
 // kakao_api DB에 넘겨줘야 해!
-                    final String id = userEmailCut[0];
+                    final String kakaoId = userEmailCut[0];
                     final String nickname = userEmailCut[0];
-                    Log.i(TAG, "String id : " + id);
+                    Log.i(TAG, "String id : " + kakaoId);
                     Log.i(TAG, "String nickname : " + nickname);
 
                     int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
@@ -748,7 +544,7 @@ public class SignUp extends AppCompatActivity {
 
                         // POST 파라미터 추가
                         RequestBody formBody = new FormBody.Builder()
-                                .add("id", id.trim())
+                                .add("id", kakaoId.trim())
                                 .add("nickname", nickname.trim())
                                 .build();
 
@@ -789,7 +585,7 @@ public class SignUp extends AppCompatActivity {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
 
-                                                    }
+                                                    } // onClcik
                                                 });
                                                 AlertDialog dialog = builder.create();
                                                 dialog.show();
@@ -825,6 +621,20 @@ public class SignUp extends AppCompatActivity {
 
 //                Intent intent = new Intent(SignUp.this, MainActivity.class);
 //                startActivityForResult(intent, 1000);
+
+                    idShared = id.getText().toString();
+                    pwShared = pw.getText().toString();
+                    pwCheckShared = pwCheck.getText().toString();
+                    nickNameShared = nickName.getText().toString();
+                    Log.i("submitCheck Insert Shared ID Check : ", idShared);
+                    Log.i("submitCheck Insert Shared PW Check : ", pwShared);
+                    Log.i("submitCheck Insert Shared PWCHECK Check : ", pwCheckShared);
+                    Log.i("submitCheck Insert Shared NICKNAME Check : ", nickNameShared);
+
+                    editor.putString("nickname", nickNameShared);
+                    editor.apply();
+                    editor.commit();
+
                     Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
                     startActivityflag(MainActivity.class);
 
@@ -1042,5 +852,383 @@ public class SignUp extends AppCompatActivity {
             } // onResponse
         }); // client.newCall
     } // idDuplicateCheck
+
+    void setSubmit() {
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "sendSignUp submitCheck 현재 페이지 회원가입 내용 기입 후 제출 버튼 클릭 ");
+
+                int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
+                if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
+                    if (isValidInput()) {
+                        if (pw.getText().toString().equals(pwCheck.getText().toString())) {
+                            sendSignUpRequest();
+                        } else {
+                            Log.i(TAG, "sendSignUp 비밀번호가 일치하지 않을 떄 : " + pw.getText().toString() + " / " + pwCheck.getText().toString());
+                            showDialog("CHECK THE PASSWORD ✔️", "비밀번호가 일치하지 않습니다..");
+                        } // else
+                    } else {
+                        Log.i(TAG, "sendSignUp 정보가 명확하지 않을 때");
+                        showDialog("CHECK YOUR INFO ✔️", "입력하신 정보를 확인해 주세요.");
+                    } // else
+                } else {
+                    Log.i(TAG, "sendSignUp 인터넷 연결이 필요할 때");
+                    showDialog("CHECK THE INTERNET ✔️", "인터넷 연결을 확인해 주세요.");
+                } // else
+            } // onClick
+        }); // submit.setOnClickListener
+    } // setSubmit
+
+    boolean isValidInput() {
+        Log.i(TAG, "sendSignUp isValidInput");
+        return id.getText().toString().trim().length() >= 4 &&
+                pw.getText().toString().trim().length() == 4 &&
+                nickName.getText().toString().trim().length() >= 2;
+    } // isValidInput
+
+    private void sendSignUpRequest() {
+        // get 방식 파라미터 추가
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://13.124.239.85/signUp.php").newBuilder();
+        urlBuilder.addQueryParameter("ver", "1.0"); // 예시
+        String url = urlBuilder.build().toString();
+        Log.i("[SignUp Activity]", "submitCheck String url 확인 : " + url);
+
+        // POST 파라미터 추가
+        RequestBody formBody = new FormBody.Builder()
+                .add("id", id.getText().toString().trim())
+                .add("pw", pw.getText().toString().trim())
+                .add("nickname", nickName.getText().toString().trim())
+                .build();
+
+        // 요청 만들기
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+
+        // 응답 콜백
+        client.newCall(request).enqueue(new Callback() {
+
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+                Log.i(TAG, "submitCheck ERROR" + e);
+            } // onFailure
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Log.i(TAG, "submitCheck onResponse 메서드 작동");
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            processResponse(response);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        } // catch
+                    } // run
+                }); // runOnUiThread
+            } // onResponse
+
+        }); // client.newCall
+    } // sendSignUpRequest
+
+    private void processResponse(@NonNull Response response) throws IOException {
+        if (!response.isSuccessful()) {
+            Log.i("[SignUp Activity]", "submitCheck 응답 실패 : " + response);
+            return;
+        } // if
+        // 응답 성공
+        Log.i("[SignUp Activity]", "submitCheck 응답 성공 : " + response);
+        final String responseData = response.body().string();
+        Log.i("[SignUp Activity]", "submitCheck 응답 성공 responseData : " + responseData);
+
+        if (responseData.equals("1")) {
+            handleSuccessfulSignUp();
+        } else {
+            Log.i(TAG, "checkSignUp (2)");
+            handleSuccessfulSignUp();
+        } // else
+    } // processResponse
+
+    private void handleSuccessfulSignUp() {
+        Log.i(TAG, "checkSignUp (1)");
+
+        idShared = id.getText().toString();
+        pwShared = pw.getText().toString();
+        pwCheckShared = pwCheck.getText().toString();
+        nickNameShared = nickName.getText().toString();
+
+        Log.i("submitCheck Insert Shared ID Check : ", idShared);
+        Log.i("submitCheck Insert Shared PW Check : ", pwShared);
+        Log.i("submitCheck Insert Shared PWCHECK Check : ", pwCheckShared);
+        Log.i("submitCheck Insert Shared NICKNAME Check : ", nickNameShared);
+
+        editor.putString("nickname", nickNameShared);
+        editor.apply();
+        editor.commit();
+
+        Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
+        startActivityflag(MainActivity.class);
+    } // handleSuccessfulSignUp
+
+
+    private void showDialog(String title, String message) {
+        Log.i(TAG, "sendSignUp showDialog");
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            } // onClick
+        }); // builder.setPositiveButton
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    } // showDialog
+
+    void beforeSetSubmitOnClick() {
+        // NOW PAGE 제출 버튼
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "submitCheck 현재 페이지 회원가입 내용 기입 후 제출 버튼 클릭 ");
+
+                int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
+                if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
+
+                    // EditText값 예외처리
+                    if (id.getText().toString().trim().length() >= 4 &&
+                            pw.getText().toString().trim().length() == 4 &&
+                            nickName.getText().toString().trim().length() >= 2) {
+
+                        if (pw.getText().toString().equals(pwCheck.getText().toString())) {
+
+                            // get 방식 파라미터 추가
+                            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://13.124.239.85/signUp.php").newBuilder();
+                            urlBuilder.addQueryParameter("ver", "1.0"); // 예시
+                            String url = urlBuilder.build().toString();
+                            Log.i("[SignUp Activity]", "submitCheck String url 확인 : " + url);
+
+                            // POST 파라미터 추가
+                            RequestBody formBody = new FormBody.Builder()
+                                    .add("id", id.getText().toString().trim())
+                                    .add("pw", pw.getText().toString().trim())
+                                    .add("nickname", nickName.getText().toString().trim())
+                                    .build();
+
+                            // 요청 만들기
+                            OkHttpClient client = new OkHttpClient();
+                            Request request = new Request.Builder()
+                                    .url(url)
+                                    .post(formBody)
+                                    .build();
+
+                            // 응답 콜백
+                            client.newCall(request).enqueue(new Callback() {
+
+
+                                @Override
+                                public void onFailure(Call call, IOException e) {
+                                    e.printStackTrace();
+                                    Log.i(TAG, "submitCheck ERROR" + e);
+                                } // onFailure
+
+                                @Override
+                                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+
+                                    // TODO copy
+                                    Log.i(TAG, "submitCheck onResponse 메서드 작동");
+
+                                    // 서브 스레드 Ui 변경 할 경우 에러
+                                    // 메인스레드 Ui 설정
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                // 프로그래스바 안보이게 처리
+//                                            findViewById(R.id.cpb).setVisibility(View.GONE);
+
+                                                if (!response.isSuccessful()) {
+                                                    // 응답 실패
+                                                    Log.i("[SignUp Activity]", "submitCheck 응답 실패 : " + response);
+//                                                    Toast.makeText(getApplicationContext(), "네트워크 문제 발생", Toast.LENGTH_SHORT).show();
+//                                                    builder.setTitle("⚠️ NETWORK ERROR ⚠️");
+//                                                    builder.setMessage("데이터 활성화와 와이파이를 확인해 주세요. ");
+//                                                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+//                                                        @Override
+//                                                        public void onClick(DialogInterface dialog, int which) {
+//
+//                                                        }
+//                                                    });
+//                                                    AlertDialog dialog = builder.create();
+//                                                    dialog.show();
+
+
+                                                } else {
+                                                    // 응답 성공
+                                                    Log.i("[SignUp Activity]", "submitCheck 응답 성공 : " + response);
+                                                    final String responseData = response.body().string();
+                                                    Log.i("[SignUp Activity]", "submitCheck 응답 성공 responseData : " + responseData);
+
+                                                    if (responseData.equals("1")) {
+
+                                                        if (pw.getText().toString().equals(pwCheck.getText().toString())) {
+                                                            if (id.getText().toString().length() >= 4 &&
+                                                                    pw.getText().toString().length() == 4 &&
+                                                                    nickName.getText().toString().length() >= 2) {
+
+                                                                Log.i(TAG, "checkSignUp (1)");
+
+                                                                idShared = id.getText().toString();
+                                                                pwShared = pw.getText().toString();
+                                                                pwCheckShared = pwCheck.getText().toString();
+                                                                nickNameShared = nickName.getText().toString();
+                                                                Log.i("submitCheck Insert Shared ID Check : ", idShared);
+                                                                Log.i("submitCheck Insert Shared PW Check : ", pwShared);
+                                                                Log.i("submitCheck Insert Shared PWCHECK Check : ", pwCheckShared);
+                                                                Log.i("submitCheck Insert Shared NICKNAME Check : ", nickNameShared);
+
+                                                                editor.putString("nickname", nickNameShared);
+                                                                editor.apply();
+                                                                editor.commit();
+
+                                                                Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
+                                                                startActivityflag(MainActivity.class);
+
+                                                            } else {
+                                                                builder.setTitle("CHECK YOUR INFO✔️");
+                                                                builder.setMessage("정보를 형식에 맞춰 입력해 주세요.");
+                                                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                                    } // onClick END
+                                                                });
+                                                                AlertDialog dialog = builder.create();
+                                                                dialog.show();
+                                                            } // else END
+
+                                                        } else {
+                                                            Log.i("[SignUp Activity]", "submitCheck 패스워드가 다를 때 : " + responseData);
+
+
+                                                            builder.setTitle("PASSWORD CHECK✔️");
+                                                            builder.setMessage("패스워드가 다릅니다. ");
+                                                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                                } // onClick
+                                                            });
+                                                            AlertDialog dialog = builder.create();
+                                                            dialog.show();
+                                                        }
+
+//                                                    } else {
+//                                                        Log.i("[SignUp Activity]", "submitCheck responseData가 1이 아닐 때 : " + responseData);
+                                                        Log.i(TAG, "checkSignUp (2)");
+
+                                                        idShared = id.getText().toString();
+                                                        pwShared = pw.getText().toString();
+                                                        pwCheckShared = pwCheck.getText().toString();
+                                                        nickNameShared = nickName.getText().toString();
+                                                        Log.i("submitCheck Insert Shared ID Check : ", idShared);
+                                                        Log.i("submitCheck Insert Shared PW Check : ", pwShared);
+                                                        Log.i("submitCheck Insert Shared PWCHECK Check : ", pwCheckShared);
+                                                        Log.i("submitCheck Insert Shared NICKNAME Check : ", nickNameShared);
+
+                                                        editor.putString("nickname", nickNameShared);
+                                                        editor.apply();
+                                                        editor.commit();
+
+                                                        Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
+                                                        startActivityflag(MainActivity.class);
+                                                    } // else
+                                                } // 응답성공 else END
+
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            } // catch END
+                                        } // run method END
+                                    }); // runOnUiThread END
+                                }
+                            });
+
+                            // 비밀번호랑 비밀번호 확인이 다를 때
+                        } else {
+//                            Toast.makeText(getApplicationContext(), "Check your information", Toast.LENGTH_SHORT).show();
+
+//                            // 비밀번호가 다릅니디.
+//                            pwDiff.setVisibility(View.VISIBLE);
+
+                            builder.setTitle("CHECK THE PASSWORD ✔️");
+                            builder.setMessage("비밀번호가 다릅니다.");
+                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                } // onClick
+                            });
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+                        } // else
+
+                    } //if 문 종료 (회원가입 전에 글자 개수 체크)
+                    else {
+                        builder.setTitle("CHECK YOUR INFO ✔️");
+                        builder.setMessage("입력하신 정정보를 확인해 주세요.");
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    }
+                } else {
+//                    Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
+                    builder.setTitle("CHECK THE INTERNET ✔️");
+                    builder.setMessage("인터넷 연결을 확인해 주세요.");
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        } // onClick
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                } //else END
+                if (id.getText().toString().length() >= 4 && pwCheck.getText().toString().length() >= 4 && nickName.getText().toString().length() >= 2) {
+
+                    Log.i(TAG, "checkSignUp (3)");
+
+                    idShared = id.getText().toString();
+                    pwShared = pw.getText().toString();
+                    pwCheckShared = pwCheck.getText().toString();
+                    nickNameShared = nickName.getText().toString();
+
+                    Log.i("submitCheck Insert Shared ID Check : ", idShared);
+                    Log.i("submitCheck Insert Shared PW Check : ", pwShared);
+                    Log.i("submitCheck Insert Shared PWCHECK Check : ", pwCheckShared);
+                    Log.i("submitCheck Insert Shared NICKNAME Check : ", nickNameShared);
+
+                    editor.putString("nickname", nickNameShared);
+                    editor.apply();
+                    editor.commit();
+
+                    Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
+                    startActivityflag(MainActivity.class);
+
+                } else {
+//                    Toast.makeText(getApplicationContext(), "회원 정보를 확인해 주세요.", Toast.LENGTH_SHORT).show();
+                } // else
+            } // onClick
+        }); // submit.setOnClickListener
+    } // beforeSetSubmit
 
 } // CLASS
