@@ -292,18 +292,15 @@ public class MainActivity extends AppCompatActivity {
                         if (!task.isSuccessful()) {
                             System.out.println("Fetching FCM registration token failed");
                             return;
-                        }
+                        } // if (!task.isSuccessful())
 
                         // Get new FCM registration token
                         String token = task.getResult();
 
                         // Log and toast
                         System.out.println("token : " + token);
-//                        Log.e(TAG, "token : " + token);
-//                        Toast.makeText(MainActivity.this, "Your device registration token is" + token
-//                                , Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    } // onComplete
+                }); // .addOnCompleteListener
 
         FirebaseMessaging.getInstance().getToken().addOnSuccessListener(new OnSuccessListener<String>() {
             @Override

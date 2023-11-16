@@ -900,6 +900,7 @@ public class SignUp extends AppCompatActivity {
                 .add("pw", pw.getText().toString().trim())
                 .add("nickname", nickName.getText().toString().trim())
                 .build();
+        // TODO (1) 바뀌지 않을 값들은 상수 처리 (변수화 - 위의 코드에서 id, pw 키 값들 예시)
 
         // 요청 만들기
         OkHttpClient client = new OkHttpClient();
