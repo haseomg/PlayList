@@ -27,6 +27,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
@@ -62,10 +64,11 @@ public class ChatActivity extends AppCompatActivity {
     private EditText chatMsg;
     private Button send;
     TextView logo, chatBack;
+    String getToken;
 
     private boolean hasConn = false;
     private Socket chatSocket;
-    private URI uri = URI.create("http://15.164.229.115:3000/");
+    private URI uri = URI.create("http://13.209.70.232:3000/");
     private IO.Options options;
 
     private ArrayList<ResponseModel> chatList = new ArrayList<>();
@@ -115,6 +118,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
     void initial() {
+
         chatCtx = ChatActivity.this;
 
         lifecycleObserver = new MyLifecycleObserver();
@@ -181,6 +185,24 @@ public class ChatActivity extends AppCompatActivity {
         connect();
         setChatSocket();
         setChatBack();
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            System.out.println("Fetching FCM registration token failed");
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+
+                        // Log and toast
+                        System.out.println("token : " + token);
+                        getToken = token;
+                    }
+                });
     } // initial
 
     void setChatBack() {
@@ -279,7 +301,7 @@ public class ChatActivity extends AppCompatActivity {
 
     void setChatSocket() {
         try {
-            chatSocket = IO.socket("http://15.164.229.115:3000/");
+            chatSocket = IO.socket("http://13.209.70.232:3000/");
             Log.i(TAG, "setChatSocket IO.socket check : " + chatSocket);
             chatSocket.connect();
 
@@ -394,6 +416,9 @@ public class ChatActivity extends AppCompatActivity {
                 jsonObject.put("today", getToday);
                 Log.i("json put", "today check : " + getToday);
                 jsonObject.put("is_read", is_read);
+                jsonObject.put("token", getToken);
+                Log.i(TAG, "token check : " + getToken);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             } // catch END
@@ -406,7 +431,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private Emitter.Listener onNewMessage = args -> runOnUiThread(() -> {
 
-        if (!fromEditText.equals("") || fromEditText.length() != 0) {
+        if (fromEditText != null  && !fromEditText.equals("") && fromEditText.length() != 0) {
 
             Log.i(TAG, "onNewMessage Listener");
 
@@ -740,6 +765,7 @@ public class ChatActivity extends AppCompatActivity {
                     // 여기서 서버나 사용하려는 곳에 토큰 저장..
                 }); // addOnCompleteListener
     } // setFCM
+
 
 
 } // Main CLASS END

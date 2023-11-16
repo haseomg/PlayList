@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -24,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.room.Room;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -34,8 +36,13 @@ import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -52,6 +59,7 @@ public class Feed extends AppCompatActivity {
     static Context feedCtx;
     private static final String TAG = "FeedActivity";
     private static final int PERMISSION_REQUEST_CODE = 1;
+    private UUIDDatabase uuidDatabase;
 
     ImageView genreFirst, genreSecond, genreThird, profile;
     TextView feedLogo, profileMusic, nameFloatingButton, msgBtn, followText, followingText, userName;
@@ -87,8 +95,9 @@ public class Feed extends AppCompatActivity {
     SharedPreferences.Editor nicknameEditor;
 
     String selected_profileMusic, fileName, getLikeGenreFirst, getLikeGenreSecond, getLikeGenreThird;
-    String getSharedNickName;
+    String getSharedNickName, uuid, you;
     String getSharedProfileMusic, getSharedGenreFirst, getSharedGenreSecond, getSharedGenreThird, getSelectedProfileImage;
+    String getRoomName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -194,7 +203,231 @@ public class Feed extends AppCompatActivity {
         setProfileImageView();
         setSelectUserFeedData(); // 피드 액티비티 접근 시 피드 로그인 유저의 피드 세팅
         setNameFloatingButton(); // 팔로우/팔로잉 로직 or 피드 편집/피드 저장
+
+        // 데이터베이스 인스턴스 생성
+        uuidDatabase = Room.databaseBuilder(getApplicationContext(), UUIDDatabase.class, "uuid_db")
+                .allowMainThreadQueries()
+                .build();
+        getUUIDFromTable(nowLoginUser);
+        getUUIDFromRoomDB(nowLoginUser);
     } // initial END
+
+    private void getUUIDFromTable(String me) {
+        you = feedUser;
+        Log.i(TAG, "getUUIDFRomToTable Method");
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://13.124.239.85/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ServerApi serverApi = retrofit.create(ServerApi.class);
+
+        Call<ResponseModel> call = serverApi.getUUID(me);
+
+        call.enqueue(new Callback<ResponseModel>() {
+            @Override
+            public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                if (response.isSuccessful()) {
+                    // 성공적인 응답 처리
+//                    Toast.makeText(ChatSelect.this, "Data selected successfully", Toast.LENGTH_SHORT).show();
+                    ResponseModel responseModel = response.body();
+
+                    // uuidFromResponse 전역 변수로 생성해서 값 넣어주면
+                    // 변수의 값이 너무 늦게 들어가거나 안 들어가 = 통신해서 response 값 받아오는 게
+                    // 원하는 생명주기 시점이 아니여서 != 채팅 목록 클릭 시
+                    String uuiidFromResponse = responseModel.getUUID();
+                    ;
+                    if (responseModel != null) {
+
+                        List<String> uuidsFromResponse = responseModel.getUUIDs();
+                        if (uuidsFromResponse != null) {
+                            // 밑에 코드에서 uuidsFromResponse를 사용하여 처리 수행
+                            // 예 : 저장, 출력, 변수 저장 등
+                        } else {
+                            Log.d(TAG, "uuids : " + "응답 데이터가 null 입니다.");
+                        }
+                        Log.d(TAG, "uuid 1 : " + uuidsFromResponse);
+                        // RoomDB에서 가져와서
+                        // 나와 상대의 이름이 포함된 uuid 키 값을 변수에 넣어줘야 함
+//                        uuidForChat = uuiidFromResponse;
+                        Log.d(TAG, "uuid 2 : " + uuidForChat);
+                        // 생성한 uuid
+                        if (uuid == null) {
+                            Log.d(TAG, "uuid 3 : " + uuidForChat);
+                            editor.putString("UUID", uuidForChat);
+                            editor.commit();
+                        } else {
+                            extractingUUID(nowLoginUser, you);
+                            Log.d(TAG, "uuid 4 : " + uuid);
+                            Log.i(TAG, "uuid check : " + uuid);
+                            editor.putString("UUID", uuid);
+                            editor.commit();
+                        }
+
+                        UUIDDatabase db = Room.databaseBuilder(getApplicationContext(), UUIDDatabase.class, "uuid")
+                                .allowMainThreadQueries()
+                                .addMigrations(MainActivity.MIGRATION_1_2)
+                                .build();
+                        UuidDao uuidDao = db.uuidDao();
+
+                        runOnUiThread(() -> {
+                            db.uuidDao().getAll().observe(Feed.this, uuids -> {
+                                if (uuids.isEmpty()) {
+//                                    Toast.makeText(ChatSelect.this, "데이터베이스가 비어 있습니다.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    StringBuilder sb = new StringBuilder();
+                                    for (Uuid uuid : uuids) {
+                                        sb.append("UUID : ").append(uuid.uuid).append("\n");
+                                    } // for END
+                                    Log.i(TAG, "UUID: " + sb.toString());
+                                } // else END
+                            }); // observer END
+                        }); // runOnUiThread END
+
+                    } else {
+                        Log.d(TAG, "uuid : " + "응답 데이터가 null 입니다.");
+                    }
+                } else {
+                    // 실패한 응답 처리
+//                    Toast.makeText(ChatSelect.this, "Failed to select data", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseModel> call, Throwable t) {
+                // 에러 처리
+                Toast.makeText(Feed.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            } // onFailure END
+        }); // call.enqueque END
+    }
+
+    private void extractingUUID(String user1, String user2) {
+        // 생성할 고유 값의 개수
+        int numValues = 1;
+
+        // 중복을 제거한 고유 값 저장
+        HashSet<String> uniqueValues = new HashSet<>();
+
+        // 이름을 덧붙히면 중복될 일이 없지 않을까?
+        while (uniqueValues.size() < numValues) {
+            // 16비트 랜덤 정수 생성
+            int randomInt = new Random().nextInt(65536);
+            // 정수를 16진수 문자열로 변환
+            String hexString = String.format("%04X", randomInt);
+
+            // 오늘 날짜 가져오기
+//            LocalDate today = LocalDate.now();
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+//            String dateString = today.format(formatter);
+
+            long now = System.currentTimeMillis();
+            Date date = new Date(now);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+            String dateString = sdf.format(date);
+
+            // 최종 고유 값 생성
+            String uniqueValue = hexString + dateString + user1 + user2;
+
+            // 생성된 고유 값을 HashSet에 추가 (중복 제거)
+            uniqueValues.add(uniqueValue);
+
+        } // while END
+
+        // 생성된 고유 값 출력
+        for (String value : uniqueValues) {
+            System.out.println("생성된 고유 값 : " + value);
+            uuid = value;
+//            editor.putString("extractingUUID", uuid);
+//            editor.commit();
+        } // for END
+//        makeUUID = shared.getString("extractingUUID", "");
+//        Log.i(TAG, "uuid in extractingUUID : " + getSharedUUID);
+//        System.out.println(one);
+    }
+
+    private void processUUIDs(List<String> uuidValues) {
+        Log.i(TAG, "chattingStart");
+        you = feedUser;
+
+        String foundValue = null;
+
+        for (String uuidValue : uuidValues) {
+            Log.i(TAG, "chattingStart uuid - for");
+            if (uuidValue.contains(nowLoginUser) && uuidValue.contains(you)) {
+                Log.i(TAG, "chattingStart uuid - if");
+                foundValue = uuidValue;
+                break;
+            } // if END
+        } // for END
+
+        if (foundValue != null) {
+            Log.i(TAG, "chattingStart Found value with me and you: " + foundValue);
+        } else {
+            Log.i(TAG, "chattingStart No value found with me and you.");
+        } // else END
+
+        Log.i(TAG, "chattingStart uuid - you check : " + you);
+
+        uuidForChat = foundValue;
+        Log.i(TAG, "chattingStart uuid ForChat ; " + uuidForChat);
+
+        // 팔로잉 상태일 때만 ChatActivity로 이동
+        if (nameFloatingButton.getText().toString().equals("팔로잉")) {
+//            Intent intent = new Intent(Feed.this, ChatActivity.class);
+//
+//            if (uuidForChat != null) {
+//                Log.i(TAG, "chattingStart if (uuidForChat != null)");
+//                Log.i(TAG, "chattingStart uuid ForChat ; " + uuidForChat);
+//                intent.putExtra("uuid", uuidForChat);
+//
+//            } else {
+//                Log.i(TAG, "chattingStart if (uuidForChat == null)");
+//                Log.i(TAG, "chattingStart uuid ForChat ; " + uuidForChat);
+//                String uuidCheck = nowLoginUser + feedUser;
+//                intent.putExtra("uuid", uuidCheck);
+//            } // else END
+//
+//            Log.i(TAG, "chattingStart yourName Check : " + you);
+//            Log.i(TAG, "chattingStart userName Check : " + nowLoginUser);
+//
+//            intent.putExtra("yourname", you);
+//            intent.putExtra("username", nowLoginUser);
+//
+//            editor.putString("room", getRoomName);
+//            editor.putString("name", nowLoginUser);
+//            editor.putString("the_other", you);
+//            editor.commit();
+//
+//            startActivity(intent);
+        }
+    }
+
+
+    private void getUUIDFromRoomDB(String me) {
+        Log.i(TAG, "uuid - getUUIDFromRoomDB Method");
+        UUIDDatabase db = Room.databaseBuilder(getApplicationContext(), UUIDDatabase.class, "uuid")
+                .addMigrations(MainActivity.MIGRATION_1_2)
+                .build();
+        UuidDao uuidDao = db.uuidDao();
+
+        runOnUiThread(() -> {
+            db.uuidDao().getAll().observe(Feed.this, uuids -> {
+                if (uuids.isEmpty()) {
+//                    Toast.makeText(ChatSelect.this, "데이터베이스가 비어 있습니다.", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    uuidValues = new ArrayList<>(); // 리스트 초기화
+                    StringBuilder sb = new StringBuilder();
+                    for (Uuid uuid : uuids) {
+                        uuidValues.add(uuid.uuid); // 값 추가
+                        sb.append("UUID : ").append(uuid.uuid).append("\n");
+                    } // for END
+                    processUUIDs(uuidValues);
+                    Log.i(TAG, "UUID: " + sb.toString());
+                } // else END
+            }); // observer END
+        }); // runOnUiThread END
+    } // getUUIDFromRoomDB
 
 //    void setMatchGenreImage() {
 //        // TODO - 첫번째 장르 이미지 세팅 이슈 해결 필요
@@ -718,7 +951,8 @@ public class Feed extends AppCompatActivity {
         msgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "can chat check msgBtn onClick()");
+                Log.i(TAG, "msgBtn onClick()");
+
                 if (msgBtn.getText().toString().equals("채팅 목록")) {
                     Intent chatRoomIntent = new Intent(Feed.this, ChatSelect.class);
                     chatRoomIntent.putExtra("before_class", "feed");
@@ -730,8 +964,9 @@ public class Feed extends AppCompatActivity {
                     Log.i(TAG, "msgBtn check : " + msgBtn.getText().toString());
 
                     if (nameFloatingButton.getText().toString().equals("팔로우")) {
+                        // TODO none Following Status (팔로우 중이지 않을 때)
                         Log.i(TAG, "msgBtn chat check (if) : " + nameFloatingButton.getText().toString());
-                        ;
+
                         new AlertDialog.Builder(Feed.this, R.style.AlertDialogCustom)
                                 .setMessage(feedUser + "님을 팔로우 시 채팅이 가능합니다.")
                                 .setCancelable(false)
@@ -746,12 +981,68 @@ public class Feed extends AppCompatActivity {
 
                     } else {
                         Log.i(TAG, "msgBtn chat check (else) : " + nameFloatingButton.getText().toString());
-                        ;
-                        // TODO - Following Status
+                        // TODO - Following Status (팔로우 중일 때)
+                        //  채팅방으로 연결
+                        Log.i(TAG, "chattingStart");
+                        you = feedUser;
+
+                        getUUIDFromRoomDB(nowLoginUser);
+                        String foundValue = null;
+
+                        for (String uuidValue : uuidValues) {
+                            Log.i(TAG, "chattingStart uuid - for");
+
+                            if (uuidValue.contains(nowLoginUser) && uuidValue.contains(you)) {
+                                Log.i(TAG, "chattingStart uuid - if");
+                                foundValue = uuidValue;
+                                break;
+                            } // if END
+                        } // for END
+
+                        if (foundValue != null) {
+                            Log.i(TAG, "chattingStart Found value with me and you: " + foundValue);
+
+                        } else {
+                            Log.i(TAG, "chattingStart No value found with me and you.");
+                        } // else END
+
+                        Log.i(TAG, "chattingStart uuid - you check : " + you);
+
+                        uuidForChat = foundValue;
+                        Log.i(TAG, "chattingStart uuid ForChat ; " + uuidForChat);
+
+                        // 전달할 데이터를 인텐트에 추가
+                        Intent intent = new Intent(Feed.this, ChatActivity.class);
+                        if (uuidForChat != null) {
+                            Log.i(TAG, "chattingStart if (uuidForChat != null)");
+                            Log.i(TAG, "chattingStart uuid ForChat ; " + uuidForChat);
+                            intent.putExtra("uuid", uuidForChat);
+
+                        } else {
+                            Log.i(TAG, "chattingStart if (uuidForChat == null)");
+                            Log.i(TAG, "chattingStart uuid ForChat ; " + uuidForChat);
+                            String uuidCheck = "none_uuid";
+//                            String uuidCheck = nowLoginUser + feedUser;
+                            intent.putExtra("uuid", uuidCheck);
+                        } // else END
+
+                        Log.i(TAG, "chattingStart yourName Check : " + you);
+                        Log.i(TAG, "chattingStart userName Check : " + nowLoginUser);
+
+                        intent.putExtra("yourname", you);
+                        intent.putExtra("username", nowLoginUser);
+
+                        editor.putString("room", getRoomName);
+                        editor.putString("name", nowLoginUser);
+                        editor.putString("the_other", you);
+                        editor.commit();
+
+                        startActivity(intent);
 
                         // 소켓 서버 열어서 채팅 가능하게
                     } // else
                 } // else
+
             } // onClick
         }); // setOnClickListener
     } // setMsgOrChatRoomBtn
