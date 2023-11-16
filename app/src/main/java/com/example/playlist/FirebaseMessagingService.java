@@ -63,17 +63,21 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             builder = new NotificationCompat.Builder(getApplicationContext());
         }
 
-        String title = remoteMessage.getNotification().getTitle();
-        String body = remoteMessage.getNotification().getBody();
+        RemoteMessage.Notification notificationData = remoteMessage.getNotification();
 
-        builder.setContentTitle(title)
-                .setContentText(body)
-                .setSmallIcon(R.drawable.ic_launcher_background);
+        if (notificationData != null) {
+            String title = notificationData.getTitle();
+            String body = notificationData.getBody();
 
-        Notification notification = builder.build();
-        notificationManager.notify(1, notification);
+            builder.setContentTitle(title)
+                    .setContentText(body)
+                    .setSmallIcon(R.drawable.ic_launcher_background);
 
-
+            Notification notification = builder.build();
+            notificationManager.notify(1, notification);
+        } else {
+            Log.i(TAG, "No notification data");
+        } // else
 
 //        title = remoteMessage.getNotification().getTitle();
 //        body = remoteMessage.getNotification().getBody();
