@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
@@ -92,8 +93,10 @@ public class FollowingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 Log.i(TAG, "setFollowerListProfileImage onBindViewHolder (imagePath) *if : " + imagePath);
                 Glide.with(context)
                         .load(imagePath)
-                        .apply(new RequestOptions().circleCrop())
-                        .error(R.drawable.gray_profile)
+                        .apply(new RequestOptions().circleCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .error(R.drawable.gray_profile))
                         .into(((FollowingHolder) holder).profile);
             } catch (NullPointerException e) {
                 e.printStackTrace();

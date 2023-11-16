@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
@@ -78,8 +79,11 @@ public class FollowerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 Log.i(TAG, "setFollowerListProfileImage onBindViewHolder (imagePath) *if : " + imagePath);
                 Glide.with(context)
                         .load(imagePath)
-                        .apply(new RequestOptions().circleCrop())
-                        .error(R.drawable.gray_profile)
+                        .apply(new RequestOptions()
+                                .circleCrop()
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .skipMemoryCache(true)
+                                .error(R.drawable.gray_profile))
                         .into(((FollowerHolder) holder).profile_image);
             } catch (NullPointerException e) {
                 e.printStackTrace();
