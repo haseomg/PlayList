@@ -90,10 +90,10 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 // 현재 아이템의 타임스탬프를 표시한다.
                 ((MyHolder) holder).chat_Time.setVisibility(View.VISIBLE);
                 ((MyHolder) holder).chat_Time.setText(chatList.get(position).getTimestamp());
+
             } else {
                 ((MyHolder) holder).chat_Time.setVisibility(View.GONE);
             } // else END
-
 
             if (((MyHolder) holder).chat_Time.getText().toString().equals("") || ((MyHolder) holder).chat_Time.getText().toString() == null || ((MyHolder) holder).chat_Time.getText().toString().isEmpty()) {
                 // if
@@ -161,6 +161,14 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         } else if (holder instanceof YourHolder) {
             Log.i(TAG, "holder instanceof YourHolder");
 //            ((YourHolder) holder).chat_You_Image.setImageResource(R.mipmap.ic_launcher);
+
+            if (chatList.size() == 1 || position == chatList.size() - 1 || !chatList.get(position + 1).getTimestamp().equals(chatList.get(position).getTimestamp())) {
+                ((YourHolder) holder).your_chat_Time.setVisibility(View.VISIBLE);
+                ((YourHolder) holder).your_chat_Time.setText(chatList.get(position).getTimestamp());
+            } else {
+                ((YourHolder) holder).your_chat_Time.setVisibility(View.GONE);
+            } // else
+
             ((YourHolder) holder).chat_You_Name.setText(chatList.get(position).getMyName());
             ((YourHolder) holder).your_chat_Text.setText(chatList.get(position).getMsg());
             ((YourHolder) holder).your_chat_Time.setText(chatList.get(position).getTimestamp());
@@ -192,8 +200,8 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     ((YourHolder) holder).your_chat_Time.setText(dateTimeSplit[1]);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     e.printStackTrace();
-                }
-            }
+                } // catch
+        } // else
         }
     } // onBindViewHolder END
 

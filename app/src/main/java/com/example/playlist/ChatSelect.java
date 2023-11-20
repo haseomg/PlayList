@@ -171,6 +171,7 @@ public class ChatSelect extends AppCompatActivity {
         chatHomeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (beforeClass.equals("home")) {
                     finish();
 
@@ -281,10 +282,10 @@ public class ChatSelect extends AppCompatActivity {
                 public void run() {
                     String message = args[0].toString();
                     // 새로운 메시지 데이터 추가 로직을 실행해야 합니다.
-                }
-            });
-        }
-    };
+                } // run
+            }); // runOnUiThread
+        } // call
+    }; // onNewMessage
 
     private void getUUIDContainsYouMe(String mine, String yours) {
         Log.i(TAG, "uuid - getUUIDContainsYouMe Method");
@@ -308,7 +309,7 @@ public class ChatSelect extends AppCompatActivity {
             if (tempList.size() > 0) {
                 uuidList.clear();
                 uuidList.addAll(tempList);
-            }
+            } // if
 
             Log.i(TAG, "uuid - check : " + uuidList.size());
             if (uuidList != null && !uuidList.isEmpty()) {
@@ -391,7 +392,7 @@ public class ChatSelect extends AppCompatActivity {
                             // 예 : 저장, 출력, 변수 저장 등
                         } else {
                             Log.d(TAG, "uuids : " + "응답 데이터가 null 입니다.");
-                        }
+                        } // else
                         Log.d(TAG, "uuid 1 : " + uuidsFromResponse);
                         // RoomDB에서 가져와서
                         // 나와 상대의 이름이 포함된 uuid 키 값을 변수에 넣어줘야 함
@@ -408,7 +409,7 @@ public class ChatSelect extends AppCompatActivity {
                             Log.i(TAG, "uuid check : " + uuid);
                             editor.putString("UUID", uuid);
                             editor.commit();
-                        }
+                        } // else
 
                         UUIDDatabase db = Room.databaseBuilder(getApplicationContext(), UUIDDatabase.class, "uuid")
                                 .allowMainThreadQueries()
@@ -432,11 +433,12 @@ public class ChatSelect extends AppCompatActivity {
 
                     } else {
                         Log.d(TAG, "uuid : " + "응답 데이터가 null 입니다.");
-                    }
+                    } // else
+
                 } else {
                     // 실패한 응답 처리
 //                    Toast.makeText(ChatSelect.this, "Failed to select data", Toast.LENGTH_SHORT).show();
-                }
+                } // else
             }
 
             @Override
