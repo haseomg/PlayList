@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-import io.socket.emitter.Emitter;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -273,19 +272,6 @@ public class ChatSelect extends AppCompatActivity {
 //        setEnterButton();
         setDeleteChatRoom();
     } // initial method END
-
-    private Emitter.Listener onNewMessage = new Emitter.Listener() {
-        @Override
-        public void call(final Object... args) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    String message = args[0].toString();
-                    // 새로운 메시지 데이터 추가 로직을 실행해야 합니다.
-                } // run
-            }); // runOnUiThread
-        } // call
-    }; // onNewMessage
 
     private void getUUIDContainsYouMe(String mine, String yours) {
         Log.i(TAG, "uuid - getUUIDContainsYouMe Method");

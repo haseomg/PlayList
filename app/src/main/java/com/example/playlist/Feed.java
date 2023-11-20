@@ -107,6 +107,7 @@ public class Feed extends AppCompatActivity {
         setContentView(R.layout.activity_feed);
 
         initial();
+        getUUIDFromRoomDB(nowLoginUser);
     } // onCreate
 
     private void initial() {
@@ -1001,7 +1002,6 @@ public class Feed extends AppCompatActivity {
 
                         if (foundValue != null) {
                             Log.i(TAG, "chattingStart Found value with me and you: " + foundValue);
-
                         } else {
                             Log.i(TAG, "chattingStart No value found with me and you.");
                         } // else END
