@@ -47,9 +47,18 @@
             android:name=".Upload"
             android:exported="false"
             android:theme="@android:style/Theme.Dialog" />
+
         <activity
             android:name=".Profile"
-            android:exported="false" />
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:host="action" android:scheme="indie_music_player_app" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".SignUp"
             android:exported="false" />
