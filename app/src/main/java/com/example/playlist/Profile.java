@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -69,6 +70,7 @@ public class Profile extends AppCompatActivity {
     UpdateNickname updateNickname;
 
     public final String TAG = "[Profile Activity]";
+    private static final String BASE_URL = "http://13.124.239.85/";
 
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
@@ -347,8 +349,16 @@ public class Profile extends AppCompatActivity {
         premiumStatusButton.setBackgroundResource(R.drawable.follower_delete_btn);
     } // updatePremiumStatus
 
-
     void setPremiumStatusButton() {
+        premiumStatusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setPremiumStatus();
+            } // onClick
+        }); // setOnClickListener
+    } // setPremiumStatusButton
+
+    void setPremiumStatus() {
         if (premiumStatusButton.getText().toString().equals("가입")) {
             // 프리미엄 혜택 가입 전일 때 == 무료 회원
             // 클릭 시 <무료 회원 -> 프리미엄 회원 혜택 안내서>
@@ -371,16 +381,71 @@ public class Profile extends AppCompatActivity {
             builder.setPositiveButton("결제하기", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    Log.i(TAG, "membershipService dialog positiveButton onClick");
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl(BASE_URL)
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+
+                    ServerApi paymentService = retrofit.create(ServerApi.class);
+                    Call<String> call = null;
+
                     // 라디오 버튼 선택에 따른 결제 로직 구현
-                    if(rb[0].isChecked()){
+                    if (rb[0].isChecked()) {
                         // 사용자 결제 로직
+                        String partner_order_id = "I.M.P " + nowLoginUser;
+                        String partner_user_id = nowLoginUser;
+                        String item_name = "premium_user";
+                        String quantity = "1";
+                        String total_amount = "3900";
+                        call = paymentService.requestPayment(partner_order_id, partner_user_id
+                                , item_name, quantity, total_amount);
+                        Log.i(TAG, "membershipService user payment logic : " + call);
 
-                    } else if(rb[1].isChecked()){
+                    } else if (rb[1].isChecked()) {
                         // 아티스트 결제 로직
-
+                        String partner_order_id = "I.M.P " + nowLoginUser;
+                        String partner_user_id = nowLoginUser;
+                        String item_name = "premium_artist";
+                        String quantity = "1";
+                        String total_amount = "5900";
+                        call = paymentService.requestPayment(partner_order_id, partner_user_id
+                                , item_name, quantity, total_amount);
+                        Log.i(TAG, "membershipService artist payment logic : " + call);
                     } // else if
-                    // 카카오페이 결제 페이지로 이동하는 코드가 들어가야 함
 
+                    // 카카오페이 결제 페이지로 이동하는 코드가 들어가야 함
+                    call.enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            Log.i(TAG, "membershipService onResponse");
+
+                            if (response.isSuccessful()) {
+                                try {
+                                    String redirectUrl = response.body();
+                                    Log.i(TAG, "membershipService response.isSuccessful : " + redirectUrl);
+
+                                    // 웹뷰를 사용하여 카카오페이 결제 페이지를 열기
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(redirectUrl));
+                                    startActivity(intent);
+                                } catch (Exception e) {
+                                    Log.e(TAG, "membershipService onResponse Exception Error : " + e.getMessage() );
+                                } // catch
+
+                            } else {
+                                try {
+                                    Log.e(TAG, "membershipService Response error body: " + response.errorBody().string());
+                                } catch (IOException e) {
+                                    Log.e(TAG, "membershipService onResponse IOException Error : " + e);
+                                } // catch
+                            } // else
+                        } // onResponse
+
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                            Log.e(TAG, "membershipService onFailure : " + t.getMessage());
+                        } // onFailure
+                    }); // call.enqueue
                 } // onClick
             });
             builder.setNegativeButton("취소", null);
@@ -440,6 +505,7 @@ public class Profile extends AppCompatActivity {
         super.onDestroy();
         Log.i(TAG, "onDestroy()");
     } // onDestroy
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
