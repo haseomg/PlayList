@@ -5,12 +5,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,8 +50,7 @@ public class Profile extends AppCompatActivity {
 
     AlertDialog.Builder builder;
 
-    TextView profileLogo;
-    TextView nickName;
+    TextView profileLogo, nickName, premiumText, premiumStatusButton;
     EditText nickNameChange;
     Button nickNameChangeBtn;
     Button profileBackBtn, logOutBtn, feedBtn;
@@ -116,6 +118,9 @@ public class Profile extends AppCompatActivity {
         nickNameChangeBtn = findViewById(R.id.nickNameChangeButton);
         logOutBtn = findViewById(R.id.logOutBtn);
         feedBtn = findViewById(R.id.feedBtn);
+
+        premiumText = findViewById(R.id.premiumTextView);
+        premiumStatusButton = findViewById(R.id.premiumStatusBtn);
 
         Intent intent = getIntent();
         nowLoginUser = intent.getStringExtra("now_login_user");
@@ -235,6 +240,7 @@ public class Profile extends AppCompatActivity {
                             fromSharedNickName = shared.getString("nickname", "LOG IN");
 //                            selectAndUpdateNickname();
 //                            Log.i(TAG, "match ok 5");
+
                         } else if (fromSharedNickName.length() < 5) {
                             profileLogo.setTextSize(30);
                             ((MainActivity) MainActivity.mainCtx).logIn.setTextSize(15);
@@ -242,7 +248,7 @@ public class Profile extends AppCompatActivity {
                             editor.commit();
 //                            selectAndUpdateNickname();
 //                            Log.i(TAG, "match ok 6");
-                        }
+                        } // else if
 
                         fromSharedNickName = shared.getString("nickname", "LOG IN");
                         selectAndUpdateNickname();
@@ -252,7 +258,7 @@ public class Profile extends AppCompatActivity {
                         nickName.setVisibility(View.VISIBLE);
                         nickNameChange.setVisibility(View.GONE);
                         nickNameChangeBtn.setText("닉네임 변경");
-                    }
+                    } // else
                 }
             }
         }); // nickNameChangeBtn.setOnClickListener
@@ -302,11 +308,9 @@ public class Profile extends AppCompatActivity {
                                 } // onClick
                             }); // setNegativeButton
                     builder.show();
-
                 } // else
             } // onClick
         }); // logOutBtn.setOnClickListener
-
 
         profileBackBtn = findViewById(R.id.profileBackButton);
         profileBackBtn.setOnClickListener(new View.OnClickListener() {
@@ -334,7 +338,60 @@ public class Profile extends AppCompatActivity {
             } // onClick
         }); // feedBtn
 
-    }
+        setPremiumStatusButton();
+    } // onCreate
+
+    void updatePremiumStatus() {
+        premiumStatusButton.setText("이용중");
+        premiumStatusButton.setTextColor(Color.parseColor("#7878E1"));
+        premiumStatusButton.setBackgroundResource(R.drawable.follower_delete_btn);
+    } // updatePremiumStatus
+
+
+    void setPremiumStatusButton() {
+        if (premiumStatusButton.getText().toString().equals("가입")) {
+            // 프리미엄 혜택 가입 전일 때 == 무료 회원
+            // 클릭 시 <무료 회원 -> 프리미엄 회원 혜택 안내서>
+//            Toast.makeText(ctx, "프리미엄 회원을 위한 결제가 진행됩니다. [안내서 차후 추가 예정]", Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("프리미엄 회원 가입");
+
+            final RadioButton[] rb = new RadioButton[2];
+            RadioGroup rg = new RadioGroup(this);
+            rb[0] = new RadioButton(this);
+            rb[0].setText("사용자: 1개월 무료 체험 • 이후 3,900원/월");
+            rg.addView(rb[0]);
+
+            rb[1] = new RadioButton(this);
+            rb[1].setText("아티스트: 1개월 무료 체험 • 이후 5,900원/월");
+            rg.addView(rb[1]);
+
+            builder.setView(rg);
+
+            builder.setPositiveButton("결제하기", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // 라디오 버튼 선택에 따른 결제 로직 구현
+                    if(rb[0].isChecked()){
+                        // 사용자 결제 로직
+
+                    } else if(rb[1].isChecked()){
+                        // 아티스트 결제 로직
+
+                    } // else if
+                    // 카카오페이 결제 페이지로 이동하는 코드가 들어가야 함
+
+                } // onClick
+            });
+            builder.setNegativeButton("취소", null);
+            builder.create().show();
+
+        } else {
+            // 프리미엄 혜택 이용 중일 때 == 유료 회원
+            // 클릭 시 [구독 취소 안내서] <프리미엄 회원 혜택 안내서 -> 무료 회원>
+
+        } // else
+    } // setPremiumStatusButton
 
     // 구글 로그아웃
     void signOut() {
@@ -344,9 +401,9 @@ public class Profile extends AppCompatActivity {
                 finish();
                 // 괜찮을지 모르겠네
                 startActivity(new Intent(Profile.this, MainActivity.class));
-            }
-        });
-    }
+            } // onComplete
+        }); // addOnCompleteListener
+    } // signOut
 
     void kakaoLogout() {
         UserApiClient.getInstance().logout(error -> {
@@ -354,43 +411,42 @@ public class Profile extends AppCompatActivity {
                 Log.e("[MAIN KAKAO LOGOUT]", "로그아웃 실패, SDK에서 토큰 삭제됨", error);
             } else {
                 Log.e("[MAIN KAKAO LOGOUT]", "로그아웃 성공, SDK에서 토큰 삭제됨");
-            }
+            } // else
             return null;
-        });
-    }
+        }); // getInstance
+    } // kakaoLogout
 
     protected void onStart() {
         super.onStart();
         Log.i(TAG, "onStart()");
-    }
+    } // onStart
 
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume()");
-    }
+    } // onResume
 
     protected void onPause() {
         super.onPause();
         Log.i(TAG, "onPause()");
-    }
+    } // onPause
 
     protected void onStop() {
         super.onStop();
         Log.i(TAG, "onStop()");
-    }
+    } // onStop
 
     protected void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy()");
-    }
-
+    } // onDestroy
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
             return false;
-        }
+        } // if
         return true;
-    }
+    } // onTouchEvent
 
     public void retrofitApi() {
         Log.i(TAG, "retrofitApi Method Start");
@@ -412,7 +468,7 @@ public class Profile extends AppCompatActivity {
 //        retrofit = retrofit.newBuilder().client(client).build();
 
         userApi = retrofit.create(UserApi.class);
-    }
+    } // retrofitAPI END
 
     public void getUser() {
 
@@ -430,14 +486,14 @@ public class Profile extends AppCompatActivity {
                 Log.i(TAG, "id : " + user.getId() + ", nickname : " + user.getNickname());
                 id = user.getId();
                 nickname = user.getNickname();
-            }
+            } // onResponse
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 Log.i(TAG, "onFailureAPI 호출 실패 : " + t.getMessage());
-            }
+            } // onFailure
         });
-    }
+    } // getUser END
 
     public void updateNickname(String id, String nickname) {
         Log.i(TAG, "updateNickname Method Start");
@@ -457,11 +513,11 @@ public class Profile extends AppCompatActivity {
                     } else {
                         Log.i(TAG, "onResponse success result Check : " + result);
                         // FAILED
-                    }
+                    } // else
                 } else {
                     Log.i(TAG, "updateNickname response failed");
                     // RESPONSE FAILED
-                }
+                } // else
             }
 
             @Override
@@ -503,20 +559,21 @@ public class Profile extends AppCompatActivity {
             public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     Log.i("Update", "응답 실패 : " + response);
+
                 } else {
                     Log.i("Update", "응답 성공 : " + response);
                     final String responseData = response.body().string();
+
                     if (responseData.equals("1")) {
                         Log.i("Update", "User Table match == 0");
+
                     } else {
                         Log.i("Update", "User Table match ok : " + responseData);
                         idToPost = responseData;
-                    }
-
-                }
-            }
+                    } // else
+                } // else
+            } // onResponse
         });
-
     }
 
     public void updateUserTB() {

@@ -96,21 +96,58 @@
         app:layout_constraintTop_toBottomOf="@+id/profileLayout"
         app:layout_constraintVertical_bias="0.060000002" />
 
-    <Button
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/premiumButton"
-        android:layout_width="310dp"
+        android:layout_width="wrap_content"
         android:layout_height="60dp"
-        android:background="#997878E1"
-        android:fontFamily="sans-serif-black"
-        android:text="✧ 프리미엄 ✧"
-        android:textColor="#AAB9ff"
-        android:textSize="30sp"
-        android:visibility="invisible"
+        android:background="#00ff0000"
         app:layout_constraintBottom_toTopOf="@+id/logOutBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profileLayout"
-        app:layout_constraintVertical_bias="0.26" />
+        app:layout_constraintVertical_bias="0.94">
+
+        <ImageView
+            android:id="@+id/premiumLogo"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:src="@drawable/logo_circle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.02"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/premiumTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:fontFamily="sans-serif-black"
+            android:text="I.M.P Premium"
+            android:textColor="#7373CF"
+            android:textSize="22dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/premiumStatusBtn"
+            app:layout_constraintStart_toEndOf="@+id/premiumLogo"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/premiumStatusBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/follower_readd_btn"
+            android:layout_marginLeft="12dp"
+            android:fontFamily="sans-serif-black"
+            android:text="가입"
+            android:textColor="#AAB9FF"
+            android:textSize="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/premiumTextView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
         android:id="@+id/logOutBtn"
