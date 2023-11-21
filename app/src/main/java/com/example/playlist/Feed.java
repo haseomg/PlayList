@@ -1086,6 +1086,8 @@ public class Feed extends AppCompatActivity {
             nameFloatingButton.setText("피드 저장");
             nameFloatingButton.setBackgroundResource(R.drawable.follow_button);
             nameFloatingButton.setTextColor(Color.WHITE);
+            feedLogo.setText("피드 편집");
+            feedLogo.setTextSize(26);
 
             if (profileMusic.getText().toString().equals("프로필 뮤직을 선택해 주세요.")) {
                 Log.i(TAG, "saveUserProfileImageInFeed setFeedEditMode *if: " + profileMusic.getText().toString());
@@ -1187,6 +1189,8 @@ public class Feed extends AppCompatActivity {
                             // TODO 디비에서 유저의 피드 정보들 저장 데이터 가져와서 UI 세팅
 //                            downloadAndSetProfileImage(); // 프로필 이미지 다운로드
 //                            setSelectUserFeedData(); // 피드 액티비티 접근 시 피드 로그인 유저의 피드 세팅
+                            feedLogo.setText("Feed");
+                            feedLogo.setTextSize(30);
                         } // onClick
                     }) // setPositiveButton
 

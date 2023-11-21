@@ -26,7 +26,7 @@
             android:fontFamily="sans-serif-black"
             android:text="Feed"
             android:textColor="#AAB9FF"
-            android:textSize="31sp"
+            android:textSize="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/feedCloseButton"
             app:layout_constraintStart_toStartOf="parent"
