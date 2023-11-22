@@ -33,14 +33,14 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-condensed-medium"
         android:text="time"
-        android:textSize="14sp"
         android:textColor="#7878E1"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/chat_Text"
         app:layout_constraintHorizontal_bias="0.975"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.82" />
+        app:layout_constraintVertical_bias="0.85" />
 
     <TextView
         android:id="@+id/is_read_me"

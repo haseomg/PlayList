@@ -9,13 +9,13 @@
         android:id="@+id/chat_You_Image"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/sea_gif"
+        android:src="@drawable/chat_profile"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.02"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.110000014" />
+        app:layout_constraintVertical_bias="0.24000001" />
 
     <View
         android:layout_width="50dp"
@@ -34,14 +34,14 @@
         android:paddingLeft="4dp"
         android:text="You"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="20dp"
         android:textColor="#7878E1"
+        android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.031"
+        app:layout_constraintHorizontal_bias="0.02"
         app:layout_constraintStart_toEndOf="@+id/chat_You_Image"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.06999999" />
+        app:layout_constraintVertical_bias="0.16000003" />
 
     <TextView
         android:id="@+id/your_chat_Text"
@@ -63,7 +63,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/chat_You_Image"
         app:layout_constraintTop_toBottomOf="@+id/chat_You_Name"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/your_chat_Time"
@@ -80,6 +80,6 @@
         app:layout_constraintHorizontal_bias="0.01"
         app:layout_constraintStart_toEndOf="@+id/your_chat_Text"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.90999997" />
+        app:layout_constraintVertical_bias="0.89" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
