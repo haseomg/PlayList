@@ -56,7 +56,7 @@ public interface ServerApi {
 
     @FormUrlEncoded
     @POST("payment")
-    Call<String> requestPayment(
+    Call<PaymentResponse> requestPayment(
             @Field("partner_order_id") String partner_order_id,
             @Field("partner_user_id") String partner_user_id,
             @Field("item_name") String item_name,

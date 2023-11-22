@@ -60,12 +60,13 @@ public class Profile extends AppCompatActivity {
     SharedPreferences.Editor editor;
 
     String fromSharedNickName;
-
     String id;
     String idToPost;
     String nickname;
     String fromNicknameChange;
     String nowLoginUser;
+
+    String partner_order_id, partner_user_id, item_name, quantity, total_amount;
 
     UpdateNickname updateNickname;
 
@@ -344,9 +345,7 @@ public class Profile extends AppCompatActivity {
     } // onCreate
 
     void updatePremiumStatus() {
-        premiumStatusButton.setText("이용중");
-        premiumStatusButton.setTextColor(Color.parseColor("#7878E1"));
-        premiumStatusButton.setBackgroundResource(R.drawable.follower_delete_btn);
+
     } // updatePremiumStatus
 
     void setPremiumStatusButton() {
@@ -387,54 +386,81 @@ public class Profile extends AppCompatActivity {
                             .addConverterFactory(GsonConverterFactory.create())
                             .build();
 
+                    Log.i(TAG, "membershipService retrofit.create");
                     ServerApi paymentService = retrofit.create(ServerApi.class);
-                    Call<String> call = null;
+                    Call<PaymentResponse> call = null;
 
                     // 라디오 버튼 선택에 따른 결제 로직 구현
                     if (rb[0].isChecked()) {
+                        Log.i(TAG, "membershipService premium user check : " + rb[0].isChecked());
                         // 사용자 결제 로직
-                        String partner_order_id = "I.M.P " + nowLoginUser;
-                        String partner_user_id = nowLoginUser;
-                        String item_name = "premium_user";
-                        String quantity = "1";
-                        String total_amount = "3900";
+                        partner_order_id = "indie_music_player_" + nowLoginUser;
+                        partner_user_id = nowLoginUser;
+                        item_name = "프리미엄 회원";
+                        quantity = "1";
+                        total_amount = "3900";
+                        Log.i(TAG, "membershipService premiumUser partner_order_id (before) : " + partner_order_id);
+                        if (partner_order_id == null) {
+                            Log.e(TAG, "membershipService partner_order_id is null!!"); // 추가된 로그
+                        } // if
                         call = paymentService.requestPayment(partner_order_id, partner_user_id
                                 , item_name, quantity, total_amount);
-                        Log.i(TAG, "membershipService user payment logic : " + call);
+                        Log.i(TAG, "membershipService premiumUser partner_order_id (after) : " + partner_order_id);
 
                     } else if (rb[1].isChecked()) {
+                        Log.i(TAG, "membershipService premium user check : " + rb[1].isChecked());
                         // 아티스트 결제 로직
-                        String partner_order_id = "I.M.P " + nowLoginUser;
-                        String partner_user_id = nowLoginUser;
-                        String item_name = "premium_artist";
-                        String quantity = "1";
-                        String total_amount = "5900";
+                        partner_order_id = "indie_music_player_" + nowLoginUser;
+                        partner_user_id = nowLoginUser;
+                        item_name = "프리미엄 아티스트";
+                        quantity = "1";
+                        total_amount = "5900";
+                        Log.i(TAG, "membershipService premiumArtist partner_order_id (before) : " + partner_order_id);
+                        if (partner_order_id == null) {
+                            Log.e(TAG, "membershipService premiumArtist partner_order_id is null!!"); // 추가된 로그
+                        } // if
                         call = paymentService.requestPayment(partner_order_id, partner_user_id
                                 , item_name, quantity, total_amount);
+                        Log.i(TAG, "membershipService partner_order_id (after) : " + partner_order_id);
                         Log.i(TAG, "membershipService artist payment logic : " + call);
                     } // else if
 
                     // 카카오페이 결제 페이지로 이동하는 코드가 들어가야 함
-                    call.enqueue(new Callback<String>() {
+                    call.enqueue(new Callback<PaymentResponse>() {
                         @Override
-                        public void onResponse(Call<String> call, Response<String> response) {
+                        public void onResponse(Call<PaymentResponse> call, Response<PaymentResponse> response) {
                             Log.i(TAG, "membershipService onResponse");
 
                             if (response.isSuccessful()) {
+                                Log.i(TAG, "membershipService onResponse response check : " + response.isSuccessful());
+                                // 성공적인 응답 처리
                                 try {
-                                    String redirectUrl = response.body();
+                                    PaymentResponse paymentResponse = response.body();
+                                    Log.i(TAG, "membershipService response.body() : " + paymentResponse);
+
+//                                     null이 아님을 확인하는 코드 -> null일 경우 AssertionError를 발생시키고 실행을 멈춤
+//                                    assert paymentResponse != null;
+                                    String redirectUrl = paymentResponse.getNext_redirect_pc_url();
                                     Log.i(TAG, "membershipService response.isSuccessful : " + redirectUrl);
 
-                                    // 웹뷰를 사용하여 카카오페이 결제 페이지를 열기
-                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(redirectUrl));
-                                    startActivity(intent);
+                                    if (redirectUrl != null) {
+                                        // 웹뷰를 사용하여 카카오페이 결제 페이지를 열기
+                                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(redirectUrl));
+//                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        startActivity(intent);
+
+                                    } else {
+                                        Log.e(TAG, "membershipService redirect URL is null");
+                                    } // else
+
                                 } catch (Exception e) {
-                                    Log.e(TAG, "membershipService onResponse Exception Error : " + e.getMessage() );
+                                    Log.e(TAG, "membershipService onResponse Exception Error : " + e.getMessage());
                                 } // catch
 
                             } else {
                                 try {
-                                    Log.e(TAG, "membershipService Response error body: " + response.errorBody().string());
+                                    Log.e(TAG, "membershipService Response error body : " + response.errorBody().string());
+                                    Log.e(TAG, "membershipService Response HTTP status : " + response.code());
                                 } catch (IOException e) {
                                     Log.e(TAG, "membershipService onResponse IOException Error : " + e);
                                 } // catch
@@ -442,13 +468,12 @@ public class Profile extends AppCompatActivity {
                         } // onResponse
 
                         @Override
-                        public void onFailure(Call<String> call, Throwable t) {
+                        public void onFailure(Call<PaymentResponse> call, Throwable t) {
                             Log.e(TAG, "membershipService onFailure : " + t.getMessage());
                         } // onFailure
                     }); // call.enqueue
                 } // onClick
-            });
-            builder.setNegativeButton("취소", null);
+            }).setNegativeButton("취소", null);
             builder.create().show();
 
         } else {
@@ -457,6 +482,32 @@ public class Profile extends AppCompatActivity {
 
         } // else
     } // setPremiumStatusButton
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        Log.i(TAG, "membershipService onNewIntent");
+        // UI 변경 코드
+        TextView premiumStatusButton = findViewById(R.id.premiumStatusBtn);
+
+        // 결제 완료/실패/취소 조건식으로 구분해야 함
+
+        // 결제 완료
+        Toast.makeText(Profile.this, "결제가 완료되었습니다.", Toast.LENGTH_SHORT).show();
+        premiumStatusButton.setText("이용중");
+        premiumStatusButton.setTextColor(Color.parseColor("#7878E1"));
+        premiumStatusButton.setBackgroundResource(R.drawable.follower_delete_btn);
+
+        // 결제 실패
+//        Toast.makeText(this, "결제를 실패하였습니다.", Toast.LENGTH_SHORT).show();
+//        premiumStatusButton.setText("가입");
+
+        // 결제 취소
+//        Toast.makeText(Profile.this, "결제가 취소되었습니다.", Toast.LENGTH_SHORT).show();
+//        premiumStatusButton.setText("가입");
+    } // onNewIntent
+
 
     // 구글 로그아웃
     void signOut() {
