@@ -51,7 +51,7 @@
         android:background="#7878E1"
         android:fontFamily="sans-serif-condensed-medium"
         android:gravity="center_vertical"
-        android:maxWidth="300dp"
+        android:maxWidth="280dp"
         android:padding="5dp"
         android:scrollHorizontally="false"
         android:singleLine="false"
