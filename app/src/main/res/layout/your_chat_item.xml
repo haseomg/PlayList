@@ -46,23 +46,23 @@
     <TextView
         android:id="@+id/your_chat_Text"
         android:layout_width="wrap_content"
-        android:maxWidth="300dp"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:background="#7878E1"
         android:fontFamily="sans-serif-condensed-medium"
         android:gravity="center_vertical"
+        android:maxWidth="300dp"
         android:padding="5dp"
         android:scrollHorizontally="false"
-        android:text="your chat"
-        android:textSize="20dp"
         android:singleLine="false"
+        android:text="your chat"
         android:textColor="#AAB9FF"
+        android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/chat_You_Image"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chat_You_Name"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView

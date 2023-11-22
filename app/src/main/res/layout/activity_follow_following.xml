@@ -39,17 +39,27 @@
         app:layout_constraintStart_toEndOf="@+id/followBack"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/follow_recyclerVIew"
-        android:layout_width="match_parent"
-        android:layout_height="620dp"
-        android:layout_weight="10"
-        android:background="#aab9ff"
+    <View
+        android:id="@+id/view2"
+        android:layout_width="wrap_content"
+        android:layout_height="2dp"
+        android:background="#AAB9FF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.43"></androidx.recyclerview.widget.RecyclerView>
+        app:layout_constraintTop_toBottomOf="@+id/followUserLogo"
+        app:layout_constraintVertical_bias="0.01999998" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/follow_recyclerVIew"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#aab9ff"
+        app:layout_constraintTop_toBottomOf="@+id/view2"
+        app:layout_constraintBottom_toTopOf="@+id/follower_btn_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 
     <View
         android:id="@+id/followFollowingBottomView"
@@ -59,15 +69,14 @@
         android:layout_weight="1"
         android:background="#9AA7E4"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/follower_btn_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/follow_recyclerVIew"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/follow_recyclerVIew" />
 
     <View
         android:id="@+id/follower_btn_view"
-        android:layout_width="205dp"
+        android:layout_width="0dp"
         android:layout_height="2.5dp"
         android:background="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/follow_recyclerVIew"
@@ -77,13 +86,12 @@
 
     <View
         android:id="@+id/following_btn_view"
-        android:layout_width="205dp"
+        android:layout_width="0dp"
         android:layout_height="2.5dp"
         android:background="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/follow_recyclerVIew"
-        app:layout_constraintEnd_toEndOf="@+id/followFollowingBottomView"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/follower_btn_view"
         app:layout_constraintTop_toBottomOf="@+id/follow_recyclerVIew" />
 
     <TextView

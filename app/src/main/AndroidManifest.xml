@@ -55,7 +55,8 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:host="action" android:scheme="indie_music_player_app" />
+                <data android:scheme="indie_music_player_app"
+                    android:host="path_to_payment" />
             </intent-filter>
         </activity>
 
