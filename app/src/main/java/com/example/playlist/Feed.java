@@ -763,8 +763,24 @@ public class Feed extends AppCompatActivity {
                         Log.i(TAG, "profileMusic onClick (if) : " + nowLoginUser + " / " + feedUser);
 
                     } else if (nameFloatingButton.getText().toString().equals("피드 편집")) {
-                        // 현재 피드 편집 모드가 아닐 때
-                        Log.i(TAG, "profileMusic onClick (else if) : " + nowLoginUser + " / " + feedUser);
+                        // 현재 피드 편집 모드가 아닐 때 - 해당 곡 재생
+                        Log.i(TAG, "feedItemClickStreaming profileMusic onClick (else if) : " + nowLoginUser + " / " + feedUser);
+                        String clickedItem = profileMusic.getText().toString();
+                        Log.i(TAG, "feedItemClickStreaming clickedItem check : " + clickedItem);
+
+                        if (clickedItem.contains("∙")) {
+                            String [] cutOtherWord = clickedItem.split(" ∙ ");
+                            String realSongName = cutOtherWord[0];
+                            Log.i(TAG, "feedItemClickStreaming realSongName check : " + realSongName);
+                            // 현재 프로필 뮤직을 고른 상태라면
+                            Intent intent = new Intent("com.example.playlist.PLAY_MUSIC");
+                            Log.i(TAG, "feedItemClickStreaming clickedItem : " + realSongName);
+                            intent.putExtra("selected_song", realSongName);
+
+                            feedCtx.sendBroadcast(intent);
+                        } else {
+                            //
+                        }
 
                     } else {
                         ProfileMusicSelectDialog dialog = new ProfileMusicSelectDialog();
@@ -878,6 +894,20 @@ public class Feed extends AppCompatActivity {
             } // onClick
         }); // setOnClickListener
     } // setProfileEditMode
+
+    void setFeedCommentAdapter() {
+        feedCommentAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Log.i(TAG, "feedCommentClickEvent onItemClick");
+                String feedCommentSongName = feedCommentList.get(position).getSong();
+                Log.i(TAG, "feedCommentClickEvent song name : " + feedCommentSongName);
+                String feedCommentSelectedTime = feedCommentList.get(position).getSelected_time();
+                Log.i(TAG, "feedCommentClickEvent selected time : " + feedCommentSelectedTime);
+
+            } // onItemClick
+        }); // feedCommentAdapter.setOnItemClickListener
+    } // setFeedCommentAdapter
 
     protected void onStart() {
         super.onStart();
@@ -1469,7 +1499,6 @@ public class Feed extends AppCompatActivity {
 
 
     void saveUserProfileImageInFeed() {
-
         Log.i(TAG, "saveUserProfileImageInFeed method");
 
         // TODO (3) - 여기에다 비즈니스 로직 추가

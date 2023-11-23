@@ -1,6 +1,7 @@
 package com.example.playlist;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,8 +81,36 @@ public class FeedCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             song = itemView.findViewById(R.id.feedCommentSong);
             time = itemView.findViewById(R.id.feedCommentSelectedTime);
             msg = itemView.findViewById(R.id.feedCommentMsg);
-        } // FeedCommentHolder Constructor
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i(TAG, "feedCommentClickEvent onClick");
+                    int position = getAdapterPosition();
+                    FeedCommentModel clickedItem = feedCommentList.get(position);
+
+                    String feedCommentSongName = clickedItem.getSong();
+                    Log.i(TAG, "feedCommentClickEvent song name : " + feedCommentSongName);
+                    String feedCommentSelectedTime = clickedItem.getSelected_time();
+                    Log.i(TAG, "feedCommentClickEvent selected time : " + feedCommentSelectedTime);
+
+                    String[] parts = feedCommentSelectedTime.split(":");
+                    int minutes = Integer.parseInt(parts[0]);
+                    int seconds = Integer.parseInt(parts[1]);
+                    int selectedTimeInMilliseconds = (minutes * 60 + seconds) * 1000;
+
+                    String[] cutOtherWord = feedCommentSongName.split(" • ");
+                    String realSongName = cutOtherWord[0];
+                    Log.i(TAG, "feedCommentClickEvent realSongName check : " + realSongName);
+
+                    Intent intent = new Intent("com.example.playlist.PLAY_MUSIC");
+                    intent.putExtra("selected_song", realSongName);
+                    intent.putExtra("selected_time", selectedTimeInMilliseconds);
+
+                    context.sendBroadcast(intent);
+                } // onClick
+            }); // itemView.setOnClickListener
+        } // FeedCommentHolder Constructor
     } // FeedCommentHolder
 
     public FeedCommentAdapter(ArrayList<FeedCommentModel> feedCommentList) {

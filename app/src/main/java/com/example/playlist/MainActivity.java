@@ -82,7 +82,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    int rPlay;
+    int rPlay, selectedTimeInMilliseconds;
     Random random;
     Button leftPlayBtn;
     Button rightPlayBtn;
@@ -3764,6 +3764,18 @@ public class MainActivity extends AppCompatActivity {
                                                 Log.i(TAG, "checking - selectStreaming mediaPlayer.prepareAsync()");
 
                                                 // TODO
+                                                Intent intent = getIntent();
+//                                                selectedTimeInMilliseconds = intent.getIntExtra("selected_time", 0);
+                                                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                                    @Override
+                                                    public void onPrepared(MediaPlayer mp) {
+                                                        Log.i(TAG, "selectStreaming onPrepared : " + selectedTimeInMilliseconds);
+                                                        if (selectedTimeInMilliseconds != 0) {
+                                                            mediaPlayer.seekTo(selectedTimeInMilliseconds);
+                                                        } // if
+                                                        mediaPlayer.start();
+                                                    } // onPrepared
+                                                }); // mediaPlayer.setOnPreparedListener
                                                 mainSeekBar.setMax(mediaPlayer.getDuration());
 
                                                 mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
@@ -3820,6 +3832,8 @@ public class MainActivity extends AppCompatActivity {
                                                     } catch (IOException e) {
                                                         e.printStackTrace();
                                                     } // catch
+
+
                                                     mediaPlayer.seekTo(0);
                                                     mainSeekBar.setProgress(0);
 
@@ -3944,18 +3958,21 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String songName = intent.getStringExtra("selected_song");
-            Log.i(TAG, "likedSongCheck now_song (before) : " + name + " / " + selected_song);
+            Log.i(TAG, "recyclerViewItemClickEvent now_song (before) : " + name + " / " + selected_song);
+            selectedTimeInMilliseconds = intent.getIntExtra("selected_time", 0);
+            Log.i(TAG, "recyclerViewItemClickEvent selectedTimeInMilliseconds : " + selectedTimeInMilliseconds);
             // TODO setting issue for select song streaming (now - last song item streaming)
             selected_song = songName;
-            Log.i(TAG, "likedSongCheck now_song (after) : " + name + " / " + selected_song);
+            Log.i(TAG, "recyclerViewItemClickEvent now_song (after) : " + name + " / " + selected_song);
             String timing = pastSongisPlayingCheckShared.getString("now", "default");
             songList.setVisibility(View.VISIBLE);
 
             if (mediaPlayer != null && mediaPlayer.isPlaying()) {  // 현재 재생 중인 경우
-                Log.i(TAG, "likedSongCheck timing (before) 1 : " + timing);
+                Log.i(TAG, "recyclerViewItemClickEvent timing (before) 1 : " + timing);
                 pastSongisPlayingCheckEditor.putString("now", "pick");
                 pastSongisPlayingCheckEditor.commit();
-                Log.i(TAG, "likedSongCheck timing (after) 2 : " + timing);
+                Log.i(TAG, "recyclerViewItemClickEvent timing (after) 2 : " + timing);
+                mediaPlayer.seekTo(selectedTimeInMilliseconds);
                 changeSong();
 
             } else {  // 현재 재생 중이 아닐 경우
@@ -3965,6 +3982,7 @@ public class MainActivity extends AppCompatActivity {
                 // TODO (첫 재생할 때 로직 추가 *하지만 곡 이름 기준 스트리밍)
 
                 setFirstStreaming(selected_song);
+                mediaPlayer.seekTo(selectedTimeInMilliseconds);
 //                changeSong();
             } // else
         } // onReceive
