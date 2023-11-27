@@ -55,6 +55,13 @@ public interface ServerApi {
     );
 
     @FormUrlEncoded
+    @POST("update_token.php")
+    Call<ResponseBody> updateDeviceToken(
+            @Field("uuid") String uuid,
+            @Field("token") String token
+    );
+
+    @FormUrlEncoded
     @POST("payment")
     Call<PaymentResponse> requestPayment(
             @Field("partner_order_id") String partner_order_id,

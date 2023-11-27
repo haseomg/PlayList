@@ -3985,6 +3985,40 @@ public class MainActivity extends AppCompatActivity {
                 mediaPlayer.seekTo(selectedTimeInMilliseconds);
 //                changeSong();
             } // else
+
+//            if (mediaPlayer != null) {  // MediaPlayer가 생성되어 있는 경우
+//                if (mediaPlayer.isPlaying()) { // 현재 재생 중인 경우
+//                    Log.i(TAG, "recyclerViewItemClickEvent timing (mediaPlayer now Playing) : " + timing);
+//                    Log.i(TAG, "recyclerViewItemClickEvent timing (before) 1 : " + timing);
+//                    pastSongisPlayingCheckEditor.putString("now", "pick");
+//                    pastSongisPlayingCheckEditor.commit();
+//                    Log.i(TAG, "recyclerViewItemClickEvent timing (after) 2 : " + timing);
+//                    mediaPlayer.seekTo(selectedTimeInMilliseconds);
+//                    changeSong();
+//
+//                } else { // 현재 재생 중지 상태인 경우
+//                    Log.i(TAG, "recyclerViewItemClickEvent timing (mediaPlayer pause) : " + timing);
+//                    // MediaPlayer 초기화
+//                    mediaPlayer.release();
+//                    mediaPlayer = null;
+//                    // MediaPlayer 다시 생성
+//                    mediaPlayer = new MediaPlayer();
+//                    setFirstStreaming(selected_song);
+//                    mediaPlayer.seekTo(selectedTimeInMilliseconds);
+//                } // else
+//
+//            } else {  // MediaPlayer가 생성되어 있지 않은 경우
+//                Log.i(TAG, "recyclerViewItemClickEvent timing (mediaPlayer not create) : " + timing);
+//                pastSongisPlayingCheckEditor.putString("now", "pick");
+//                pastSongisPlayingCheckEditor.commit();
+//                // TODO (첫 재생할 때 로직 추가 *하지만 곡 이름 기준 스트리밍)
+//
+//                setFirstStreaming(selected_song);
+//                mediaPlayer.seekTo(selectedTimeInMilliseconds);
+////                changeSong();
+//            } // else
+
+
         } // onReceive
     }; // BroadcastReceiver
 

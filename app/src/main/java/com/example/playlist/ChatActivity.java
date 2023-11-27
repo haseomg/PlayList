@@ -45,6 +45,7 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 import okhttp3.WebSocket;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -203,7 +204,37 @@ public class ChatActivity extends AppCompatActivity {
                         getToken = token;
                     }
                 });
+        Log.i(TAG, "updateToken getRoomName : " + getRoomName);
+        Log.i(TAG, "updateToken getToken : " + getToken);
+        updateDeviceTokenToChatTable(getRoomName, getToken);
     } // initial
+
+    void updateDeviceTokenToChatTable(String uuid, String token) {
+        // String getToken 값을 chat_messages 테이블에 token 컬럼으로 추가 또는 업데이트 (replace?)
+        // getRoomName (uuid 컬럼) 기준으로 조회해서 해당되는 모든 줄에 token 컬럼 추가
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://13.124.239.85/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ServerApi tokenApi = retrofit.create(ServerApi.class);
+        Call<ResponseBody> call = tokenApi.updateDeviceToken(uuid, token);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Log.d(TAG, "updateToken successfully.");
+                } else {
+                    Log.d(TAG, "updateToken failed.");
+                } // else
+            } // onResponse
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "updateToken onFailure : " + t.getMessage());
+            } // onFailure
+        }); // call.enqueue
+    } // updateDeviceTokenToChatTable
 
     void setChatBack() {
         chatBack = findViewById(R.id.chatBackBtn);
@@ -431,7 +462,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private Emitter.Listener onNewMessage = args -> runOnUiThread(() -> {
 
-        if (fromEditText != null  && !fromEditText.equals("") && fromEditText.length() != 0) {
+        if (fromEditText != null && !fromEditText.equals("") && fromEditText.length() != 0) {
 
             Log.i(TAG, "onNewMessage Listener");
 
@@ -765,7 +796,6 @@ public class ChatActivity extends AppCompatActivity {
                     // 여기서 서버나 사용하려는 곳에 토큰 저장..
                 }); // addOnCompleteListener
     } // setFCM
-
 
 
 } // Main CLASS END
