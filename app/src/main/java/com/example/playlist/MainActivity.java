@@ -57,6 +57,10 @@ import com.google.gson.GsonBuilder;
 import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.user.model.Account;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -540,7 +544,7 @@ public class MainActivity extends AppCompatActivity {
         mainLogo = findViewById(R.id.mainLogo);
 
         setNowPlayingShared("default");
-//        weather();
+        weather();
 
         mainSeekBar = findViewById(R.id.mainSeekBar);
 
@@ -2376,6 +2380,7 @@ public class MainActivity extends AppCompatActivity {
     public void weather() {
         OkHttpClient client = new OkHttpClient();
 
+        // city도 현재 위치 받아올 수 있을까?
         String city = "Suwon";
         String url = WEATHER_URL.replace("{CITY_NAME}", city).replace("{API_KEY}", API_KEY);
 
@@ -2386,20 +2391,67 @@ public class MainActivity extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                e.printStackTrace();
-            }
+                Log.e(TAG, "weatherResponse onFailure : " + e);
+            } // onFailure
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    throw new IOException("response Check : " + response);
-                }
-                String responseData = response.body().string();
-                Log.i(TAG, "responseData Check : " + responseData);
-                // TODO WEATHER
-                mainLogo.setText("날씨 : " + responseData);
-            }
-        });
+                    throw new IOException("weatherResponse Check : " + response);
+                } // if
+                final String responseData = response.body().string();
+                Log.i(TAG, "weatherResponse Check : " + responseData);
+
+                try {
+                    JSONObject jsonObject = new JSONObject(responseData);
+                    JSONArray weatherArray = jsonObject.getJSONArray("weather");
+                    JSONObject weatherObject = weatherArray.getJSONObject(0);
+                    String weatherDescription = weatherObject.getString("description");
+
+                    // description을 한글로 변환
+                    String weatherInKorean;
+                    switch (weatherDescription) {
+                        case "clear sky":
+                            weatherInKorean = "맑음";
+                            break;
+                        case "few clouds":
+                            weatherInKorean = "구름 조금";
+                            break;
+                        case "scattered clouds":
+                            weatherInKorean = "구름 많음";
+                            break;
+                        case "broken clouds":
+                            weatherInKorean = "흐림";
+                            break;
+                        case "shower rain":
+                        case "rain":
+                            weatherInKorean = "비";
+                            break;
+                        case "thunderstorm":
+                            weatherInKorean = "뇌우";
+                            break;
+                        case "snow":
+                            weatherInKorean = "눈";
+                            break;
+                        case "mist":
+                            weatherInKorean = "안개";
+                            break;
+                        default:
+                            weatherInKorean = weatherDescription;
+                    } // switch
+
+                    final String finalWeather = "날씨 : " + weatherInKorean;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mainLogo.setText(finalWeather);
+                        } // run
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } // catch
+            } // onResponse
+        }); // client.newCall
     }
 
 
