@@ -2440,7 +2440,7 @@ public class MainActivity extends AppCompatActivity {
                             weatherInKorean = weatherDescription;
                     } // switch
 
-                    final String finalWeather = "날씨 : " + weatherInKorean;
+                    final String finalWeather = "날씨 • " + weatherInKorean;
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

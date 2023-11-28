@@ -378,7 +378,7 @@ public class LogIn extends Activity {
             try {
                 task.getResult(ApiException.class);
             } catch (ApiException e) {
-                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "재로그인이 필요합니다.", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -524,18 +524,12 @@ public class LogIn extends Activity {
                                                 Log.i("[SignUp Activity]", "responseData.equals(\"0\") else : " + responseData);
 //                                                Toast.makeText(getApplicationContext(), "Sign Up Failed", Toast.LENGTH_SHORT).show();
                                             }
-
-
                                         }
-
-
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
                                 }
                             });
-
-
                         }
                     });
                 }
@@ -549,9 +543,7 @@ public class LogIn extends Activity {
 //                startActivityForResult(intent, 1000);
                 Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_SHORT).show();
                 startActivityflag(MainActivity.class);
-
             }
-
 
             return null;
         });

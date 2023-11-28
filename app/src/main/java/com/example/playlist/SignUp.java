@@ -295,7 +295,7 @@ public class SignUp extends AppCompatActivity {
             try {
                 task.getResult(ApiException.class);
             } catch (ApiException e) {
-                Toast.makeText(getApplicationContext(), "Something went wrong ⚠️", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "재로그인이 필요합니다.", Toast.LENGTH_SHORT).show();
 
             }
         }
