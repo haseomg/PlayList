@@ -34,6 +34,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,7 +66,7 @@ public class ChatActivity extends AppCompatActivity {
     private EditText chatMsg;
     private Button send;
     TextView logo, chatBack;
-    String getToken;
+    String getToken, yourDeviceToken;
 
     private boolean hasConn = false;
     private Socket chatSocket;
@@ -183,6 +184,7 @@ public class ChatActivity extends AppCompatActivity {
         chatSocket = IO.socket(uri, options);
         Log.i(TAG, "chatSocket IO.socket (url, options) check : " + chatSocket);
 
+        getTokenFromChatTable(getRoomName, getYourname);
         connect();
         setChatSocket();
         setChatBack();
@@ -201,15 +203,61 @@ public class ChatActivity extends AppCompatActivity {
 
                         // Log and toast
                         System.out.println("token : " + token);
-                        getToken = token;
-                    }
+                        try {
+                            if (yourDeviceToken != null  || !yourDeviceToken.equals("")) {
+                                getToken = yourDeviceToken;
+                            } // if
+
+                        } catch (NullPointerException e) {
+                            Log.e(TAG, "updateToken onComplete NULL ERROR : " + e);
+                            getToken = token;
+                        } // catch
+
+                        Log.i(TAG, "updateToken getRoomName : " + getRoomName);
+                        Log.i(TAG, "updateToken getToken : " + getToken);
+                        Log.i(TAG, "updateToken getUsername : " + getUsername);
+                        updateDeviceTokenToChatTable(getRoomName, getToken, getUsername);
+                    } // onComplete
                 });
-        Log.i(TAG, "updateToken getRoomName : " + getRoomName);
-        Log.i(TAG, "updateToken getToken : " + getToken);
-        updateDeviceTokenToChatTable(getRoomName, getToken);
     } // initial
 
-    void updateDeviceTokenToChatTable(String uuid, String token) {
+    void getTokenFromChatTable (String uuid, String you) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://13.124.239.85/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ServerApi getTokenApi = retrofit.create(ServerApi.class);
+        Call<ResponseBody> call = getTokenApi.getTokens(uuid, you);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Log.d(TAG, "getTokenFromChatTable fetched successfully.");
+                    try {
+                        String[] tokens = response.body().string().split("\n");
+                        for (String token : tokens) {
+                            Log.d(TAG, "getTokenFromChatTable Token: " + token);
+                            yourDeviceToken = token;
+                            Log.i(TAG, "getTokenFromChatTable yourDeviceToken : " + yourDeviceToken);
+                        } // for
+                    } catch (IOException e) {
+                        Log.e(TAG, "getTokenFromChatTable onResponse ERROR : " + e);
+                    } // catch
+
+                } else {
+                    Log.d(TAG, "getTokenFromChatTable Error: " + response.code());
+                } // else
+            } // onResponse
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "getTokenFromChatTable onFailure : " + t.getMessage());
+            } // onFailure
+        }); // call.enqueue
+    } // getTokenFromChatTable
+
+    void updateDeviceTokenToChatTable(String uuid, String token, String me) {
         // String getToken 값을 chat_messages 테이블에 token 컬럼으로 추가 또는 업데이트 (replace?)
         // getRoomName (uuid 컬럼) 기준으로 조회해서 해당되는 모든 줄에 token 컬럼 추가
         Retrofit retrofit = new Retrofit.Builder()
@@ -218,7 +266,7 @@ public class ChatActivity extends AppCompatActivity {
                 .build();
 
         ServerApi tokenApi = retrofit.create(ServerApi.class);
-        Call<ResponseBody> call = tokenApi.updateDeviceToken(uuid, token);
+        Call<ResponseBody> call = tokenApi.updateDeviceToken(uuid, token, me);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

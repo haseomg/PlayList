@@ -58,7 +58,15 @@ public interface ServerApi {
     @POST("update_token.php")
     Call<ResponseBody> updateDeviceToken(
             @Field("uuid") String uuid,
-            @Field("token") String token
+            @Field("token") String token,
+            @Field("me") String me
+    );
+
+    @FormUrlEncoded
+    @POST("getTokens.php")
+    Call<ResponseBody> getTokens(
+            @Field("uuid") String uuid,
+            @Field("you") String you
     );
 
     @FormUrlEncoded
