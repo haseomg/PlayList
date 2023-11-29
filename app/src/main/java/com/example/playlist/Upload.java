@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaMetadataRetriever;
@@ -35,6 +36,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -54,7 +56,7 @@ public class Upload extends Activity {
     static final int REQUEST_READ_STORAGE = 2;
 
     String selectedAudioFilePath = "";
-    String getSelectedAudioFileName, getSelectedAudioFileUri, mimeType;
+    String getSelectedAudioFileName, getSelectedAudioFileUri, getSelectedAudioFileTime, mimeType, getSharedNickName, vibeCheck, seasonCheck;
     TextView selectedAudio, songTime;
     Button back, find, play, upload;
 
@@ -65,6 +67,8 @@ public class Upload extends Activity {
 
     Spinner vibe, season;
     TextView vibeTextView, seasonTextView;
+    SharedPreferences nicknameShared;
+    SharedPreferences.Editor nicknameEditor;
 
     @Override
     public void onBackPressed() {
@@ -78,6 +82,10 @@ public class Upload extends Activity {
         setContentView(R.layout.activity_upload);
 
         spinners();
+
+        nicknameShared = getSharedPreferences("nickname", MODE_PRIVATE);
+        nicknameEditor = nicknameShared.edit();
+        getSharedNickName = nicknameShared.getString("nickname", "default");
 
         back = findViewById(R.id.uploadBackButton);
         back.setOnClickListener(new View.OnClickListener() {
@@ -124,8 +132,10 @@ public class Upload extends Activity {
                 Log.i(TAG, "upload onClick");
                 // 1. 서버에 파일 업로드
                 uploadAudioToServer();
+                // String name, artist, time
+                uploadAudioData(getSelectedAudioFileName, getSharedNickName, getSelectedAudioFileTime);
                 finish();
-                // 2. music 테이블에 name, artist, time, path 추가
+                // 2. music 테이블에 name, artist, time 추가
             } // onClick END
         }); // setUpload
 
@@ -163,6 +173,9 @@ public class Upload extends Activity {
             mediaPlayer.start();
             isPlaying = true;
             int time = mediaPlayer.getDuration();
+            int seconds = (time / 1000) % 60;
+            int minutes = (time / (1000 * 60)) % 60;
+            String timeFormat = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
             String duration = convertMillisToTime(time);
             songTime.setText(duration);
             seekBar.setMax(mediaPlayer.getDuration());
@@ -278,6 +291,21 @@ public class Upload extends Activity {
             getSelectedAudioFileUri = uri.toString();
             Log.i(TAG, "getSelected FileUri : " + getSelectedAudioFileUri);
             selectedAudio.setText(selectedAudioFileName);
+
+            // MediaMetadataRetriever 객체를 생성하고 선택한 오디오 파일의 URI를 설정합니다.
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            retriever.setDataSource(this, uri);
+
+            // 오디오 파일의 총 시간을 가져옵니다.
+            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            long timeInmillisec = Long.parseLong(time);
+            long duration = timeInmillisec / 1000;
+            long hours = duration / 3600;
+            long minutes = (duration - hours * 3600) / 60;
+            long seconds = duration - (hours * 3600 + minutes * 60);
+
+            // 시간 값을 문자열 형식으로 변환합니다.
+            getSelectedAudioFileTime = String.format("%02d:%02d", minutes, seconds);
         } else {
             Log.i(TAG, "onActivityResult (else) - requestCode check : " + requestCode);
         } // else END
@@ -347,6 +375,7 @@ public class Upload extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.i(TAG, "spinner vibe pick check : " + vibe.getSelectedItem().toString());
+                vibeCheck = vibe.getSelectedItem().toString();
             } // onItemSelected END
 
             @Override
@@ -378,6 +407,7 @@ public class Upload extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.i(TAG, "spinner season pick check : " + season.getSelectedItem().toString());
+                seasonCheck = season.getSelectedItem().toString();
             } // onItemSelected
 
             @Override
@@ -387,6 +417,50 @@ public class Upload extends Activity {
         }); // setOnItemSelectedListener
     } // spinners method END
 
+    void uploadAudioData(String name, String artist, String time) {
+        String vibe = vibeCheck;
+        Log.i(TAG, "uploadAudioData vibe check : " + vibe);
+        String season = seasonCheck;
+        Log.i(TAG, "uploadAudioData season check : " + season);
+        String path = "uploads/";
+        if (name.contains(" ")) {
+            name = name.replace(" ", "_");
+        }
+        if (artist.contains(" ")) {
+            artist = artist.replace(" ", "_");
+        }
+
+        if (vibe.contains(" ")) {
+            vibe = vibe.replace(" ", "_");
+        }
+
+        if (season.contains(" ")) {
+            season = season.replace(" ", "_");
+        }
+        Log.i(TAG, "uploadAudioData name, artist, time, vibe, season, path : " + name + " / " + artist + " / "
+        + time + " / " + vibe + " / " + season + " / " + path);
+        ServerApi serverApi = ApiClient.getApiClient().create(ServerApi.class);
+        Call<Void> call = serverApi.uploadMusicData(name, artist, time, path, vibe, season);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.i(TAG, "uploadAudioData onResponse");
+
+                if (response.isSuccessful()) {
+                    Log.i(TAG, "uploadAudioData response.body *is successful : " + response.body());
+
+                } else {
+                    Log.i(TAG, "uploadAudioData response.body *isn't successful : " + response.body());
+
+                } // else
+            } // onResponse
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.i(TAG, "uploadAudioData onFailure : " + t.getMessage());
+            } // onFailure
+        }); // call.enqueue
+    } // uploadAudioData
 
     private void uploadAudioToServer() {
         Log.i(TAG, "uploadAudioToServer method");

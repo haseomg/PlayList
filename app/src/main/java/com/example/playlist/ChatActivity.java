@@ -184,9 +184,10 @@ public class ChatActivity extends AppCompatActivity {
         chatSocket = IO.socket(uri, options);
         Log.i(TAG, "chatSocket IO.socket (url, options) check : " + chatSocket);
 
+        setChatSocket();
         getTokenFromChatTable(getRoomName, getYourname);
         connect();
-        setChatSocket();
+        Log.i(TAG, "getTokenFromChatTable getRoomName + getYourname : " + getRoomName + " / " + getYourname);
         setChatBack();
 
         FirebaseMessaging.getInstance().getToken()
@@ -200,28 +201,31 @@ public class ChatActivity extends AppCompatActivity {
 
                         // Get new FCM registration token
                         String token = task.getResult();
-
                         // Log and toast
                         System.out.println("token : " + token);
                         try {
-                            if (yourDeviceToken != null  || !yourDeviceToken.equals("")) {
+                            if (yourDeviceToken != null || !yourDeviceToken.equals("")) {
                                 getToken = yourDeviceToken;
-                            } // if
 
+//                                Log.i(TAG, "updateToken getRoomName : " + getRoomName);
+//                                Log.i(TAG, "updateToken getToken : " + getToken);
+//                                Log.i(TAG, "updateToken getUsername : " + getUsername);
+//                                updateDeviceTokenToChatTable(getRoomName, getToken, getUsername);
+                            } // if
                         } catch (NullPointerException e) {
-                            Log.e(TAG, "updateToken onComplete NULL ERROR : " + e);
+                            Log.e(TAG, "getTokenFromChatTable updateToken onComplete NULL ERROR : " + e);
                             getToken = token;
+                            Log.i(TAG, "getTokenFromChatTable updateToken getRoomName : " + getRoomName);
+                            Log.i(TAG, "getTokenFromChatTable updateToken getToken : " + getToken);
+                            Log.i(TAG, "getTokenFromChatTable updateToken getUsername : " + getUsername);
+                            updateDeviceTokenToChatTable(getRoomName, getToken, getUsername);
                         } // catch
 
-                        Log.i(TAG, "updateToken getRoomName : " + getRoomName);
-                        Log.i(TAG, "updateToken getToken : " + getToken);
-                        Log.i(TAG, "updateToken getUsername : " + getUsername);
-                        updateDeviceTokenToChatTable(getRoomName, getToken, getUsername);
                     } // onComplete
                 });
     } // initial
 
-    void getTokenFromChatTable (String uuid, String you) {
+    void getTokenFromChatTable(String uuid, String you) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://13.124.239.85/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -234,13 +238,12 @@ public class ChatActivity extends AppCompatActivity {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     Log.d(TAG, "getTokenFromChatTable fetched successfully.");
+
                     try {
-                        String[] tokens = response.body().string().split("\n");
-                        for (String token : tokens) {
-                            Log.d(TAG, "getTokenFromChatTable Token: " + token);
-                            yourDeviceToken = token;
-                            Log.i(TAG, "getTokenFromChatTable yourDeviceToken : " + yourDeviceToken);
-                        } // for
+                        String token = response.body().string().trim();
+                        Log.i(TAG, "getTokenFromChatTable token : " + token);
+                        yourDeviceToken = token;
+                        Log.i(TAG, "getTokenFromChatTable yourDeviceToken : " + yourDeviceToken);
                     } catch (IOException e) {
                         Log.e(TAG, "getTokenFromChatTable onResponse ERROR : " + e);
                     } // catch
@@ -398,6 +401,7 @@ public class ChatActivity extends AppCompatActivity {
         JSONObject userId = new JSONObject();
 
         getRoomName = uuidFromSelect;
+        Log.i(TAG, "getTokenFromChatTable setChatSocket getRoomName Check : " + getRoomName);
         insertUUID = getRoomName;
 
         try {
@@ -496,7 +500,7 @@ public class ChatActivity extends AppCompatActivity {
                 Log.i("json put", "today check : " + getToday);
                 jsonObject.put("is_read", is_read);
                 jsonObject.put("token", getToken);
-                Log.i(TAG, "token check : " + getToken);
+                Log.i(TAG, "getTokenFromChatTable getToken check : " + getToken);
 
             } catch (JSONException e) {
                 e.printStackTrace();

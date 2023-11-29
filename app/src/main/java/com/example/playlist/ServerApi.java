@@ -63,7 +63,7 @@ public interface ServerApi {
     );
 
     @FormUrlEncoded
-    @POST("getTokens.php")
+    @POST("get_tokens.php")
     Call<ResponseBody> getTokens(
             @Field("uuid") String uuid,
             @Field("you") String you
@@ -79,12 +79,12 @@ public interface ServerApi {
             @Field("total_amount") String total_amount
     );
 
-
     @FormUrlEncoded
     @POST("get_uuid.php")
     Call<ResponseModel> getUUID(
             @Field("me") String me
     );
+
 
     @GET("load_chat_data.php")
     Call<List<ResponseModel>> loadChat(
@@ -195,6 +195,17 @@ public interface ServerApi {
     Call<Void> loadPlayedRecord(
             @Field("user") String user,
             @Field("playedSongs") String playedSongs
+    );
+
+    @FormUrlEncoded
+    @POST("upload_music_data.php")
+    Call<Void> uploadMusicData(
+            @Field("name") String name,
+            @Field("artist") String artist,
+            @Field("time") String time,
+            @Field("path") String path,
+            @Field("vibe") String vibe,
+            @Field("season") String season
     );
 
     @FormUrlEncoded
