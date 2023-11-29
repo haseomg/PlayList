@@ -499,8 +499,8 @@ public class ChatActivity extends AppCompatActivity {
                 jsonObject.put("today", getToday);
                 Log.i("json put", "today check : " + getToday);
                 jsonObject.put("is_read", is_read);
-                jsonObject.put("token", getToken);
-                Log.i(TAG, "getTokenFromChatTable getToken check : " + getToken);
+                jsonObject.put("token", yourDeviceToken);
+                Log.i(TAG, "getTokenFromChatTable getToken check : " + yourDeviceToken);
 
             } catch (JSONException e) {
                 e.printStackTrace();

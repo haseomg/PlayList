@@ -45,7 +45,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         String name = data.get("name");
         String message = data.get("message");
         String time = data.get("time");
-        Log.i(TAG, "onMessageReceived - data : " +data);
+        Log.i(TAG, "onMessageReceived - data : " + data);
         Log.i(TAG, "onMessageReceived - name : " + name);
         Log.i(TAG, "onMessageReceived message : " + message);
         Log.i(TAG, "onMessageReceived time : " + time);
@@ -59,25 +59,41 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 notificationManager.createNotificationChannel(channel);
             }
             builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
-        }else {
-            builder = new NotificationCompat.Builder(getApplicationContext());
-        }
 
-        RemoteMessage.Notification notificationData = remoteMessage.getNotification();
-
-        if (notificationData != null) {
-            String title = notificationData.getTitle();
-            String body = notificationData.getBody();
-
-            builder.setContentTitle(title)
-                    .setContentText(body)
-                    .setSmallIcon(R.drawable.ic_launcher_background);
-
-            Notification notification = builder.build();
-            notificationManager.notify(1, notification);
         } else {
-            Log.i(TAG, "No notification data");
+            builder = new NotificationCompat.Builder(getApplicationContext());
         } // else
+
+        // title 이랑 body 설정
+        builder.setContentTitle(name)
+                .setContentText(message)
+                .setSmallIcon(R.drawable.ic_launcher_background);
+
+        Notification notification = builder.build();
+        notificationManager.notify((int) System.currentTimeMillis(), notification);
+
+//        RemoteMessage.Notification notificationData = remoteMessage.getNotification();
+//        try {
+//            Log.d(TAG, "onMessageReceived notificationData : " + notificationData);
+//        } catch (NullPointerException e) {
+//            Log.i(TAG, "onMessageReceived NULL ERROR : " + e);
+//        } // catch
+//
+//        if (notificationData != null) {
+//            String title = notificationData.getTitle();
+//            String body = notificationData.getBody();
+//            Log.i(TAG, "onMessageReceived title : " + title);
+//            Log.i(TAG, "onMessageReceived body : " + body);
+//
+//            builder.setContentTitle(title)
+//                    .setContentText(body)
+//                    .setSmallIcon(R.drawable.ic_launcher_background);
+//
+//            Notification notification = builder.build();
+//            notificationManager.notify(1, notification);
+//        } else {
+//            Log.i(TAG, "No notification data");
+//        } // else
 
 //        title = remoteMessage.getNotification().getTitle();
 //        body = remoteMessage.getNotification().getBody();
@@ -101,8 +117,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 //        notificationManager.notify(0,mBuilder.build());
 //
 //        mBuilder.setContentIntent(contentIntent);
-
-
 
 
 //        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
