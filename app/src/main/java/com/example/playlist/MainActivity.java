@@ -2415,10 +2415,10 @@ public class MainActivity extends AppCompatActivity {
                             weatherInKorean = "맑음";
                             break;
                         case "few clouds":
-                            weatherInKorean = "구름 조금";
+                            weatherInKorean = "구름 조금 ☁";
                             break;
                         case "scattered clouds":
-                            weatherInKorean = "구름 많음";
+                            weatherInKorean = "구름 많음 ☁";
                             break;
                         case "broken clouds":
                             weatherInKorean = "흐림";
@@ -2428,13 +2428,34 @@ public class MainActivity extends AppCompatActivity {
                             weatherInKorean = "비";
                             break;
                         case "thunderstorm":
-                            weatherInKorean = "뇌우";
+                            weatherInKorean = "뇌우 ⛈";
                             break;
                         case "snow":
-                            weatherInKorean = "눈";
+                            weatherInKorean = "눈 ❄☃";
                             break;
                         case "mist":
+                            weatherInKorean = "엷은 안개";
+                            break;
+                        case "haze":
                             weatherInKorean = "안개";
+                            break;
+                        case "fog":
+                            weatherInKorean = "짙은 안개";
+                            break;
+                        case "tornado":
+                            weatherInKorean = "⚠️ 토네이도 ⚠️";
+                            break;
+                        case "drizzle":
+                            weatherInKorean = "이슬비";
+                            break;
+                        case "light rain":
+                            weatherInKorean = "가벼운 비";
+                            break;
+                        case "heavy intensity rain":
+                            weatherInKorean = "강한 비";
+                            break;
+                        case "moderate rain":
+                            weatherInKorean = "중간 비";
                             break;
                         default:
                             weatherInKorean = weatherDescription;
