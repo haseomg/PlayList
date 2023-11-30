@@ -3,6 +3,8 @@ package com.example.playlist;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
@@ -45,10 +47,12 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         String name = data.get("name");
         String message = data.get("message");
         String time = data.get("time");
+        String me = data.get("me");
         Log.i(TAG, "onMessageReceived - data : " + data);
         Log.i(TAG, "onMessageReceived - name : " + name);
         Log.i(TAG, "onMessageReceived message : " + message);
         Log.i(TAG, "onMessageReceived time : " + time);
+        Log.i(TAG, "onMessageReceived me : " + me);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
 
@@ -64,87 +68,29 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             builder = new NotificationCompat.Builder(getApplicationContext());
         } // else
 
+        Intent intent = new Intent(this, ChatSelect.class );
+        intent.putExtra("before_class", "home");
+        intent.putExtra("username", me);
+        intent.putExtra("name", name); // 알림 이름 추가
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
         // title 이랑 body 설정
         builder.setContentTitle(name)
-                .setContentText(message)
-                .setSmallIcon(R.drawable.ic_launcher_background);
+//                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setSmallIcon(R.drawable.logo_circle)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 
-        Notification notification = builder.build();
+                Notification notification = builder.build();
         notificationManager.notify((int) System.currentTimeMillis(), notification);
-
-//        RemoteMessage.Notification notificationData = remoteMessage.getNotification();
-//        try {
-//            Log.d(TAG, "onMessageReceived notificationData : " + notificationData);
-//        } catch (NullPointerException e) {
-//            Log.i(TAG, "onMessageReceived NULL ERROR : " + e);
-//        } // catch
-//
-//        if (notificationData != null) {
-//            String title = notificationData.getTitle();
-//            String body = notificationData.getBody();
-//            Log.i(TAG, "onMessageReceived title : " + title);
-//            Log.i(TAG, "onMessageReceived body : " + body);
-//
-//            builder.setContentTitle(title)
-//                    .setContentText(body)
-//                    .setSmallIcon(R.drawable.ic_launcher_background);
-//
-//            Notification notification = builder.build();
-//            notificationManager.notify(1, notification);
-//        } else {
-//            Log.i(TAG, "No notification data");
-//        } // else
-
-//        title = remoteMessage.getNotification().getTitle();
-//        body = remoteMessage.getNotification().getBody();
-//        Log.i(TAG, "FCM title check : " + title);
-//        Log.i(TAG, "FCM body check : " + body);
-//
-//        Intent intent = new Intent(this, ChatActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//
-//        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
-//
-//        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.mipmap.ic_launcher)
-//                .setContentTitle(title)
-//                .setContentText(body)
-//                .setAutoCancel(true)
-//                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-//                .setVibrate(new long[]{1,1000});
-//
-//        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//        notificationManager.notify(0,mBuilder.build());
-//
-//        mBuilder.setContentIntent(contentIntent);
-
-
-//        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
-//        Log.i(TAG, "notificationManager : " + notificationManager);
-//
-//        NotificationCompat.Builder builder = null;
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            Log.i(TAG, "if) Build.VERSION.SDK_INT >= Build.VERSION_CODES.O");
-//            if (notificationManager.getNotificationChannel(CHANNEL_ID) == null) {
-//                Log.i(TAG, "if) notificationManager.getNotificationChannel(CHANNEL_ID) : " + notificationManager.getNotificationChannel(CHANNEL_ID));
-//                NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
-//                Log.i(TAG, "NotiChannel : " + channel);
-//                notificationManager.createNotificationChannel(channel);
-//            }
-//            builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
-//        } else {
-//            Log.i(TAG, "else)");
-//            builder = new NotificationCompat.Builder(getApplicationContext());
-//        }
-//
-//        builder.setContentTitle(title)
-//                .setContentText(body)
-//                .setSmallIcon(R.drawable.ic_launcher_background);
-//
-//        Notification notification = builder.build();
-//        notificationManager.notify(1, notification);
-
     } // onMessageReceived
+
 
     // 받아오는 코드가 없어 - stella
 

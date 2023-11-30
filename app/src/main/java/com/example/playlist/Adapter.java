@@ -48,6 +48,7 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         View view;
         // getItemViewType 에서 뷰타입 1을 리턴받았다면 내 채팅 레이아웃을 받은 Holder를 리턴
         if (viewType == 0) {
+            // TODO (1) - 첫번째 메시지 발신 ㅅ
             view = LayoutInflater.from(context).inflate(R.layout.chat_date_item, parent, false);
             return new DateHolder(view);
         } else if (viewType == 1) {

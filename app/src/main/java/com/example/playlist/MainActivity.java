@@ -2415,10 +2415,10 @@ public class MainActivity extends AppCompatActivity {
                             weatherInKorean = "맑음";
                             break;
                         case "few clouds":
-                            weatherInKorean = "구름 조금 ☁";
+                            weatherInKorean = "구름 조금";
                             break;
                         case "scattered clouds":
-                            weatherInKorean = "구름 많음 ☁";
+                            weatherInKorean = "구름 많음";
                             break;
                         case "broken clouds":
                             weatherInKorean = "흐림";
@@ -2428,7 +2428,7 @@ public class MainActivity extends AppCompatActivity {
                             weatherInKorean = "비";
                             break;
                         case "thunderstorm":
-                            weatherInKorean = "뇌우 ⛈";
+                            weatherInKorean = "뇌우";
                             break;
                         case "snow":
                             weatherInKorean = "눈 ❄☃";

@@ -218,7 +218,7 @@ public class ChatActivity extends AppCompatActivity {
                             Log.i(TAG, "getTokenFromChatTable updateToken getRoomName : " + getRoomName);
                             Log.i(TAG, "getTokenFromChatTable updateToken getToken : " + getToken);
                             Log.i(TAG, "getTokenFromChatTable updateToken getUsername : " + getUsername);
-                            updateDeviceTokenToChatTable(getRoomName, getToken, getUsername);
+                            updateDeviceTokenToChatTable(getRoomName, token, getUsername);
                         } // catch
 
                     } // onComplete
@@ -488,6 +488,8 @@ public class ChatActivity extends AppCompatActivity {
 //        }
             JSONObject jsonObject = new JSONObject();
             try {
+                Log.i(TAG, "chatSendMessage sendMsessage me : " + getYourname);
+                jsonObject.put("me", getYourname);
                 jsonObject.put("name", getUsername);
                 Log.i("json put", "name check : " + getUsername);
                 jsonObject.put("script", message);
@@ -528,7 +530,7 @@ public class ChatActivity extends AppCompatActivity {
 //        JSONObject data = new JSONObject();
             Log.i(TAG, "data check : " + data);
             Log.i(TAG, "args check : " + args);
-            String name, image, room_name, message, timestamp;
+            String name, image, room_name, message, timestamp, me;
             int is_read = 1;
 
             try {
@@ -544,6 +546,9 @@ public class ChatActivity extends AppCompatActivity {
                 room_name = data.getString("roomName");
                 Log.i(TAG, "roomName check : " + room_name);
                 is_read = data.getInt("is_read");
+                me = data.getString("me");
+                Log.i(TAG, "chatSendMessage onNewMessage me : " + me);
+
 
                 ResponseModel format = new ResponseModel(name, message, timestamp, is_read, image);
 //            ArrayList<ChatModel> chatList = chatAdapter.getDataList();

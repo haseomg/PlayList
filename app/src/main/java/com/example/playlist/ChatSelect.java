@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -147,6 +148,12 @@ public class ChatSelect extends AppCompatActivity {
                 .allowMainThreadQueries()
                 .build();
 
+//        String getName = getIntent().getStringExtra("name");
+//
+//        if (getName != null && !getName.isEmpty()) {
+//            removeNotificationsWithName(getName);
+//        }
+
         Log.i(TAG, "initial()");
         intent = getIntent();
         getUsername = intent.getStringExtra("username");
@@ -272,6 +279,21 @@ public class ChatSelect extends AppCompatActivity {
 //        setEnterButton();
         setDeleteChatRoom();
     } // initial method END
+
+    private void removeNotificationsWithName(String getName) {
+        // 알림 ID를 저장하는 곳에서 해당 이름을 가진 모든 알림의 ID를 가져옵니다.
+        List<Integer> notificationIds = getNotificationIdsWithName(getName);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+        for (int id : notificationIds) {
+            notificationManager.cancel(id);
+        }
+    } // removeNotificationsWithName
+
+    private List<Integer> getNotificationIdsWithName(String name) {
+        return new ArrayList<>();
+    } // getNotificationIdsWithName
 
     private void getUUIDContainsYouMe(String mine, String yours) {
         Log.i(TAG, "uuid - getUUIDContainsYouMe Method");
