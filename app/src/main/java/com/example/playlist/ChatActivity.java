@@ -276,7 +276,12 @@ public class ChatActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     Log.d(TAG, "updateToken successfully.");
                 } else {
-                    Log.d(TAG, "updateToken failed.");
+                    try {
+                        Log.d(TAG, "updateToken failed : " + response.errorBody().string());
+
+                    } catch (IOException e) {
+                        Log.e(TAG, "updateToken onResponse ERROR : " + e);
+                    } // catch
                 } // else
             } // onResponse
 
@@ -389,10 +394,6 @@ public class ChatActivity extends AppCompatActivity {
 
             Log.d("SOCKET", "Connection success : " + chatSocket.id());
 
-            chatSocket.on("connect_user", onNewUser);
-            chatSocket.on("chat_message", onNewMessage);
-//            chatSocket.on("notify", onNewNotification);
-
             joinRoom();
 
         } catch (Exception e) {
@@ -442,6 +443,10 @@ public class ChatActivity extends AppCompatActivity {
 
         getTime();
 
+//        Log.i(TAG, "updateToken getRoomName : " + getRoomName);
+//        Log.i(TAG, "updateToken getToken : " + getToken);
+//        Log.i(TAG, "updateToken getUsername : " + getUsername);
+//        updateDeviceTokenToChatTable(getRoomName, getToken, getUsername);
         fromEditText = chatMsg.getText().toString();
         if (!fromEditText.equals("") || fromEditText.length() != 0) {
 
