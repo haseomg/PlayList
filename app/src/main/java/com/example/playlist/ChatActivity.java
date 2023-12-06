@@ -202,6 +202,7 @@ public class ChatActivity extends AppCompatActivity {
                         // Get new FCM registration token
                         String token = task.getResult();
                         // Log and toast
+                        Log.i(TAG, "getTokenFromChatTable task.getResult : " + token);
                         System.out.println("token : " + token);
                         try {
                             if (yourDeviceToken != null || !yourDeviceToken.equals("")) {
@@ -261,6 +262,7 @@ public class ChatActivity extends AppCompatActivity {
     } // getTokenFromChatTable
 
     void updateDeviceTokenToChatTable(String uuid, String token, String me) {
+        Log.i(TAG, "getTokenFromChatTable after updateDeviceTokenToChatTable method");
         // String getToken 값을 chat_messages 테이블에 token 컬럼으로 추가 또는 업데이트 (replace?)
         // getRoomName (uuid 컬럼) 기준으로 조회해서 해당되는 모든 줄에 token 컬럼 추가
         Retrofit retrofit = new Retrofit.Builder()
@@ -273,14 +275,15 @@ public class ChatActivity extends AppCompatActivity {
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.d(TAG, "getTokenFromChatTable after onResponse");
                 if (response.isSuccessful()) {
-                    Log.d(TAG, "updateToken successfully.");
+                    Log.d(TAG, "getTokenFromChatTable after updateToken successfully.");
                 } else {
                     try {
-                        Log.d(TAG, "updateToken failed : " + response.errorBody().string());
+                        Log.d(TAG, "getTokenFromChatTable after updateToken failed : " + response.errorBody().string());
 
                     } catch (IOException e) {
-                        Log.e(TAG, "updateToken onResponse ERROR : " + e);
+                        Log.e(TAG, "getTokenFromChatTable after updateToken onResponse ERROR : " + e);
                     } // catch
                 } // else
             } // onResponse

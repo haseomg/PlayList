@@ -4090,8 +4090,6 @@ public class MainActivity extends AppCompatActivity {
 //                mediaPlayer.seekTo(selectedTimeInMilliseconds);
 ////                changeSong();
 //            } // else
-
-
         } // onReceive
     }; // BroadcastReceiver
 
@@ -4243,7 +4241,6 @@ public class MainActivity extends AppCompatActivity {
                                                 mediaPlayer.setDataSource(uri);
                                                 Log.i(TAG, "setFirstStreaming mediaPlayer.setDataSource(path)");
                                                 isPlaying = true;
-
 
                                                 mediaPlayer.prepareAsync();
                                                 Log.i(TAG, "setFirstStreaming mediaPlayer.prepareAsync()");

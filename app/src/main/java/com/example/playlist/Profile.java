@@ -358,7 +358,9 @@ public class Profile extends AppCompatActivity {
     } // setPremiumStatusButton
 
     void setPremiumStatus() {
+        Log.i(TAG, "membershipService setPremiumStatus");
         if (premiumStatusButton.getText().toString().equals("가입")) {
+            Log.i(TAG, "membershipService setPremiumStatus *가입");
             // 프리미엄 혜택 가입 전일 때 == 무료 회원
             // 클릭 시 <무료 회원 -> 프리미엄 회원 혜택 안내서>
 //            Toast.makeText(ctx, "프리미엄 회원을 위한 결제가 진행됩니다. [안내서 차후 추가 예정]", Toast.LENGTH_SHORT).show();
