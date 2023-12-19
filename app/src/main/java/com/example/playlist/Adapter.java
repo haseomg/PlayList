@@ -50,10 +50,9 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             Log.i(TAG, "ChattingAdapter chatList == null : " + chatList);
             chatList = new ArrayList<>(); // chatList가 null인 경우 새로운 ArrayList를 생성
             chatList.add(item); // 새로 생성된 ArrayList에 item 추가
-        }
+        } // else
         notifyDataSetChanged(); // 데이터가 변경되었음을 알림
-    }
-
+    } // addItem
 
     @NonNull
     @Override
@@ -98,129 +97,244 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         ResponseModel previousItem = position > 0 ? chatList.get(position - 1) : null;
 
         if (holder instanceof MyHolder) {
-            Log.i(TAG, "ChattingAdapter holder instanceof MyHolder");
-            ((MyHolder) holder).chat_Text.setText(chatList.get(position).getMsg());
-//            ((MyHolder) holder).chat_Time.setText(chatList.get(position).getTimestamp());
+            Log.i(TAG, "ChattingAdapter MyHolder");
 
-            if (chatList.size() == 1 || position == chatList.size() - 1 || !chatList.get(position + 1).getTimestamp().equals(chatList.get(position).getTimestamp())) {
-                // 리스트 사이즈가 1이거나 현재 아이템이 마지막 아이템일 경우
-                // 또는 이전 아이템의 타임스탬프와 현재 아이템의 타임스탬프가 같지 않을 때
-                // 현재 아이템의 타임스탬프를 표시한다.
-                ((MyHolder) holder).chat_Time.setVisibility(View.VISIBLE);
-                ((MyHolder) holder).chat_Time.setText(chatList.get(position).getTimestamp());
+            MyHolder myHolder = (MyHolder) holder;
+            myHolder.chat_Text.setText(chatList.get(position).getMsg());
 
+            boolean isLastItem = position == chatList.size() - 1;
+            boolean isTimestampDifferent = isLastItem || !chatList.get(position + 1).getTimestamp().equals(chatList.get(position).getTimestamp());
+
+            Log.i(TAG, "ChattingAdapter MyHolder - chatList.size() : " + chatList.size());
+            Log.i(TAG, "ChattingAdapter MyHolder - isLastItem : " + isLastItem);
+            Log.i(TAG, "ChattingAdapter MyHolder - isTimestampDifferent : " + isTimestampDifferent);
+            if (chatList.size() == 1 || isLastItem || isTimestampDifferent) {
+                Log.i(TAG, "ChattingAdapter MyHolder chat_Time visible");
+                myHolder.chat_Time.setVisibility(View.VISIBLE);
+                myHolder.chat_Time.setText(chatList.get(position).getTimestamp());
             } else {
-                ((MyHolder) holder).chat_Time.setVisibility(View.GONE);
-            } // else END
-
-            if (((MyHolder) holder).chat_Time.getText().toString().equals("") || ((MyHolder) holder).chat_Time.getText().toString() == null || ((MyHolder) holder).chat_Time.getText().toString().isEmpty()) {
-                // if
-            } else {
-//                ((MyHolder) holder).is_read.setVisibility(View.VISIBLE);
-                ((MyHolder) holder).is_read.setVisibility(View.GONE);
-            } // else END
-
-            Log.i(TAG, "ChattingAdapter date chatList.get(position).getTimestamp() check : " + chatList.get(position).getTimestamp());
-            String[] dateTimeSplit = chatModel.getTimestamp().split("_");
-
-            // 오늘 날짜와 비교
-            SimpleDateFormat dateFormat = new SimpleDateFormat("M.dd", Locale.getDefault());
-            String today = dateFormat.format(new Date());
-            String messageDate = dateTimeSplit[0];
-            Log.i(TAG, "ChattingAdapter date check 0 : " + dateTimeSplit[0]);
-            try {
-                Log.i(TAG, "ChattingAdapter date check 1 : " + dateTimeSplit[1]);
-            } catch (ArrayIndexOutOfBoundsException e) {
-                Log.i(TAG, "ChattingAdapter ERROR : " + e);
-            } // catch END
-
-            if (today.equals(messageDate)) {
-                // 오늘 날짜일 경우에는 시간만 표시
-                ((MyHolder) holder).chat_Time.setText(dateTimeSplit[1]);
-            } else {
-                try {
-//                    ((MyHolder) holder).chat_Time.setText(dateTimeSplit[1] + " (" + dateTimeSplit[0] + ")");
-                    ((MyHolder) holder).chat_Time.setText(dateTimeSplit[1]);
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    e.printStackTrace();
-                } // catch END
-            } // else END
-
-        } else if (holder instanceof DateHolder) {
-            Log.i(TAG, "ChattingAdapter holder instanceof DateHolder");
-            String chat_Time = currentItem.getTimestamp();
-            Log.i(TAG, "ChattingAdapter chat_Time check : " + chat_Time);
-
-            if (chat_Time.length() > 10) {
-                Log.i(TAG, "ChattingAdapter chat_Time length > 10");
-                String[] cutTime = chat_Time.split("_");
-                Log.i(TAG, "ChattingAdapter chat_Time split check : " + cutTime[0]);
-                ((DateHolder) holder).chat_date.setText(cutTime[0]);
-            } else if (chat_Time.length() > 0 && chat_Time.length() < 8) {
-                Log.i(TAG, "ChattingAdapter chat_Time.length() > 0 && chat_Time.length() < 8");
-                // else if
-            } else {
-//                if (previousItem != null && !currentItem.getTimestamp().substring(0, 5).equalsIgnoreCase(previousItem.getTimestamp().substring(0, 5))) {
-//                    Log.i(TAG, "chat_Time if");
-//                    String timestamp = chatModel.getTimestamp();
-//                    String[] dateTimeSplit = timestamp.split("_");
-//                    ((DateHolder) holder).chat_date.setText(dateTimeSplit[0]);
-//                    ((DateHolder) holder).chat_date.setVisibility(View.GONE);
-//                } else {
-                Log.i(TAG, "ChattingAdapter chat_Time else");
-                ((DateHolder) holder).chat_date.setVisibility(View.GONE);
-//                } // else END
-            }
-
-//            String timestamp = currentItem.getTimestamp();
-//            String date = timestamp.substring(0, 5);
-//            ((DateHolder) holder).chat_date.setText(date);
-
-        } else if (holder instanceof YourHolder) {
-            Log.i(TAG, "holder instanceof YourHolder");
-//            ((YourHolder) holder).chat_You_Image.setImageResource(R.mipmap.ic_launcher);
-
-            if (chatList.size() == 1 || position == chatList.size() - 1 || !chatList.get(position + 1).getTimestamp().equals(chatList.get(position).getTimestamp())) {
-                ((YourHolder) holder).your_chat_Time.setVisibility(View.VISIBLE);
-                ((YourHolder) holder).your_chat_Time.setText(chatList.get(position).getTimestamp());
-            } else {
-                ((YourHolder) holder).your_chat_Time.setVisibility(View.GONE);
+                Log.i(TAG, "ChattingAdapter MyHolder chat_Time gone");
+                myHolder.chat_Time.setVisibility(View.GONE);
             } // else
 
-            ((YourHolder) holder).chat_You_Name.setText(chatList.get(position).getMyName());
-            ((YourHolder) holder).your_chat_Text.setText(chatList.get(position).getMsg());
-            ((YourHolder) holder).your_chat_Time.setText(chatList.get(position).getTimestamp());
+            if (!myHolder.chat_Time.getText().toString().isEmpty()) {
+                Log.i(TAG, "ChattingAdapter MyHolder is_read gone");
+                myHolder.is_read.setVisibility(View.GONE);
+            } // if
 
-            Log.i(TAG, "ChattingAdapter date chatList.get(position).getTimestamp() check : " + chatList.get(position).getTimestamp());
             String[] dateTimeSplit = chatModel.getTimestamp().split("_");
+            if (dateTimeSplit.length < 2) {
+                Log.i(TAG, "ChattingAdapter MyHolder dateTimeSplit.length : " + dateTimeSplit.length);
+                return;
+            } // iif
 
-            // 오늘 날짜와 비교
             SimpleDateFormat dateFormat = new SimpleDateFormat("M.dd", Locale.getDefault());
             String today = dateFormat.format(new Date());
             String messageDate = dateTimeSplit[0];
-            try {
-                Log.i(TAG, "ChattingAdapter date check 0 : " + dateTimeSplit[0]);
-                Log.i(TAG, "ChattingAdapter date check 1 : " + dateTimeSplit[1]);
+            Log.i(TAG, "ChattingAdapter MyHolder today : " + today);
+            Log.i(TAG, "ChattingAdapter MyHolder messageDate : " + messageDate);
+            if (today.equals(messageDate)) {
+                Log.i(TAG, "ChattingAdapter MyHolder *if : " + today + " / " + messageDate);
+                myHolder.chat_Time.setText(dateTimeSplit[1]);
+            } else {
+                Log.i(TAG, "ChattingAdapter MyHolder *else : " + today + " / " + messageDate);
+                myHolder.chat_Time.setText(dateTimeSplit[1]);
+            } // else
 
-            } catch (ArrayIndexOutOfBoundsException e) {
-                e.printStackTrace();
-            } // catch
+//            ((MyHolder) holder).chat_Text.setText(chatList.get(position).getMsg());
+////            ((MyHolder) holder).chat_Time.setText(chatList.get(position).getTimestamp());
+//
+//            if (chatList.size() == 1 || position == chatList.size() - 1 || !chatList.get(position + 1).getTimestamp().equals(chatList.get(position).getTimestamp())) {
+//                Log.i(TAG, "ChattingAdapter MyHolder *if (chatList.size) : " + chatList.size());
+//                Log.i(TAG, "ChattingAdapter MyHolder *if (position / chatList.size) : " + position + "/" + chatList.size());
+//                Log.i(TAG, "ChattingAdapter MyHolder *if (chatList.get(position+1).getTimestamp() : " + chatList.get(position + 1).getTimestamp());
+//                Log.i(TAG, "ChattingAdapter MyHolder *if (chatList.get(position).getTimestamp() : " + chatList.get(position).getTimestamp());
+//                // 리스트 사이즈가 1이거나 현재 아이템이 마지막 아이템일 경우
+//                // 또는 이전 아이템의 타임스탬프와 현재 아이템의 타임스탬프가 같지 않을 때
+//                // 현재 아이템의 타임스탬프를 표시한다.
+//                ((MyHolder) holder).chat_Time.setVisibility(View.VISIBLE);
+//                ((MyHolder) holder).chat_Time.setText(chatList.get(position).getTimestamp());
+//
+//            } else {
+//                Log.i(TAG, "ChattingAdapter MyHolder *else");
+//                ((MyHolder) holder).chat_Time.setVisibility(View.GONE);
+//            } // else END
+//
+//            if (((MyHolder) holder).chat_Time.getText().toString().equals("") || ((MyHolder) holder).chat_Time.getText().toString() == null || ((MyHolder) holder).chat_Time.getText().toString().isEmpty()) {
+//
+//            } else {
+////                ((MyHolder) holder).is_read.setVisibility(View.VISIBLE);
+//                ((MyHolder) holder).is_read.setVisibility(View.GONE);
+//            } // else END
+//
+//            Log.i(TAG, "ChattingAdapter date chatList.get(position).getTimestamp() : " + chatList.get(position).getTimestamp());
+//            String[] dateTimeSplit = chatModel.getTimestamp().split("_");
+//
+//            // 오늘 날짜와 비교
+//            SimpleDateFormat dateFormat = new SimpleDateFormat("M.dd", Locale.getDefault());
+//            String today = dateFormat.format(new Date());
+//            String messageDate = dateTimeSplit[0];
+//            Log.i(TAG, "ChattingAdapter date check 0 : " + dateTimeSplit[0]);
+//            try {
+//                Log.i(TAG, "ChattingAdapter date check 1 : " + dateTimeSplit[1]);
+//
+//            } catch (ArrayIndexOutOfBoundsException e) {
+//                Log.i(TAG, "ChattingAdapter ERROR : " + e);
+//            } // catch END
+//
+//            if (today.equals(messageDate)) {
+//                // 오늘 날짜일 경우에는 시간만 표시
+//                ((MyHolder) holder).chat_Time.setText(dateTimeSplit[1]);
+//            } else {
+//
+//                try {
+////                    ((MyHolder) holder).chat_Time.setText(dateTimeSplit[1] + " (" + dateTimeSplit[0] + ")");
+//                    ((MyHolder) holder).chat_Time.setText(dateTimeSplit[1]);
+//
+//                } catch (ArrayIndexOutOfBoundsException e) {
+//                    e.printStackTrace();
+//                } // catch END
+//            } // else END
+
+            // MyHolder
+        } else if (holder instanceof DateHolder) {
+
+            Log.i(TAG, "ChattingAdapter DateHolder");
+            DateHolder dateHolder = (DateHolder) holder;
+            String chat_Time = currentItem.getTimestamp();
+            Log.i(TAG, "ChattingAdapter DateHolder chat_Time / chat_Time.length : " + chat_Time + " / " + chat_Time.length());
+
+            if (chat_Time.length() > 10) {
+                String[] cutTime = chat_Time.split("_");
+                Log.i(TAG, "ChattingAdapter DateHolder *if - cutTime : " + cutTime);
+                dateHolder.chat_date.setText(cutTime[0]);
+            } else if (chat_Time.length() > 0 && chat_Time.length() < 8) {
+                Log.i(TAG, "ChattingAdapter DateHolder *else if");
+                // Do something if chat_Time length is between 1 and 7
+            } else {
+                Log.i(TAG, "ChattingAdapter DateHolder *else");
+                dateHolder.chat_date.setVisibility(View.GONE);
+            } // else
+
+//            Log.i(TAG, "ChattingAdapter DateHolder");
+//            String chat_Time = currentItem.getTimestamp();
+//            Log.i(TAG, "ChattingAdapter DateHolder chat_Time : " + chat_Time);
+//
+//            if (chat_Time.length() > 10) {
+//                Log.i(TAG, "ChattingAdapter chat_Time length > 10");
+//                String[] cutTime = chat_Time.split("_");
+//                Log.i(TAG, "ChattingAdapter chat_Time split check : " + cutTime[0]);
+//                ((DateHolder) holder).chat_date.setText(cutTime[0]);
+//
+//            } else if (chat_Time.length() > 0 && chat_Time.length() < 8) {
+//                Log.i(TAG, "ChattingAdapter chat_Time.length() > 0 && chat_Time.length() < 8");
+//                // else if
+//            } else {
+////                if (previousItem != null && !currentItem.getTimestamp().substring(0, 5).equalsIgnoreCase(previousItem.getTimestamp().substring(0, 5))) {
+////                    Log.i(TAG, "chat_Time if");
+////                    String timestamp = chatModel.getTimestamp();
+////                    String[] dateTimeSplit = timestamp.split("_");
+////                    ((DateHolder) holder).chat_date.setText(dateTimeSplit[0]);
+////                    ((DateHolder) holder).chat_date.setVisibility(View.GONE);
+////                } else {
+//                Log.i(TAG, "ChattingAdapter chat_Time else");
+//                ((DateHolder) holder).chat_date.setVisibility(View.GONE);
+////                } // else END
+//            }
+//
+////            String timestamp = currentItem.getTimestamp();
+////            String date = timestamp.substring(0, 5);
+////            ((DateHolder) holder).chat_date.setText(date);
+
+        } else if (holder instanceof YourHolder) {
+
+            Log.i(TAG, "ChattingAdapter YourHolder");
+
+            YourHolder yourHolder = (YourHolder) holder;
+            yourHolder.chat_You_Name.setText(chatList.get(position).getMyName());
+            yourHolder.your_chat_Text.setText(chatList.get(position).getMsg());
+
+            boolean isLastItem = position == chatList.size() - 1;
+            boolean isTimestampDifferent = isLastItem || !chatList.get(position + 1).getTimestamp().equals(chatList.get(position).getTimestamp());
+
+            Log.i(TAG, "ChattingAdapter YourHolder chatList.size : " + chatList.size());
+            Log.i(TAG, "ChattingAdapter YourHolder isLastItem : " + isLastItem);
+            Log.i(TAG, "ChattingAdapter YourHolder isTimestampDifferent : " + isTimestampDifferent);
+
+            if (chatList.size() == 1 || isLastItem || isTimestampDifferent) {
+                Log.i(TAG, "ChattingAdapter YourHolder *if");
+                yourHolder.your_chat_Time.setVisibility(View.VISIBLE);
+                yourHolder.your_chat_Time.setText(chatList.get(position).getTimestamp());
+            } else {
+                Log.i(TAG, "ChattingAdapter YourHolder *else");
+                yourHolder.your_chat_Time.setVisibility(View.GONE);
+            } // else
+
+            String[] dateTimeSplit = chatModel.getTimestamp().split("_");
+            Log.i(TAG, "ChattingAdapter YourHolder dateTimeSplit / length : " + dateTimeSplit + " / " + dateTimeSplit.length);
+            if (dateTimeSplit.length < 2) {
+                Log.i(TAG, "ChattingAdapter YourHolder *if");
+                return;
+            } // if
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("M.dd", Locale.getDefault());
+            String today = dateFormat.format(new Date());
+            String messageDate = dateTimeSplit[0];
+            Log.i(TAG, "ChattingAdapter YourHolder today : " + today);
+            Log.i(TAG, "ChattingAdapter YourHolder messageDate : " + messageDate);
 
             if (today.equals(messageDate)) {
-                // 오늘 날짜일 경우에는 시간만 표시
-                ((YourHolder) holder).your_chat_Time.setText(dateTimeSplit[1]);
+                Log.i(TAG, "ChattingAdapter YourHolder *if");
+                yourHolder.your_chat_Time.setText(dateTimeSplit[1]);
             } else {
-                // 다른 날짜일 경우에는 날짜만 표시
-//                ((YourHolder) holder).your_chat_Time.setText(messageDate);
-//                ((DateHolder) holder).chat_date.setText(dateTimeSplit[0]);
-                try {
-//                    ((YourHolder) holder).your_chat_Time.setText(dateTimeSplit[1] + " (" + dateTimeSplit[0] + ")");
-                    ((YourHolder) holder).your_chat_Time.setText(dateTimeSplit[1]);
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    e.printStackTrace();
-                } // catch
-        } // else
-        }
+                Log.i(TAG, "ChattingAdapter YourHolder *else");
+                yourHolder.your_chat_Time.setText(dateTimeSplit[1]);
+            }
+//            Log.i(TAG, "holder instanceof YourHolder");
+////            ((YourHolder) holder).chat_You_Image.setImageResource(R.mipmap.ic_launcher);
+//
+//            if (chatList.size() == 1 || position == chatList.size() - 1 || !chatList.get(position + 1).getTimestamp().equals(chatList.get(position).getTimestamp())) {
+//                ((YourHolder) holder).your_chat_Time.setVisibility(View.VISIBLE);
+//                ((YourHolder) holder).your_chat_Time.setText(chatList.get(position).getTimestamp());
+//            } else {
+//                ((YourHolder) holder).your_chat_Time.setVisibility(View.GONE);
+//            } // else
+//
+//            ((YourHolder) holder).chat_You_Name.setText(chatList.get(position).getMyName());
+//            ((YourHolder) holder).your_chat_Text.setText(chatList.get(position).getMsg());
+//            ((YourHolder) holder).your_chat_Time.setText(chatList.get(position).getTimestamp());
+//
+//            Log.i(TAG, "ChattingAdapter date chatList.get(position).getTimestamp() check : " + chatList.get(position).getTimestamp());
+//            String[] dateTimeSplit = chatModel.getTimestamp().split("_");
+//
+//            // 오늘 날짜와 비교
+//            SimpleDateFormat dateFormat = new SimpleDateFormat("M.dd", Locale.getDefault());
+//            String today = dateFormat.format(new Date());
+//            String messageDate = dateTimeSplit[0];
+//            try {
+//                Log.i(TAG, "ChattingAdapter date check 0 : " + dateTimeSplit[0]);
+//                Log.i(TAG, "ChattingAdapter date check 1 : " + dateTimeSplit[1]);
+//
+//            } catch (ArrayIndexOutOfBoundsException e) {
+//                e.printStackTrace();
+//            } // catch
+//
+//            if (today.equals(messageDate)) {
+//                // 오늘 날짜일 경우에는 시간만 표시
+//                ((YourHolder) holder).your_chat_Time.setText(dateTimeSplit[1]);
+//            } else {
+//                // 다른 날짜일 경우에는 날짜만 표시
+////                ((YourHolder) holder).your_chat_Time.setText(messageDate);
+////                ((DateHolder) holder).chat_date.setText(dateTimeSplit[0]);
+//                try {
+////                    ((YourHolder) holder).your_chat_Time.setText(dateTimeSplit[1] + " (" + dateTimeSplit[0] + ")");
+//                    ((YourHolder) holder).your_chat_Time.setText(dateTimeSplit[1]);
+//                } catch (ArrayIndexOutOfBoundsException e) {
+//                    e.printStackTrace();
+//                } // catch
+//            } // else
+        } // YourHolder END
+
     } // onBindViewHolder END
 
     // 내가 친 채팅 뷰홀더
