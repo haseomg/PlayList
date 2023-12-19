@@ -128,6 +128,7 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 return;
             } // iif
 
+
             SimpleDateFormat dateFormat = new SimpleDateFormat("M.dd", Locale.getDefault());
             String today = dateFormat.format(new Date());
             String messageDate = dateTimeSplit[0];
