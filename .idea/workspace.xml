@@ -6,7 +6,6 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="setPlayed" />
     <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
     <option name="TOOL_WINDOW_REGEXP_FILTER" value="false" />
@@ -15,15 +14,34 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" name="Changes" comment="[check] When Emulator run Exception - Chatting Data) When today is different from the last time we chatted / When it's morning(am)">
+    <list default="true" id="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" name="Changes" comment="[Change] Public IP (I.M.P main server)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/Adapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/Adapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/ApiClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/ApiClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/ChatActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/ChatActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/ChatSelect.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/ChatSelect.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/Feed.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/Feed.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/FollowFollowing.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/FollowFollowing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/FollowFragmentActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/FollowFragmentActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/FollowerAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/FollowerAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/FollowingAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/FollowingAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/LikedList.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/LikedList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/LogIn.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/LogIn.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/MusicClickListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/MusicClickListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/Played.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/Played.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/Profile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/Selectable.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/Selectable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/SignUp.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/SignUp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/UpdateNickname.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/UpdateNickname.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/Upload.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/playlist/Upload.java" afterDir="false" />
     </list>
     <list id="89646e18-bbcf-49f0-9114-e0eca38bfbb0" name="Other Changes" comment="nothing">
       <change beforePath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/app/PlayList.app.androidTest.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/app/PlayList.app.androidTest.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/app/PlayList.app.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/app/PlayList.app.main.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/app/PlayList.app.unitTest.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/app/PlayList.app.unitTest.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/ic_launcher-playstore.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/ic_launcher-playstore.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -34,7 +52,7 @@
   <component name="CodeInsightWorkspaceSettings">
     <option name="optimizeImportsOnTheFly" value="true" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[ce0517152185d52d03]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[33004e50aacf4361]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -122,124 +140,9 @@
     </option>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/build.gradle" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/app/build.gradle" root0="FORCE_HIGHLIGHTING" />
-  </component>
-  <component name="LineStatusTrackerManager">
-    <file path="$PROJECT_DIR$/.idea/workspace.xml">
-      <ranges>
-        <range start1="8" end1="8" start2="8" end2="9" changelist="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" />
-        <range start1="16" end1="17" start2="17" end2="25" changelist="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" />
-        <range start1="18" end1="18" start2="26" end2="27" changelist="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" />
-        <range start1="70" end1="70" start2="79" end2="80" changelist="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" />
-        <range start1="71" end1="71" start2="81" end2="82" changelist="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" />
-        <range start1="105" end1="105" start2="116" end2="123" changelist="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" />
-        <range start1="109" end1="109" start2="127" end2="242" changelist="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" />
-        <range start1="126" end1="126" start2="259" end2="262" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="129" end1="130" start2="265" end2="266" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="146" end1="146" start2="282" end2="284" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="148" end1="150" start2="286" end2="286" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="306" end1="306" start2="442" end2="443" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="310" end1="324" start2="447" end2="447" changelist="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" />
-        <range start1="325" end1="329" start2="448" end2="452" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="330" end1="331" start2="453" end2="454" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="332" end1="336" start2="455" end2="459" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="337" end1="338" start2="460" end2="461" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="339" end1="343" start2="462" end2="466" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="344" end1="345" start2="467" end2="468" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="346" end1="350" start2="469" end2="473" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="351" end1="352" start2="474" end2="475" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="353" end1="357" start2="476" end2="480" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="358" end1="359" start2="481" end2="482" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="360" end1="364" start2="483" end2="487" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="365" end1="366" start2="488" end2="489" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="367" end1="371" start2="490" end2="494" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="372" end1="373" start2="495" end2="496" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="374" end1="378" start2="497" end2="501" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="379" end1="380" start2="502" end2="503" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="381" end1="385" start2="504" end2="508" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="386" end1="387" start2="509" end2="510" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="388" end1="392" start2="511" end2="515" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="393" end1="394" start2="516" end2="517" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="395" end1="399" start2="518" end2="522" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="400" end1="401" start2="523" end2="524" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="402" end1="406" start2="525" end2="529" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="407" end1="408" start2="530" end2="531" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="409" end1="413" start2="532" end2="536" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="414" end1="415" start2="537" end2="538" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="416" end1="420" start2="539" end2="543" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="421" end1="422" start2="544" end2="545" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="423" end1="427" start2="546" end2="550" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="428" end1="429" start2="551" end2="552" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="430" end1="434" start2="553" end2="557" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="435" end1="436" start2="558" end2="559" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="437" end1="441" start2="560" end2="564" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="442" end1="443" start2="565" end2="566" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="444" end1="448" start2="567" end2="571" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="449" end1="450" start2="572" end2="573" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="451" end1="455" start2="574" end2="578" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="456" end1="457" start2="579" end2="580" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="458" end1="462" start2="581" end2="585" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="463" end1="464" start2="586" end2="587" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="465" end1="469" start2="588" end2="592" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="470" end1="471" start2="593" end2="594" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="472" end1="476" start2="595" end2="599" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="477" end1="478" start2="600" end2="601" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="479" end1="483" start2="602" end2="606" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="484" end1="485" start2="607" end2="608" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="486" end1="490" start2="609" end2="613" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="491" end1="492" start2="614" end2="615" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="493" end1="497" start2="616" end2="620" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="498" end1="499" start2="621" end2="622" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="500" end1="504" start2="623" end2="627" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="505" end1="506" start2="628" end2="629" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="507" end1="511" start2="630" end2="634" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="512" end1="513" start2="635" end2="636" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="514" end1="518" start2="637" end2="641" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="519" end1="520" start2="642" end2="643" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="521" end1="525" start2="644" end2="648" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="526" end1="527" start2="649" end2="650" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="528" end1="532" start2="651" end2="655" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="533" end1="534" start2="656" end2="657" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="535" end1="539" start2="658" end2="662" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="540" end1="541" start2="663" end2="664" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="542" end1="546" start2="665" end2="669" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="547" end1="548" start2="670" end2="671" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="549" end1="553" start2="672" end2="676" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="554" end1="555" start2="677" end2="678" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="556" end1="560" start2="679" end2="683" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="561" end1="562" start2="684" end2="685" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="563" end1="567" start2="686" end2="690" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="568" end1="569" start2="691" end2="692" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="570" end1="574" start2="693" end2="697" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="575" end1="576" start2="698" end2="699" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="577" end1="581" start2="700" end2="704" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="582" end1="583" start2="705" end2="706" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="584" end1="588" start2="707" end2="711" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="589" end1="590" start2="712" end2="713" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="591" end1="595" start2="714" end2="718" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="596" end1="597" start2="719" end2="720" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="598" end1="602" start2="721" end2="725" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="603" end1="604" start2="726" end2="727" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="605" end1="609" start2="728" end2="732" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="610" end1="611" start2="733" end2="734" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="612" end1="616" start2="735" end2="739" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="617" end1="618" start2="740" end2="741" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="619" end1="623" start2="742" end2="746" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="624" end1="625" start2="747" end2="748" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="626" end1="630" start2="749" end2="753" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="631" end1="632" start2="754" end2="755" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="633" end1="637" start2="756" end2="760" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="638" end1="639" start2="761" end2="762" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="640" end1="644" start2="763" end2="767" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="645" end1="646" start2="768" end2="769" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="647" end1="651" start2="770" end2="774" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="652" end1="653" start2="775" end2="776" changelist="89646e18-bbcf-49f0-9114-e0eca38bfbb0" />
-        <range start1="654" end1="655" start2="777" end2="792" changelist="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" />
-        <range start1="686" end1="712" start2="823" end2="860" changelist="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" />
-      </ranges>
-    </file>
+    <setting file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="2Fg7D9r0bNPExbBwtMJBWFbTO8s" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -257,15 +160,24 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
     <property name="SHOW_ALL_PROCESSES" value="false" />
+    <property name="TODO_SCOPE" value="All Places" />
+    <property name="android-custom-view/Users/pinni/Library/Android/sdk/sources/android-32/android/view/View.java_SELECTED" value="View" />
+    <property name="android-custom-view/Users/pinni/Library/Android/sdk/sources/android-32/android/view/View.java_View_DIMENSIONS" value="1080&#10;1920" />
+    <property name="android-custom-view/Users/pinni/Library/Android/sdk/sources/android-32/android/widget/AdapterView.java_AdapterView_DIMENSIONS" value="1080&#10;1920" />
+    <property name="android-custom-view/Users/pinni/Library/Android/sdk/sources/android-32/android/widget/AdapterView.java_SELECTED" value="AdapterView" />
     <property name="android-custom-view/Users/pinni/Library/Android/sdk/sources/android-32/android/widget/EditText.java_EditText_DIMENSIONS" value="1080&#10;1920" />
     <property name="android-custom-view/Users/pinni/Library/Android/sdk/sources/android-32/android/widget/EditText.java_SELECTED" value="EditText" />
+    <property name="android-custom-view/Users/pinni/Library/Android/sdk/sources/android-32/android/widget/ImageView.java_ImageView_DIMENSIONS" value="1080&#10;1920" />
+    <property name="android-custom-view/Users/pinni/Library/Android/sdk/sources/android-32/android/widget/ImageView.java_SELECTED" value="ImageView" />
+    <property name="android-custom-view/Users/pinni/Library/Android/sdk/sources/android-32/android/widget/TextView.java_SELECTED" value="TextView" />
+    <property name="android-custom-view/Users/pinni/Library/Android/sdk/sources/android-32/android/widget/TextView.java_TextView_DIMENSIONS" value="1080&#10;1920" />
     <property name="cidr.known.project.marker" value="true" />
-    <property name="last_directory_selection" value="$PROJECT_DIR$/app/src/main/java" />
+    <property name="last_directory_selection" value="$PROJECT_DIR$/app/src/main/res/drawable" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/main/res/layout" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.17" />
     <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
@@ -277,10 +189,10 @@
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
-      <recent name="$PROJECT_DIR$/app" />
-      <recent name="$PROJECT_DIR$/app/src" />
-      <recent name="$PROJECT_DIR$/app/src/main/java/com/example/playlist" />
-      <recent name="$PROJECT_DIR$/app/src/main/res/raw" />
+      <recent name="$PROJECT_DIR$/app/src/main/res/drawable-xxxhdpi" />
+      <recent name="$PROJECT_DIR$/app/src/main/res/drawable-v24" />
+      <recent name="$PROJECT_DIR$/app/src/main/res/menu" />
+      <recent name="$PROJECT_DIR$/app/src/main/res/genre" />
     </key>
     <key name="android.template.1841083567">
       <recent name="com.example.playlist" />
@@ -295,6 +207,9 @@
       <recent name="com.example.playlist" />
     </key>
     <key name="android.template.-1455165929">
+      <recent name="com.example.playlist" />
+    </key>
+    <key name="android.template.-871327980">
       <recent name="com.example.playlist" />
     </key>
     <key name="android.template.-1661308665">
@@ -437,355 +352,356 @@
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="8642a024-3cc6-4a7e-8c3b-6125a25a4c88" name="Changes" comment="" />
+      <changelist id="89646e18-bbcf-49f0-9114-e0eca38bfbb0" name="Other Changes" comment="nothing" />
       <created>1664901750508</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1664901750508</updated>
     </task>
-    <task id="LOCAL-00099" summary="UpdateNickname.java">
-      <created>1681934097741</created>
-      <option name="number" value="00099" />
-      <option name="presentableId" value="LOCAL-00099" />
+    <task id="LOCAL-00311" summary="[add] When Logout - MediaPlayer Stop in MainActivity (BroadCastReceiver)">
+      <created>1699708721843</created>
+      <option name="number" value="00311" />
+      <option name="presentableId" value="LOCAL-00311" />
       <option name="project" value="LOCAL" />
-      <updated>1681934097741</updated>
+      <updated>1699708721843</updated>
     </task>
-    <task id="LOCAL-00100" summary="UpdateNickname.java">
-      <created>1681934266393</created>
-      <option name="number" value="00100" />
-      <option name="presentableId" value="LOCAL-00100" />
+    <task id="LOCAL-00312" summary="[doing] When Selected Genre on GenreSelectDialog - Click the OK button, set the image to the image view of the Feed Activity.">
+      <created>1699768984819</created>
+      <option name="number" value="00312" />
+      <option name="presentableId" value="LOCAL-00312" />
       <option name="project" value="LOCAL" />
-      <updated>1681934266393</updated>
+      <updated>1699768984819</updated>
     </task>
-    <task id="LOCAL-00101" summary="UpdateNickname.java">
-      <created>1681934785577</created>
-      <option name="number" value="00101" />
-      <option name="presentableId" value="LOCAL-00101" />
+    <task id="LOCAL-00313" summary="[add] When Selected Genre on GenreSelectDialog - method">
+      <created>1699773851521</created>
+      <option name="number" value="00313" />
+      <option name="presentableId" value="LOCAL-00313" />
       <option name="project" value="LOCAL" />
-      <updated>1681934785577</updated>
+      <updated>1699773851521</updated>
     </task>
-    <task id="LOCAL-00102" summary="UpdateNickname.java">
-      <created>1681934957298</created>
-      <option name="number" value="00102" />
-      <option name="presentableId" value="LOCAL-00102" />
+    <task id="LOCAL-00314" summary="[doing] When Selected Genre on GenreSelectDialog - method">
+      <created>1699800999820</created>
+      <option name="number" value="00314" />
+      <option name="presentableId" value="LOCAL-00314" />
       <option name="project" value="LOCAL" />
-      <updated>1681934957298</updated>
+      <updated>1699800999820</updated>
     </task>
-    <task id="LOCAL-00103" summary="UpdateNickname.java">
-      <created>1681935004081</created>
-      <option name="number" value="00103" />
-      <option name="presentableId" value="LOCAL-00103" />
+    <task id="LOCAL-00315" summary="[issue] When Selected Genre on GenreSelectDialog set Selected Genre Image">
+      <created>1699806596349</created>
+      <option name="number" value="00315" />
+      <option name="presentableId" value="LOCAL-00315" />
       <option name="project" value="LOCAL" />
-      <updated>1681935004081</updated>
+      <updated>1699806596350</updated>
     </task>
-    <task id="LOCAL-00104" summary="UpdateNickname.java">
-      <created>1681935422841</created>
-      <option name="number" value="00104" />
-      <option name="presentableId" value="LOCAL-00104" />
+    <task id="LOCAL-00316" summary="[check] ImageView onClick (image zoom) / Feed / SignUp">
+      <created>1699860067038</created>
+      <option name="number" value="00316" />
+      <option name="presentableId" value="LOCAL-00316" />
       <option name="project" value="LOCAL" />
-      <updated>1681935422841</updated>
+      <updated>1699860067039</updated>
     </task>
-    <task id="LOCAL-00105" summary="added class for kakao/google login">
-      <created>1681935514816</created>
-      <option name="number" value="00105" />
-      <option name="presentableId" value="LOCAL-00105" />
+    <task id="LOCAL-00317" summary="[add] Feed (Edit Mode) - When feed edit mode, image (profile, genre) setting issue check">
+      <created>1699874369832</created>
+      <option name="number" value="00317" />
+      <option name="presentableId" value="LOCAL-00317" />
       <option name="project" value="LOCAL" />
-      <updated>1681935514816</updated>
+      <updated>1699874369832</updated>
     </task>
-    <task id="LOCAL-00106" summary="play with randomNumber from server">
-      <created>1681942837127</created>
-      <option name="number" value="00106" />
-      <option name="presentableId" value="LOCAL-00106" />
+    <task id="LOCAL-00318" summary="[add] Feed (Edit Mode) - selected genre imageVIew setting/divide - default image/setting image (before edit status check)">
+      <created>1699877745579</created>
+      <option name="number" value="00318" />
+      <option name="presentableId" value="LOCAL-00318" />
       <option name="project" value="LOCAL" />
-      <updated>1681942837127</updated>
+      <updated>1699877745579</updated>
     </task>
-    <task id="LOCAL-00107" summary="gif file playing in my project -&gt; Giphy">
-      <created>1681973567803</created>
-      <option name="number" value="00107" />
-      <option name="presentableId" value="LOCAL-00107" />
+    <task id="LOCAL-00319" summary="[issue] Feed (Edit Mode) - After [Feed Save] button on Click (when selected other image) setImageView before profile image issue">
+      <created>1699885109749</created>
+      <option name="number" value="00319" />
+      <option name="presentableId" value="LOCAL-00319" />
       <option name="project" value="LOCAL" />
-      <updated>1681973567803</updated>
+      <updated>1699885109749</updated>
     </task>
-    <task id="LOCAL-00108" summary="commit all">
-      <created>1681973986565</created>
-      <option name="number" value="00108" />
-      <option name="presentableId" value="LOCAL-00108" />
+    <task id="LOCAL-00320" summary="[issue] Feed (Edit Mode) - After [Feed Save] button on Click (when selected other image) setImageView before profile image issue">
+      <created>1699886547481</created>
+      <option name="number" value="00320" />
+      <option name="presentableId" value="LOCAL-00320" />
       <option name="project" value="LOCAL" />
-      <updated>1681973986565</updated>
+      <updated>1699886547481</updated>
     </task>
-    <task id="LOCAL-00109" summary="Add MainFull ImageView (For Gif playing)">
-      <created>1682262264515</created>
-      <option name="number" value="00109" />
-      <option name="presentableId" value="LOCAL-00109" />
+    <task id="LOCAL-00321" summary="[complete] Feed (Edit Mode) - After [Feed Save] button on Click (when selected other image) setImageView before profile image issue (cache issue)0">
+      <created>1699942268894</created>
+      <option name="number" value="00321" />
+      <option name="presentableId" value="LOCAL-00321" />
       <option name="project" value="LOCAL" />
-      <updated>1682262264516</updated>
+      <updated>1699942268894</updated>
     </task>
-    <task id="LOCAL-00110" summary="shape change duplicate check Button">
-      <created>1682587565423</created>
-      <option name="number" value="00110" />
-      <option name="presentableId" value="LOCAL-00110" />
+    <task id="LOCAL-00322" summary="[add] Feed - profile image onClick, Bottom Dialog">
+      <created>1699949922665</created>
+      <option name="number" value="00322" />
+      <option name="presentableId" value="LOCAL-00322" />
       <option name="project" value="LOCAL" />
-      <updated>1682587565423</updated>
+      <updated>1699949922665</updated>
     </task>
-    <task id="LOCAL-00111" summary="bitmap to Gif (not yet..)">
-      <created>1683175549987</created>
-      <option name="number" value="00111" />
-      <option name="presentableId" value="LOCAL-00111" />
+    <task id="LOCAL-00323" summary="[doing] Feed - profile image onClick, Bottom Dialog">
+      <created>1699952735697</created>
+      <option name="number" value="00323" />
+      <option name="presentableId" value="LOCAL-00323" />
       <option name="project" value="LOCAL" />
-      <updated>1683175549988</updated>
+      <updated>1699952735697</updated>
     </task>
-    <task id="LOCAL-00112" summary="bring gifEncoder library..">
-      <created>1683175575075</created>
-      <option name="number" value="00112" />
-      <option name="presentableId" value="LOCAL-00112" />
+    <task id="LOCAL-00324" summary="[doing] FCM - chat received">
+      <created>1699967927629</created>
+      <option name="number" value="00324" />
+      <option name="presentableId" value="LOCAL-00324" />
       <option name="project" value="LOCAL" />
-      <updated>1683175575075</updated>
+      <updated>1699967927630</updated>
     </task>
-    <task id="LOCAL-00113" summary="chat implementation">
-      <created>1687768593395</created>
-      <option name="number" value="00113" />
-      <option name="presentableId" value="LOCAL-00113" />
+    <task id="LOCAL-00325" summary="[check] Liked - heart setting issue complete / server conn">
+      <created>1699984694903</created>
+      <option name="number" value="00325" />
+      <option name="presentableId" value="LOCAL-00325" />
       <option name="project" value="LOCAL" />
-      <updated>1687768593395</updated>
+      <updated>1699984694903</updated>
     </task>
-    <task id="LOCAL-00114" summary="Solving emulator resource linkage issues">
-      <created>1687768627451</created>
-      <option name="number" value="00114" />
-      <option name="presentableId" value="LOCAL-00114" />
+    <task id="LOCAL-00326" summary="[check] FCM - put data to server/token">
+      <created>1699984734629</created>
+      <option name="number" value="00326" />
+      <option name="presentableId" value="LOCAL-00326" />
       <option name="project" value="LOCAL" />
-      <updated>1687768627451</updated>
+      <updated>1699984734629</updated>
     </task>
-    <task id="LOCAL-00115" summary="chat implementation">
-      <created>1687768655213</created>
-      <option name="number" value="00115" />
-      <option name="presentableId" value="LOCAL-00115" />
+    <task id="LOCAL-00327" summary="[check] Feed - delete image (profile, genre)">
+      <created>1699984762012</created>
+      <option name="number" value="00327" />
+      <option name="presentableId" value="LOCAL-00327" />
       <option name="project" value="LOCAL" />
-      <updated>1687768655213</updated>
+      <updated>1699984762012</updated>
     </task>
-    <task id="LOCAL-00116" summary="chat implementation">
-      <created>1687971534605</created>
-      <option name="number" value="00116" />
-      <option name="presentableId" value="LOCAL-00116" />
+    <task id="LOCAL-00328" summary="[check] id duplicate button nothing change issue (length)">
+      <created>1699989628912</created>
+      <option name="number" value="00328" />
+      <option name="presentableId" value="LOCAL-00328" />
       <option name="project" value="LOCAL" />
-      <updated>1687971534605</updated>
+      <updated>1699989628913</updated>
     </task>
-    <task id="LOCAL-00117" summary="채팅 문제 해결 중 - 방 이름 (DB &lt;-&gt; Room 활용 중) , 채팅 목록에서 채팅 방 왼쪽으로 스와이프해서 삭제 (+ DB에서도 삭제 - 서버 측 코드 확인 중)">
-      <created>1687987547216</created>
-      <option name="number" value="00117" />
-      <option name="presentableId" value="LOCAL-00117" />
+    <task id="LOCAL-00329" summary="[check] Code optimization (duplicate code removel, method, module)">
+      <created>1700053524833</created>
+      <option name="number" value="00329" />
+      <option name="presentableId" value="LOCAL-00329" />
       <option name="project" value="LOCAL" />
-      <updated>1687987547216</updated>
+      <updated>1700053524833</updated>
     </task>
-    <task id="LOCAL-00118" summary="get uuid - from chat_messages table in server on Intro Activity">
-      <created>1688573642922</created>
-      <option name="number" value="00118" />
-      <option name="presentableId" value="LOCAL-00118" />
+    <task id="LOCAL-00330" summary="[check] Glide ImageView noneChange caching issue (disk, memory)">
+      <created>1700145047378</created>
+      <option name="number" value="00330" />
+      <option name="presentableId" value="LOCAL-00330" />
       <option name="project" value="LOCAL" />
-      <updated>1688573642922</updated>
+      <updated>1700145047378</updated>
     </task>
-    <task id="LOCAL-00119" summary="get uuid - receive it when you want.">
-      <created>1688630938014</created>
-      <option name="number" value="00119" />
-      <option name="presentableId" value="LOCAL-00119" />
+    <task id="LOCAL-00331" summary="[check] Activity regenreate issue">
+      <created>1700145088760</created>
+      <option name="number" value="00331" />
+      <option name="presentableId" value="LOCAL-00331" />
       <option name="project" value="LOCAL" />
-      <updated>1688630938014</updated>
+      <updated>1700145088760</updated>
     </task>
-    <task id="LOCAL-00120" summary="get uuid - from server and insert room db and select from room db">
-      <created>1689197772859</created>
-      <option name="number" value="00120" />
-      <option name="presentableId" value="LOCAL-00120" />
+    <task id="LOCAL-00332" summary="[check] FCM - Notification">
+      <created>1700145111282</created>
+      <option name="number" value="00332" />
+      <option name="presentableId" value="LOCAL-00332" />
       <option name="project" value="LOCAL" />
-      <updated>1689197772859</updated>
+      <updated>1700145111282</updated>
     </task>
-    <task id="LOCAL-00121" summary="upload - upload audio file to server not yet, server can't get audio file from client (checking)">
-      <created>1691001555137</created>
-      <option name="number" value="00121" />
-      <option name="presentableId" value="LOCAL-00121" />
+    <task id="LOCAL-00333" summary="[check] SignUp Logic organize">
+      <created>1700145136024</created>
+      <option name="number" value="00333" />
+      <option name="presentableId" value="LOCAL-00333" />
       <option name="project" value="LOCAL" />
-      <updated>1691001555138</updated>
+      <updated>1700145136024</updated>
     </task>
-    <task id="LOCAL-00122" summary="main activity layout - comment view add (recycler view)">
-      <created>1691030747858</created>
-      <option name="number" value="00122" />
-      <option name="presentableId" value="LOCAL-00122" />
+    <task id="LOCAL-00334" summary="[check] Chatting Logic/Chatting Room UI">
+      <created>1700484715414</created>
+      <option name="number" value="00334" />
+      <option name="presentableId" value="LOCAL-00334" />
       <option name="project" value="LOCAL" />
-      <updated>1691030747858</updated>
+      <updated>1700484715414</updated>
     </task>
-    <task id="LOCAL-00123" summary="comment activity - delete seek bar">
-      <created>1691030893037</created>
-      <option name="number" value="00123" />
-      <option name="presentableId" value="LOCAL-00123" />
+    <task id="LOCAL-00335" summary="[add] LogoView, RecyclerView Divide View">
+      <created>1700487205659</created>
+      <option name="number" value="00335" />
+      <option name="presentableId" value="LOCAL-00335" />
       <option name="project" value="LOCAL" />
-      <updated>1691030893037</updated>
+      <updated>1700487205659</updated>
     </task>
-    <task id="LOCAL-00124" summary="Add songName, selectedTime TextView - for selected checking">
-      <created>1692107849373</created>
-      <option name="number" value="00124" />
-      <option name="presentableId" value="LOCAL-00124" />
+    <task id="LOCAL-00336" summary="[check] Enter Chatting Logic Check">
+      <created>1700487223725</created>
+      <option name="number" value="00336" />
+      <option name="presentableId" value="LOCAL-00336" />
       <option name="project" value="LOCAL" />
-      <updated>1692107849373</updated>
+      <updated>1700487223725</updated>
     </task>
-    <task id="LOCAL-00125" summary="Implement song view count increment on playback exceeding 30 seconds.">
-      <created>1692653354512</created>
-      <option name="number" value="00125" />
-      <option name="presentableId" value="LOCAL-00125" />
+    <task id="LOCAL-00337" summary="[doing] Profile - Pay (membership)">
+      <created>1700568977837</created>
+      <option name="number" value="00337" />
+      <option name="presentableId" value="LOCAL-00337" />
       <option name="project" value="LOCAL" />
-      <updated>1692653354512</updated>
+      <updated>1700568977837</updated>
     </task>
-    <task id="LOCAL-00126" summary="add like feature">
-      <created>1692820636969</created>
-      <option name="number" value="00126" />
-      <option name="presentableId" value="LOCAL-00126" />
+    <task id="LOCAL-00338" summary="[add] Profile - Pay (membership) App Scheme">
+      <created>1700574886117</created>
+      <option name="number" value="00338" />
+      <option name="presentableId" value="LOCAL-00338" />
       <option name="project" value="LOCAL" />
-      <updated>1692820636985</updated>
+      <updated>1700574886117</updated>
     </task>
-    <task id="LOCAL-00127" summary="Add auto-change to next song when current song ends">
-      <created>1693430458871</created>
-      <option name="number" value="00127" />
-      <option name="presentableId" value="LOCAL-00127" />
+    <task id="LOCAL-00339" summary="[check] Feed Logic">
+      <created>1700578879220</created>
+      <option name="number" value="00339" />
+      <option name="presentableId" value="LOCAL-00339" />
       <option name="project" value="LOCAL" />
-      <updated>1693430458871</updated>
+      <updated>1700578879220</updated>
     </task>
-    <task id="LOCAL-00128" summary="app to server music file upload">
-      <created>1696368105543</created>
-      <option name="number" value="00128" />
-      <option name="presentableId" value="LOCAL-00128" />
+    <task id="LOCAL-00340" summary="[doing] Profile - Premium user/artist pay logic">
+      <created>1700578904069</created>
+      <option name="number" value="00340" />
+      <option name="presentableId" value="LOCAL-00340" />
       <option name="project" value="LOCAL" />
-      <updated>1696368105543</updated>
+      <updated>1700578904069</updated>
     </task>
-    <task id="LOCAL-00129" summary="collecting info on songs the user has listened to">
-      <created>1696745342052</created>
-      <option name="number" value="00129" />
-      <option name="presentableId" value="LOCAL-00129" />
+    <task id="LOCAL-00341" summary="[change] Feed - Comment List width match_parent">
+      <created>1700639136810</created>
+      <option name="number" value="00341" />
+      <option name="presentableId" value="LOCAL-00341" />
       <option name="project" value="LOCAL" />
-      <updated>1696745342052</updated>
+      <updated>1700639136810</updated>
     </task>
-    <task id="LOCAL-00130" summary="Collecting info about songs the user has listened to and requesting insertion into the server">
-      <created>1696750438582</created>
-      <option name="number" value="00130" />
-      <option name="presentableId" value="LOCAL-00130" />
+    <task id="LOCAL-00342" summary="[add] Profile - KakaoPay logic">
+      <created>1700661328536</created>
+      <option name="number" value="00342" />
+      <option name="presentableId" value="LOCAL-00342" />
       <option name="project" value="LOCAL" />
-      <updated>1696750438583</updated>
+      <updated>1700661328536</updated>
     </task>
-    <task id="LOCAL-00131" summary="get played music info the user has listened to from the db">
-      <created>1696758650085</created>
-      <option name="number" value="00131" />
-      <option name="presentableId" value="LOCAL-00131" />
+    <task id="LOCAL-00343" summary="[check] Feed/FollowFollowing/feed_comment.item/your_chat_item UI">
+      <created>1700661360392</created>
+      <option name="number" value="00343" />
+      <option name="presentableId" value="LOCAL-00343" />
       <option name="project" value="LOCAL" />
-      <updated>1696758650089</updated>
+      <updated>1700661360392</updated>
     </task>
-    <task id="LOCAL-00132" summary="Information about the played music the user has listened to is being retrieved from the DB.">
-      <created>1696763769282</created>
-      <option name="number" value="00132" />
-      <option name="presentableId" value="LOCAL-00132" />
+    <task id="LOCAL-00344" summary="[change] Chatting Item Design">
+      <created>1700661897188</created>
+      <option name="number" value="00344" />
+      <option name="presentableId" value="LOCAL-00344" />
       <option name="project" value="LOCAL" />
-      <updated>1696763769283</updated>
+      <updated>1700661897188</updated>
     </task>
-    <task id="LOCAL-00133" summary="[Issue] client can't solve json data related to playback info">
-      <created>1696767323867</created>
-      <option name="number" value="00133" />
-      <option name="presentableId" value="LOCAL-00133" />
+    <task id="LOCAL-00345" summary="[doing] Chatting Item UI Design">
+      <created>1700663973449</created>
+      <option name="number" value="00345" />
+      <option name="presentableId" value="LOCAL-00345" />
       <option name="project" value="LOCAL" />
-      <updated>1696767323868</updated>
+      <updated>1700663973449</updated>
     </task>
-    <task id="LOCAL-00134" summary="Set the JSON data received from the server in the played recycler view">
-      <created>1696850803917</created>
-      <option name="number" value="00134" />
-      <option name="presentableId" value="LOCAL-00134" />
+    <task id="LOCAL-00346" summary="[add] Feed - When feed comment item click event (Go to the corresponding time of the song you selected)">
+      <created>1700726151887</created>
+      <option name="number" value="00346" />
+      <option name="presentableId" value="LOCAL-00346" />
       <option name="project" value="LOCAL" />
-      <updated>1696850803917</updated>
+      <updated>1700726151887</updated>
     </task>
-    <task id="LOCAL-00135" summary="Get JSON data from the server Issue solve. (ItemModel, Adapter, Class checking)">
-      <created>1696853221100</created>
-      <option name="number" value="00135" />
-      <option name="presentableId" value="LOCAL-00135" />
+    <task id="LOCAL-00347" summary="[doing] Chat - When chatting start, insert token 'chat_messages' table">
+      <created>1701083775072</created>
+      <option name="number" value="00347" />
+      <option name="presentableId" value="LOCAL-00347" />
       <option name="project" value="LOCAL" />
-      <updated>1696853221100</updated>
+      <updated>1701083775072</updated>
     </task>
-    <task id="LOCAL-00136" summary="Played recycler view stacking in reverse order">
-      <created>1696853415189</created>
-      <option name="number" value="00136" />
-      <option name="presentableId" value="LOCAL-00136" />
+    <task id="LOCAL-00348" summary="[doing] Chat - When chatting start, insert token 'chat_messages' table">
+      <created>1701192442945</created>
+      <option name="number" value="00348" />
+      <option name="presentableId" value="LOCAL-00348" />
       <option name="project" value="LOCAL" />
-      <updated>1696853415189</updated>
+      <updated>1701192442945</updated>
     </task>
-    <task id="LOCAL-00137" summary="Chatting">
-      <created>1696855814044</created>
-      <option name="number" value="00137" />
-      <option name="presentableId" value="LOCAL-00137" />
+    <task id="LOCAL-00349" summary="[add] Weather API - mainLogo.setText">
+      <created>1701193146338</created>
+      <option name="number" value="00349" />
+      <option name="presentableId" value="LOCAL-00349" />
       <option name="project" value="LOCAL" />
-      <updated>1696855814044</updated>
+      <updated>1701193146338</updated>
     </task>
-    <task id="LOCAL-00138" summary="All Files Commit">
-      <created>1696856191737</created>
-      <option name="number" value="00138" />
-      <option name="presentableId" value="LOCAL-00138" />
+    <task id="LOCAL-00350" summary="[check] Social login logic">
+      <created>1701195970374</created>
+      <option name="number" value="00350" />
+      <option name="presentableId" value="LOCAL-00350" />
       <option name="project" value="LOCAL" />
-      <updated>1696856191737</updated>
+      <updated>1701195970374</updated>
     </task>
-    <task id="LOCAL-00139" summary="All Files Commit">
-      <created>1696857646500</created>
-      <option name="number" value="00139" />
-      <option name="presentableId" value="LOCAL-00139" />
+    <task id="LOCAL-00351" summary="[doing] when message bring, send FCM">
+      <created>1701246676570</created>
+      <option name="number" value="00351" />
+      <option name="presentableId" value="LOCAL-00351" />
       <option name="project" value="LOCAL" />
-      <updated>1696857646500</updated>
+      <updated>1701246676571</updated>
     </task>
-    <task id="LOCAL-00140" summary="test commit (commit issue)">
-      <created>1696857755959</created>
-      <option name="number" value="00140" />
-      <option name="presentableId" value="LOCAL-00140" />
+    <task id="LOCAL-00352" summary="[add] Weather - type">
+      <created>1701247442627</created>
+      <option name="number" value="00352" />
+      <option name="presentableId" value="LOCAL-00352" />
       <option name="project" value="LOCAL" />
-      <updated>1696857755959</updated>
+      <updated>1701247442627</updated>
     </task>
-    <task id="LOCAL-00141" summary="test commit (commit issue)">
-      <created>1696858130599</created>
-      <option name="number" value="00141" />
-      <option name="presentableId" value="LOCAL-00141" />
+    <task id="LOCAL-00353" summary="[add] FCM - when message bring + push, script">
+      <created>1701249563840</created>
+      <option name="number" value="00353" />
+      <option name="presentableId" value="LOCAL-00353" />
       <option name="project" value="LOCAL" />
-      <updated>1696858130599</updated>
+      <updated>1701249563840</updated>
     </task>
-    <task id="LOCAL-00142" summary="test commit">
-      <created>1696859215433</created>
-      <option name="number" value="00142" />
-      <option name="presentableId" value="LOCAL-00142" />
+    <task id="LOCAL-00354" summary="[check] Chat - FCM">
+      <created>1701310031559</created>
+      <option name="number" value="00354" />
+      <option name="presentableId" value="LOCAL-00354" />
       <option name="project" value="LOCAL" />
-      <updated>1696859215433</updated>
+      <updated>1701310031559</updated>
     </task>
-    <task id="LOCAL-00143" summary="test commit">
-      <created>1696859359101</created>
-      <option name="number" value="00143" />
-      <option name="presentableId" value="LOCAL-00143" />
+    <task id="LOCAL-00355" summary="[check] Chat - Item add">
+      <created>1701327468599</created>
+      <option name="number" value="00355" />
+      <option name="presentableId" value="LOCAL-00355" />
       <option name="project" value="LOCAL" />
-      <updated>1696859359101</updated>
+      <updated>1701327468599</updated>
     </task>
-    <task id="LOCAL-00144" summary="test commit">
-      <created>1696859465498</created>
-      <option name="number" value="00144" />
-      <option name="presentableId" value="LOCAL-00144" />
+    <task id="LOCAL-00356" summary="[check] logic">
+      <created>1701839506322</created>
+      <option name="number" value="00356" />
+      <option name="presentableId" value="LOCAL-00356" />
       <option name="project" value="LOCAL" />
-      <updated>1696859465498</updated>
+      <updated>1701839506323</updated>
     </task>
-    <task id="LOCAL-00145" summary="test commit">
-      <created>1696862411624</created>
-      <option name="number" value="00145" />
-      <option name="presentableId" value="LOCAL-00145" />
+    <task id="LOCAL-00357" summary="[check] date item setting logic">
+      <created>1702980075324</created>
+      <option name="number" value="00357" />
+      <option name="presentableId" value="LOCAL-00357" />
       <option name="project" value="LOCAL" />
-      <updated>1696862411624</updated>
+      <updated>1702980075324</updated>
     </task>
-    <task id="LOCAL-00275" summary="[change] Feed - Item Design">
-      <created>1698735412573</created>
-      <option name="number" value="00275" />
-      <option name="presentableId" value="LOCAL-00275" />
+    <task id="LOCAL-00358" summary="[check] date item setting logic">
+      <created>1702980213232</created>
+      <option name="number" value="00358" />
+      <option name="presentableId" value="LOCAL-00358" />
       <option name="project" value="LOCAL" />
-      <updated>1698735412573</updated>
+      <updated>1702980213232</updated>
     </task>
-    <task id="LOCAL-00276" summary="[check] When Emulator run Exception - Chatting Data) When today is different from the last time we chatted / When it's morning(am)">
-      <created>1698735556564</created>
-      <option name="number" value="00276" />
-      <option name="presentableId" value="LOCAL-00276" />
+    <task id="LOCAL-00359" summary="[Check] toast message displayed when playing a song.">
+      <created>1711013683968</created>
+      <option name="number" value="00359" />
+      <option name="presentableId" value="LOCAL-00359" />
       <option name="project" value="LOCAL" />
-      <updated>1698735556564</updated>
+      <updated>1711013683968</updated>
     </task>
-    <option name="localTasksCounter" value="277" />
+    <option name="localTasksCounter" value="360" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -817,32 +733,32 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="[doing] Feed Composition" />
-    <MESSAGE value="[add] Feed Button Image (Edit Mode)" />
-    <MESSAGE value="[doing] Feed - Host Divide" />
-    <MESSAGE value="[doing] ChatSelectRoom &lt;-&gt; Feed or Main Connect / Feed - 'Feed Edit Mode' add" />
-    <MESSAGE value="[add] Feed - If not edit mode (profile_image, genre, profile_music onClick impossibly)" />
-    <MESSAGE value="[Solve Issue] Feed - Get Image From Gallery, not setting issue / Other Host Feed - profileImage, profileMusic, genre click event cancel" />
-    <MESSAGE value="[doing] Feed - follow button click event (not follower)" />
-    <MESSAGE value="[design] Feed - Follow Button Add [doing] Follow, Following Dialog Add and Logic" />
-    <MESSAGE value="[doing] Feed - nowLoginUser and FeedHostUser Comparing" />
-    <MESSAGE value="[add] Other User Follow - Table Insert" />
-    <MESSAGE value="[doing] If I Follow Feed User - Button setName Following [add] Unfollow" />
-    <MESSAGE value="[add] If I Follow Feed User - Button setName Following / UnFollow" />
-    <MESSAGE value="[doing] Feed - setFollower, setFollowing try" />
-    <MESSAGE value="[Issue] Server (with VsCode) Issue" />
-    <MESSAGE value="[change] Server IP" />
-    <MESSAGE value="[check] Connection Server and data" />
-    <MESSAGE value="[add] chatting room back button" />
-    <MESSAGE value="[doing] Feed - getComments" />
-    <MESSAGE value="[doing] Feed - Comment Item Design" />
-    <MESSAGE value="[add] Feed Comment Adapter" />
-    <MESSAGE value="[add] SetFeedComment" />
-    <MESSAGE value="[add] SetFeedComment [doing] Chatting" />
-    <MESSAGE value="[doing] SetChatting [add] Feed - setComments" />
-    <MESSAGE value="[change] Feed - Item Design" />
-    <MESSAGE value="[check] When Emulator run Exception - Chatting Data) When today is different from the last time we chatted / When it's morning(am)" />
-    <option name="LAST_COMMIT_MESSAGE" value="[check] When Emulator run Exception - Chatting Data) When today is different from the last time we chatted / When it's morning(am)" />
+    <MESSAGE value="[add] LogoView, RecyclerView Divide View" />
+    <MESSAGE value="[check] Enter Chatting Logic Check" />
+    <MESSAGE value="[doing] Profile - Pay (membership)" />
+    <MESSAGE value="[add] Profile - Pay (membership) App Scheme" />
+    <MESSAGE value="[check] Feed Logic" />
+    <MESSAGE value="[doing] Profile - Premium user/artist pay logic" />
+    <MESSAGE value="[change] Feed - Comment List width match_parent" />
+    <MESSAGE value="[add] Profile - KakaoPay logic" />
+    <MESSAGE value="[check] Feed/FollowFollowing/feed_comment.item/your_chat_item UI" />
+    <MESSAGE value="[change] Chatting Item Design" />
+    <MESSAGE value="[doing] Chatting Item Design" />
+    <MESSAGE value="[doing] Chatting Item UI Design" />
+    <MESSAGE value="[add] Feed - When feed comment item click event (Go to the corresponding time of the song you selected)" />
+    <MESSAGE value="[doing] Chat - When chatting start, insert token 'chat_messages' table" />
+    <MESSAGE value="[add] Weather API - mainLogo.setText" />
+    <MESSAGE value="[check] Social login logic" />
+    <MESSAGE value="[doing] when message bring, send FCM" />
+    <MESSAGE value="[add] Weather - type" />
+    <MESSAGE value="[add] FCM - when message bring + push, script" />
+    <MESSAGE value="[check] Chat - FCM" />
+    <MESSAGE value="[check] Chat - Item add" />
+    <MESSAGE value="[check] logic" />
+    <MESSAGE value="[check] date item setting logic" />
+    <MESSAGE value="[Check] toast message displayed when playing a song." />
+    <MESSAGE value="[Change] Public IP (I.M.P main server)" />
+    <option name="LAST_COMMIT_MESSAGE" value="[Change] Public IP (I.M.P main server)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -851,6 +767,11 @@
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/playlist/CommentAdapter.java</url>
           <line>62</line>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/playlist/MainActivity.java</url>
+          <line>3911</line>
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

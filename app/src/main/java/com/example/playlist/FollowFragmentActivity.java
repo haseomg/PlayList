@@ -22,7 +22,7 @@ public class FollowFragmentActivity extends Fragment {
     public RecyclerView followRecyclerView;
     public RecyclerView.Adapter followAdapter;
     public ArrayList<FollowerModel> followerList = new ArrayList<>();
-    private static final String BASE_URL = "http://13.124.239.85/";
+    private static final String BASE_URL = "http://15.165.205.105/";
 
     @Nullable
     @Override

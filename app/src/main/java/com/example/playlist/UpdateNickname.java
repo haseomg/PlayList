@@ -26,7 +26,7 @@ public class UpdateNickname {
 
         Log.i("updateNickname Class", "selectUserTB Method");
 
-        HttpUrl.Builder builder = HttpUrl.parse("http://13.124.239.85/user_info.php").newBuilder();
+        HttpUrl.Builder builder = HttpUrl.parse("http://15.165.205.105/user_info.php").newBuilder();
         builder.addQueryParameter("ver", "1.0");
         String url = builder.build().toString();
         Log.i("updateNickname", "String url check : " + url);
@@ -75,7 +75,7 @@ public class UpdateNickname {
 
         Log.i("updateNickname Class", "updateUserTB Method");
 
-        HttpUrl.Builder builder = HttpUrl.parse("http://13.124.239.85/update_user.php").newBuilder();
+        HttpUrl.Builder builder = HttpUrl.parse("http://15.165.205.105/update_user.php").newBuilder();
         builder.addQueryParameter("ver", "1.0");
         String url = builder.build().toString();
         Log.i("updateNickname", "String url check : " + url);

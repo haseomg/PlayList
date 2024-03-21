@@ -84,7 +84,7 @@ public class Feed extends AppCompatActivity {
     LinearLayoutManager feedCommentLayoutManager;
 
     private ServerApi serverApi;
-    private static final String BASE_URL = "http://13.124.239.85/";
+    private static final String BASE_URL = "http://15.165.205.105/";
     private final int GET_GALLERY_IMAGE = 200;
 
     SharedPreferences sharedPreferences;
@@ -217,7 +217,7 @@ public class Feed extends AppCompatActivity {
         you = feedUser;
         Log.i(TAG, "getUUIDFRomToTable Method");
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://13.124.239.85/")
+                .baseUrl("http://15.165.205.105/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

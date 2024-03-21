@@ -28,7 +28,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private OnItemFollowDeleteButtonClickListener deleteListener;
     private OnItemFollowReAddButtonClickListener reAddListener;
     private OnItemMovingEventClickListener movingListener;
-    private static final String BASE_URL = "http://13.124.239.85/";
+    private static final String BASE_URL = "http://15.165.205.105/";
     private int position;
     String TAG = "FollowingAdapter";
 

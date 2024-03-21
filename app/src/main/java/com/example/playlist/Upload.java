@@ -479,7 +479,7 @@ public class Upload extends Activity {
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
 
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("http://13.124.239.85/")
+                .baseUrl("http://15.165.205.105/")
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create());
 

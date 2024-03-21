@@ -228,7 +228,7 @@ public class ChatActivity extends AppCompatActivity {
 
     void getTokenFromChatTable(String uuid, String you) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://13.124.239.85/")
+                .baseUrl("http://15.165.205.105/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -266,7 +266,7 @@ public class ChatActivity extends AppCompatActivity {
         // String getToken 값을 chat_messages 테이블에 token 컬럼으로 추가 또는 업데이트 (replace?)
         // getRoomName (uuid 컬럼) 기준으로 조회해서 해당되는 모든 줄에 token 컬럼 추가
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://13.124.239.85/")
+                .baseUrl("http://15.165.205.105/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -308,7 +308,7 @@ public class ChatActivity extends AppCompatActivity {
     private void loadChatMessages(String uuid) {
         Log.i(TAG, "loadChatMessages Method");
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://13.124.239.85/")
+                .baseUrl("http://15.165.205.105/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

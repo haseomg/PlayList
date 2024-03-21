@@ -30,29 +30,29 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.chatList = chatList;
     } // constructor END
 
-//    public void addItem(ResponseModel item) {
-//        Log.i(TAG, "ChattingAdapter addItem Method");
-//        if (chatList != null) {
-//            Log.i(TAG, "ChattingAdapter chatList != null : " + chatList);
-//            chatList.add(item);
-//        } // if END
-//        else {
-//            Log.i(TAG, "ChattingAdapter chatList == null : " + chatList);
-//        } // else END
-//    } // addItem Method END
-
     public void addItem(ResponseModel item) {
         Log.i(TAG, "ChattingAdapter addItem Method");
         if (chatList != null) {
             Log.i(TAG, "ChattingAdapter chatList != null : " + chatList);
             chatList.add(item);
-        } else {
+        } // if END
+        else {
             Log.i(TAG, "ChattingAdapter chatList == null : " + chatList);
-            chatList = new ArrayList<>(); // chatList가 null인 경우 새로운 ArrayList를 생성
-            chatList.add(item); // 새로 생성된 ArrayList에 item 추가
-        } // else
-        notifyDataSetChanged(); // 데이터가 변경되었음을 알림
-    } // addItem
+        } // else END
+    } // addItem Method END
+
+//    public void addItem(ResponseModel item) {
+//        Log.i(TAG, "ChattingAdapter addItem Method");
+//        if (chatList != null) {
+//            Log.i(TAG, "ChattingAdapter chatList != null : " + chatList);
+//            chatList.add(item);
+//        } else {
+//            Log.i(TAG, "ChattingAdapter chatList == null : " + chatList);
+//            chatList = new ArrayList<>(); // chatList가 null인 경우 새로운 ArrayList를 생성
+//            chatList.add(item); // 새로 생성된 ArrayList에 item 추가
+//        } // else
+//        notifyDataSetChanged(); // 데이터가 변경되었음을 알림
+//    } // addItem
 
     @NonNull
     @Override
@@ -60,6 +60,7 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         Log.i(TAG, "ChattingAdapter nCreateViewHolder");
         View view;
         // getItemViewType 에서 뷰타입 1을 리턴받았다면 내 채팅 레이아웃을 받은 Holder를 리턴
+
         if (viewType == 0) {
             Log.i(TAG, "ChattingAdapter onCreateViewHolder viewType : " + viewType);
             // TODO (1) - 첫번째 메시지 발신
@@ -108,6 +109,7 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             Log.i(TAG, "ChattingAdapter MyHolder - chatList.size() : " + chatList.size());
             Log.i(TAG, "ChattingAdapter MyHolder - isLastItem : " + isLastItem);
             Log.i(TAG, "ChattingAdapter MyHolder - isTimestampDifferent : " + isTimestampDifferent);
+
             if (chatList.size() == 1 || isLastItem || isTimestampDifferent) {
                 Log.i(TAG, "ChattingAdapter MyHolder chat_Time visible");
                 myHolder.chat_Time.setVisibility(View.VISIBLE);

@@ -71,7 +71,7 @@ public class Profile extends AppCompatActivity {
     UpdateNickname updateNickname;
 
     public final String TAG = "[Profile Activity]";
-    private static final String BASE_URL = "http://13.124.239.85/";
+    private static final String BASE_URL = "http://15.165.205.105/";
 
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
@@ -575,7 +575,7 @@ public class Profile extends AppCompatActivity {
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://13.124.239.85/")
+                .baseUrl("http://15.165.205.105/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -651,7 +651,7 @@ public class Profile extends AppCompatActivity {
 
         Log.i("updateNickname Class", "selectUserTB Method");
 
-        HttpUrl.Builder builder = HttpUrl.parse("http://13.124.239.85/user_info.php").newBuilder();
+        HttpUrl.Builder builder = HttpUrl.parse("http://15.165.205.105/user_info.php").newBuilder();
         builder.addQueryParameter("ver", "1.0");
         String url = builder.build().toString();
         Log.i("updateNickname", "String url check : " + url);
@@ -699,7 +699,7 @@ public class Profile extends AppCompatActivity {
 
         Log.i("updateNickname Class", "updateUserTB Method");
 
-        HttpUrl.Builder builder = HttpUrl.parse("http://13.124.239.85/update_user.php").newBuilder();
+        HttpUrl.Builder builder = HttpUrl.parse("http://15.165.205.105/update_user.php").newBuilder();
         builder.addQueryParameter("ver", "1.0");
         String url = builder.build().toString();
         Log.i("updateNickname", "String url check : " + url);
@@ -743,7 +743,7 @@ public class Profile extends AppCompatActivity {
 
         OkHttpClient client = new OkHttpClient();
 
-        HttpUrl.Builder builder = HttpUrl.parse("http://13.124.239.85/user_info.php").newBuilder();
+        HttpUrl.Builder builder = HttpUrl.parse("http://15.165.205.105/user_info.php").newBuilder();
         builder.addQueryParameter("ver", "1.0");
         String url = builder.build().toString();
         Log.i("updateNickname", "String url check : " + url);

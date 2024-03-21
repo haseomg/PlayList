@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class FollowerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final String BASE_URL = "http://13.124.239.85/";
+    private static final String BASE_URL = "http://15.165.205.105/";
     private Context context;
     private ArrayList<FollowerModel> followerList;
     private OnItemClickListener listener;

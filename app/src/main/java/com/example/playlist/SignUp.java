@@ -537,7 +537,7 @@ public class SignUp extends AppCompatActivity {
                     int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
                     if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
                         // get 방식 파라미터 추가
-                        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://13.124.239.85/kakaoLogin.php").newBuilder();
+                        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://15.165.205.105/kakaoLogin.php").newBuilder();
                         urlBuilder.addQueryParameter("ver", "1.0"); // 예시
                         String url = urlBuilder.build().toString();
                         Log.i("[kakao]", "String url 확인 : " + url);
@@ -679,7 +679,7 @@ public class SignUp extends AppCompatActivity {
 
     public void checkId() {
         Log.i(TAG, "idDuCheckButton OnClick()");
-        String url = "http://13.124.239.85/check_id.php";
+        String url = "http://15.165.205.105/check_id.php";
         String myId = id.getText().toString();
         new CheckIdTask() {
             @Override
@@ -737,7 +737,7 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 Log.i(TAG, "id - afterTextChanged Method");
-                String url = "http://13.124.239.85/check_id.php";
+                String url = "http://15.165.205.105/check_id.php";
                 String myId = id.getText().toString();
                 new CheckIdTask() {
                     @Override
@@ -767,7 +767,7 @@ public class SignUp extends AppCompatActivity {
     public void idDuplicateCheck() {
         Log.i(TAG, "idDuplicate Check Method()");
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://13.124.239.85/check_id.php").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://15.165.205.105/check_id.php").newBuilder();
         urlBuilder.addQueryParameter("ver", "1.0"); // 예시
         String url = urlBuilder.build().toString();
         Log.i("[SignUp Activity]", "idDuplicate String url 확인 : " + url);
@@ -889,7 +889,7 @@ public class SignUp extends AppCompatActivity {
 
     private void sendSignUpRequest() {
         // get 방식 파라미터 추가
-        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://13.124.239.85/signUp.php").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://15.165.205.105/signUp.php").newBuilder();
         urlBuilder.addQueryParameter("ver", "1.0"); // 예시
         String url = urlBuilder.build().toString();
         Log.i("[SignUp Activity]", "submitCheck String url 확인 : " + url);
@@ -1009,7 +1009,7 @@ public class SignUp extends AppCompatActivity {
                         if (pw.getText().toString().equals(pwCheck.getText().toString())) {
 
                             // get 방식 파라미터 추가
-                            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://13.124.239.85/signUp.php").newBuilder();
+                            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://15.165.205.105/signUp.php").newBuilder();
                             urlBuilder.addQueryParameter("ver", "1.0"); // 예시
                             String url = urlBuilder.build().toString();
                             Log.i("[SignUp Activity]", "submitCheck String url 확인 : " + url);

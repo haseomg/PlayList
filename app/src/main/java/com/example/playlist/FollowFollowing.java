@@ -32,7 +32,7 @@ public class FollowFollowing extends AppCompatActivity {
     View followerView, followingView;
 
     private ServerApi serverApi;
-    private static final String BASE_URL = "http://13.124.239.85/";
+    private static final String BASE_URL = "http://15.165.205.105/";
     androidx.recyclerview.widget.RecyclerView followRecyclerView;
     // TODO - Follower (팔로워 세팅)
     ArrayList<FollowerModel> followerList = new ArrayList<>();

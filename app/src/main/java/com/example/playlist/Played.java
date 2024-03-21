@@ -50,7 +50,7 @@ public class Played extends AppCompatActivity {
 
     static Context playedContext;
 
-    private static final String BASE_URL = "http://13.124.239.85/";
+    private static final String BASE_URL = "http://15.165.205.105/";
     private String song_name;
 
     @Override
