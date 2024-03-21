@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView default_album;
     ImageView mainFull;
 
-    static final String BASE_URL = "http://13.124.239.85/";
+    static final String BASE_URL = "http://15.165.205.105/";
     int syncInterval = 3000; // 코멘트 동기화 간격 3초
     static final int TIME_INTERVAL = 1;
     // 3초 간격
@@ -244,11 +244,13 @@ public class MainActivity extends AppCompatActivity {
         gif = new Gif_Play();
         serverApi = ApiClient.getApiClient().create(ServerApi.class);
 
-        toast = Toast.makeText(this, "\uD835\uDC29\uD835\uDC25\uD835\uDC1A\uD835\uDC32\uD835\uDC22\uD835\uDC27\uD835\uDC20 ♪", Toast.LENGTH_LONG);
+//        toast = Toast.makeText(this, "\uD835\uDC29\uD835\uDC25\uD835\uDC1A\uD835\uDC32\uD835\uDC22\uD835\uDC27\uD835\uDC20 ♪", Toast.LENGTH_LONG);
+        toast = Toast.makeText(this, "playing ♪", Toast.LENGTH_LONG);
         toastView = toast.getView();
         toastView.getBackground().setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
         TextView toastMessage = toastView.findViewById(android.R.id.message);
         toastMessage.setTextColor(Color.WHITE);
+        toastMessage.setAlpha(0.55F);
         toastMessage.setTextSize(16);
 
         shared = getSharedPreferences("nickname", MODE_PRIVATE);
@@ -710,10 +712,10 @@ public class MainActivity extends AppCompatActivity {
                                 Uri.Builder builder = new Uri.Builder()
                                         .appendQueryParameter("num", 1 + firstRanNum);
                                 String postParams = builder.build().getEncodedQuery();
-                                new getJSONData().execute("http://13.124.239.85/" + "file_sampling.php", postParams);
+                                new getJSONData().execute("http://15.165.205.105/" + "file_sampling.php", postParams);
 
 //                             get 방식 파라미터 추가
-                                HttpUrl.Builder urlBuilder = HttpUrl.parse("http://13.124.239.85/file_sampling.php").newBuilder();
+                                HttpUrl.Builder urlBuilder = HttpUrl.parse("http://15.165.205.105/file_sampling.php").newBuilder();
                                 urlBuilder.addQueryParameter("ver", "1.0");
                                 String url = urlBuilder.build().toString();
                                 Log.i(TAG, "String url 확인 : " + url);
@@ -812,7 +814,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                                                             // 수정한 부분
-                                                            String uri = "http://13.124.239.85/" + name;
+                                                            String uri = "http://15.165.205.105/" + name;
                                                             Log.i(TAG, "file name from music table : " + uri);
                                                             //
                                                             play.setText("❚❚");
@@ -905,7 +907,7 @@ public class MainActivity extends AppCompatActivity {
 //                                                            play.setText("▶");
 //                                                        }
                                                             // TODO TOAST
-                                                            Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
+//                                                            Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
                                                             toast.show();
 
                                                             updateSeekBar();
@@ -1269,7 +1271,7 @@ public class MainActivity extends AppCompatActivity {
 //        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.waves);
         mediaPlayer.start();
         // TODO TOAST
-        Toast.makeText(this, "♫", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "♫", Toast.LENGTH_SHORT).show();
         toast.show();
     }
 
@@ -1356,7 +1358,7 @@ public class MainActivity extends AppCompatActivity {
                     if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
 
                         // GET 방식 파라미터
-                        HttpUrl.Builder builder = HttpUrl.parse("http://13.124.239.85/login_kakao.php").newBuilder();
+                        HttpUrl.Builder builder = HttpUrl.parse("http://15.165.205.105/login_kakao.php").newBuilder();
                         builder.addQueryParameter("ver", "1.0");
                         String url = builder.build().toString();
                         Log.i(TAG, "String url Check : " + url);
@@ -1455,7 +1457,7 @@ public class MainActivity extends AppCompatActivity {
         int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
         if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
             // get 방식 파라미터 추가
-            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://13.124.239.85/googleLogin.php").newBuilder();
+            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://15.165.205.105/googleLogin.php").newBuilder();
             urlBuilder.addQueryParameter("ver", "1.0"); // 예시
             String url = urlBuilder.build().toString();
             Log.i("[Google]", "String url 확인 : " + url);
@@ -1787,7 +1789,7 @@ public class MainActivity extends AppCompatActivity {
 //                                Uri.Builder builder = new Uri.Builder()
 //                                        .appendQueryParameter("past_song", pastSongName);
 //                                String postParams = builder.build().getEncodedQuery();
-//                                new getJSONData().execute("http://13.124.239.85/" + "/file_sampling.php", postParams);
+//                                new getJSONData().execute("http://15.165.205.105/" + "/file_sampling.php", postParams);
 //                            } // if
 //                        } // if
 //
@@ -1804,12 +1806,12 @@ public class MainActivity extends AppCompatActivity {
                     Uri.Builder builder = new Uri.Builder()
                             .appendQueryParameter("num", 1 + nextRanNum);
                     String postParams = builder.build().getEncodedQuery();
-                    new getJSONData().execute("http://13.124.239.85/" + "/file_sampling.php", postParams);
+                    new getJSONData().execute("http://15.165.205.105/" + "/file_sampling.php", postParams);
 
 //                    } // else
 
 //                             get 방식 파라미터 추가
-                    HttpUrl.Builder urlBuilder = HttpUrl.parse("http://13.124.239.85/file_sampling.php").newBuilder();
+                    HttpUrl.Builder urlBuilder = HttpUrl.parse("http://15.165.205.105/file_sampling.php").newBuilder();
                     urlBuilder.addQueryParameter("ver", "1.0");
                     String url = urlBuilder.build().toString();
                     Log.i(TAG, "[changeStreaming] String url 확인 : " + url);
@@ -1938,7 +1940,7 @@ public class MainActivity extends AppCompatActivity {
 
                                                 Log.i(TAG, "[changeStreaming] song name before streaming check : " + name);
                                                 ;
-                                                String uri = "http://13.124.239.85/" + name;
+                                                String uri = "http://15.165.205.105/" + name;
                                                 Log.i(TAG, "[changeStreaming] file name from music table : " + uri);
                                                 // 경로
                                                 mediaPlayer.setDataSource(uri);
@@ -2016,7 +2018,7 @@ public class MainActivity extends AppCompatActivity {
                                                 } // else
 
                                                 // TODO TOAST
-                                                Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
+//                                                Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
                                                 toast.show();
 
                                                 updateSeekBar();
@@ -2218,7 +2220,7 @@ public class MainActivity extends AppCompatActivity {
         int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
         if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
 
-            HttpUrl.Builder builder = HttpUrl.parse("http://13.124.239.85/insert_pastMusic.php").newBuilder();
+            HttpUrl.Builder builder = HttpUrl.parse("http://15.165.205.105/insert_pastMusic.php").newBuilder();
             builder.addQueryParameter("ver", "1.0");
             String url = builder.build().toString();
             Log.i(TAG, "insertPastMusicTable String url Check : " + url);
@@ -2288,7 +2290,7 @@ public class MainActivity extends AppCompatActivity {
         int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
         if (status == NetworkStatus.TYPE_MOBILE || status == NetworkStatus.TYPE_WIFI) {
 
-            HttpUrl.Builder builder = HttpUrl.parse("http://13.124.239.85/delete_Music.php").newBuilder();
+            HttpUrl.Builder builder = HttpUrl.parse("http://15.165.205.105/delete_Music.php").newBuilder();
             builder.addQueryParameter("ver", "1.0");
             String url = builder.build().toString();
             Log.i(TAG, "delete_Music  String url Check : " + url);
@@ -2531,7 +2533,7 @@ public class MainActivity extends AppCompatActivity {
 
         OkHttpClient client = new OkHttpClient();
 
-        HttpUrl.Builder builder = HttpUrl.parse("http://13.124.239.85/create_random_numbers.php").newBuilder();
+        HttpUrl.Builder builder = HttpUrl.parse("http://15.165.205.105/create_random_numbers.php").newBuilder();
         builder.addQueryParameter("ver", "1.0");
         String url = builder.build().toString();
         Log.i(TAG, "bringGet String url check : " + url);
@@ -2656,7 +2658,7 @@ public class MainActivity extends AppCompatActivity {
                             Uri.Builder builder = new Uri.Builder()
                                     .appendQueryParameter("past_song", rePastSongName);
                             String postParams = builder.build().getEncodedQuery();
-                            new getJSONData().execute("http://13.124.239.85/" + "/past_file_sampling.php", postParams);
+                            new getJSONData().execute("http://15.165.205.105/" + "/past_file_sampling.php", postParams);
                         } else {
                             rePastSongName = pastSongName;
                         }
@@ -2664,7 +2666,7 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 //                             get 방식 파라미터 추가
-                    HttpUrl.Builder urlBuilder = HttpUrl.parse("http://13.124.239.85/past_file_sampling.php").newBuilder();
+                    HttpUrl.Builder urlBuilder = HttpUrl.parse("http://15.165.205.105/past_file_sampling.php").newBuilder();
                     urlBuilder.addQueryParameter("ver", "1.0");
                     String url = urlBuilder.build().toString();
                     Log.i(TAG, "[pastStreaming] String url 확인 : " + url);
@@ -2773,7 +2775,7 @@ public class MainActivity extends AppCompatActivity {
 
                                                 Log.i(TAG, "[pastStreaming] song name before streaming check : " + name);
                                                 ;
-                                                String uri = "http://13.124.239.85/" + name;
+                                                String uri = "http://15.165.205.105/" + name;
                                                 Log.i(TAG, "[pastStreaming] file name from music table : " + uri);
                                                 // 경로
                                                 mediaPlayer.setDataSource(uri);
@@ -2851,7 +2853,7 @@ public class MainActivity extends AppCompatActivity {
                                                 } // else
 
                                                 // TODO TOAST
-                                                Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
+//                                                Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
                                                 toast.show();
 
                                                 updateSeekBar();
@@ -2984,7 +2986,7 @@ public class MainActivity extends AppCompatActivity {
     private void getUUIDFromTable(String me) {
         Log.i(TAG, "getUUIDFRomToTable Method");
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://13.124.239.85/")
+                .baseUrl("http://15.165.205.105/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -3710,13 +3712,13 @@ public class MainActivity extends AppCompatActivity {
                             Uri.Builder builder = new Uri.Builder()
                                     .appendQueryParameter("selected_song", reSongName + ".mp3");
                             String postParams = builder.build().getEncodedQuery();
-                            new getJSONData().execute("http://13.124.239.85/" + "/select_file_sampling.php", postParams);
+                            new getJSONData().execute("http://15.165.205.105/" + "/select_file_sampling.php", postParams);
                         } // if
                     } catch (NullPointerException e) { //
                         Log.e(TAG, "checking setItemClickStreaming ERROR : " + e);
                     } // catch
 
-                    HttpUrl.Builder urlBuilder = HttpUrl.parse("http://13.124.239.85/select_file_sampling.php").newBuilder();
+                    HttpUrl.Builder urlBuilder = HttpUrl.parse("http://15.165.205.105/select_file_sampling.php").newBuilder();
                     urlBuilder.addQueryParameter("ver", "1.0");
                     String url = urlBuilder.build().toString();
                     Log.i(TAG, "checking String url 확인 : " + url);
@@ -3824,7 +3826,7 @@ public class MainActivity extends AppCompatActivity {
 
                                                 Log.i(TAG, "checking - selectStreaming song name before streaming check : " + name);
 
-                                                String uri = "http://13.124.239.85/" + name;
+                                                String uri = "http://15.165.205.105/" + name;
                                                 Log.i(TAG, "checking - selectStreaming  file name from music table : " + uri);
                                                 // 경로
                                                 mediaPlayer.setDataSource(uri);
@@ -3916,7 +3918,7 @@ public class MainActivity extends AppCompatActivity {
                                                 } // else
 
                                                 // TODO TOAST
-                                                Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
+//                                                Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
                                                 toast.show();
 
                                                 updateSeekBar();
@@ -4153,9 +4155,9 @@ public class MainActivity extends AppCompatActivity {
                     Uri.Builder builder = new Uri.Builder()
                             .appendQueryParameter("selected_song", reName);
                     String postParams = builder.build().getEncodedQuery();
-                    new getJSONData().execute("http://13.124.239.85/" + "select_file_sampling.php", postParams);
+                    new getJSONData().execute("http://15.165.205.105/" + "select_file_sampling.php", postParams);
 
-                    HttpUrl.Builder urlBuilder = HttpUrl.parse("http://13.124.239.85/select_file_sampling.php").newBuilder();
+                    HttpUrl.Builder urlBuilder = HttpUrl.parse("http://15.165.205.105/select_file_sampling.php").newBuilder();
                     urlBuilder.addQueryParameter("ver", "1.0");
                     String url = urlBuilder.build().toString();
                     Log.i(TAG, "setFirstStreaming String url 확인 : " + url);
@@ -4233,7 +4235,7 @@ public class MainActivity extends AppCompatActivity {
                                                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                                                 Log.i(TAG, "setFirstStreaming mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)");
 
-                                                String uri = "http://13.124.239.85/" + name;
+                                                String uri = "http://15.165.205.105/" + name;
                                                 Log.i(TAG, "setFirstStreaming file name from music table : " + uri);
 
                                                 play.setText("❚❚");
@@ -4308,7 +4310,7 @@ public class MainActivity extends AppCompatActivity {
 
                                                     Thread();
                                                 } // else
-                                                Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
+//                                                Toast.makeText(getApplicationContext(), "♫", Toast.LENGTH_SHORT).show();
                                                 toast.show();
 
                                                 updateSeekBar();
